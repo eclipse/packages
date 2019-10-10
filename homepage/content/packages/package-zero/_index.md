@@ -16,13 +16,13 @@ In order to have a better understanding, the following diagram will give you a b
 
 {{<row>}}
 
-{{<col>}}
+{{<col "sm-6">}}
 
 {{<img-fluid src="images/overview.png" title="Overview diagram">}}
 
 {{</col>}}
 
-{{<col>}}
+{{<col "sm-6">}}
 
 <p class="border-callout-left" style="border-color: #ff972f;">
 <strong>Eclipse Hono</strong> provides the IoT messaging layer. It allows the devices to connect into the cluster
