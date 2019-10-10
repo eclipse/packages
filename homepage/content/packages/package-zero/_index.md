@@ -12,4 +12,14 @@ description: A package connecting and managing sensor style devices. Connecting 
 
 Getting started
 
+## Overview
+
+{{<row>}}
+
+{{<col>}}
+
 {{<img-fluid src="images/overview.svg" title="Overview diagram">}}
+
+{{</col>}}
+
+{{</row>}}
