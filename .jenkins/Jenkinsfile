@@ -1,0 +1,124 @@
+
+def label = "builder-${UUID.randomUUID().toString()}"
+
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '10')),
+    pipelineTriggers([
+        [$class:"SCMTrigger", scmpoll_spec:"H/10 * * * *"],
+    ]),
+    disableConcurrentBuilds()
+])
+
+def needToDeploy() {
+    return BRANCH_NAME == 'master' || BRANCH_NAME == 'develop'
+}
+
+def isStaging() {
+    return BRANCH_NAME == 'develop'
+}
+
+podTemplate(
+    label: label,
+    containers: [
+        containerTemplate(
+            name: 'hugo',
+            image: 'cibuilds/hugo',
+            ttyEnabled: true,
+            command: 'cat',
+            resourceRequestMemory: '1Gi',
+            resourceLimitMemory: '2Gi',
+        )
+    ],
+    volumes: [
+        configMapVolume(mountPath: '/home/jenkins/.ssh', configMapName: 'known-hosts')
+    ]
+) {
+
+    node(label) {
+
+        container('hugo') {
+
+            withEnv([
+                "PROJECT_NAME=packages",
+                "PROJECT_BOT_NAME=Eclipse IoT Packages Bot"
+            ]) {
+
+                deleteDir()
+
+                try {
+
+                    stage ('Init') {
+                        sh "env | sort"
+                    }
+
+                    stage ('Clone') {
+                        dir("build") {
+                            checkout scm
+                        }
+                    }
+
+                    stage ('Build') {
+                        dir ("build/homepage") {
+                            if ( isStaging() ) {
+                                sh 'hugo -b https://staging.eclipse.org/${PROJECT_NAME}/'
+                            } else {
+                                sh 'hugo'
+                            }
+                        }
+                    }
+
+                    if ( needToDeploy() ) {
+
+                        stage ('Checkout website') {
+                            dir ("www") {
+                                sshagent(['git.eclipse.org-bot-ssh']) {
+                                    sh '''
+                                        git config --global user.email "${PROJECT_NAME}-bot@eclipse.org"
+                                        git config --global user.name "${PROJECT_BOT_NAME}"
+                                        git clone ssh://genie.${PROJECT_NAME}@git.eclipse.org:29418/www.eclipse.org/${PROJECT_NAME} .
+                                        git checkout ${BRANCH_NAME}
+                                    '''
+                                }
+                            }
+                        }
+
+                        stage ('Copy content') {
+                            sh 'rm -rf www/* && cp -Rvf build/homepage/public/* www/'
+                        }
+
+                        stage ('Commit and push') {
+                            dir("www") {
+                                sshagent(['git.eclipse.org-bot-ssh']) {
+                                    sh '''
+                                    if [ ${BRANCH_NAME} == "develop" ]; then
+                                      BRANCH_NAME="staging"
+                                    fi
+
+                                    git add -A
+                                    if ! git diff --cached --exit-code; then
+                                      echo "Changes have been detected, publishing to repo 'www.eclipse.org/${PROJECT_NAME}'"
+                                      git commit -m "Website build ${JOB_NAME}-${BUILD_NUMBER}"
+                                      git log --graph --abbrev-commit --date=relative -n 5
+                                      git push origin HEAD:${BRANCH_NAME}
+                                    else
+                                      echo "No changes have been detected since last build, nothing to publish"
+                                    fi
+                                    '''
+                                }
+                            }
+                        }
+
+                    }
+
+                } catch (err) {
+                    currentBuild.result = 'FAILED'
+                    throw err
+                }
+
+            } /* with-env */
+
+        } /* container */
+
+    } /* node */
+
+} /* pod */

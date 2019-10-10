@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+
+{{ partial "head.html" . }}
+
+<body class="d-flex flex-column h-100">
+    {{- partial "header.html" . -}}
+
+    <main role="main" >
+        <div id="content">
+            {{- block "main" . }}{{- end }}
+        </div>
+    </main>
+
+    {{- partial "footer.html" . -}}
+
+    <script src="{{ "popper.min.js" | relURL }}"></script>
+    <script src="{{ "jquery.min.js" | relURL }}"></script>
+    <script src="{{ "bootstrap/bootstrap.min.js" | relURL }}"></script>
+
+</body>
+
+</html>

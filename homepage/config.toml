@@ -1,0 +1,120 @@
+baseURL = "https://eclipse.org/packages/"
+languageCode = "en-us"
+title = "Eclipse IoT Packages™"
+themesDir = "themes"
+theme = "eclipse-iot-packages"
+
+copyright = "Copyright © Eclipse Foundation, Inc. All Rights Reserved."
+
+[taxonomies]
+    project = "projects"
+
+[[menu.main]]
+    name = "Home"
+    url = ""
+    weight = 1
+
+[[menu.main]]
+    name = "About"
+    url = "about/"
+    weight = 2
+
+[[menu.main]]
+    name = "FAQ"
+    url = "faq/"
+    weight = 3
+
+[[menu.main]]
+    name = "Contribute"
+    url = "contribute/"
+    weight = 4
+
+[[menu.footer]]
+    name = "Eclipse IoT Packages"
+    weight = 1
+
+[[menu.footer]]
+    parent = "Eclipse IoT Packages"
+    name = "Home"
+    weight = 1
+    url = ""
+
+[[menu.footer]]
+    parent = "Eclipse IoT Packages"
+    name = "About"
+    weight = 2
+    url = "about"
+
+[[menu.footer]]
+    parent = "Eclipse IoT Packages"
+    name = "Contribute"
+    weight = 3
+    url = "contribute"
+
+[[menu.footer]]
+    parent = "Eclipse IoT Packages"
+    name = "Security"
+    weight = 4
+    url = "https://eclipse.org/security"
+
+[[menu.footer]]
+    name = "Eclipse IoT"
+    weight = 10
+
+[[menu.footer]]
+    parent = "Eclipse IoT"
+    name = "Top Level Project"
+    url = "https://iot.eclipse.org"
+
+[[menu.footer]]
+    parent = "Eclipse IoT"
+    name = "Working group"
+    url = "https://www.eclipse.org/org/workinggroups/iotwg_charter.php"
+
+[[menu.footer]]
+    name = "Legal"
+    weight = 20
+
+[[menu.footer]]
+    parent = "Legal"
+    name = "Privacy Policy"
+    url = "http://www.eclipse.org/legal/privacy.php"
+
+[[menu.footer]]
+    parent = "Legal"
+    name = "Terms of Use"
+    url = "http://www.eclipse.org/legal/termsofuse.php"
+
+[[menu.footer]]
+    parent = "Legal"
+    name = "Copyright Agent"
+    url = "https://www.eclipse.org/legal/copyright.php"
+
+[[menu.footer]]
+    parent = "Legal"
+    name = "Eclipse Public License"
+    url = "https://www.eclipse.org/legal/epl-2.0/"
+
+[[menu.footer]]
+    parent = "Legal"
+    name = "Legal Resources"
+    url = "http://www.eclipse.org/legal"
+
+[[menu.footer]]
+    name = "Eclipse Foundation"
+    weight = 30
+
+[[menu.footer]]
+    parent = "Eclipse Foundation"
+    name = "About us"
+    url = "https://eclipse.org/org"
+
+[[menu.footer]]
+    parent = "Eclipse Foundation"
+    name = "Contact us"
+    url = "https://www.eclipse.org/org/foundation/contact.php"
+
+[[menu.footer]]
+    parent = "Eclipse Foundation"
+    name = "Board of Directors"
+    url = "https://www.eclipse.org/org/foundation/directors.php"

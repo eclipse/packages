@@ -1,0 +1,28 @@
+
+<div class="card">
+  <img src="{{with .Params.images }}{{ index . 0 | relURL }}{{end}}" class="card-img-top" alt="{{ .Title | htmlEscape }}">
+  <div class="card-body">
+    <h5 class="card-title">{{ .Title  | markdownify }}</h5>
+    <p class="card-text">
+    {{ .Description | markdownify }}
+    </p>
+  </div>
+  <div class="card-footer">
+    <div class="d-flex justify-content-between align-items-center">
+    <span>
+
+    {{ with .Params.projects }}<b>Contains:</b> {{range $idx, $project :=  . }}
+
+    {{- if (ne $idx 0) -}},&nbsp;{{- end -}}
+
+    {{- with $.Site.GetPage ( printf "/projects/%s" ( $project | urlize ) ) -}} 
+    <a href="{{ .Params.projectUrl }}" title="{{ .Params.fullName }}">{{ .Params.shortName }}</a>
+    {{- end -}}
+
+    {{end}}{{ end }}
+
+    </span>
+    <a href="{{ .RelPermalink }}" class="card-link">{{ .Params.actionLabel | default "Get Started!"}}</a>
+    </div>
+  </div>
+</div>

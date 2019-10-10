@@ -1,0 +1,12 @@
+{{ define "main" }}
+
+<div class="container mt-5">
+
+<h1>{{ .Title }}</h1>
+<p class="lead">{{.Description | markdownify }}</p>
+
+<section>{{ .Content }}</section>
+
+</div>
+
+{{ end }}

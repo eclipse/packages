@@ -1,0 +1,46 @@
+
+<footer class="">
+
+    <div class="container">
+
+    <div class="row">
+
+    {{ if .Site.Menus.footer }}
+
+        {{ $currentPage := . }}
+        {{ range .Site.Menus.footer }}
+            <div class="col-6 col-md">
+            {{ if .HasChildren }}
+                <h5>{{ .Name }}</h5>
+                <ul class="list-unstyled">
+                    {{ range .Children }}
+                        <li>
+                            <a class="text-muted" href="{{ .URL | relURL }}">{{ .Name }}</a>
+                        </li>
+                    {{ end }}
+                </ul>
+            {{ else }}
+                <li>
+                    <a href="{{ .URL | relURL }}">
+                        {{ .Pre }}
+                        <span>{{ .Name }}</span>
+                    </a>
+                </li>
+            {{ end }}
+            </div>
+        {{ end }}
+
+    {{ end }}
+    </div>
+
+    {{ if .Site.Copyright }}
+    <div class="row">
+        <div class="col-12 col-md text-muted">
+            {{- .Site.Copyright | markdownify -}}
+        </div>
+    </div>
+    {{ end }}
+    
+    </div>
+
+</footer>

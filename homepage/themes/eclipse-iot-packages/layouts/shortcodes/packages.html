@@ -1,0 +1,24 @@
+
+<div class="card-deck mb-5">
+
+{{ range ( where (where .Site.Pages "Kind" "section" ) "Section" "packages" ) }}
+
+{{ if not .Parent.IsHome }}
+{{ partial "package-card.html" . }}
+{{ end }}
+
+{{ end }}
+
+<div class="card">
+  <img src="{{"/images/new-project.svg" | relURL}}" class="card-img-top" alt="Contribute new package">
+  <div class="card-body">
+    <h5 class="card-title">Your ideas next!</h5>
+    <p class="card-text">Provide your own package.</p>
+  </div>
+  <div class="card-footer text-right">
+     <a href="{{"/contribute/" | relURL }}" class="card-link">Contribute!</a>
+  </div>
+</div>
+
+</div>
+

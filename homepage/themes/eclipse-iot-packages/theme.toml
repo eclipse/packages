@@ -1,0 +1,12 @@
+name = "Eclipse IoT Packages"
+license = "EPLv2"
+licenselink = "https://github.com/eclipse/iot-packages/LICENSE"
+description = "The theme for Eclipse IoT Packages"
+homepage = "https://eclipse.org/iot-packages"
+tags = ["bootstrap"]
+features = ["responsive", "blog"]
+min_version = 0.50
+
+[author]
+  name = "Jens Reimann"
+  homepage = "https://eclipse.org/iot-packages"

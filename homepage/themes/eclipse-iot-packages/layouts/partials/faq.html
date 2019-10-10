@@ -1,0 +1,22 @@
+
+{{ if .Content }}{{ partial "single" . }}{{ end }}
+
+<h2>Questions</h2>
+
+<ul>
+    {{ range sort .Pages }}
+    <li>
+        <a href="#{{ .Title | anchorize }}">
+            {{- .Title | markdownify }}
+        </a>
+    </li>
+    {{ end }}
+</ul>
+
+
+<h2>Answers</h2>
+
+{{ range .Pages }}
+    <h3 id="{{.Title | anchorize}}">{{- .Title | markdownify }}</h3>
+    {{- .Content | markdownify }}
+{{ end }}

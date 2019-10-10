@@ -1,0 +1,15 @@
+<section class="jumbotron">
+<div class="container">
+
+<h1 class="display-4">
+{{ .Page.Title }}
+</h1>
+
+<p class="lead">
+{{ .Params.introductionText | markdownify }}
+</p>
+
+<a class="btn btn-primary btn-lg" href="{{ .Params.introductionUrl}}" role="button">Learn more</a>
+
+</div>
+</section>
