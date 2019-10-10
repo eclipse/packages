@@ -8,3 +8,9 @@ footer {
     margin-top: 3rem;
     font-size: small;
 }
+
+.border-callout-left {
+    border-left: solid 5px;
+    padding-left: .5rem;
+    border-radius: 5px;
+}
