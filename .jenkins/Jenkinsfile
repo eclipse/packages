@@ -1,6 +1,4 @@
 
-def label = "builder-${UUID.randomUUID().toString()}"
-
 properties([
     buildDiscarder(logRotator(numToKeepStr: '10')),
     pipelineTriggers([
@@ -17,108 +15,95 @@ def isStaging() {
     return BRANCH_NAME == 'develop'
 }
 
-podTemplate(
-    label: label,
-    containers: [
-        containerTemplate(
-            name: 'hugo',
-            image: 'cibuilds/hugo',
-            ttyEnabled: true,
-            command: 'cat',
-            resourceRequestMemory: '1Gi',
-            resourceLimitMemory: '2Gi',
-        )
-    ],
-    volumes: [
-        configMapVolume(mountPath: '/home/jenkins/.ssh', configMapName: 'known-hosts')
-    ]
-) {
+node {
 
-    node(label) {
+        withEnv([
+            "PROJECT_NAME=packages",
+            "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
+            "hugo_version=0.58.3"
+        ]) {
 
-        container('hugo') {
+            deleteDir()
 
-            withEnv([
-                "PROJECT_NAME=packages",
-                "PROJECT_BOT_NAME=Eclipse IoT Packages Bot"
-            ]) {
+            try {
 
-                deleteDir()
-
-                try {
-
-                    stage ('Init') {
-                        sh "env | sort"
-                    }
-
-                    stage ('Clone') {
-                        dir("build") {
-                            checkout scm
-                        }
-                    }
-
-                    stage ('Build') {
-                        dir ("build/homepage") {
-                            if ( isStaging() ) {
-                                sh 'hugo -b https://staging.eclipse.org/${PROJECT_NAME}/'
-                            } else {
-                                sh 'hugo'
-                            }
-                        }
-                    }
-
-                    if ( needToDeploy() ) {
-
-                        stage ('Checkout website') {
-                            dir ("www") {
-                                sshagent(['git.eclipse.org-bot-ssh']) {
-                                    sh '''
-                                        git config --global user.email "${PROJECT_NAME}-bot@eclipse.org"
-                                        git config --global user.name "${PROJECT_BOT_NAME}"
-                                        git clone ssh://genie.${PROJECT_NAME}@git.eclipse.org:29418/www.eclipse.org/${PROJECT_NAME} .
-                                        git checkout ${BRANCH_NAME}
-                                    '''
-                                }
-                            }
-                        }
-
-                        stage ('Copy content') {
-                            sh 'rm -rf www/* && cp -Rvf build/homepage/public/* www/'
-                        }
-
-                        stage ('Commit and push') {
-                            dir("www") {
-                                sshagent(['git.eclipse.org-bot-ssh']) {
-                                    sh '''
-                                    if [ ${BRANCH_NAME} == "develop" ]; then
-                                      BRANCH_NAME="staging"
-                                    fi
-
-                                    git add -A
-                                    if ! git diff --cached --exit-code; then
-                                      echo "Changes have been detected, publishing to repo 'www.eclipse.org/${PROJECT_NAME}'"
-                                      git commit -m "Website build ${JOB_NAME}-${BUILD_NUMBER}"
-                                      git log --graph --abbrev-commit --date=relative -n 5
-                                      git push origin HEAD:${BRANCH_NAME}
-                                    else
-                                      echo "No changes have been detected since last build, nothing to publish"
-                                    fi
-                                    '''
-                                }
-                            }
-                        }
-
-                    }
-
-                } catch (err) {
-                    currentBuild.result = 'FAILED'
-                    throw err
+                stage ('Init') {
+                    sh "env | sort"
                 }
 
-            } /* with-env */
+                stage ('Setup') {
+                    sh '''
+                        pwd
+                        curl -Ls -o hugo.tar.gz https://github.com/gohugoio/hugo/releases/download/v${hugo_version}/hugo_${hugo_version}_Linux-64bit.tar.gz
+                        tar xvzf hugo.tar.gz
+                        rm LICENSE README.md
+                    '''
+                }
 
-        } /* container */
+                stage ('Clone') {
+                    dir("build") {
+                        checkout scm
+                    }
+                }
 
-    } /* node */
+                stage ('Build') {
+                    dir ("build/homepage") {
+                        if ( isStaging() ) {
+                            sh '$WORKSPACE/hugo -b https://staging.eclipse.org/${PROJECT_NAME}/'
+                        } else {
+                            sh '$WORKSPACE/hugo'
+                        }
+                    }
+                }
 
-} /* pod */
+                if ( needToDeploy() ) {
+
+                    stage ('Checkout website') {
+                        dir ("www") {
+                            sshagent(['git.eclipse.org-bot-ssh']) {
+                                sh '''
+                                    git config --global user.email "${PROJECT_NAME}-bot@eclipse.org"
+                                    git config --global user.name "${PROJECT_BOT_NAME}"
+                                    git clone ssh://genie.${PROJECT_NAME}@git.eclipse.org:29418/www.eclipse.org/${PROJECT_NAME} .
+                                    git checkout ${BRANCH_NAME}
+                                '''
+                            }
+                        }
+                    }
+
+                    stage ('Copy content') {
+                        sh 'rm -rf www/* && cp -Rvf build/homepage/public/* www/'
+                    }
+
+                    stage ('Commit and push') {
+                        dir("www") {
+                            sshagent(['git.eclipse.org-bot-ssh']) {
+                                sh '''
+                                if [ ${BRANCH_NAME} == "develop" ]; then
+                                  BRANCH_NAME="staging"
+                                fi
+
+                                git add -A
+                                if ! git diff --cached --exit-code; then
+                                  echo "Changes have been detected, publishing to repo 'www.eclipse.org/${PROJECT_NAME}'"
+                                  git commit -m "Website build ${JOB_NAME}-${BUILD_NUMBER}"
+                                  git log --graph --abbrev-commit --date=relative -n 5
+                                  git push origin HEAD:${BRANCH_NAME}
+                                else
+                                  echo "No changes have been detected since last build, nothing to publish"
+                                fi
+                                '''
+                            }
+                        }
+                    }
+
+                }
+
+            } catch (err) {
+                currentBuild.result = 'FAILED'
+                throw err
+            }
+
+        } /* with-env */
+
+} /* node */
