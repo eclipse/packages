@@ -1,6 +1,10 @@
 
 <div class="card">
+
+  <a href="{{ .RelPermalink }}">
   <img src="{{with .Params.images }}{{ index . 0 | relURL }}{{end}}" class="card-img-top" alt="{{ .Title | htmlEscape }}">
+  </a>
+
   <div class="card-body">
     <h5 class="card-title">{{ .Title  | markdownify }}</h5>
     <p class="card-text">
