@@ -33,7 +33,7 @@ integrated package is, and some initial, tutorial like steps, to play with the s
 
 {{</col>}}
 
-{{<col "md-3" "pl-md-5">}}{{<img-fluid src="/images/eclipse-IoT-light.png">}}{{</col>}}
+{{<col "md-3" "pl-md-5">}}{{<img-fluid src="../images/eclipse-IoT-light.png">}}{{</col>}}
 
 {{</row>}}
 
@@ -54,8 +54,8 @@ a set of YAML files, which are easy to deploy.
 {{</col>}}
 
 {{<col "md-4" "pl-md-5">}}{{<row>}}
-{{<col>}}{{<img-fluid src="/images/kubernetes.svg">}}{{</col>}}
-{{<col>}}{{<img-fluid src="/images/helm.png">}}{{</col>}}
+{{<col>}}{{<img-fluid src="../images/kubernetes.svg">}}{{</col>}}
+{{<col>}}{{<img-fluid src="../images/helm.png">}}{{</col>}}
 {{</row>}}{{</col>}}
 
 {{</row>}}
