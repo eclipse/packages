@@ -3,8 +3,11 @@
 
 The homepage is built with [Hugo](https://gohugo.io). Simply run:
 
-    cd homepage
     hugo
+
+You can also run a local server:
+
+    hugo serve
 
 ## Updating dependencies
 
