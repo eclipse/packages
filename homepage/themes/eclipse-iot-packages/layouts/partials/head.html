@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ "bootstrap/bootstrap.min.css" |relURL }}">
 
     <title>
-        {{- block "title" . -}}
+        {{- block "pagetitle" . -}}
         {{ .Title}}{{ if ne .Title .Site.Title }} | {{ .Site.Title }}{{ end }}
         {{- end -}}
     </title>

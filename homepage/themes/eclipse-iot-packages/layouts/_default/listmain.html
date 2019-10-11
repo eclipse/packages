@@ -1,0 +1,14 @@
+
+<ul>
+    {{ range .Paginator.Pages }}
+    <li>
+        <a href="{{ .RelPermalink }}">
+            {{- .Title | markdownify }}
+        </a>
+    </li>
+    {{ end }}
+</ul>
+
+{{ template "_internal/pagination.html" . }}
+
+</div>

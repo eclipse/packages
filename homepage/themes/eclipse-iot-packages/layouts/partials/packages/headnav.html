@@ -1,0 +1,9 @@
+{{ $current := .current }}
+
+<nav class="nav nav-pills nav-fill mt-5 mb-5">
+  <a class="nav-item nav-link {{if eq $current.RelPermalink .overview.RelPermalink }} active{{end}}" href="{{ .overview.RelPermalink }}">Overview</a>
+
+  {{ range .pages }}
+  <a class="nav-item nav-link {{if eq $current.RelPermalink .RelPermalink }} active{{end}}" href="{{ .RelPermalink }}">{{.Title}}</a>
+  {{ end }}
+</nav>

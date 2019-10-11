@@ -1,0 +1,6 @@
+<h1>{{.Title}}</h1>
+<p class="lead">{{.Description | markdownify }}</p>
+
+{{ partial "packages/headnav.html" ( dict "overview" . "pages" .Pages "current" . ) }}
+
+<section>{{ .Content }}</section>

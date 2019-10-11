@@ -1,8 +1,7 @@
 {{ define "main" }}
 
 <div class="container mt-5">
-<h1>{{ .Title }}</h1>
-<section>{{ .Content }}</section>
+{{ .Render "content" }}
 </div>
 
 {{ end }}
