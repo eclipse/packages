@@ -2,7 +2,7 @@
 all: fetch
 
 build/bootstrap.zip:
-	mkdir build
+	mkdir -p build
 	curl -Ls https://github.com/twbs/bootstrap/releases/download/v4.3.1/bootstrap-4.3.1-dist.zip -o build/bootstrap.zip
 
 themes/eclipse-iot-packages/static/jquery.min.js:

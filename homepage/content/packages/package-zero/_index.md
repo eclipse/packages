@@ -10,8 +10,6 @@ projects:
 description: A package connecting and managing sensor style devices. Connecting sensors to the cloud, processing data with a digital twin platform, and managing device firmware.
 ---
 
-## Overview
-
 In order to have a better understanding, the following diagram will give you a brief overview of the package.
 
 {{<row>}}

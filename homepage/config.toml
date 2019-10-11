@@ -29,6 +29,11 @@ copyright = "Copyright © Eclipse Foundation, Inc. All Rights Reserved."
     url = "contribute/"
     weight = 4
 
+[[menu.main]]
+    name = "Prerequisites"
+    url = "kubernetes/"
+    weight = 5
+
 [[menu.footer]]
     name = "Eclipse IoT Packages"
     weight = 1
