@@ -41,7 +41,7 @@ pre-process it, so that applications can work with more structured data.
 layer provided by Hono.
 </p>
 
-<p class="border-callout-left" style="border-color: #729fcf;">
+<p class="border-callout-left" style="border-color: #ff6d6d;">
 This enables your <strong>Custom Application</strong> to easily communicate with the devices, using a
 structured data model, a scalable messaging layer.
 </p>
