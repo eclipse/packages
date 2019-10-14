@@ -8,18 +8,29 @@ showToc: true
 
 {{<col "12,md-8,lg-9">}}
 
-## Kubernetes
+## Kubernetes Client
+
+First of all, you will need a command tool named `kubectl`. This application allows you to interact with
+your Kubernetes cluster from the command line. While Kubernetes also comes with a Web UI, it is much simpler
+to document the installation procedures using command line tool. Also does the Web UI change over time, and
+with different Kubernetes variants. However the `kubectl` tool works with all variations of Kubernetes, as it
+uses the standardized API in the background.
+
+You can find more information in the Kubernetes documentation: [Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
+
+## Kubernetes Cluster
 
 For the cloud side environment, you will need an installation of Kubernetes. Kubernetes comes in
-different forms, and we try to document a few of them for you. There are more, and you are welcome
-to try all of them. All packages should be able to run on any Kubernetes you provide.
+different forms, and we try to document a few of them for you. There are other variants as well,
+and you are welcome to try all of them. All packages should be able to run on any Kubernetes
+you provide.
 
 ### Minikube
 
 [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/) is Kubernetes in a bottle.
 
 Instead of provisioning a full blown cluster, it will create a virtual machine on your local system, and
-provision a small, single-node cluster in it. As it puts the operating system in a VM, Minikube itself
+provision a small, single-node cluster inside of it. As it puts the operating system in a VM, Minikube itself
 can run on all major operating systems, including Windows and Mac OS.
 
 Instead of duplicating the effort, documenting how to get Minikube up an running, we leave this to the
@@ -64,6 +75,8 @@ into arguments to the `start` command:
 
     minishift start --cpus <cpus> --disk-size <size> --memory <memory>
 
+Using the following arguments:
+
 <dl class="row">
 
 <dt class="col-sm-2">cpus</dt>
@@ -84,7 +97,7 @@ The amount of RAM allocated to the virtual machine. This is the amount in MiB (e
 
 {{</col>}}
 
-{{<col "12,md-4,lg-3">}}
+{{<col "12,md-4,lg-3" "d-none d-md-block">}}
 <div class="position-sticky" style="top: 4rem;">
 {{<toc>}}
 </div>

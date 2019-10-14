@@ -9,41 +9,4 @@
 </div>
 </aside>
 
-<script>
-var callback = function() {
-
-    var toc = $("#toc");
-    toc.empty();
-
-    var prevItem = null;
-    var prevList = null;
-    var index = 0;
-
-    $("h2, h3").each(function() {
-
-        var id="toc-" + $(this).attr('id');
-        jQuery(this).before("<a class='toc-anchor' name='" + id + "'></a>");   
-
-        var li = "<li class='toc-item'><a class='text-muted' href='#" + id + "'>" + $(this).text() + "</a></li>";
-
-        if( $(this).is("h2") ){
-            prevList = $("<ul></ul>");
-            prevItem = $(li);
-            prevItem.append(prevList);
-            prevItem.appendTo(toc);
-        } else {
-            prevList.append(li);
-        }
-    });
-}
-
-if (
-    document.readyState === "complete" ||
-    (document.readyState !== "loading" && !document.documentElement.doScroll)
-) {
-  callback();
-} else {
-  document.addEventListener("DOMContentLoaded", callback);
-}
-
-</script>
+<script>generateToc("#toc", "h2, h3, h4");</script>
