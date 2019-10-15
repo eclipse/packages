@@ -55,17 +55,23 @@ excellent [documentation of Minikube](https://kubernetes.io/docs/tasks/tools/ins
 
 Once you have everything installed, you should be able to start a new cluster by executing:
 
+{{<clipboard>}}
     minikube start
+{{</clipboard>}}
 
 And you can switch `kubectl` to the context `minikube`, and interact with your cluster:
 
+{{<clipboard>}}
     kubectl config use-context minikube
+{{</clipboard>}}
 
 For example, get the current version of the client and server:
 
+{{<clipboard>}}
     kubectl version
+{{</clipboard>}}
 
-Which should print out something like:
+Which should show a proper version for the client **and** the server:
 
     Client Version: version.Info{Major:"1", Minor:"11+", GitVersion:"v1.11.0+d4cacc0", GitCommit:"d4cacc0", GitTreeState:"clean", BuildDate:"2018-10-10T16:38:01Z", GoVersion:"go1.10.3", Compiler:"gc", Platform:"linux/amd64"}
     Server Version: version.Info{Major:"1", Minor:"13+", GitVersion:"v1.13.4+c2a5caf", GitCommit:"c2a5caf", GitTreeState:"clean", BuildDate:"2019-09-21T02:12:52Z", GoVersion:"go1.11.13", Compiler:"gc", Platform:"linux/amd64"}
@@ -74,13 +80,22 @@ Which should print out something like:
 
 When you no longer need your cluster, you can stop it using:
 
+{{<clipboard>}}
     minishift stop
-    # and later on
+{{</clipboard>}}
+
+This will suspend the VM so that you can, later on, resume it by
+executing:
+
+{{<clipboard>}}
     minishift start
+{{</clipboard>}}
 
 Or delete it using:
 
+{{<clipboard>}}
     minishift delete
+{{</clipboard>}}
 
 #### Resources
 
