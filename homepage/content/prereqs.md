@@ -27,17 +27,19 @@ you provide.
 
 Packages are encouraged to give you an estimate of what resources they require. The following is
 an example of what this may look like. You will need to translate this into the specific
-Kubernetes environment you have.
+Kubernetes environment you have. Also may the package declare on which Kubernetes platform
+it was tested. This doesn't mean that other Kubernetes versions don't work, but sets some
+expectations of what was tested at some point.
 
 {{<row>}}
 
 {{<col "12,sm-6,md-5,lg-4" "mx-md-auto mb-3">}}
-{{<cluster-req "CPUs=+2" "Memory=1024 MiB" "Disk=40 GiB" />}}
+{{<cluster-req "Kubernetes=1.15.x" "CPUs=+2" "Memory=1024 MiB" "Disk=40 GiB" />}}
 {{</col>}}
 
 {{</row>}}
 
-For each documentation Kubernetes environment in this page, you will
+For each documentation Kubernetes environment on this page, you will
 find a section that explains how to do this.
 
 ### Minikube
@@ -101,7 +103,7 @@ Or delete it using:
 
 You can translate the package resources requirements into arguments for the `start` command like this:
 
-    minishift start --cpus <cpus> --disk-size <size> --memory <memory>
+    minishift start --cpus <cpus> --disk-size <size> --memory <memory> --kubernetes-version <version>
 
 Using the following arguments:
 
@@ -119,6 +121,11 @@ where unit can be either <code>k</code>, <code>m</code>, or <code>g</code> (e.g.
 <dt class="col-sm-2">memory</dt>
 <dd class="col-sm-10">
 The amount of RAM allocated to the virtual machine. This is the amount in MiB (e.g. for 8GiB means <code>--memory 8192</code>.
+</dd>
+
+<dt class="col-sm-2">version</dt>
+<dd class="col-sm-10">
+The Kubernetes version deployed into the virtual machine (e.g. <code>--kubernetes-version v1.15.4</code>). 
 </dd>
 
 </dl>

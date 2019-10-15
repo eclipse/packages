@@ -11,8 +11,7 @@ it meets the requirements.
 
 ## Check access
 
-Be sure that you are logged in into your Kubernetes cluster. For example, the following command
-should list all namespaces that you have access to:
+Be sure that you are logged in into your Kubernetes cluster:
 
 {{<clipboard>}}
     kubectl version
@@ -51,7 +50,7 @@ All further commands assume that you are operating from this directory.
 {{</content/main>}}
 
 {{<content/aside preserve="true">}}
-{{<cluster-req "CPUs=4" "Memory=8192 MiB" "Disk=40 GiB">}}Will require cluster admin privileges.{{</cluster-req>}}
+{{<cluster-req "Kubernetes=1.15.x" "CPUs=4" "Memory=8192 MiB" "Disk=40 GiB">}}Will require cluster admin privileges.{{</cluster-req>}}
 {{</content/aside>}}
 
 {{</content>}}
