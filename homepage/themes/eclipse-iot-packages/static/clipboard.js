@@ -10,14 +10,14 @@ function showTooltip(target,msg) {
 		.attr("data-original-title", "Copy to clipboard");
 }
 
-function showFailure(target) {
+function showFailure(_target) {
 }
 
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip({});
 });
 
-$('.clipboard > pre').prepend($('<button class="btn btn-clipboard" data-clipboard-snippet data-toggle="tooltip" data-placement="auto" title="Copy to clipboard">Copy</button>'));
+$('.clipboard > pre').prepend($('<button class="btn btn-clipboard" data-clipboard-snippet data-toggle="tooltip" data-placement="left" title="Copy to clipboard">Copy</button>'));
 var clipboardSnippets=new ClipboardJS('[data-clipboard-snippet]',
 	{
 		target: function(trigger) {
