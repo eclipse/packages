@@ -33,15 +33,43 @@ pre {
     }
 }
 
-.toc-list {
-    padding-left: 0;
+.toc > ul {
+    padding-left: 0 !important;
 }
 
-.toc-list ul {
+.toc ul {
     padding-left: 1rem;
 }
 
 .toc-item {
     list-style: none;
-    margin-left: 0;
 }
+
+.req-card h4, .req-card h5 {
+    margin-bottom: 0;
+}
+.req-card dl {
+    margin-bottom: 0;
+}
+.req-card dd {
+    margin-bottom: 0;
+}
+
+.clipboard {
+    position: relative;
+}
+
+.btn-clipboard {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 80%;
+}
+.btn-clipboard:hover {
+    color: #fff;
+    background-color: #007bff;
+}
+.btn-clipboard:focus {
+    box-shadow: none;
+}
+

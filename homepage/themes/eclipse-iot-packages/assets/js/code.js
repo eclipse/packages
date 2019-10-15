@@ -6,28 +6,43 @@ function generateToc(target, elements) {
         var toc = $(target);
         toc.empty();
 
-        var currentLevel = 0;
-        var current = toc;
+        var toclist = $("<ul class='toc-list'></ul>");
+        toc.append(toclist);
+
+        var currentLevel = -1;
+        var current = toclist;
 
         $(elements).each(function() {
 
             var id="toc-" + $(this).attr('id');
-            $(this).before("<a class='toc-anchor' name='" + id + "'></a>");   
-
-            var li = $("<li class='toc-item'><a class='text-muted' href='#" + id + "'>" + $(this).text() + "</a></li>");
+            $(this).before("<a class='toc-anchor' name='" + id + "'></a>");
 
             var level = parseInt(this.tagName.substr(1));
-            if ( level == currentLevel ) {
-            } else if ( level > currentLevel ) {
-                var next = $("<ul></ul>");
-                current.append(next);
-                current = next;
-            } else {
-                current = current.parent;
+
+            if ( currentLevel <= 0 ) {
+                currentLevel = level;
             }
 
+            while ( currentLevel < level ) {
+              var next = $("<ul></ul>");
+              var t = current.children().last();
+              if ( t.length == 0 ) {
+                var li2 = $("<li class='toc-item'></li>");
+                current.append(li2);
+                t = li2;
+              }
+              t.append(next);
+              current = next;
+              currentLevel++;
+            }
+
+            while ( currentLevel > level ) {
+              current = current.parent().parent();
+              currentLevel--;
+            }
+
+            var li = $("<li class='toc-item'><a class='text-muted' href='#" + id + "'>" + $(this).text() + "</a></li>");
             current.append(li);
-            currentLevel = level;
 
         });
     }

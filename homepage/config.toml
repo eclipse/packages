@@ -31,7 +31,7 @@ copyright = "Copyright © Eclipse Foundation, Inc. All Rights Reserved."
 
 [[menu.main]]
     name = "Prerequisites"
-    url = "kubernetes/"
+    url = "prereqs/"
     weight = 5
 
 [[menu.footer]]

@@ -25,6 +25,21 @@ different forms, and we try to document a few of them for you. There are other v
 and you are welcome to try all of them. All packages should be able to run on any Kubernetes
 you provide.
 
+Packages are encouraged to give you an estimate of what resources they require. The following is
+an example of what this may look like. You will need to translate this into the specific
+Kubernetes environment you have.
+
+{{<row>}}
+
+{{<col "12,sm-6,md-5,lg-4" "mx-md-auto mb-3">}}
+{{<cluster-req "CPUs=+2" "Memory=1024 MiB" "Disk=40 GiB" />}}
+{{</col>}}
+
+{{</row>}}
+
+For each documentation Kubernetes environment in this page, you will
+find a section that explains how to do this.
+
 ### Minikube
 
 [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/) is Kubernetes in a bottle.
@@ -69,9 +84,7 @@ Or delete it using:
 
 #### Resources
 
-Packages might need more resources than the default settings of Minikube allow. Packages are
-encouraged to give you an estimate of what resources they require, you can translate this
-into arguments to the `start` command:
+You can translate the package resources requirements into arguments for the `start` command like this:
 
     minishift start --cpus <cpus> --disk-size <size> --memory <memory>
 
@@ -98,9 +111,22 @@ The amount of RAM allocated to the virtual machine. This is the amount in MiB (e
 {{</col>}}
 
 {{<col "12,md-4,lg-3" "d-none d-md-block">}}
-<div class="position-sticky" style="top: 4rem;">
-{{<toc>}}
-</div>
+{{<toc sticky="true">}}
 {{</col>}}
 
 {{</row>}}
+
+## Command line tools
+
+Some tutorials might require some common command line tool. The installation depends on the
+operating system you are using.
+
+It is recommended to have the following tools installed:
+
+### curl
+
+For downloading files and execution API call the tool `curl` will be used.
+
+### Mosquitto CLI
+
+Mosquitto command line tools: e.g. `moquitto_pub`

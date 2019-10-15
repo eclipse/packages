@@ -11,7 +11,14 @@ themes/eclipse-iot-packages/static/jquery.min.js:
 themes/eclipse-iot-packages/static/popper.min.js:
 	curl -Ls https://unpkg.com/popper.js@1.15.0/dist/umd/popper.min.js -o "$@"
 
-fetch: build/bootstrap.zip themes/eclipse-iot-packages/static/jquery.min.js themes/eclipse-iot-packages/static/popper.min.js
+themes/eclipse-iot-packages/static/clipboard.min.js:
+	curl -Ls https://unpkg.com/clipboard@2.0.4/dist/clipboard.js -o "$@"
+
+fetch: build/bootstrap.zip
+fetch: themes/eclipse-iot-packages/static/jquery.min.js
+fetch: themes/eclipse-iot-packages/static/popper.min.js
+fetch: themes/eclipse-iot-packages/static/clipboard.min.js
+fetch:
 	rm -Rf themes/eclipse-iot-packages/static/bootstrap
 	mkdir -p themes/eclipse-iot-packages/static/bootstrap
 	cd themes/eclipse-iot-packages/static/bootstrap && unzip -qq -j  ../../../../build/bootstrap.zip
