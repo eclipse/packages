@@ -3,9 +3,9 @@ title: 'Installation'
 date: 2019-09-24T14:51:12+2:00
 ---
 
-{{<row>}}
+{{<content>}}
 
-{{<col "md-8,lg-9">}}
+{{<content/main>}}
 You will need a Kubernetes instance in order to deploy this package. If you haven't done so already, take a look at our [Kubernetes installation]({{<relref "/prereqs.md#kubernetes-cluster">}}) page. Any Kubernetes compatible cluster will do, as long as
 it meets the requirements.
 
@@ -48,10 +48,10 @@ All further commands assume that you are operating from this directory.
 
 ## Run the deployment
 
-{{</col>}}
+{{</content/main>}}
 
-{{<col "sm-8,md-4,lg-3" "mt-3 mt-md-0 mx-auto" >}}
+{{<content/aside preserve="true">}}
 {{<cluster-req "CPUs=4" "Memory=8192 MiB" "Disk=40 GiB">}}Will require cluster admin privileges.{{</cluster-req>}}
-{{</col>}}
+{{</content/aside>}}
 
-{{</row>}}
+{{</content>}}

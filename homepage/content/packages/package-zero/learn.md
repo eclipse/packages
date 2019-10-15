@@ -3,15 +3,16 @@ title: 'Learn more'
 date: 2019-09-24T14:51:12+2:00
 ---
 
-{{<row>}}
+{{<content>}}
 
-{{<col "12,md-8,lg-9">}}
+{{<content/main>}}
 
+This packages allows you to create 
 
+{{</content/main>}}
 
-{{</col>}}
+{{<content/aside>}}
 
-{{<col "12,md-4,lg-3">}}
 ## Also see
 
 * About Eclipse Hono
@@ -22,7 +23,7 @@ date: 2019-09-24T14:51:12+2:00
 * About Eclipse Hawkbit
     * [Getting started](https://www.eclipse.org/hawkbit/gettingstarted/)
 
-{{</col>}}
+{{</content/aside>}}
 
-{{</row>}}
+{{</content>}}
 

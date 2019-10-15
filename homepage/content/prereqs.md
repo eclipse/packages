@@ -4,9 +4,9 @@ lead: Getting you started with a common set of tools, used by all packages.
 showToc: true
 ---
 
-{{<row>}}
+{{<content>}}
 
-{{<col "12,md-8,lg-9">}}
+{{<content/main>}}
 
 ## Kubernetes Client
 
@@ -123,14 +123,6 @@ The amount of RAM allocated to the virtual machine. This is the amount in MiB (e
 
 </dl>
 
-{{</col>}}
-
-{{<col "12,md-4,lg-3" "d-none d-md-block">}}
-{{<toc sticky="true">}}
-{{</col>}}
-
-{{</row>}}
-
 ## Command line tools
 
 Some tutorials might require some common command line tool. The installation depends on the
@@ -145,3 +137,11 @@ For downloading files and execution API call the tool `curl` will be used.
 ### Mosquitto CLI
 
 Mosquitto command line tools: e.g. `moquitto_pub`
+
+{{</content/main>}}
+
+{{<content/aside>}}
+{{<toc sticky="true">}}
+{{</content/aside>}}
+
+{{</content>}}
