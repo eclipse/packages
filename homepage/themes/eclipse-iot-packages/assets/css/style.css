@@ -4,12 +4,17 @@ body {
 }
 
 /* compensate for the fixed navbar */
-*[id]:before {
+h1[id]:before, h2[id]:before, h3[id]:before, h4[id]:before, h5[id]:before, h6[id]:before {
     display: block;
     content: "";
     margin-top: -75px;
     height: 75px;
     visibility: hidden;
+}
+
+/* fix issue with overlapping "before" block */
+h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+    pointer-events: none;
 }
 
 .toc-anchor {
