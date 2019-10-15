@@ -14,7 +14,8 @@ function generateToc(target, elements) {
 
         $(elements).each(function() {
 
-            var id="toc-" + $(this).attr('id');
+            // var id="toc-" + $(this).attr('id');
+            var id=$(this).attr('id');
             $(this).before("<a class='toc-anchor' name='" + id + "'></a>");
 
             var level = parseInt(this.tagName.substr(1));

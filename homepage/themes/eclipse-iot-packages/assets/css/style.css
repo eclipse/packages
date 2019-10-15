@@ -1,5 +1,15 @@
+/* compensate for the fixed navbar */
 body {
-  padding-top: 56px;
+    padding-top: 56px;
+}
+
+/* compensate for the fixed navbar */
+*[id]:before {
+    display: block;
+    content: "";
+    margin-top: -75px;
+    height: 75px;
+    visibility: hidden;
 }
 
 .toc-anchor {
