@@ -1,0 +1,4 @@
+{{- if and .Values.prometheus.createInstance .Values.adapters.lora.enabled }}
+{{- $args := dict "dot" . "component" "adapter-lora-vertx" "name" "adapter-lora-vertx" }}
+{{- include "hono.headless.service" $args }}
+{{ end }}

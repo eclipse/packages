@@ -1,0 +1,15 @@
+{{- if .Values.grafana.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  {{- $args := dict "dot" . "component" "dashboard" "name" "grafana-dashboards" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+    grafana_dashboard: "1"
+data:
+  overview.json: |
+    {{- .Files.Get "config/grafana/dashboard-definitions/overview.json" | nindent 4 }}
+  message-details.json: |
+    {{- .Files.Get "config/grafana/dashboard-definitions/message-details.json" | nindent 4 }}
+  jvm-details.json: |
+    {{- .Files.Get "config/grafana/dashboard-definitions/jvm-details.json" | nindent 4 }}
+{{- end }}

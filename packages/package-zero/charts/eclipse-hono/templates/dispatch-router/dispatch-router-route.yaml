@@ -1,0 +1,15 @@
+{{- if and .Values.amqpMessagingNetworkExample.enabled (eq .Values.global.platform "openshift") }}
+apiVersion: v1
+kind: Route
+metadata:
+  {{- $args := dict "dot" . "component" "amqp-messaging-network-router" "name" "dispatch-router" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+spec:
+  port:
+    targetPort: 5671
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: {{ .Release.Name }}-dispatch-router-ext
+{{- end }}

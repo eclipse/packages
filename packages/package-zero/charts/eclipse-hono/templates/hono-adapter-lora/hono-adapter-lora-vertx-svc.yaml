@@ -1,0 +1,33 @@
+{{- if .Values.adapters.lora.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  {{- $args := dict "dot" . "component" "adapter-lora-vertx" "name" "adapter-lora-vertx" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+  {{- with .Values.adapters.lora.svc.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+    nodePort: 32080
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+    nodePort: 32443
+  selector:
+    {{- include "hono.matchLabels" $args | nindent 4 }}
+{{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.global.platform "openshift" ) }}
+  type: LoadBalancer
+{{- else }}
+  type: NodePort
+{{- end }}
+{{- with .Values.adapters.lora.svc.loadBalancerIP }}
+  loadBalancerIP: {{ . | quote }}
+{{- end }}
+{{- end }}

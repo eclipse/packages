@@ -1,0 +1,13 @@
+{{- if and .Values.deviceRegistryExample.enabled ( eq .Values.global.platform "openshift" ) }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  {{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry-http" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+spec:
+  port:
+    targetPort: amqps
+  to:
+    kind: Service
+    name: {{ .Release.Name }}-service-device-registry
+{{- end }}

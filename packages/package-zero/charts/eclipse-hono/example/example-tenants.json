@@ -1,0 +1,37 @@
+[
+  {
+    "tenant-id": "DEFAULT_TENANT",
+    "trusted-ca": {
+      "subject-dn": "CN=DEFAULT_TENANT_CA,OU=Hono,O=Eclipse IoT,L=Ottawa,C=CA",
+      "public-key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElkwCSPlO563eQb6ONdULAISm2XngGGSoAAz+I1s8zkS9guPUpNKoxeczLtKlObelHqBgIZtRXdrPRgXidGOnmQ==",
+      "algorithm": "EC"
+    },
+    "enabled": true
+  },
+  {
+    "tenant-id": "HTTP_TENANT",
+    "enabled": true,
+    "adapters": [
+      {
+        "type": "hono-http",
+        "enabled": true,
+        "device-authentication-required": true
+      },
+      {
+        "type": "hono-mqtt",
+        "enabled": false,
+        "device-authentication-required": true
+      },
+      {
+        "type": "hono-kura",
+        "enabled": false,
+        "device-authentication-required": true
+      },
+      {
+        "type": "hono-coap",
+        "enabled": false,
+        "device-authentication-required": true
+      }
+    ]
+  }
+]

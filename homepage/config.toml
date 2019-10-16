@@ -6,6 +6,9 @@ theme = "eclipse-iot-packages"
 
 copyright = "Copyright © Eclipse Foundation, Inc. All Rights Reserved."
 
+[blackfriday]
+    smartypants = false
+
 [taxonomies]
     project = "projects"
 

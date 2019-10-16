@@ -1,0 +1,8 @@
+# platform indicates the type of container orchestration platform we are deploying to.
+# Supported values are:
+# - openshift
+# - kubernetes
+#
+# When setting to "openshift", Route resources will also be deployed.
+global:
+  platform: kubernetes

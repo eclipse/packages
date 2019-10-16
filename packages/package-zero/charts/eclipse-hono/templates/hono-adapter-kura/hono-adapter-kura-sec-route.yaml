@@ -1,0 +1,15 @@
+{{- if and (eq .Values.global.platform "openshift") .Values.adapters.kura.enabled }}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  {{- $args := dict "dot" . "component" "adapter-kura" "name" "adapter-kura-sec" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+spec:
+  port:
+    targetPort: 8883
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: {{ .Release.Name }}-adapter-kura
+{{ end }}
