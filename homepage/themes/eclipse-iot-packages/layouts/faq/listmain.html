@@ -1,4 +1,5 @@
 
+<section>
 <h2>Questions</h2>
 
 <ul>
@@ -10,10 +11,13 @@
     </li>
     {{ end }}
 </ul>
+</section>
 
 <h2>Answers</h2>
 
 {{ range .Pages }}
+    <section>
     <h3 id="{{.Title | anchorize}}">{{- .Title | markdownify }}</h3>
     {{- .Content | markdownify }}
+    </section>
 {{ end }}
