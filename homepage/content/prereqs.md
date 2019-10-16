@@ -130,6 +130,14 @@ The Kubernetes version deployed into the virtual machine (e.g. <code>--kubernete
 
 </dl>
 
+## Helm
+
+You will need an installation of Helm on the machine which is used to deploy the packages. You can find
+installation instructions for Helm in the Helm documentation under [Installing Helm](https://helm.sh/docs/using_helm/#installing-helm).
+
+You will not need to install Tiller on the cluster. Of course, if you prefer to use Tiller, you may still
+do so. Also see: [FAQ: Why aren't you using Tiller]({{<relref "/faq/_index.md#why-aren-t-you-using-tiller">}}).
+
 ## Command line tools
 
 Some tutorials might require some common command line tool. The installation depends on the
