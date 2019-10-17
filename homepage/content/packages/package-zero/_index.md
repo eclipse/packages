@@ -2,7 +2,7 @@
 title: 'Package Zero'
 date: 2019-09-24T14:51:12+2:00
 images:
-- /images/project-zero.jpg
+- images/project-zero.jpg
 projects:
 - iot.hono
 - iot.ditto
