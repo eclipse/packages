@@ -38,14 +38,16 @@ of those variables:
 {{<variant "Kubernetes">}}
 {{<clipboard>}}
     DEVICE_REGISTRY_URL=https://$(kubectl get service package-zero-service-device-registry-ext --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n package-zero):28080
-    MQTT_ADAPTER_URL=https://$(kubectl get service package-zero-adapter-mqtt-vertx --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n package-zero):8883
+    MQTT_ADAPTER_HOST=$(kubectl get service package-zero-adapter-mqtt-vertx --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n package-zero)
+    MQTT_ADAPTER_PORT=8883
 {{</clipboard>}}
 {{</variant>}}
 
 {{<variant "OpenShift">}}
 {{<clipboard>}}
     DEVICE_REGISTRY_URL=https://$(oc get -n package-zero route package-zero-service-device-registry-https --template='{{.spec.host}}')
-    MQTT_ADAPTER_URL=https://$(oc -n package-zero get route package-zero-adapter-http-vertx-sec --template='{{.spec.host}}')
+    MQTT_ADAPTER_URL=$(oc -n package-zero get route package-zero-adapter-http-vertx-sec --template='{{.spec.host}}')
+    MQTT_ADAPTER_PORT=443
 {{</clipboard>}}
 {{</variant>}}
 
