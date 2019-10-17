@@ -7,6 +7,19 @@ date: 2019-10-17T14:51:12+2:00
 
 {{<col "12,md-8,lg-9">}}
 
+{{<alert "warning" "Under construction">}}
+This tutorial is still under construction, and not finished yet.
+Of course, your are still welcome to it. Take a look and give some feedback.
+
+---
+
+<p class="mb-0">
+Just be aware, that some content might still be missing, change over time,
+or that you might experience some issues when testing.
+</p>
+
+{{</alert>}}
+
 The following examples will use information which depends on your
 environment. All of this information is listed in this section, and will be
 set as environment variables, so that all command using it, can make use
