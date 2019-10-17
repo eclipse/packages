@@ -1,0 +1,12 @@
+
+<nav>
+  <div class="nav nav-tabs" role="tablist">
+    {{range $idx, $value := split (.Get 0) ","}}
+    <a class="nav-item nav-link {{if eq $idx 0}} active{{end}}" data-toggle="tab" id="variants-{{ $value | urlize }}-navtab" href="#variants-{{ $value | urlize }}" aria-controls="variants-{{ $value | urlize }}">{{.}}</a>
+    {{end}} 
+  </div>
+</nav>
+
+<div class="tab-content">
+{{- .Inner -}}
+</div>
