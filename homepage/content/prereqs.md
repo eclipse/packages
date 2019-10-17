@@ -143,7 +143,12 @@ do so. Also see: [FAQ: Why aren't you using Tiller]({{<relref "/faq/_index.md#wh
 Some tutorials might require some common command line tool. The installation depends on the
 operating system you are using.
 
-It is recommended to have the following tools installed:
+It is required to have the following tools installed:
+
+### Bash
+
+Bash is available on Windows, Linux and Mac OS X. True platform independence. So all commands which
+you are supposed to execute can be executed in Bash, version 3 or newer.
 
 ### curl
 
