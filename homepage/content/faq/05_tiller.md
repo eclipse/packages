@@ -1,6 +1,6 @@
 ---
 title: 'Why aren''t you using Tiller?'
-weight: 4
+weight: 5
 ---
 
 Tiller is a server side component for Helm. It allows the Helm client, which is on your local machine,
