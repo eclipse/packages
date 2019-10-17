@@ -70,15 +70,20 @@ pre {
     margin-bottom: 0;
 }
 
+/* clipboard */
+
 .clipboard {
     position: relative;
 }
 
 .btn-clipboard {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 80%;
+    top: .4rem;
+    right: .4rem;
+    font-size: 100%;
+    padding: .25rem .5rem;
+    color: #818a91;
+    font-size: 85%;
 }
 .btn-clipboard:hover {
     color: #fff;
@@ -87,4 +92,3 @@ pre {
 .btn-clipboard:focus {
     box-shadow: none;
 }
-

@@ -1,7 +1,18 @@
 
+function onReady(fn) {
+    if (
+        document.readyState === "complete" ||
+        (document.readyState !== "loading" && !document.documentElement.doScroll)
+    ) {
+      fn();
+    } else {
+      document.addEventListener("DOMContentLoaded", fn);
+    }
+}
+
 function generateToc(target, elements) {
 
-    var callback = function() {
+    onReady(function() {
 
         var toc = $(target);
         toc.empty();
@@ -46,15 +57,10 @@ function generateToc(target, elements) {
             current.append(li);
 
         });
-    }
-
-    if (
-        document.readyState === "complete" ||
-        (document.readyState !== "loading" && !document.documentElement.doScroll)
-    ) {
-      callback();
-    } else {
-      document.addEventListener("DOMContentLoaded", callback);
-    }
+    });
 
 }
+
+onReady(function(){
+  $('[data-toggle="tooltip"]').tooltip({});
+});
