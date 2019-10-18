@@ -7,6 +7,8 @@ properties([
     disableConcurrentBuilds()
 ])
 
+def label = "packages-${UUID.randomUUID().toString()}"
+
 def needToDeploy() {
     return BRANCH_NAME == 'master' || BRANCH_NAME == 'develop'
 }
@@ -15,12 +17,31 @@ def isStaging() {
     return BRANCH_NAME == 'develop'
 }
 
-node {
+podTemplate(
+    label: label,
+    containers: [
+        containerTemplate(
+            name: 'jekyll',
+            image: 'jekyll/jekyll:4',
+            ttyEnabled: true,
+            command: 'cat',
+            resourceRequestMemory: '1Gi',
+            resourceLimitMemory: '2Gi',
+        )
+    ],
+    volumes: [
+        emptyDirVolume(mountPath: '/home/jenkins', memory: false),
+        configMapVolume(mountPath: '/home/jenkins/.ssh', configMapName: 'known-hosts')
+    ]
+) {
+
+    node(label) {
+
+      container('jekyll') {
 
         withEnv([
             "PROJECT_NAME=packages",
             "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
-            "hugo_version=0.58.3"
         ]) {
 
             deleteDir()
@@ -34,9 +55,6 @@ node {
                 stage ('Setup') {
                     sh '''
                         pwd
-                        curl -Ls -o hugo.tar.gz https://github.com/gohugoio/hugo/releases/download/v${hugo_version}/hugo_${hugo_version}_Linux-64bit.tar.gz
-                        tar xvzf hugo.tar.gz
-                        rm LICENSE README.md
                     '''
                 }
 
@@ -49,12 +67,28 @@ node {
                 stage ('Build') {
                     dir ("build/homepage") {
                         if ( isStaging() ) {
-                            sh '$WORKSPACE/hugo -b https://staging.eclipse.org/${PROJECT_NAME}/'
+                            sh '/usr/gem/bin/jekyll build --config _config.yml,_config_staging.yml'
                         } else {
-                            sh '$WORKSPACE/hugo'
+                            sh '/usr/gem/bin/jekyll build'
                         }
                     }
                 }
+
+            } catch (err) {
+                currentBuild.result = 'FAILED'
+                throw err
+            }
+        } /* with-env */
+      } /* container */
+
+      container('jnlp') {
+
+        withEnv([
+            "PROJECT_NAME=packages",
+            "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
+        ]) {
+
+            try {
 
                 if ( needToDeploy() ) {
 
@@ -62,6 +96,9 @@ node {
                         dir ("www") {
                             sshagent(['git.eclipse.org-bot-ssh']) {
                                 sh '''
+                                    if [ ${BRANCH_NAME} == "develop" ]; then
+                                      BRANCH_NAME="staging"
+                                    fi
                                     git config --global user.email "${PROJECT_NAME}-bot@eclipse.org"
                                     git config --global user.name "${PROJECT_BOT_NAME}"
                                     git clone ssh://genie.${PROJECT_NAME}@git.eclipse.org:29418/www.eclipse.org/${PROJECT_NAME} .
@@ -72,7 +109,7 @@ node {
                     }
 
                     stage ('Copy content') {
-                        sh 'rm -rf www/* && cp -Rvf build/homepage/public/* www/'
+                        sh 'rm -rf www/* && cp -Rvf build/homepage/_site/* www/'
                     }
 
                     stage ('Commit and push') {
@@ -106,4 +143,8 @@ node {
 
         } /* with-env */
 
-} /* node */
+      } /* container */
+
+  } /* node */
+
+} /* pod */

@@ -1,6 +1,0 @@
-<h1>{{.Parent.Title}}</h1>
-<p class="lead">{{.Parent.Description | markdownify }}</p>
-
-{{ partial "packages/headnav.html" ( dict "overview" .Parent "pages" .Parent.Pages "current" . ) }}
-
-<section>{{ .Content }}</section>

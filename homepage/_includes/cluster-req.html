@@ -1,0 +1,24 @@
+<div class="card req-card">
+  <div class="card-header text-center"><h5>Requirements</h5></div>
+  <ul class="list-group list-group-flush">
+
+{% assign reqs = include.reqs | split: ";" %}
+{% for item in reqs %}
+
+{% assign tok = item | split: "=" %}
+
+<li class="list-group-item">
+
+<dl class="row">
+<dt class="col-sm-6">{{ tok[0] }}</dt>
+<dd class="col-sm-6 text-right">{{ tok[1] }}</dd>
+</dl>
+
+</li>
+{% endfor %}
+
+  </ul>
+  {%if include.additional %}
+  <div class="card-body">{{- include.additional -}}</div>
+  {%endif%}
+</div>

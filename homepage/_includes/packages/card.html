@@ -1,0 +1,33 @@
+
+<div class="card">
+
+  <a href="{{ package.url | relative_url }}">
+    <img src="{{ package.image }}" class="card-img-top" alt="{{ .Title | htmlEscape }}">
+  </a>
+
+  <div class="card-body">
+    <h5 class="card-title">{{ package.name | escape }}</h5>
+    <p class="card-text" markdown="1">
+    {{ package.description }}
+    </p>
+  </div>
+
+  <div class="card-footer">
+    <div class="d-flex justify-content-between align-items-center">
+    <span>
+    <b>Contains:</b>
+
+    {%- for project in package.projects -%}
+
+      {%- unless forloop.first %}, {% endunless -%}
+
+      {% assign p = site.data.projects[project] %}
+      <a target="_blank" href="{{ p.projectUrl }}" title="{{ p.fullName | escape }}">{{ p.shortName | escape -}}</a>
+
+    {%- endfor %}
+    </span>
+    <a href="{{ package.url | relative_url }}" class="card-link">Get Started!</a>
+    </div>
+
+  </div>
+</div>

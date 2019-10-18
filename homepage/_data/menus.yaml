@@ -1,0 +1,58 @@
+main:
+
+  - name: "Home"
+    url: "/"
+  - name: "About"
+    url: "about/"
+  - name: "FAQ"
+    url: "faq/"
+  - name: "Contribute"
+    url: "contribute/"
+  - name: "Prerequisites"
+    url: "prereqs/"
+
+footer:
+
+    - name: "Eclipse IoT Packages"
+      children:
+        - name: "Home"
+          url: "/"
+        - name: "About"
+          url: "about"
+        - name: "Contribute"
+          url: "contribute"
+        - name: "Security"
+          url: "https://eclipse.org/security"
+
+    - name: "Eclipse IoT"
+      children:
+       - name: "Top Level Project"
+         url: "https://iot.eclipse.org"
+       - name: "Working group"
+         url: "https://www.eclipse.org/org/workinggroups/iotwg_charter.php"
+
+    - name: "Legal"
+      children:
+
+       - name: "Privacy Policy"
+         url: "http://www.eclipse.org/legal/privacy.php"
+       - name: "Terms of Use"
+         url: "http://www.eclipse.org/legal/termsofuse.php"
+       - name: "Copyright Agent"
+         url: "https://www.eclipse.org/legal/copyright.php"
+       - name: "Eclipse Public License"
+         url: "https://www.eclipse.org/legal/epl-2.0/"
+       - name: "Legal Resources"
+         url: "http://www.eclipse.org/legal"
+
+    - name: "Eclipse Foundation"
+      children:
+
+       - name: "About us"
+         url: "https://eclipse.org/org"
+
+       - name: "Contact us"
+         url: "https://www.eclipse.org/org/foundation/contact.php"
+
+       - name: "Board of Directors"
+         url: "https://www.eclipse.org/org/foundation/directors.php"

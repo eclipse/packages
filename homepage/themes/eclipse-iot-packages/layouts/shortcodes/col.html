@@ -1,8 +1,0 @@
-
-{{ $col := slice }}
-{{ with .Get 0 }}{{ $col = split . ","}}{{ end }}
-
-<div class="{{range $col}}col-{{.}} {{else}}col{{end}}
-{{- with .Get 1}}{{.}}{{ end }}">
-{{ .Inner | markdownify }}
-</div>

@@ -1,0 +1,32 @@
+---
+layout: default
+---
+
+{% capture package %}/packages/{% include package-id.html id=page.id %}/{% endcapture %}
+
+
+{%- for p in site.packages -%}
+{% capture pid %}/packages/{% include package-id.html id=p.id %}/{% endcapture %}
+{%- assign p2 = p.id | split:"/" | shift | shift | shift | join:"/" -%}
+{%- if pid == package and p2 == "" -%}
+{%- include page-heading.html title=p.name lead=p.description -%}
+{%- endif -%}
+
+{%- endfor -%}
+
+<div class="container mt-5">
+
+<nav class="nav nav-pills nav-fill mt-5 mb-5">
+
+{%- for p in site.packages -%}
+{% capture pid %}/packages/{% include package-id.html id=p.id %}/{% endcapture %}
+{%- if package == pid -%}
+  <a class="nav-item nav-link {%if page.id == p.id %} active{%endif%}" href="{{ p.url | relative_url }}">{{p.title}}</a>
+{%- endif -%}
+{%- endfor -%}
+
+</nav>
+
+{{- content -}}
+
+</div>

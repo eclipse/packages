@@ -1,4 +1,0 @@
-{{ block "title" . }}<h1>{{ .Title }}</h1>{{ end }}
-{{ block "lead" . }}{{ with .Params.lead }}<p class="lead">{{ . | markdownify }}{{end}}</p>{{end}}
-
-{{ block "content" . }}<section>{{ .Content }}</section>{{ end }}

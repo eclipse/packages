@@ -1,0 +1,45 @@
+<footer>
+
+    <div class="container">
+
+    <div class="row">
+
+    {% if site.data.menus.footer %}
+
+        {% for entry in site.data.menus.footer %}
+
+            <div class="col-6 col-md">
+            {% if entry.children %}
+            {{ if .HasChildren }}
+                <h5>{{ entry.name }}</h5>
+                <ul class="list-unstyled">
+                    {% for child in entry.children %}
+                        <li>
+                            <a class="text-muted" href="{{ child.url | relative_url }}">{{ child.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <li>
+                    <a href="{{ entry.url | relative_url }}">
+                        <span>{{ entry.name }}</span>
+                    </a>
+                </li>
+            {% endif %}
+            </div>
+        {%endfor%}
+
+    {%endif%}
+    </div>
+
+    {% if site.copyright %}
+    <div class="row">
+        <div class="col-12 col-md text-muted">
+            {{- site.copyright | escape -}}
+        </div>
+    </div>
+    {% endif %}
+
+    </div>
+
+</footer>

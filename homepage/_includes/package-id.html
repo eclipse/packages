@@ -1,0 +1,6 @@
+{%- assign _package = include.id | split:"/" | shift | shift | pop | join:"/" -%}
+{%- if _package == "" -%}
+{%- assign _package = include.id | split:"/" | shift | shift | join:"/" -%}
+{%- endif -%}
+{%- assign _package = _package | unshift:"" | unshift:"packages" | join:"/" -%}
+{{- _package -}}

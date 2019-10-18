@@ -1,5 +1,0 @@
-{{- $first := not ( .Page.Scratch.Get "first" ) -}}
-{{- .Page.Scratch.Set "first" "visited" -}}
-<div class="tab-pane {{ if $first }} active show{{end}}" id="variants-{{ .Get 0 | urlize }}" role="tabpanel" aria-labelledby="variants-{{ .Get 0 | urlize }}-tab">
-{{- .Inner -}}
-</div>

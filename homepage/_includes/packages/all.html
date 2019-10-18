@@ -1,0 +1,21 @@
+<div class="card-deck mb-5">
+
+{% for package in site.packages -%}
+{%- assign pid = package.id | split:"/" | shift | shift | shift | join:"/" -%}
+{%- if pid == "" -%}
+{%- include packages/card.html package=package -%}
+{%- endif -%}
+{%- endfor -%}
+
+<div class="card">
+  <img src="{{"/images/new-project.svg" | relative_url }}" class="card-img-top" alt="Contribute new package">
+  <div class="card-body">
+    <h5 class="card-title">Your ideas next!</h5>
+    <p class="card-text">Provide your own package.</p>
+  </div>
+  <div class="card-footer text-right">
+     <a href="{{"/contribute/" | relative_url }}" class="card-link">Contribute!</a>
+  </div>
+</div>
+
+</div>

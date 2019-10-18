@@ -1,0 +1,25 @@
+
+  <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+    <a class="navbar-brand" href="#"> {{ site.title | escape }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+
+{%- assign pru = page.url | relative_url -%}
+
+        {%- for item in site.data.menus["main"] -%}
+
+{%- assign iru = item.url | relative_url -%}
+
+        <li class="nav-item">
+          <a
+              class="nav-link {%- if pru == iru %} active{% endif -%}"
+              href="{{ item.url | relative_url }}">{{ item.name }}</a>
+        </li>
+        {% endfor -%}
+
+      </ul>
+    </div>
+  </nav>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="{{ "/assets/bootstrap/bootstrap.min.css" | relative_url }}">
+
+    <title>{{ page.title | escape }}</title>
+
+    <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+    <script src="{{ "/assets/js/code.js" | relative_url }}"></script>
+    {% include twitter.html %}
+
+</head>
+
+<body>
+
+    {% include header.html %}
+
+    <main id="main" role="main" >
+      {{ content }}
+    </main>
+
+    {% include footer.html %}
+
+    <script src="{{ "/assets/popper.min.js" | relative_url }}"></script>
+    <script src="{{ "/assets/jquery.min.js" | relative_url }}"></script>
+    <script src="{{ "/assets/bootstrap/bootstrap.min.js" | relative_url }}"></script>
+
+    <script src="{{ "/assets/clipboard.min.js" | relative_url }}"></script>
+    <script src="{{ "/assets/clipboard.js" | relative_url }}"></script>
+
+</body>
+
+</html>

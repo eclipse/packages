@@ -1,0 +1,14 @@
+iot.ditto:
+  shortName: Ditto
+  fullName: Eclipse Ditto™
+  projectUrl: https://eclipse.org/ditto
+
+iot.hawkbit:
+  shortName: Hawkbit
+  fullName: Eclipse Hawkbit™
+  projectUrl: https://eclipse.org/hawkbit
+
+iot.hono:
+  shortName: Hono
+  fullName: Eclipse Hono™
+  projectUrl: https://eclipse.org/hono

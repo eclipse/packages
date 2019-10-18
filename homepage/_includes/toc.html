@@ -1,0 +1,18 @@
+{% if include.sticky %}
+<div class="position-sticky" style="top: 4rem;">
+{% endif %}
+
+<aside>
+<div class="card">
+<div class="card-body">
+<h5 class="card-title">Table of contents</h5>
+<div id="toc" class="toc"></div>
+</div>
+</div>
+</aside>
+
+<script>generateToc("#toc", "h2[id], h3[id], h4[id]");</script>
+
+{% if include.sticky %}
+</div>
+{% endif %}
