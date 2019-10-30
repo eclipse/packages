@@ -1,0 +1,13 @@
+<section class="jumbotron">
+<div class="container">
+
+<h1 class="display-4">{{ include.title }}</h1>
+
+<p class="lead">{{ include.lead }}</p>
+
+{% if include.actionUrl %}
+<a class="btn btn-primary btn-lg" href="{{ include.actionUrl | relative_url }}" role="button">{{ include.actionLabel | escape }}</a>
+{% endif %}
+
+</div>
+</section>

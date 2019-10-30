@@ -1,4 +1,4 @@
 Serve Homepage:
 
     JEKYLL_VERSION=4
-    docker run --rm --volume="$PWD:/srv/jekyll:z" -eJEKYLL_UID=$UID -p 4000:4000 -it jekyll/jekyll:$JEKYLL_VERSION jekyll serve -b /packages
+    docker run --rm --volume="$PWD:/srv/jekyll:z" --volume="$PWD/vendor/bundle:/usr/local/bundle:z" -eJEKYLL_UID=$UID -p 4000:4000 -it jekyll/jekyll:$JEKYLL_VERSION jekyll serve

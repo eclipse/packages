@@ -6,6 +6,9 @@ url: https://eclipse.org
 baseurl: /packages
 permalink: pretty
 
+plugins:
+  - jekyll-contentblocks
+
 collections:
   packages:
     output: true
