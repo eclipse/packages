@@ -66,6 +66,7 @@ podTemplate(
 
                 stage ('Build') {
                     dir ("build/homepage") {
+                        sh 'bundler install'
                         if ( isStaging() ) {
                             sh '/usr/gem/bin/jekyll build --config _config.yml,_config_staging.yml'
                         } else {
