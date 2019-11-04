@@ -11,7 +11,7 @@ prependContent: pre
 {% contentfor premain %}
 <div class="container">
 <div class="row justify-content-md-center">
-<div class="col col-md-8 m-5">
+<div class="col col-md-6 m-5">
 <img class=" img-fluid" src="{{ "images/logo.svg" | relative_url }}">
 </div>
 </div>
