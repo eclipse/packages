@@ -10,14 +10,14 @@ prependContent: pre
 
 {% contentfor premain %}
 <div class="container">
-<div class="row justify-content-md-center">
-<div class="col col-md-6 m-5">
+<div class="row">
+<div class="col col-md-5 my-5">
 <img class=" img-fluid" src="{{ "images/logo.svg" | relative_url }}">
 </div>
 </div>
 </div>
 
-{% include jumbotron.html title=page.title lead="IoT Packages is an effort of the Eclipse IoT working group, to create easy to deploy Eclipse IoT based, end-to-end scenarios on top of Kubernetes and Helm." actionUrl="/about" actionLabel="Learn more" %}
+{% include jumbotron.html lead="IoT Packages is an effort by the Eclipse IoT working group, to create easy to deploy Eclipse IoT based, end-to-end scenarios, on top of Kubernetes and Helm." actionUrl="/about" actionLabel="Learn more" %}
 
 {% endcontentfor %}
 
