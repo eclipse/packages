@@ -1,0 +1,13 @@
+.idea
+*.iml
+.project
+.settings
+.metadata
+.vscode/
+target/
+*.mdb
+.env
+.DS_Store
+Chart.lock
+kind-config.yaml
+charts/*/charts
