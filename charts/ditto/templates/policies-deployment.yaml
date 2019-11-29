@@ -2,10 +2,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "eclipse-ditto.fullname" . }}-policies
+  name: {{ include "ditto.fullname" . }}-policies
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-policies
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-policies
+{{ include "ditto.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.policies.replicaCount }}
   strategy:
@@ -14,12 +14,12 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-policies
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-policies
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-policies
+        app.kubernetes.io/name: {{ include "ditto.name" . }}-policies
         app.kubernetes.io/instance: {{ .Release.Name }}
         actorSystemName: {{ .Values.akka.actorSystemName }}
         {{- with .Values.policies.additionalLabels }}
@@ -37,7 +37,7 @@ spec:
         {{- end }}
     spec:
       {{- if .Values.rbac.enabled }}
-      serviceAccountName: {{ template "eclipse-ditto.serviceAccountName" . }}
+      serviceAccountName: {{ template "ditto.serviceAccountName" . }}
       {{- end }}
     {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
@@ -80,7 +80,7 @@ spec:
             - name: MONGO_DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "eclipse-ditto.fullname" . }}-mongodb-secret
+                  name: {{ include "ditto.fullname" . }}-mongodb-secret
                   key: policies-uri
           {{- if .Values.global.prometheus.enabled }}
             - name: PROMETHEUS_PORT

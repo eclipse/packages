@@ -2,10 +2,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "eclipse-ditto.fullname" . }}-swaggerui
+  name: {{ include "ditto.fullname" . }}-swaggerui
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-swaggerui
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-swaggerui
+{{ include "ditto.labels" . | indent 4 }}
 spec:
 spec:
   replicas: {{ .Values.swaggerui.replicaCount }}
@@ -15,12 +15,12 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-swaggerui
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-swaggerui
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-swaggerui
+        app.kubernetes.io/name: {{ include "ditto.name" . }}-swaggerui
         app.kubernetes.io/instance: {{ .Release.Name }}
         {{- with .Values.swaggerui.additionalLabels }}
         {{- toYaml . | nindent 8 }}
@@ -52,7 +52,7 @@ spec:
       volumes:
         - name: swagger-ui-api
           configMap:
-            name: {{ include "eclipse-ditto.fullname" . }}-swaggerui
+            name: {{ include "ditto.fullname" . }}-swaggerui
 {{- if .Values.swaggerui.rootAccess }}
       securityContext:
         runAsUser: 0

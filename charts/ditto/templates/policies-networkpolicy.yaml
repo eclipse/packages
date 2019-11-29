@@ -2,14 +2,14 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: {{ include "eclipse-ditto.fullname" . }}-policies
+  name: {{ include "ditto.fullname" . }}-policies
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-policies
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-policies
+{{ include "ditto.labels" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-policies
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-policies
       app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
   - Ingress

@@ -2,10 +2,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "eclipse-ditto.fullname" . }}-nginx
+  name: {{ include "ditto.fullname" . }}-nginx
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-nginx
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
+{{ include "ditto.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.nginx.replicaCount }}
   strategy:
@@ -14,12 +14,12 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-nginx
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-nginx
+        app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
         app.kubernetes.io/instance: {{ .Release.Name }}
         {{- with .Values.nginx.additionalLabels }}
         {{- toYaml . | nindent 8 }}

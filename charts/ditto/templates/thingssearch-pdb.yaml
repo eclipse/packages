@@ -2,14 +2,14 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "eclipse-ditto.fullname" . }}-thingssearch
+  name: {{ include "ditto.fullname" . }}-thingssearch
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-thingssearch
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-thingssearch
+{{ include "ditto.labels" . | indent 4 }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-thingssearch
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-thingssearch
       app.kubernetes.io/instance: {{ .Release.Name }}
   minAvailable: {{ .Values.things.podDisruptionBudget.minAvailable }}
 {{- end }}

@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "eclipse-ditto.fullname" . }}-gateway
+  name: {{ include "ditto.fullname" . }}-gateway
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-gateway
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-gateway
+{{ include "ditto.labels" . | indent 4 }}
   {{- with .Values.gateway.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -17,6 +17,6 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-gateway
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-gateway
     app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

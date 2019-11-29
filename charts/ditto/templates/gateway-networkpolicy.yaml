@@ -2,14 +2,14 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: {{ include "eclipse-ditto.fullname" . }}-gateway
+  name: {{ include "ditto.fullname" . }}-gateway
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-gateway
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-gateway
+{{ include "ditto.labels" . | indent 4 }}
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-gateway
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-gateway
       app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
   - Ingress
@@ -19,7 +19,7 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-nginx
+          app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
           app.kubernetes.io/instance: {{ .Release.Name }}
     ports:
     - protocol: TCP

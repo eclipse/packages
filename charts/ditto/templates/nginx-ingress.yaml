@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "eclipse-ditto.fullname" . -}}
+{{- $fullName := include "ditto.fullname" . -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
@@ -9,8 +9,8 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-nginx
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
+{{ include "ditto.labels" . | indent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

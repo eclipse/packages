@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-nginx-conf
   labels:
-    app.kubernetes.io/name: {{ include "eclipse-ditto.name" . }}-nginx-conf
-{{ include "eclipse-ditto.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx-conf
+{{ include "ditto.labels" . | indent 4 }}
 data:
   nginx.conf: |-
     worker_processes 1;
@@ -26,8 +26,8 @@ data:
     
       merge_slashes off; # allow multiple slashes for CRS Authentication
     
-      upstream {{ include "eclipse-ditto.fullname" . }}-gateway {
-        server {{ include "eclipse-ditto.fullname" . }}-gateway:8080;
+      upstream {{ include "ditto.fullname" . }}-gateway {
+        server {{ include "ditto.fullname" . }}-gateway:8080;
       }
     
       server {
@@ -52,7 +52,7 @@ data:
           proxy_set_header              x-ditto-dummy-auth  "nginx:${remote_user}";
           {{- end }}
         
-          proxy_pass                    http://{{ include "eclipse-ditto.fullname" . }}-gateway;
+          proxy_pass                    http://{{ include "ditto.fullname" . }}-gateway;
           proxy_http_version            1.1;
           proxy_set_header              Host                $http_host;
           proxy_set_header              X-Real-IP           $remote_addr;
@@ -77,7 +77,7 @@ data:
           proxy_set_header              x-ditto-dummy-auth  "nginx:${remote_user}";
           {{- end }}
           
-          proxy_pass                    http://{{ include "eclipse-ditto.fullname" . }}-gateway;
+          proxy_pass                    http://{{ include "ditto.fullname" . }}-gateway;
           proxy_http_version            1.1;
           proxy_set_header              Host                $http_host;
           proxy_set_header              X-Real-IP           $remote_addr;
@@ -93,7 +93,7 @@ data:
         location /health {
           include nginx-cors.conf;
     
-          proxy_pass                    http://{{ include "eclipse-ditto.fullname" . }}-gateway/health;
+          proxy_pass                    http://{{ include "ditto.fullname" . }}-gateway/health;
           proxy_http_version            1.1;
           proxy_set_header              Host                $http_host;
           proxy_set_header              X-Real-IP           $remote_addr;
@@ -105,7 +105,7 @@ data:
         location /status {
           include nginx-cors.conf;
     
-          proxy_pass                    http://{{ include "eclipse-ditto.fullname" . }}-gateway/overall/status;
+          proxy_pass                    http://{{ include "ditto.fullname" . }}-gateway/overall/status;
           proxy_http_version            1.1;
           proxy_set_header              Host                $http_host;
           proxy_set_header              X-Real-IP           $remote_addr;
@@ -117,7 +117,7 @@ data:
         location /stats {
           include nginx-cors.conf;
 
-          proxy_pass                    http://{{ include "eclipse-ditto.fullname" . }}-gateway/stats;
+          proxy_pass                    http://{{ include "ditto.fullname" . }}-gateway/stats;
           proxy_http_version            1.1;
           proxy_set_header              Host                $http_host;
           proxy_set_header              X-Real-IP           $remote_addr;
@@ -129,7 +129,7 @@ data:
         location /devops {
           include nginx-cors.conf;
 
-          proxy_pass                    http://{{ include "eclipse-ditto.fullname" . }}-gateway/devops;
+          proxy_pass                    http://{{ include "ditto.fullname" . }}-gateway/devops;
           proxy_http_version            1.1;
           proxy_set_header              Host                $http_host;
           proxy_set_header              X-Real-IP           $remote_addr;
@@ -142,7 +142,7 @@ data:
         # access API doc on: /apidoc/1 or /apidoc/2
         location /apidoc/ {
           rewrite ^/apidoc/([0-9])$ $scheme://raw.githubusercontent.com/eclipse/ditto/{{ .Chart.AppVersion }}/documentation/src/main/resources/openapi/ditto-api-$1.yml  redirect;
-          proxy_pass                    http://{{ include "eclipse-ditto.fullname" . }}-swaggerui:8080/;
+          proxy_pass                    http://{{ include "ditto.fullname" . }}-swaggerui:8080/;
           proxy_http_version            1.1;
           proxy_set_header              Host                $http_host;
         }
