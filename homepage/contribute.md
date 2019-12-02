@@ -12,6 +12,16 @@ Feedback is always welcome. The more constructive it is, the more impact it will
 The easiest way to provide feedback is through
 [GitHub issues](https://github.com/eclipse/packages/issues) of the project.
 
+## Join the community call
+
+Starting <time datetime="2019-12-02">2019-12-02</time>, we have a quick (30min), bi-weekly
+community call at <time datetime="16:00">16:00</time> CET. This is an open call,
+everyone is welcome to join.
+
+The URL to the call is: [https://eclipse.zoom.us/j/317801130](https://eclipse.zoom.us/j/317801130).
+
+You may also directly subscribe to the [community calendar](https://calendar.google.com/calendar/ical/lu98p1vc1ed4itl7n9qno3oogc%40group.calendar.google.com/public/basic.ics).
+
 ## Improving an existing package
 
 There is always room for improvement. Found a bug, have an idea how to make things better.
