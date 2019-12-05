@@ -31,6 +31,7 @@ The project maintains the following source code repositories:
 
 # Copyright holders
 
+* Copyright 2019 Red Hat Inc
 * Copyright 2019 Bosch Software Innovations GmbH
 * Copyright 2019 Kiwigrid GmbH
 
