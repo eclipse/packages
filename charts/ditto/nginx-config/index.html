@@ -1,0 +1,213 @@
+<!doctype html>
+<!--
+  ~ Copyright (c) 2019 Contributors to the Eclipse Foundation
+  ~
+  ~ See the NOTICE file(s) distributed with this work for additional
+  ~ information regarding copyright ownership.
+  ~
+  ~ This program and the accompanying materials are made available under the
+  ~ terms of the Eclipse Public License 2.0 which is available at
+  ~ http://www.eclipse.org/legal/epl-2.0
+  ~
+  ~ SPDX-License-Identifier: EPL-2.0
+  -->
+<html>
+<head>
+  <title>Welcome to Eclipse Ditto</title>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+  <style>
+    body {
+      text-align: center;
+      padding: 150px;
+    }
+
+    h1 {
+      font-size: 50px;
+    }
+
+    body {
+      font: 20px Helvetica, sans-serif;
+      color: #333;
+    }
+
+    article {
+      display: block;
+      text-align: left;
+      width: 750px;
+      margin: 0 auto;
+    }
+
+    a {
+      color: #dc8100;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .stats {
+      line-height: 3em;
+    }
+
+    .stats-count {
+      font: normal 2em Abel;
+      color: #3a8c9a;
+      font-weight: bold;
+      text-align: center;
+      margin: 5px;
+      clear: left;
+      float: left;
+      width: 5em;
+      background-color: lightgray;
+    }
+
+    .stats-count-text {
+      padding-left: 1em;
+      vertical-align: middle;
+    }
+
+    .health {
+      background-size: contain;
+      height: 30px;
+      width: 30px;
+      float: left;
+    }
+
+    .health-up {
+      background-image: url(ditto-up.svg);
+    }
+
+    .health-down {
+      background-image: url(ditto-down.svg);
+    }
+
+    .health-list li {
+      clear: both;
+      line-height: 30px;
+      padding-bottom: 5px;
+    }
+
+    .health-key {
+      float: left;
+      width: 9em;
+    }
+
+    .health-status {
+      line-height: 30px;
+      padding-left: 1em;
+    }
+  </style>
+</head>
+<body>
+
+<article>
+  <h1>You have started Eclipse Ditto</h1>
+  <div>
+    <p>Thank you for trying out Eclipse Ditto!</p>
+    <p>For more information about how to start, please consult the
+      <a href="https://www.eclipse.org/ditto/intro-hello-world.html">Ditto documentation intro</a> and/or the
+      <a href="https://www.eclipse.org/ditto/http-api-doc.html">Ditto HTTP API documentation</a>.
+    </p>
+    <p>In order to get started quickly and if you started the local swaggerui, you can now have a look at the OpenAPI documentation for
+    <ul>
+      <li><a href="/apidoc/1">API version 1</a></li>
+      <li><a href="/apidoc/2">API version 2</a></li>
+    </ul>
+    <p>Try out the HTTP APIs by using username "ditto" and password "ditto" when asked for by your browser.</p>
+    <p>&mdash; the Ditto team</p>
+  </div>
+  <h2 style="clear: both">Health</h2>
+  <div id="health-content">
+  </div>
+  <h2>Statistics</h2>
+  <div>
+    <div class="stats">
+      <span id="total-things-count" class="stats-count"></span><span
+      class="stats-count-text"> persisted <em>Things</em></span>
+    </div>
+    <div class="stats">
+      <span id="hot-things-count" class="stats-count"></span><span class="stats-count-text"> currently "hot" <em>Things</em> (accessed within the last 2 hours)</span>
+    </div>
+  </div>
+</article>
+
+<script>
+  function update_count(selector, count) {
+    $(selector).animate({
+                          counter: count
+                        }, {
+                          duration: 3000,
+                          easing: 'swing',
+                          step: function (now) {
+                            $(this).text(Math.ceil(now));
+                          }
+                        });
+  }
+
+  $.getJSON("/stats/search", function (data) {
+    let allThingsCount = data.allThingsCount;
+    update_count('#total-things-count', allThingsCount);
+  }).fail(function () {
+    update_count('#total-things-count', 0);
+  });
+  $.getJSON("/stats/things", function (data) {
+    let hotThings = data.hotThings;
+    update_count('#hot-things-count', hotThings);
+  }).fail(function () {
+    update_count('#hot-things-count', 0);
+  });
+
+  function calcHealthStatusClass(status) {
+    let healthStatusClass;
+    if (status === "UP") {
+      healthStatusClass = "health-up";
+    } else if (status === "DOWN") {
+      healthStatusClass = "health-down";
+    } else {
+      healthStatusClass = "health-down";
+    }
+    return healthStatusClass;
+  }
+
+  $.getJSON("/status/health", function (data) {
+    const keysToIgnore = ['status', 'thing-cache-aware', 'dc-default', 'policy-cache-aware', 'blocked-namespaces-aware'];
+    let overallStatus = data.status;
+    $(`<p>
+            <span class="health-key"></span>
+            <span class="health ${calcHealthStatusClass(overallStatus)}"></span>
+            <span class="health-status">${overallStatus}</span>
+        </p>`).appendTo("#health-content");
+
+    let items = [];
+    $.each(data.children, function (idx, child) {
+      if (keysToIgnore.includes(child.label)) {
+        // ignore
+      } else {
+        items.push(`<li>
+                    <span class="health-key">${child.label}:</span>
+                    <span class="health ${calcHealthStatusClass(child.status)}"></span>
+                    <span class="health-status">${child.status}</span>
+                </li>`);
+      }
+    });
+
+    $("<ul/>", {
+      "class": "health-list",
+      html: items.join("")
+    }).appendTo("#health-content");
+  }).fail(function () {
+    $(`<p>
+            <span class="health-key"></span>
+            <span class="health health-down"></span>
+            <span class="health-status">COULD NOT BE DETERMINED</span>
+        </p>`).appendTo("#health-content");
+  })
+</script>
+
+</body>
+</html>
+

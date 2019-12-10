@@ -1,0 +1,26 @@
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+---
+apiVersion: v1
+appVersion: "1.0.0-M3"
+description: A Helm chart for Eclipse Ditto
+name: ditto
+version: 1.0.0-snapshot
+home: https://www.eclipse.org/ditto
+sources:
+- https://github.com/eclipse/ditto
+- https://github.com/eclipse/packages
+icon: https://www.eclipse.org/ditto/images/ditto.svg
+maintainers:
+- name: axdotl
+  email: axel.koehler@kiwigrid.com
+- name: thjaeckle
+  email: thomas.jaeckle@bosch-si.com

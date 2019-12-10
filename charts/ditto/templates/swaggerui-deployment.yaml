@@ -1,0 +1,71 @@
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+---
+{{- if .Values.swaggerui.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ditto.fullname" . }}-swaggerui
+  labels:
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-swaggerui
+{{ include "ditto.labels" . | indent 4 }}
+spec:
+spec:
+  replicas: {{ .Values.swaggerui.replicaCount }}
+  strategy:
+  {{- with .Values.swaggerui.updateStrategy }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-swaggerui
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "ditto.name" . }}-swaggerui
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- with .Values.swaggerui.additionalLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.swaggerui.additionalAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}-swaggerui
+          image: "{{ .Values.swaggerui.image.repository }}:{{ .Values.swaggerui.image.tag }}"
+          imagePullPolicy: {{ .Values.swaggerui.image.imagePullPolicy }}
+          env:
+          {{- if .Values.swaggerui.extraEnv }}
+            {{- toYaml .Values.swaggerui.extraEnv | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - name: swagger-ui-api
+              mountPath: /usr/share/nginx/html/openapi
+      volumes:
+        - name: swagger-ui-api
+          configMap:
+            name: {{ include "ditto.fullname" . }}-swaggerui
+{{- if .Values.swaggerui.rootAccess }}
+      securityContext:
+        runAsUser: 0
+{{- end }}
+{{- end }}
