@@ -22,6 +22,10 @@ The URL to the call is: [https://eclipse.zoom.us/j/317801130](https://eclipse.zo
 
 You may also directly subscribe to the [community calendar](https://calendar.google.com/calendar/ical/lu98p1vc1ed4itl7n9qno3oogc%40group.calendar.google.com/public/basic.ics).
 
+## Contact us on Gitter
+
+We also do have a channel on Gitter: [https://gitter.im/eclipse/packages](https://gitter.im/eclipse/packages "Gitter Channel").
+
 ## Improving an existing package
 
 There is always room for improvement. Found a bug, have an idea how to make things better.
