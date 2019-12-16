@@ -67,14 +67,19 @@ podTemplate(
                 }
 
                 stage ('Clone') {
-                    dir("build") {
+                    dir ("build") {
                         checkout scm
+                    }
+                }
+
+                stage ('Dependencies') {
+                    dir ("build/homepage") {
+                        sh 'bundle install'
                     }
                 }
 
                 stage ('Build') {
                     dir ("build/homepage") {
-                        sh 'bundle install'
                         if ( isStaging() ) {
                             sh 'bundle exec ruby /usr/gem/bin/jekyll build --config _config.yml,_config_staging.yml'
                         } else {
