@@ -45,31 +45,7 @@ podTemplate(
 
     node(label) {
 
-      container('helm') {
-        withEnv([
-            "PROJECT_NAME=packages",
-            "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
-        ]) {
-          try {
-            stage('Helm Build') {
-              dir("build/charts") {
-                sh 'mkdir -p helm-repository'
-                sh 'helm package -u ditto -d helm-repository'
-              }
-            }
-            stage('Helm Repo') {
-              dir("build/charts") {
-                sh 'helm repo index helm-repository --url https://eclipse.org/packages/charts'
-              }
-            }
-          } catch (err) {
-              currentBuild.result = 'FAILED'
-              throw err
-          } /* try */
-        } /* with-env */
-      } /* container */
-
-      container('jekyll') {
+      container('jnlp') {
 
         withEnv([
             "PROJECT_NAME=packages",
@@ -95,6 +71,51 @@ podTemplate(
                         checkout scm
                     }
                 }
+
+            } catch (err) {
+                currentBuild.result = 'FAILED'
+                throw err
+            }
+        } /* with-env */
+      } /* container */
+
+
+      container('helm') {
+        withEnv([
+            "PROJECT_NAME=packages",
+            "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
+        ]) {
+
+          try {
+
+            stage('Helm Build') {
+              dir("build/charts") {
+                sh 'mkdir -p helm-repository'
+                sh 'helm package -u ditto -d helm-repository'
+              }
+            }
+
+            stage('Helm Repo') {
+              dir("build/charts") {
+                sh 'helm repo index helm-repository --url https://eclipse.org/packages/charts'
+              }
+            }
+
+          } catch (err) {
+              currentBuild.result = 'FAILED'
+              throw err
+          } /* try */
+        } /* with-env */
+      } /* container */
+
+      container('jekyll') {
+
+        withEnv([
+            "PROJECT_NAME=packages",
+            "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
+        ]) {
+
+            try {
 
                 stage ('Dependencies') {
                     dir ("build/homepage") {
