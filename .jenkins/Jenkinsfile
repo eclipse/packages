@@ -27,7 +27,15 @@ podTemplate(
             command: 'cat',
             resourceRequestMemory: '1Gi',
             resourceLimitMemory: '2Gi',
-        )
+        ),
+        containerTemplate(
+            name: 'helm',
+            image: 'alpine/helm:3.0.1',
+            ttyEnabled: true,
+            command: 'cat',
+            resourceRequestMemory: '1Gi',
+            resourceLimitMemory: '2Gi',
+        ),
     ],
     volumes: [
         emptyDirVolume(mountPath: '/home/jenkins', memory: false),
@@ -82,6 +90,30 @@ podTemplate(
         } /* with-env */
       } /* container */
 
+      container('') {
+        withEnv([
+            "PROJECT_NAME=packages",
+            "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
+        ]) {
+          try {
+            stage('Helm Build') {
+              dir("build/charts") {
+                sh 'mkdir -p helm-repository'
+                sh 'helm package ditto -d helm-repository'
+              }
+            }
+            stage('Helm Repo') {
+              dir("build/charts") {
+                sh 'helm repo index helm-repository --url https://eclipse.org/packages/charts'
+              }
+            }
+          } catch (err) {
+              currentBuild.result = 'FAILED'
+              throw err
+          } /* try */
+        } /* with-env */
+      } /* container */
+
       container('jnlp') {
 
         withEnv([
@@ -111,6 +143,7 @@ podTemplate(
 
                     stage ('Copy content') {
                         sh 'rm -rf www/* && cp -Rvf build/homepage/_site/* www/'
+                        sh 'mkdir -p www/charts && cp -Rvf build/charts/helm-repository www/charts/'
                     }
 
                     stage ('Commit and push') {
@@ -144,7 +177,7 @@ podTemplate(
 
         } /* with-env */
 
-      } /* container */
+      } /* container (jekyll) */
 
   } /* node */
 
