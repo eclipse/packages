@@ -84,21 +84,26 @@ podTemplate(
         withEnv([
             "PROJECT_NAME=packages",
             "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
+            "HELM_HOME=${env.WORKSPACE}/helm-home",
         ]) {
 
           try {
 
             stage('Helm Build') {
-              dir("build/charts") {
-                sh 'mkdir -p helm-repository'
-                sh 'helm package -u ditto -d helm-repository'
-              }
+                sh 'helm init --client-only'
+            }
+
+            stage('Helm Build') {
+                dir("build/charts") {
+                    sh 'mkdir -p helm-repository'
+                    sh 'helm package -u ditto -d helm-repository'
+                }
             }
 
             stage('Helm Repo') {
-              dir("build/charts") {
-                sh 'helm repo index helm-repository --url https://eclipse.org/packages/charts'
-              }
+                dir("build/charts") {
+                    sh 'helm repo index helm-repository --url https://eclipse.org/packages/charts'
+                }
             }
 
           } catch (err) {
