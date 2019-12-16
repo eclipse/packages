@@ -17,7 +17,7 @@
 set -o errexit
 set -o pipefail
 
-CHART_REPO="https://github.com/kiwigrid/helm-charts.git"
+CHART_REPO="https://github.com/eclipse/packages.git"
 
 echo "Check for chart changes to speedup ci..."
 
