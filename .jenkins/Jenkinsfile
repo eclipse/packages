@@ -30,7 +30,7 @@ podTemplate(
         ),
         containerTemplate(
             name: 'helm',
-            image: 'alpine/helm:3.0.1',
+            image: 'alpine/helm:2.16.1',
             ttyEnabled: true,
             command: 'cat',
             resourceRequestMemory: '1Gi',
@@ -54,7 +54,7 @@ podTemplate(
             stage('Helm Build') {
               dir("build/charts") {
                 sh 'mkdir -p helm-repository'
-                sh 'helm package ditto -d helm-repository'
+                sh 'helm package -u ditto -d helm-repository'
               }
             }
             stage('Helm Repo') {
