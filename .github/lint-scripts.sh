@@ -16,7 +16,7 @@
 
 set -o errexit
 
-CONFIG_DIR=".ci"
+CONFIG_DIR=".github"
 
 TMP_FILE="$(mktemp)"
 
