@@ -7,6 +7,5 @@
 .vscode/
 # Helm and kind specific ignores:
 Chart.lock
-kind-config.yaml
 # dependencies of charts get downloaded to chart/<chartname>/carts - so exclude those:
 charts/*/charts
