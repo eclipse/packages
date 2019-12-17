@@ -26,8 +26,8 @@ podTemplate(
             image: 'jekyll/jekyll:4',
             ttyEnabled: true,
             command: 'cat',
-            resourceRequestMemory: '1Gi',
-            resourceLimitMemory: '2Gi',
+            resourceRequestMemory: '4Gi',
+            resourceLimitMemory: '4Gi',
         )
     ],
     volumes: [
@@ -90,7 +90,6 @@ podTemplate(
       } /* container (jnlp) */
 
       container('jekyll') {
-        // run in jeykll container to have more resources available
         withEnv([
             "PROJECT_NAME=packages",
             "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
