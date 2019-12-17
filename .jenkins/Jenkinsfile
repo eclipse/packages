@@ -174,7 +174,7 @@ podTemplate(
 
                     stage ('Copy content') {
                         sh 'rm -rf www/* && cp -Rvf build/homepage/_site/* www/'
-                        sh 'mkdir -p www/charts && cp -Rvf build/charts/helm-repository www/charts/'
+                        sh 'mkdir -p www/charts && cp -Rvf build/charts/helm-repository/* www/charts/'
                     }
 
                     stage ('Commit and push') {
