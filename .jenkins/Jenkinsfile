@@ -95,7 +95,12 @@ podTemplate(
                 stage('Helm Build') {
                     dir("build/charts") {
                         sh 'mkdir -p helm-repository'
-                        sh '${WORKSPACE}/helm package -u ditto -d helm-repository'
+                        sh '''
+                            for i in $(ls */Chart.yaml); do
+                                echo "Building $(dirname $i) ..."
+                                ${WORKSPACE}/helm package -u "$(dirname $i)" -d helm-repository
+                            done
+                        '''
                     }
                 }
 
