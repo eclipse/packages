@@ -101,7 +101,11 @@ podTemplate(
 
                 stage ('Jekyll Dependencies') {
                     dir ("build/homepage") {
-                        sh 'bundle install'
+                        sh '''
+                            mkdir -p vendor/bundle
+                            cp /usr/gem/. vendor/bundle
+                            bundle install
+                        '''
                     }
                 }
 
