@@ -173,10 +173,14 @@ podTemplate(
                     }
 
                     stage ('Copy content') {
+                        // delete the whole directory, and re-populate with the new content 
                         sh 'rm -rf www/* && cp -Rvf build/homepage/_site/* www/'
+                        // pre-fill the published charts from the git repository
+                        // and only copy new packages
                         sh '''
                            mkdir -p www/charts
-                           cp -Rvn build/charts/helm-repository/* www/charts/
+                           git checkout -- www/charts/
+                           cp -vn build/charts/helm-repository/*.tgz www/charts/
                         '''
                     }
 
