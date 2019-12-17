@@ -9,7 +9,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 ---
-# Default values for ditto.
+# Default values for Ditto.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
