@@ -88,7 +88,7 @@ spec:
             - name: TZ
               value: "{{ .Values.global.timezone }}"
             - name: OPENJ9_JAVA_OPTIONS
-              value: "-XX:MaxRAMPercentage=80 -XX:InitialRAMPercentage=40 -XX:+ExitOnOutOfMemoryError"
+              value: "-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -XX:InitialRAMPercentage=40 -Dakka.coordinated-shutdown.exit-jvm=on"
             - name: DEVOPS_SECURE_STATUS
               value: "{{ .Values.gateway.devopsSecureStatus }}"
             - name: DEVOPS_PASSWORD
