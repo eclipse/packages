@@ -156,15 +156,26 @@ podTemplate(
                         // delete the whole directory, and re-populate with the new content 
                         sh 'rm -rf www/* && cp -Rvf build/homepage/_site/* www/'
 
-                        // pre-fill the published charts from the git repository
+                        // pre-fill with the published charts and index from the git repository
                         dir ("www") {
                             sh 'git checkout -- charts/'
                         }
 
-                        // and only copy new packages
+                        // and only copy new packages, remove index when updating
+                        sh '''
+                            for i in $(ls build/charts/helm-repository/*.tgz); do
+                              if [ ! -f "www/charts/$(basename $i)" ]; then
+                                echo "Publishing $(basename $i) ..."
+                                cp -v "$i" www/charts/
+                                rm -f www/charts/index.yaml
+                              fi
+                            done
+                        '''
                         sh 'cp -vn build/charts/helm-repository/*.tgz www/charts/'
                     }
 
+                    // only update the index, when it is missing
+                    if (!fileExists('www/charts/index.yaml')) {
                     stage ('Helm Index') {
                         if ( isStaging() ) {
                             sh '${WORKSPACE}/helm repo index www/charts/ --url https://eclipse.org/packages/charts'
@@ -172,6 +183,7 @@ podTemplate(
                             sh '${WORKSPACE}/helm repo index www/charts/ --url https://staging.eclipse.org/packages/charts'
                         }
                     }
+                    } /* if */
 
                     stage ('Commit and push') {
                         dir("www") {
