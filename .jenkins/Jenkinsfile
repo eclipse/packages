@@ -102,7 +102,7 @@ podTemplate(
                 stage ('Jekyll Dependencies') {
                     dir ("build/homepage") {
                         sh '''
-                            cp -rv /usr/gem/. /usr/local/bundle/
+                            cp -r /usr/gem/. /usr/local/bundle/
                             bundle install
                         '''
                     }
