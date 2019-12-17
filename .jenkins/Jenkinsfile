@@ -103,7 +103,7 @@ podTemplate(
                     dir ("build/homepage") {
                         sh '''
                             mkdir -p vendor/bundle
-                            cp /usr/gem/. vendor/bundle
+                            cp -av /usr/gem/. vendor/bundle
                             bundle install
                         '''
                     }
