@@ -79,7 +79,6 @@ podTemplate(
         } /* with-env */
       } /* container */
 
-
       container('helm') {
         withEnv([
             "PROJECT_NAME=packages",
@@ -89,7 +88,7 @@ podTemplate(
 
           try {
 
-            stage('Helm Build') {
+            stage('Helm Init') {
                 sh 'helm init --client-only'
             }
 
@@ -122,13 +121,13 @@ podTemplate(
 
             try {
 
-                stage ('Dependencies') {
+                stage ('Jekyll Dependencies') {
                     dir ("build/homepage") {
                         sh 'bundle install'
                     }
                 }
 
-                stage ('Build') {
+                stage ('Jekyll Build') {
                     dir ("build/homepage") {
                         if ( isStaging() ) {
                             sh 'bundle exec ruby /usr/gem/bin/jekyll build --config _config.yml,_config_staging.yml'
