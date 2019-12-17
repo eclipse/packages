@@ -75,13 +75,6 @@ podTemplate(
                     sh '${WORKSPACE}/helm init --client-only'
                 }
 
-                stage('Helm Build') {
-                    dir("build/charts") {
-                        sh 'mkdir -p helm-repository'
-                        sh '${WORKSPACE}/helm package -u ditto -d helm-repository'
-                    }
-                }
-
             } catch (err) {
                 currentBuild.result = 'FAILED'
                 throw err
@@ -105,22 +98,6 @@ podTemplate(
                         sh '${WORKSPACE}/helm package -u ditto -d helm-repository'
                     }
                 }
-
-            } catch (err) {
-                currentBuild.result = 'FAILED'
-                throw err
-            } /* try */
-        } /* with-env */
-      } /* container (jekyll) */
-
-      container('jekyll') {
-
-        withEnv([
-            "PROJECT_NAME=packages",
-            "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
-        ]) {
-
-            try {
 
                 stage ('Jekyll Dependencies') {
                     dir ("build/homepage") {
