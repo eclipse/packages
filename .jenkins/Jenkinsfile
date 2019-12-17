@@ -183,9 +183,9 @@ podTemplate(
                     if (!fileExists('www/charts/index.yaml')) {
                     stage ('Helm Index') {
                         if ( isStaging() ) {
-                            sh '${WORKSPACE}/helm repo index www/charts/ --url https://eclipse.org/packages/charts'
-                        } else {
                             sh '${WORKSPACE}/helm repo index www/charts/ --url https://staging.eclipse.org/packages/charts'
+                        } else {
+                            sh '${WORKSPACE}/helm repo index www/charts/ --url https://eclipse.org/packages/charts'
                         }
                     }
                     } /* if */
