@@ -8,6 +8,7 @@ properties([
 ])
 
 def label = "packages-${UUID.randomUUID().toString()}"
+def HELM_VERSION = "2.16.1"
 
 def needToDeploy() {
     return BRANCH_NAME == 'master' || BRANCH_NAME == 'develop'
@@ -27,15 +28,7 @@ podTemplate(
             command: 'cat',
             resourceRequestMemory: '1Gi',
             resourceLimitMemory: '2Gi',
-        ),
-        containerTemplate(
-            name: 'helm',
-            image: 'alpine/helm:2.16.1',
-            ttyEnabled: true,
-            command: 'cat',
-            resourceRequestMemory: '1Gi',
-            resourceLimitMemory: '2Gi',
-        ),
+        )
     ],
     volumes: [
         emptyDirVolume(mountPath: '/home/jenkins', memory: false),
@@ -50,6 +43,8 @@ podTemplate(
         withEnv([
             "PROJECT_NAME=packages",
             "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
+            "HELM_VERSION=${HELM_VERSION}",
+            "HELM_HOME=${env.WORKSPACE}/helm-home",
         ]) {
 
             deleteDir()
@@ -72,45 +67,27 @@ podTemplate(
                     }
                 }
 
+                stage('Helm Init') {
+                    sh '''
+                       curl --silent --location https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz --output helm.tar.gz
+                       tar --strip-components=1 -xvzf helm.tar.gz linux-amd64/helm
+                    '''
+                    sh '${WORKSPACE}/helm init --client-only'
+                }
+
+                stage('Helm Build') {
+                    dir("build/charts") {
+                        sh 'mkdir -p helm-repository'
+                        sh '${WORKSPACE}/helm package -u ditto -d helm-repository'
+                    }
+                }
+
             } catch (err) {
                 currentBuild.result = 'FAILED'
                 throw err
-            }
+            } /* try */
         } /* with-env */
-      } /* container */
-
-      container('helm') {
-        withEnv([
-            "PROJECT_NAME=packages",
-            "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
-            "HELM_HOME=${env.WORKSPACE}/helm-home",
-        ]) {
-
-          try {
-
-            stage('Helm Init') {
-                sh 'helm init --client-only'
-            }
-
-            stage('Helm Build') {
-                dir("build/charts") {
-                    sh 'mkdir -p helm-repository'
-                    sh 'helm package -u ditto -d helm-repository'
-                }
-            }
-
-            stage('Helm Repo') {
-                dir("build/charts") {
-                    sh 'helm repo index helm-repository --url https://eclipse.org/packages/charts'
-                }
-            }
-
-          } catch (err) {
-              currentBuild.result = 'FAILED'
-              throw err
-          } /* try */
-        } /* with-env */
-      } /* container */
+      } /* container (jnlp) */
 
       container('jekyll') {
 
@@ -142,7 +119,7 @@ podTemplate(
                 throw err
             }
         } /* with-env */
-      } /* container */
+      } /* container (jekyll) */
 
       container('jnlp') {
 
@@ -173,7 +150,18 @@ podTemplate(
 
                     stage ('Copy content') {
                         sh 'rm -rf www/* && cp -Rvf build/homepage/_site/* www/'
-                        sh 'mkdir -p www/charts && cp -Rvf build/charts/helm-repository/* www/charts/'
+                        sh '''
+                           mkdir -p www/charts
+                           cp -Rvn build/charts/helm-repository/* www/charts/
+                        '''
+                    }
+
+                    stage ('Helm Index') {
+                        if ( isStaging() ) {
+                            sh '${WORKSPACE}/helm repo index www/charts/ --url https://eclipse.org/packages/charts'
+                        } else {
+                            sh '${WORKSPACE}/helm repo index www/charts/ --url https://staging.eclipse.org/packages/charts'
+                        }
                     }
 
                     stage ('Commit and push') {
@@ -207,7 +195,7 @@ podTemplate(
 
         } /* with-env */
 
-      } /* container (jekyll) */
+      } /* container (jnlp) */
 
   } /* node */
 
