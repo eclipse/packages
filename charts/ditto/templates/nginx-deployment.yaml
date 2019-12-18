@@ -81,6 +81,12 @@ spec:
             - name: nginx-index
               mountPath: /etc/nginx/html/index.html
               subPath: index.html
+            - name: nginx-ditto-down
+              mountPath: /etc/nginx/html/ditto-down.svg
+              subPath: ditto-down.svg
+            - name: nginx-ditto-up
+              mountPath: /etc/nginx/html/ditto-up.svg
+              subPath: ditto-up.svg
             - name: nginx-cache
               mountPath: /var/cache/nginx
             - name: nginx-run
