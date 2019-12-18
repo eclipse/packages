@@ -13,11 +13,12 @@ This chart uses `eclipse/ditto-XXX` containers to run Ditto inside Kubernetes.
 
 ## Installing the Chart
 
-To install the chart with the release name `eclipse-ditto`, run the following command:
+To install the chart with the release name `eclipse-ditto`, run the following command (tested with Helm v3):
 
 ```bash
-# TODO: the helm chart is not yet published, this won't work yet:
-helm install eclipse-iot/ditto --name eclipse-ditto
+helm repo add eclipse-iot https://eclipse.org/packages/charts
+relm repo update
+helm install eclipse-ditto eclipse-iot/ditto
 ```
 
 ## Uninstalling the Chart
@@ -39,8 +40,7 @@ Please view the `values.yaml` for the list of possible configuration values with
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example:
 
 ```bash
-# TODO: the helm chart is not yet published, this won't work yet:
-helm install --name eclipse-ditto --set swaggerui.enabled=false eclipse-iot/ditto
+helm install eclipse-ditto eclipse-iot/ditto --set swaggerui.enabled=false
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart.
