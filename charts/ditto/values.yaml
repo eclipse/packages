@@ -67,6 +67,11 @@ ingress:
   #    hosts:
   #      - ditto.example.com
 
+## OpenShift Routes
+routes:
+  enabled: false
+  annotations: {}
+
 ## ----------------------------------------------------------------------------
 ## global configuration shared by all components
 global:
@@ -377,6 +382,9 @@ nginx:
     port: 8080
     ## annotations to add arbritrary annotations to nginx service
     annotations: {}
+  networkPolicy:
+    ## enabled controls whether policies related NetworkPolicy should be created
+    enabled: true
   ## nodeSelector
   ## https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   nodeSelector: {}
