@@ -104,6 +104,12 @@ spec:
         - name: nginx-index
           configMap:
             name: {{ .Release.Name }}-nginx-config-index-html
+        - name: nginx-ditto-down
+          configMap:
+            name: {{ .Release.Name }}-nginx-config-ditto-down-svg
+        - name: nginx-ditto-up
+          configMap:
+            name: {{ .Release.Name }}-nginx-config-ditto-up-svg
         - name: nginx-cache
           emptyDir: {}
         - name: nginx-run
