@@ -56,7 +56,7 @@ spec:
           {{- end }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8080
               protocol: TCP
           {{- if .Values.nginx.readinessProbe }}
           readinessProbe:
@@ -81,6 +81,10 @@ spec:
             - name: nginx-index
               mountPath: /etc/nginx/html/index.html
               subPath: index.html
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /run/nginx
       volumes:
         - name: nginx-conf
           configMap:
@@ -94,10 +98,10 @@ spec:
         - name: nginx-index
           configMap:
             name: {{ .Release.Name }}-nginx-config-index-html
-{{- if .Values.nginx.rootAccess }}
-      securityContext:
-        runAsUser: 0
-{{- end }}
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
       {{- with .Values.nginx.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

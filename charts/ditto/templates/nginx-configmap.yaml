@@ -19,6 +19,7 @@ metadata:
 data:
   nginx.conf: |-
     worker_processes 1;
+    pid /run/nginx/nginx.pid;
     
     events {worker_connections 1024;}
     
@@ -42,7 +43,7 @@ data:
       }
     
       server {
-        listen 80;
+        listen 8080;
         server_name localhost;
     
         location / {

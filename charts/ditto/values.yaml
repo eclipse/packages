@@ -370,8 +370,6 @@ nginx:
   ## livenessProbe configuration for nginx
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   livenessProbe: {}
-  # rootAccess to control securityContext (necessary when running on Openshift for writing in pod)
-  rootAccess: false
   service:
     ## type of the nginx service
     type: ClusterIP
@@ -500,8 +498,6 @@ swaggerui:
     enabled: true
     ## minAvailable number of replicas during voluntary disruptions
     minAvailable: 1
-  # rootAccess to control securityContext (necessary when running on Openshift for writing in pod)
-  rootAccess: false
   service:
     ## port of the swaggerui service
     port: 8080
@@ -662,5 +658,7 @@ mongodb:
   enabled: true
   fullnameOverride: ditto-mongodb
   usePassword: false
+  securityContext:
+    enabled: false
   persistence:
     enabled: false
