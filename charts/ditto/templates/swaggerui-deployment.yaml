@@ -45,6 +45,25 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      initContainers:
+        - name: {{ .Chart.Name }}-init
+          image: "{{ .Values.swaggerui.image.repository }}:{{ .Values.swaggerui.image.tag }}"
+          imagePullPolicy: {{ .Values.swaggerui.image.imagePullPolicy }}
+          command:
+            - sh
+            - -ec
+            - |
+               cp -rv /etc/nginx/. /init-config/
+               cp -rv /usr/share/nginx/html/. /init-content/
+               mkdir /var/lib/nginx/logs
+               mkdir /var/lib/nginx/tmp
+          volumeMounts:
+            - name: swagger-ui-config
+              mountPath: /init-config
+            - name: swagger-ui-content
+              mountPath: /init-content
+            - name: swagger-ui-work
+              mountPath: /var/lib/nginx
       containers:
         - name: {{ .Chart.Name }}-swaggerui
           image: "{{ .Values.swaggerui.image.repository }}:{{ .Values.swaggerui.image.tag }}"
@@ -60,12 +79,28 @@ spec:
           volumeMounts:
             - name: swagger-ui-api
               mountPath: /usr/share/nginx/html/openapi
+            - name: swagger-ui-cache
+              mountPath: /var/cache/nginx
+            - name: swagger-ui-work
+              mountPath: /var/lib/nginx
+            - name: swagger-ui-config
+              mountPath: /etc/nginx
+            - name: swagger-ui-content
+              mountPath: /usr/share/nginx/html
+            - name: swagger-ui-run
+              mountPath: /run/nginx
       volumes:
         - name: swagger-ui-api
           configMap:
             name: {{ include "ditto.fullname" . }}-swaggerui
-{{- if .Values.swaggerui.rootAccess }}
-      securityContext:
-        runAsUser: 0
-{{- end }}
+        - name: swagger-ui-cache
+          emptyDir: {}
+        - name: swagger-ui-work
+          emptyDir: {}
+        - name: swagger-ui-config
+          emptyDir: {}
+        - name: swagger-ui-content
+          emptyDir: {}
+        - name: swagger-ui-run
+          emptyDir: {}
 {{- end }}
