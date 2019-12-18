@@ -1,0 +1,69 @@
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+{{- if .Values.routes.enabled }}
+
+{{- if .Values.nginx.networkPolicy.enabled }}
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "ditto.fullname" . }}-nginx
+  labels:
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
+{{ include "ditto.labels" . | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow access from OpenShift Router
+  - ports:
+    - protocol: TCP
+      port: 8080
+{{- end }}
+
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ include "ditto.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
+{{ include "ditto.labels" . | indent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: ""
+  to:
+    kind: Service
+    name: {{ include "ditto.fullname" . }}-nginx
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: {{ .Values.routes.tlsTermination | default "edge" }}
+    insecureEdgeTerminationPolicy: {{ .Values.routes.tlsInsecurePolicy | default "Redirect" }}
+status:
+  ingress:
+    - conditions:
+      - lastTransitionTime: "2019-12-06T03:24:58Z"
+        status: "True"
+        type: Admitted
+      host: 
+      routerCanonicalHostname: 
+      routerName: default
+      wildcardPolicy: None
+{{- end }}

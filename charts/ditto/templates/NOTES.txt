@@ -1,6 +1,7 @@
 Eclipse Ditto installed!
 
-Access ditto in your browser (http://localhost:8080) by running:
+{{- if ( not .Values.routes.enabled ) }}
+Access Ditto in your browser (http://localhost:8080) by running:
 
     kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "ditto.fullname" . }}-nginx 8080:8080
 
@@ -13,3 +14,20 @@ The /devops resource can be accessed by:
 
     export DEVOPS_PWD=$(kubectl --namespace {{ .Release.Namespace }} get secret {{ include "ditto.fullname" . }}-gateway-secret -o jsonpath="{.data.devops-password}" | base64 --decode)
     curl -i -X GET "http://devops:${DEVOPS_PWD}@localhost:8080/devops"
+{{- else -}}
+Access Ditto in your browser, get the URL with:
+
+    echo https://$(kubectl --namespace {{ .Release.Namespace }} get route {{ include "ditto.fullname" . }} -o jsonpath="{.status.ingress[0].host}")
+
+The /status resource can be accessed by:
+
+    export STATUS_PWD=$(kubectl --namespace {{ .Release.Namespace }} get secret {{ include "ditto.fullname" . }}-gateway-secret -o jsonpath="{.data.status-password}" | base64 --decode)
+    export URL=https://devops:${STATUS_PWD}@$(kubectl --namespace {{ .Release.Namespace }} get route {{ include "ditto.fullname" . }} -o jsonpath="{.status.ingress[0].host}")
+    curl -i -X GET "$URL/status"
+
+The /devops resource can be accessed by:
+
+    export DEVOPS_PWD=$(kubectl --namespace {{ .Release.Namespace }} get secret {{ include "ditto.fullname" . }}-gateway-secret -o jsonpath="{.data.devops-password}" | base64 --decode)
+    export URL=https://devops:${DEVOPS_PWD}@$(kubectl --namespace {{ .Release.Namespace }} get route {{ include "ditto.fullname" . }} -o jsonpath="{.status.ingress[0].host}")
+    curl -i -X GET "$URL/devops"
+{{- end }}
