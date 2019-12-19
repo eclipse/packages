@@ -15,7 +15,7 @@ apiVersion: v1
 version: 1.0.2
 # Version of the application being deployed by the chart
 appVersion: 1.0.2
-name: eclipse-hono
+name: hono
 description: Scalable IoT messaging platform
 keywords:
   - IoT
@@ -23,3 +23,6 @@ keywords:
 home: https://www.eclipse.org/hono/
 sources:
   - https://github.com/eclipse/hono
+maintainers:
+  - name: dejanb
+    email: dbosanac@redhat.com
