@@ -4,7 +4,9 @@ properties([
     pipelineTriggers([
         [$class:"SCMTrigger", scmpoll_spec:"H/10 * * * *"],
     ]),
-    disableConcurrentBuilds()
+    disableConcurrentBuilds(),
+    timeout(time: 15, unit: 'MINUTES'),
+    retry(3)
 ])
 
 def label = "packages-${UUID.randomUUID().toString()}"
