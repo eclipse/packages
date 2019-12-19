@@ -4,9 +4,7 @@ properties([
     pipelineTriggers([
         [$class:"SCMTrigger", scmpoll_spec:"H/10 * * * *"],
     ]),
-    disableConcurrentBuilds(),
-    timeout(time: 15, unit: 'MINUTES'),
-    retry(3)
+    disableConcurrentBuilds()
 ])
 
 def label = "packages-${UUID.randomUUID().toString()}"
@@ -39,6 +37,8 @@ podTemplate(
 ) {
 
     node(label) {
+
+      timeout(time: 10, unit: "MINUTES") {
 
       container('jnlp') {
 
@@ -224,6 +224,8 @@ podTemplate(
         } /* with-env */
 
       } /* container (jnlp) */
+
+      } /* timeout */
 
   } /* node */
 
