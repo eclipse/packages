@@ -10,6 +10,8 @@ main:
     url: "contribute/"
   - name: "Prerequisites"
     url: "prereqs/"
+  - name: "Repository"
+    url: "repository/"
 
 footer:
 
