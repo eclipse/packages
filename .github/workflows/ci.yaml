@@ -25,7 +25,7 @@ jobs:
       - name: Lint Bash scripts
         uses: docker://koalaman/shellcheck-alpine:v0.7.0
         with:
-          args: /github/workspace/.github/lint-scripts.sh
+          args: .github/lint-scripts.sh
 
   check-for-chart-changes:
     runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Check for chart changes
-        run: /home/runner/work/packages/packages/.github/check-for-chart-changes.sh
+        run: .github/check-for-chart-changes.sh
 
   lint-chart:
     runs-on: ubuntu-latest
@@ -67,7 +67,7 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@master
         with:
-          config: /home/runner/work/packages/packages/.github/kind-config.yaml
+          config: .github/kind-config.yaml
           installLocalPathProvisioner: true
           node-image: ${{ matrix.k8s }}
       - name: Run chart-testing (install)
