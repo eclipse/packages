@@ -23,7 +23,7 @@ helm install eclipse-ditto eclipse-iot/ditto
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `eclipse-ditto` deployment:
+To uninstall/delete the `eclipse-ditto` release:
 
 ```bash
 helm delete eclipse-ditto
@@ -79,9 +79,9 @@ In order to install the Helm chart locally (e.g. in order to enhance the chart),
 
 ### Requirements
 
-- [Kubernetes IN Dokcer](https://github.com/kubernetes-sigs/kind)
-- [kubectl](https://kubernetes.io/docs/tasks/kubectl/install/)
-- [Helm v3](https://docs.helm.sh/using_helm/#installing-helm)
+* [Kubernetes IN Docker](https://github.com/kubernetes-sigs/kind)
+* [kubectl](https://kubernetes.io/docs/tasks/kubectl/install/)
+* [Helm v3](https://docs.helm.sh/using_helm/#installing-helm)
 
 ### Run Eclipse Ditto
 
