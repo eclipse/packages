@@ -18,7 +18,7 @@ are labeled explicitly.
 You can add the repository with a simple command:
 
 {% clipboard %}
-    helm repo add eclipse-iot <https://eclipse.org/packages/charts>
+    helm repo add eclipse-iot https://eclipse.org/packages/charts
 {% endclipboard %}
 
 This will add the repository, using the name `eclipse-iot`. Of course you may choose
