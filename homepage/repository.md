@@ -38,3 +38,10 @@ If you want to see "under development" charts:
 {% clipboard %}
     helm search repo --devel
 {% endclipboard %}
+
+## How chart publishing works
+
+All chart changes will be verified by a [Github action](https://github.com/eclipse/packages/actions), this is done on every pull request.
+
+Once a pull request is merged, the updated chart will be deployed by a [Jenkins job](https://ci.eclipse.org/packages/job/Website/job/master/).
+This job takes care of publishing the resources and generating an updated `index.yaml`.
