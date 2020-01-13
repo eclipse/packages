@@ -738,7 +738,7 @@ prometheus:
   # Set this property to false if you want to use an already existing server
   # instead. In that case, set the "name" and "port" properties to the
   # existing server's host name and port.
-  createInstance: true
+  createInstance: false
   # host contains the host name of an existing Prometheus server.
   # This property is used to configure a corresponding datasource in Grafana
   # if createInstance is set to false.
@@ -787,7 +787,7 @@ prometheus:
     enabled: false
 
 grafana:
-  enabled: true
+  enabled: false
   adminPassword: admin
 
   # labels to be added to the Grafana Deployment
