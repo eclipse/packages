@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -9,7 +9,8 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 
-helm-extra-args: --timeout 7200
+# consider helm install to be failed after 10 minutes
+helm-extra-args: --timeout 600
 check-version-increment: true
 debug: true
 chart-repos:
