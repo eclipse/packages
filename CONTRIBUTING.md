@@ -46,7 +46,7 @@ Please make sure any file you newly create contains a proper license header like
 
 ````
 /**
- * Copyright (c) 2019 Contributors to the Eclipse Foundation
+ * Copyright (c) 2020 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -62,7 +62,7 @@ You should, of course, adapt this header to use the specific mechanism for comme
 
 ````
 <!--
- Copyright (c) 2019 Contributors to the Eclipse Foundation
+ Copyright (c) 2020 Contributors to the Eclipse Foundation
 
  See the NOTICE file(s) distributed with this work for additional
  information regarding copyright ownership.
