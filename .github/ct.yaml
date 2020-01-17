@@ -15,3 +15,4 @@ check-version-increment: true
 debug: true
 chart-repos:
   - stable=https://kubernetes-charts.storage.googleapis.com/
+  - bitnami=https://charts.bitnami.com
