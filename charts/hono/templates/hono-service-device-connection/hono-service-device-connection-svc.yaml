@@ -28,12 +28,4 @@ spec:
     targetPort: amqps
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}
-  type: LoadBalancer
-{{- else }}
-  type: NodePort
-{{- end }}
-{{- with .Values.deviceConnectionService.svc.loadBalancerIP }}
-  loadBalancerIP: {{ . | quote }}
-{{- end }}
 {{- end }}

@@ -26,20 +26,14 @@ spec:
     port: 15671
     protocol: TCP
     targetPort: amqps
-    nodePort: 30671
+    {{- include "hono.service.nodePort" (dict "dot" . "service" .Values.amqpMessagingNetworkExample.dispatchRouter.svc "port" "amqps" ) | nindent 4 }}
   - name: amqp
     port: 15672
     protocol: TCP
     targetPort: amqp
-    nodePort: 30672
+    {{- include "hono.service.nodePort" (dict "dot" . "service" .Values.amqpMessagingNetworkExample.dispatchRouter.svc "port" "amqp" ) | nindent 4 }}
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}
-  type: LoadBalancer
-{{- else }}
-  type: NodePort
-{{- end }}
-{{- with .Values.amqpMessagingNetworkExample.dispatchRouter.svc.loadBalancerIP }}
-  loadBalancerIP: {{ . | quote }}
-{{- end }}
+{{- include "hono.service.type" (dict "dot" . "service" .Values.amqpMessagingNetworkExample.dispatchRouter.svc ) | nindent 2 }}
+{{- include "hono.service.loadBalancerIP" (dict "dot" . "service" .Values.amqpMessagingNetworkExample.dispatchRouter.svc ) | nindent 2 }}
 {{- end }}

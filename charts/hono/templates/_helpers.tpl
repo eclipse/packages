@@ -356,3 +356,44 @@ The scope passed in is expected to be a dict with keys
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Render the service type.
+The scope passed in is expected to be a dict with keys
+- "dot": the root scope (".") and
+- "service": the service specific values
+*/}}
+{{- define "hono.service.type" }}
+  {{- if ( eq .dot.Values.platform "openshift" ) }}
+type: NodePort
+  {{- else }}
+type: {{ .service.type }}
+  {{- end }}
+{{- end }}
+
+{{/*
+Render the load balancer IP, if required.
+- "dot": the root scope (".") and
+- "service": the service specific values
+*/}}
+{{- define "hono.service.loadBalancerIP" }}
+  {{- if and (eq .service.type "LoadBalancer") (ne .dot.Values.platform "openshift") }}
+    {{- with .service.loadBalancerIP }}
+loadBalancerIP: {{ . | quote }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{/*
+Render the node port, if required.
+- "dot": the root scope (".") and
+- "service": the service specific values
+- "port": name of the port
+*/}}
+{{- define "hono.service.nodePort" }}
+  {{- if and (eq .service.type "NodePort") (ne .dot.Values.platform "openshift") }}
+    {{- with (index .service.nodePorts .port) }}
+nodePort: {{ . }}
+    {{- end }}
+  {{- end }}
+{{- end }}

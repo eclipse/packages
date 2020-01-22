@@ -25,19 +25,13 @@ spec:
     port: 1883
     protocol: TCP
     targetPort: mqtt
-    nodePort: 31883
+    {{- include "hono.service.nodePort" (dict "dot" . "service" .Values.adapters.mqtt.svc "port" "mqtt" ) | nindent 4 }}
   - name: secure-mqtt
     port: 8883
     protocol: TCP
     targetPort: secure-mqtt
-    nodePort: 30883
+    {{- include "hono.service.nodePort" (dict "dot" . "service" .Values.adapters.mqtt.svc "port" "mqtts" ) | nindent 4 }}
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}
-  type: LoadBalancer
-{{- else }}
-  type: NodePort
-{{- end }}
-{{- with .Values.adapters.mqtt.svc.loadBalancerIP }}
-  loadBalancerIP: {{ . | quote }}
-{{- end }}
+{{- include "hono.service.type" (dict "dot" . "service" .Values.adapters.mqtt.svc ) | nindent 2 }}
+{{- include "hono.service.loadBalancerIP" (dict "dot" . "service" .Values.adapters.mqtt.svc ) | nindent 2 }}

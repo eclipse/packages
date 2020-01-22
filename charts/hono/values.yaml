@@ -27,6 +27,15 @@ amqpMessagingNetworkExample:
     svc:
       annotations: {}
       loadBalancerIP:
+      nodePorts:
+        amqps: 30671
+        amqp: 30672
+
+      # serviceType defines the type which the created service will have.
+      # The default is "NodePort".
+      # Note: This property will be ignored when deploying to platform "openshift".
+      type: NodePort
+
   # AMQP Messaging Network Broker configuration.
   broker:
     type: artemis
@@ -64,6 +73,13 @@ jaegerBackendExample:
   svc:
     annotations: {}
     loadBalancerIP:
+    nodePorts:
+      http: 36686
+
+    # serviceType defines the type which the created service will have.
+    # The default is "NodePort".
+    # Note: This property will be ignored when deploying to platform "openshift".
+    type: NodePort
 
 # jaegerAgentImage contains the name (including tag)
 # of the container image to use for the Jaeger Agent sidecar deployed
@@ -102,11 +118,6 @@ healthCheckPort: 8088
 #
 # When setting to "openshift", Route resources will also be deployed.
 platform: kubernetes
-
-# useLoadBalancer indicates whether services should be deployed using the
-# "LoadBalancer" type (true) or the "NodePort" type (false).
-# This property will be ignored when deploying to platform "openshift".
-useLoadBalancer: true
 
 # Configuration properties for protocol adapters.
 adapters:
@@ -174,6 +185,14 @@ adapters:
     svc:
       annotations: {}
       loadBalancerIP:
+      nodePorts:
+        amqps: 32671
+        amqp: 32672
+
+      # serviceType defines the type which the created service will have.
+      # The default is "NodePort".
+      # Note: This property will be ignored when deploying to platform "openshift".
+      type: NodePort
 
     # extraSecretMounts describes additional secrets that should be mounted into the
     # adapter's container filesystem. The files from the secret(s) can
@@ -232,6 +251,14 @@ adapters:
     svc:
       annotations: {}
       loadBalancerIP:
+      nodePorts:
+        coap: 30683
+        coaps: 30684
+
+      # serviceType defines the type which the created service will have.
+      # The default is "NodePort".
+      # Note: This property will be ignored when deploying to platform "openshift".
+      type: NodePort
 
     # extraSecretMounts describes additional secrets that should be mounted into the
     # adapter's container filesystem. The files from the secret(s) can
@@ -277,6 +304,14 @@ adapters:
     svc:
       annotations: {}
       loadBalancerIP:
+      nodePorts:
+        http: 30080
+        https: 30443
+
+      # serviceType defines the type which the created service will have.
+      # The default is "NodePort".
+      # Note: This property will be ignored when deploying to platform "openshift".
+      type: NodePort
 
     # extraSecretMounts describes additional secrets that should be mounted into the
     # adapter's container filesystem. The files from the secret(s) can
@@ -333,6 +368,14 @@ adapters:
     svc:
       annotations: {}
       loadBalancerIP:
+      nodePorts:
+        http: 32080
+        https: 32443
+
+      # serviceType defines the type which the created service will have.
+      # The default is "NodePort".
+      # Note: This property will be ignored when deploying to platform "openshift".
+      type: NodePort
 
     # extraSecretMounts describes additional secrets that should be mounted into the
     # adapter's container filesystem. The files from the secret(s) can
@@ -386,6 +429,14 @@ adapters:
     svc:
       annotations: {}
       loadBalancerIP:
+      nodePorts:
+        mqtt: 31883
+        mqtts: 30883
+
+      # serviceType defines the type which the created service will have.
+      # The default is "NodePort".
+      # Note: This property will be ignored when deploying to platform "openshift".
+      type: NodePort
 
     # extraSecretMounts describes additional secrets that should be mounted into the
     # adapter's container filesystem. The files from the secret(s) can
@@ -441,6 +492,14 @@ adapters:
     svc:
       annotations: {}
       loadBalancerIP:
+      nodePorts:
+        mqtt: 31884
+        mqtts: 30884
+
+      # serviceType defines the type which the created service will have.
+      # The default is "NodePort".
+      # Note: This property will be ignored when deploying to platform "openshift".
+      type: NodePort
 
     # extraSecretMounts describes additional secrets that should be mounted into the
     # adapter's container filesystem. The files from the secret(s) can
@@ -572,6 +631,14 @@ deviceRegistryExample:
   svc:
     annotations: {}
     loadBalancerIP:
+    nodePorts:
+      http: 31080
+      https: 31443
+
+    # serviceType defines the type which the created service will have.
+    # The default is "NodePort".
+    # Note: This property will be ignored when deploying to platform "openshift".
+    type: NodePort
 
   # extraSecretMounts describes additional secrets that should be mounted into the
   # Device Registry's' container filesystem. The files from the secret(s) can

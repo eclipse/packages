@@ -12,3 +12,13 @@
 #
 jaegerBackendExample:
   enabled: true
+
+  service:
+    annotations: {}
+    loadBalancerIP:
+    nodePort:
+
+    # serviceType defines the type which the created service will have.
+    # The default is "ClusterIP". 
+    # Note: This property will be ignored when deploying to platform "openshift".
+    type: LoadBalancer
