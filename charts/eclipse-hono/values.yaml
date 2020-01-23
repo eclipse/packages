@@ -169,7 +169,7 @@ adapters:
   amqp:
     # imageName contains the name (including registry and tag)
     # of the container image to use for the AMQP adapter
-    imageName: eclipse/hono-adapter-amqp-vertx:${project.version}
+    imageName: eclipse/hono-adapter-amqp-vertx:1.0.3
 
     svc:
       annotations: {}
