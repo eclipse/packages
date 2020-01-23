@@ -1,0 +1,15 @@
+apiVersion: v1
+version: 1.0.0
+appVersion: "0.3.0M6-mysql"
+description: A Helm chart for hawkBit update server
+name: hawkbit
+home: https://www.eclipse.org/hawkbit/
+sources:
+- https://github.com/eclipse/hawkbit
+- https://github.com/eclipse/packages
+icon: https://www.eclipse.org/hawkbit/images/hawkbit_icon.png
+maintainers:
+- name: monotek
+  email: andre.bauer@kiwigrid.com
+- name: axdotl
+  email: axel.koehler@kiwigrid.com
