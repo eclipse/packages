@@ -23,3 +23,10 @@ keywords:
 home: https://www.eclipse.org/hono/
 sources:
   - https://github.com/eclipse/hono
+maintainers:
+  - name: dejanb
+    email: dbosanac@redhat.com
+  - name: ctron
+    email: jreimann@redhat.com
+  - name: sophokles73
+    email: kai.hudalla@bosch.io
