@@ -122,7 +122,7 @@ healthCheck:
 {{- if . }}
   {{- toYaml . | nindent 2 }}
 {{- else }}
-  port: ${vertx.health.port}
+  port: 8088
   bindAddress: "0.0.0.0"
   keyPath: "/etc/hono/key.pem"
   certPath: "/etc/hono/cert.pem"
