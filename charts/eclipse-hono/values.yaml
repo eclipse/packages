@@ -592,7 +592,6 @@ deviceRegistryExample:
 
   # data defines the location of files containing data
   # that should be used to initialize the example Device Registry during startup.
-  # The files are ource from where 
   data:
     # volumeName contains the name of the service pod's volume that has been created for the
     # secret containing the example data files.
