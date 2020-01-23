@@ -1,0 +1,4 @@
+# use NodePorts instead of LoadBalancers in CI pipeline
+# because the "kind" cluster used for testing installation
+# does not provide a load balancer
+useLoadBalancer: false
