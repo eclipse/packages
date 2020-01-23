@@ -260,7 +260,7 @@ The scope passed in is expected to be a dict with keys
   - names:
     - {{ printf "%s-%s-headless" .dot.Release.Name .serviceName }}
     type: A
-    port: {{ default ${prometheus.scraping.port} .dot.Values.monitoring.prometheus.port }}
+    port: {{ default 8088 .dot.Values.monitoring.prometheus.port }}
     refresh_interval: 10s
 {{- end }}
 
