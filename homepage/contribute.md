@@ -124,6 +124,21 @@ At least one maintainer needs to explicitly approve the PR before it can be merg
 
 Once the Chart has been merged, a CI job will automatically package and release the Chart in the [Eclipse IoT Packages repository](https://eclipse.org/packages/repository/).
 
+## When to increase a chart's version number?
+
+Based on the assumption that a chart's external interface and behavior is determined by the
+configuration properties it supports, the following (non-exhaustive) table lists some types
+of changes that should be reflected by a corresponding increase of the patch, minor or major
+version of the chart.
+
+| Type of change | Requires increase of |
+| -------------- | -------------------- |
+| Update the `README.md` file | patch version |
+| Chart introduces a property for explicitly configuring an already existing fixed value | patch version |
+| Chart introduces a property for configuring a new feature with a reasonable default value | minor version |
+| Chart renames an existing configuration property | major version |
+| Chart removes an existing configuration property | major version |
+
 ## The legal side of things
 
 If you plan on contributing code, you will need to
