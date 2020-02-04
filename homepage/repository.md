@@ -30,10 +30,10 @@ expect the name to be `eclipse-iot`.
 You can browse through the content using:
 
 {% clipboard %}
-    helm search repo --devel
+    helm search repo
 {% endclipboard %}
 
-If you want to see "under development" charts:
+If you also want the search to include charts that are still under development, e.g. *alpha*, *beta* and *pre-release* versions:
 
 {% clipboard %}
     helm search repo --devel
