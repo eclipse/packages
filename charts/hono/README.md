@@ -4,7 +4,7 @@
 numbers of IoT devices to a back end and interacting with them in a uniform way regardless of the device
 communication protocol.
 
-This repository contains a *chart* that can be used to install Hono to a Kubernets cluster using the
+This repository contains a *chart* that can be used to install Hono to a Kubernetes cluster using the
 [Helm package manager](https://helm.sh).
 
 ## Prerequisites
@@ -196,7 +196,7 @@ adapters:
       mountPath: "/etc/custom"
 
   # provide connection params
-  # assuming that "my-secret" contains an "amqp-credenials.properties" file
+  # assuming that "my-secret" contains an "amqp-credentials.properties" file
   amqpMessagingNetworkSpec:
     host: my-custom.amqp-network.org
     port: 5672
