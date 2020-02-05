@@ -49,8 +49,8 @@ spec:
           value: dev
         - name: LOGGING_CONFIG
           value: classpath:logback-spring.xml
-        - name: _JAVA_OPTIONS
-          value: "{{ .Values.defaultJavaOptions }}"
+        - name: JDK_JAVA_OPTIONS
+          value: {{ .Values.adapters.lora.javaOptions | quote }}
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:
@@ -58,19 +58,20 @@ spec:
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         volumeMounts:
         {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "conf" .Values.adapters.lora ) | indent 8 }}
+        {{- with .Values.adapters.lora.resources }}
         resources:
-          limits:
-            memory: "256Mi"
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /liveness
-            port: {{ .Values.healthCheckPort }}
+            port: health
             scheme: HTTPS
           initialDelaySeconds: 180
         readinessProbe:
           httpGet:
             path: /readiness
-            port: {{ .Values.healthCheckPort }}
+            port: health
             scheme: HTTPS
           initialDelaySeconds: 10
       volumes:
