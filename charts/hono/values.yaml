@@ -23,10 +23,21 @@ amqpMessagingNetworkExample:
   # dispatchRouter.imageName contains the name (including tag)
   # of the container image to use for the example AQMP Messaging Network Router.
   dispatchRouter:
-    imageName: quay.io/enmasse/qdrouterd-base:1.7.0
+    imageName: quay.io/interconnectedcloud/qdrouterd:1.10.0
     svc:
       annotations: {}
       loadBalancerIP:
+    # resources contains the container's 'requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "64M"
+      limits:
+        cpu: "1"
+        memory: "256M"
   # AMQP Messaging Network Broker configuration.
   broker:
     type: artemis
