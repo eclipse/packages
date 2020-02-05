@@ -670,7 +670,6 @@ authServer:
       # svc contains configuration properties for the server
       svc:
         permissionsPath: "file:///etc/hono/permissions.json"
-        supportedSaslMechanisms: "PLAIN"
         signing:
           # tokenExpiration contains the number of seconds after which tokens issued
           # by the Auth server will expire.
