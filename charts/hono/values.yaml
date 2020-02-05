@@ -218,6 +218,20 @@ adapters:
     # imageName contains the name (including registry and tag)
     # of the container image to use for the AMQP adapter
     imageName: index.docker.io/eclipse/hono-adapter-amqp-vertx:1.0.3
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # resources contains the container's 'requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "300M"
+      limits:
+        cpu: "1"
+        memory: "512M"
 
     svc:
       annotations: {}
@@ -276,6 +290,20 @@ adapters:
     # imageName contains the name (including registry and tag)
     # of the container image to use for the CoAP adapter
     imageName: index.docker.io/eclipse/hono-adapter-coap-vertx:1.0.3
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # resources contains the container's 'requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "256M"
+      limits:
+        cpu: "1"
+        memory: "512M"
 
     svc:
       annotations: {}
@@ -321,6 +349,20 @@ adapters:
     # imageName contains the name (including registry and tag)
     # of the container image to use for the HTTP adapter
     imageName: index.docker.io/eclipse/hono-adapter-http-vertx:1.0.3
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # resources contains the container's 'requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "300M"
+      limits:
+        cpu: "1"
+        memory: "512M"
 
     svc:
       annotations: {}
@@ -371,12 +413,96 @@ adapters:
       #  keyPath: "/etc/config/key.pem"
       #  certPath: "/etc/config/cert.pem"
 
+  kura:
+    # enabled indicates if Hono's (deprecated) Kura adapter should be deployed.
+    enabled: false
+    # imageName contains the name (including registry and tag)
+    # of the container image to use for the Kura adapter
+    imageName: index.docker.io/eclipse/hono-adapter-kura:1.0.3
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # resources contains the container's 'requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "300M"
+      limits:
+        cpu: "1"
+        memory: "512M"
+
+    svc:
+      annotations: {}
+      loadBalancerIP:
+
+    # extraSecretMounts describes additional secrets that should be mounted into the
+    # adapter's container filesystem. The files from the secret(s) can
+    # then be used in e.g. the service client specs.
+    # The secrets are expected to exist in the same Kubernetes namespace
+    # as the one that the adapter has been deployed to.
+    # If this property is set then the example key, cert, trust store and credentials
+    # will not be included in the adapters "config" secret, i.e. the extra
+    # secret(s) defined here need to include these artifacts if the adapter should
+    # use TLS and/or credentials for authentication.
+    extraSecretMounts:
+    #  passwords:
+    #    secretName: "my-passwords"
+    #    mountPath: "/etc/pwd"
+    #  other:
+    #    secretName: "other-stuff"
+    #    mountPath: "/etc/other"
+
+    # hono contains the adapter's configuration properties as defined in
+    # https://www.eclipse.org/hono/docs/admin-guide/kura-adapter-config/
+    hono:
+      app:
+        # maxInstances defines the number of adapter Verticle instances to deploy
+        # to the vert.x runtime during start-up.
+        maxInstances: 1
+
+      # http contains configuration properties for the adapter's
+      # exposed MQTT endpoints.
+      # If not set, the adapter by default exposes the secure and insecure ports
+      # using an example key and certificate.
+      kura:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+      # healthCheck contains configuration properties for the adapter's
+      # health check server as defined by
+      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+      # If not set, a TLS secured health check server is configured listening on
+      # all network interfaces on port 8088 using the adapter's
+      # example key and cert.'
+      healthCheck:
+      #  bindAddress: 0.0.0.0
+      #  port: 12000
+      #  keyPath: "/etc/config/key.pem"
+      #  certPath: "/etc/config/cert.pem"
+
   lora:
     # enabled indicates if Hono's Lora adapter should be deployed.
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the LoRa adapter
     imageName: index.docker.io/eclipse/hono-adapter-lora-vertx:1.0.3
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # resources contains the container's 'requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "300M"
+      limits:
+        cpu: "1"
+        memory: "512M"
 
     svc:
       annotations: {}
@@ -430,6 +556,20 @@ adapters:
     # imageName contains the name (including registry and tag)
     # of the container image to use for the MQTT adapter
     imageName: index.docker.io/eclipse/hono-adapter-mqtt-vertx:1.0.3
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # resources contains the container's 'requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "300M"
+      limits:
+        cpu: "1"
+        memory: "512M"
 
     svc:
       annotations: {}
@@ -480,61 +620,6 @@ adapters:
       #  keyPath: "/etc/config/key.pem"
       #  certPath: "/etc/config/cert.pem"
 
-  kura:
-    # enabled indicates if Hono's (deprecated) Kura adapter should be deployed.
-    enabled: false
-    # imageName contains the name (including registry and tag)
-    # of the container image to use for the Kura adapter
-    imageName: index.docker.io/eclipse/hono-adapter-kura:1.0.3
-    svc:
-      annotations: {}
-      loadBalancerIP:
-
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    # If this property is set then the example key, cert, trust store and credentials
-    # will not be included in the adapters "config" secret, i.e. the extra
-    # secret(s) defined here need to include these artifacts if the adapter should
-    # use TLS and/or credentials for authentication.
-    extraSecretMounts:
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
-
-    # hono contains the adapter's configuration properties as defined in
-    # https://www.eclipse.org/hono/docs/admin-guide/kura-adapter-config/
-    hono:
-      app:
-        # maxInstances defines the number of adapter Verticle instances to deploy
-        # to the vert.x runtime during start-up.
-        maxInstances: 1
-
-      # http contains configuration properties for the adapter's
-      # exposed MQTT endpoints.
-      # If not set, the adapter by default exposes the secure and insecure ports
-      # using an example key and certificate.
-      kura:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
 
 # authServer contains configuration properties for the Auth Server component.
 authServer:
@@ -542,6 +627,20 @@ authServer:
   # imageName contains the name (including registry and tag)
   # of the container image to use for the Auth Server
   imageName: index.docker.io/eclipse/hono-service-auth:1.0.3
+  # javaOptions contains options to pass to the JVM when starting
+  # up the service
+  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+  # resources contains the container's 'requests and limits for CPU and memory
+  # as defined by the Kubernetes API.
+  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  # for a description of the properties' semantics.
+  resources:
+    requests:
+      cpu: "0.1"
+      memory: "196M"
+    limits:
+      cpu: "1"
+      memory: "256M"
 
   # extraSecretMounts describes additional secrets that should be mounted into the
   # Auth Server's' container filesystem. The files from the secret(s) can
@@ -615,6 +714,20 @@ deviceRegistryExample:
   # imageName contains the name (including registry and tag)
   # of the container image to use for the example Device Registry
   imageName: index.docker.io/eclipse/hono-service-device-registry:1.0.3
+  # javaOptions contains options to pass to the JVM when starting
+  # up the service
+  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+  # resources contains the container's 'requests and limits for CPU and memory
+  # as defined by the Kubernetes API.
+  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  # for a description of the properties' semantics.
+  resources:
+    requests:
+      cpu: "0.1"
+      memory: "300M"
+    limits:
+      cpu: "1"
+      memory: "300M"
 
   svc:
     annotations: {}
@@ -708,6 +821,21 @@ deviceConnectionService:
   # imageName contains the name (including registry and tag)
   # of the container image to use for the Device Connection service
   imageName: index.docker.io/eclipse/hono-service-device-connection:1.0.3
+  # javaOptions contains options to pass to the JVM when starting
+  # up the service
+  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+  # resources contains the container's 'requests and limits for CPU and memory
+  # as defined by the Kubernetes API.
+  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  # for a description of the properties' semantics.
+  resources:
+    requests:
+      cpu: "0.1"
+      memory: "256M"
+    limits:
+      cpu: "1"
+      memory: "256M"
+
   svc:
     annotations: {}
 
