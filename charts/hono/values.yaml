@@ -33,7 +33,7 @@ amqpMessagingNetworkExample:
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "0.1"
+        cpu: "100m"
         memory: "64M"
       limits:
         cpu: "1"
@@ -51,7 +51,7 @@ amqpMessagingNetworkExample:
       # for a description of the properties' semantics.
       resources:
         requests:
-          cpu: "0.1"
+          cpu: "100m"
           memory: "256M"
         limits:
           cpu: "1"
@@ -79,10 +79,10 @@ dataGridExample:
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "0.1"
+      cpu: "100m"
       memory: "256M"
     limits:
-      cpu: "0.5"
+      cpu: "500m"
       memory: "512M"
   # authUsername contains the name of the user that is authorized to connect to the example data grid.
   authUsername: "hono"
@@ -104,7 +104,7 @@ jaegerBackendExample:
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "0.1"
+      cpu: "100m"
       memory: "256M"
     limits:
       cpu: "1"
@@ -227,7 +227,7 @@ adapters:
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "0.1"
+        cpu: "100m"
         memory: "300M"
       limits:
         cpu: "1"
@@ -299,7 +299,7 @@ adapters:
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "0.1"
+        cpu: "100m"
         memory: "256M"
       limits:
         cpu: "1"
@@ -358,7 +358,7 @@ adapters:
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "0.1"
+        cpu: "100m"
         memory: "300M"
       limits:
         cpu: "1"
@@ -428,7 +428,7 @@ adapters:
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "0.1"
+        cpu: "100m"
         memory: "300M"
       limits:
         cpu: "1"
@@ -498,7 +498,7 @@ adapters:
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "0.1"
+        cpu: "100m"
         memory: "300M"
       limits:
         cpu: "1"
@@ -565,7 +565,7 @@ adapters:
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "0.1"
+        cpu: "100m"
         memory: "300M"
       limits:
         cpu: "1"
@@ -636,7 +636,7 @@ authServer:
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "0.1"
+      cpu: "100m"
       memory: "196M"
     limits:
       cpu: "1"
@@ -722,7 +722,7 @@ deviceRegistryExample:
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "0.1"
+      cpu: "100m"
       memory: "300M"
     limits:
       cpu: "1"
@@ -829,7 +829,7 @@ deviceConnectionService:
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "0.1"
+      cpu: "100m"
       memory: "256M"
     limits:
       cpu: "1"
