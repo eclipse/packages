@@ -34,10 +34,10 @@ amqpMessagingNetworkExample:
     resources:
       requests:
         cpu: "100m"
-        memory: "64M"
+        memory: "64Mi"
       limits:
         cpu: "1"
-        memory: "256M"
+        memory: "256Mi"
   # AMQP Messaging Network Broker configuration.
   broker:
     type: artemis
@@ -52,10 +52,10 @@ amqpMessagingNetworkExample:
       resources:
         requests:
           cpu: "100m"
-          memory: "256M"
+          memory: "256Mi"
         limits:
           cpu: "1"
-          memory: "512M"
+          memory: "512Mi"
    # Azure Service Bus as alternative to self-hosted Artemis ActiveMQ for event persistence
     servicebus:
       saslUsername:
@@ -80,10 +80,10 @@ dataGridExample:
   resources:
     requests:
       cpu: "100m"
-      memory: "256M"
+      memory: "256Mi"
     limits:
       cpu: "500m"
-      memory: "512M"
+      memory: "512Mi"
   # authUsername contains the name of the user that is authorized to connect to the example data grid.
   authUsername: "hono"
   # authPassword contains the secret of the user that is authorized to connect to the example data grid
@@ -105,10 +105,10 @@ jaegerBackendExample:
   resources:
     requests:
       cpu: "100m"
-      memory: "256M"
+      memory: "256Mi"
     limits:
       cpu: "1"
-      memory: "512M"
+      memory: "512Mi"
   svc:
     annotations: {}
     loadBalancerIP:
@@ -228,10 +228,10 @@ adapters:
     resources:
       requests:
         cpu: "100m"
-        memory: "300M"
+        memory: "300Mi"
       limits:
         cpu: "1"
-        memory: "512M"
+        memory: "512Mi"
 
     svc:
       annotations: {}
@@ -300,10 +300,10 @@ adapters:
     resources:
       requests:
         cpu: "100m"
-        memory: "256M"
+        memory: "256Mi"
       limits:
         cpu: "1"
-        memory: "512M"
+        memory: "512Mi"
 
     svc:
       annotations: {}
@@ -359,10 +359,10 @@ adapters:
     resources:
       requests:
         cpu: "100m"
-        memory: "300M"
+        memory: "300Mi"
       limits:
         cpu: "1"
-        memory: "512M"
+        memory: "512Mi"
 
     svc:
       annotations: {}
@@ -429,10 +429,10 @@ adapters:
     resources:
       requests:
         cpu: "100m"
-        memory: "300M"
+        memory: "300Mi"
       limits:
         cpu: "1"
-        memory: "512M"
+        memory: "512Mi"
 
     svc:
       annotations: {}
@@ -499,10 +499,10 @@ adapters:
     resources:
       requests:
         cpu: "100m"
-        memory: "300M"
+        memory: "300Mi"
       limits:
         cpu: "1"
-        memory: "512M"
+        memory: "512Mi"
 
     svc:
       annotations: {}
@@ -566,10 +566,10 @@ adapters:
     resources:
       requests:
         cpu: "100m"
-        memory: "300M"
+        memory: "300Mi"
       limits:
         cpu: "1"
-        memory: "512M"
+        memory: "512Mi"
 
     svc:
       annotations: {}
@@ -637,10 +637,10 @@ authServer:
   resources:
     requests:
       cpu: "100m"
-      memory: "196M"
+      memory: "196Mi"
     limits:
       cpu: "1"
-      memory: "256M"
+      memory: "256Mi"
 
   # extraSecretMounts describes additional secrets that should be mounted into the
   # Auth Server's' container filesystem. The files from the secret(s) can
@@ -723,10 +723,10 @@ deviceRegistryExample:
   resources:
     requests:
       cpu: "100m"
-      memory: "300M"
+      memory: "300Mi"
     limits:
       cpu: "1"
-      memory: "300M"
+      memory: "300Mi"
 
   svc:
     annotations: {}
@@ -830,10 +830,10 @@ deviceConnectionService:
   resources:
     requests:
       cpu: "100m"
-      memory: "256M"
+      memory: "256Mi"
     limits:
       cpu: "1"
-      memory: "256M"
+      memory: "256Mi"
 
   svc:
     annotations: {}
