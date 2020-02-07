@@ -49,18 +49,18 @@ jobs:
           - v1.11.10
           - v1.12.10
           - v1.13.12
-          - v1.14.9
-          - v1.15.6
-          - v1.16.3
-          - v1.17.0
+          - v1.14.10
+          - v1.15.7
+          - v1.16.4
+          - v1.17.2
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Create kind cluster
-        uses: monotek/kind-action@kind070
+        uses: helm/kind-action@master
         with:
           config: .github/kind-config.yaml
-          node-image: ${{ matrix.k8s }}
+          node_image: ${{ matrix.k8s }}
       - name: Run chart-testing (install)
         uses: helm/chart-testing-action@master
         with:
