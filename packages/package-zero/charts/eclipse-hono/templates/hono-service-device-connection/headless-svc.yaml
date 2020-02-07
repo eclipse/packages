@@ -1,4 +1,0 @@
-{{- if .Values.prometheus.createInstance }}
-{{- $args := dict "dot" . "component" "service-device-connection" "name" "service-device-connection" }}
-{{- include "hono.headless.service" $args }}
-{{ end }}
