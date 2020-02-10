@@ -13,6 +13,7 @@
 
 # profile for installing Hono
 # - without monitoring infrastructre
+# - with example Infinispan data grid
 
 useLoadBalancer: false
 
@@ -21,3 +22,6 @@ prometheus:
 
 grafana:
   enabled: false
+
+dataGridExample:
+  enabled: true

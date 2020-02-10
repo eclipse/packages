@@ -161,6 +161,25 @@ dataGridExample:
   # authPassword contains the secret of the user that is authorized to connect to the example data grid
   authPassword: "hono-secret"
 
+# dataGridSpec contains properties for configuring the Infinispan Hotrod connection
+# to the existing data grid (i.e. not the example grid) that should be used for storing
+# the device connection data.
+# This property MUST be set if "deviceConnectionService.enabled" is set to true
+# and "dataGridExample.enabled" is set to false (the default).
+# Please refer to https://docs.jboss.org/infinispan/9.4/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
+# for a list of configuration properties.
+dataGridSpec:
+  # serverList contains the hostname:port of the data grid node(s)
+  # This property only needs to be set when using an existing data grid other than the
+  # example grid.
+#  serverList: my-grid.example.com:11222
+  # authServerName contains the name that Hotrod clients need to use for establishing a
+  # connection to the data grid.
+#  authServerName:
+  # authUsername contains the name of the user that is authorized to connect to the data grid.
+#  authUsername:
+  # authPassword contains the secret of the user that is authorized to connect to the data grid
+#  authPassword:
 
 jaegerBackendExample:
 
@@ -293,7 +312,7 @@ adapters:
   # deviceConnectionSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Device Connection service.
   # This property MUST be set if "deviceRegistryExample.enabled" and
-  # "deviceConnectionService.enabled" are both set to false.
+  # "deviceConnectionService.enabled" and "dataGridExample.enabled" are all set to false.
   # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   deviceConnectionSpec:
@@ -310,7 +329,7 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the AMQP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-amqp-vertx:1.2.0
+    imageName: index.docker.io/eclipse/hono-adapter-amqp-vertx:1.2.1
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -376,7 +395,7 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the CoAP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-coap-vertx:1.2.0
+    imageName: index.docker.io/eclipse/hono-adapter-coap-vertx:1.2.1
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -433,7 +452,7 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the HTTP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-http-vertx:1.2.0
+    imageName: index.docker.io/eclipse/hono-adapter-http-vertx:1.2.1
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -499,7 +518,7 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the Kura adapter
-    imageName: index.docker.io/eclipse/hono-adapter-kura:1.2.0
+    imageName: index.docker.io/eclipse/hono-adapter-kura:1.2.1
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -565,7 +584,7 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the LoRa adapter
-    imageName: index.docker.io/eclipse/hono-adapter-lora-vertx:1.2.0
+    imageName: index.docker.io/eclipse/hono-adapter-lora-vertx:1.2.1
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -630,7 +649,7 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the MQTT adapter
-    imageName: index.docker.io/eclipse/hono-adapter-mqtt-vertx:1.2.0
+    imageName: index.docker.io/eclipse/hono-adapter-mqtt-vertx:1.2.1
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -697,7 +716,7 @@ authServer:
 
   # imageName contains the name (including registry and tag)
   # of the container image to use for the Auth Server
-  imageName: index.docker.io/eclipse/hono-service-auth:1.2.0
+  imageName: index.docker.io/eclipse/hono-service-auth:1.2.1
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -780,7 +799,7 @@ deviceRegistryExample:
 
   # imageName contains the name (including registry and tag)
   # of the container image to use for the example Device Registry
-  imageName: index.docker.io/eclipse/hono-service-device-registry-file:1.2.0
+  imageName: index.docker.io/eclipse/hono-service-device-registry-file:1.2.1
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -881,9 +900,18 @@ deviceRegistryExample:
 # Device Connection service.
 deviceConnectionService:
 
+  # enabled indicates if the data grid based Device Connection service implementation
+  # should be deployed and used.
+  # If set to false (the default) and "deviceRegistryExample.enabled" is set to true,
+  # the in-memory implementation that is part of the example Device Registry is used.
+  # If set to false (the default) and "deviceRegistryExample.enabled" is also set to false,
+  # then the "adapters.deviceConnectionSpec" is expected to contain the required
+  # Hono client config properties to connect to an already existing Device Connection service.
+  enabled: false
+
   # imageName contains the name (including registry and tag)
   # of the container image to use for the Device Connection service
-  imageName: index.docker.io/eclipse/hono-service-device-connection:1.2.0
+  imageName: index.docker.io/eclipse/hono-service-device-connection:1.2.1
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -901,15 +929,6 @@ deviceConnectionService:
 
   svc:
     annotations: {}
-
-  # enabled indicates if the data grid based Device Connection service implementation
-  # should be deployed and used.
-  # If set to false (the default) and "deviceRegistryExample.enabled" is set to true,
-  # the in-memory implementation that is part of the example Device Registry is used.
-  # If set to false (the default) and "deviceRegistryExample.enabled" is also set to false,
-  # then the "adapters.deviceConnectionSpec" is expected to contain the required
-  # Hono client config properties to connect to an already existing Device Connection service.
-  enabled: false
 
   # extraSecretMounts describes additional secrets that should be mounted into the
   # service's' container filesystem. The files from the secret(s) can
@@ -943,6 +962,7 @@ deviceConnectionService:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
+      # DEPRECATED use the dataGridSpec property instead
       # remote contains properties for configuring the Infinispan Hotrod connection
       # to the data grid that should be used for storing the device connection data.
       # This property MUST be set if "deviceConnectionService.enabled" is set to true
