@@ -60,7 +60,7 @@ jobs:
         uses: helm/kind-action@master
         with:
           config: .github/kind-config.yaml
-          node_image: ${{ matrix.k8s }}
+          node_image: kindest/node:${{ matrix.k8s }}
       - name: Run chart-testing (install)
         uses: helm/chart-testing-action@master
         with:
