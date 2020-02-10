@@ -13,6 +13,8 @@
 
 # profile for installing Hono
 # - without monitoring infrastructre
+# - with example Infinispan data grid
+# - with Device Connection service
 
 useLoadBalancer: false
 
@@ -21,3 +23,9 @@ prometheus:
 
 grafana:
   enabled: false
+
+dataGridExample:
+  enabled: true
+
+deviceConnectionService:
+  enabled: true
