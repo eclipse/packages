@@ -8,41 +8,41 @@ layout: package-page
 {% alert warning: Under construction %}
 
 This tutorial is still under construction, and not finished yet.
-Of course, your are still welcome to try it. Take a look and give some feedback.
+Of course, you are still welcome to try it. Take a look and give some feedback.
 
 {% alertdetails %}
-Just be aware, that some content might still be missing, change over time,
+Just be aware that some content might still be missing, change over time
 or that you might experience some issues when testing.
 {% endalertdetails %}
 
 {% endalert %}
 
 The following examples will use information which depends on your
-environment. All of this information is listed in this section, and will be
-set as environment variables, so that all command using it, can make use
+environment. All of this information is listed in this section and will be
+set as environment variables so that all commands can easily make use
 of those variables:
 
 {% variants %}
 {% variant Minikube %}
 {% clipboard %}
-DEVICE_REGISTRY_URL=$(minikube service -n package-zero package-zero-service-device-registry-ext --url --https | grep 31443)
-MQTT_ADAPTER_HOST=$(minikube service -n package-zero package-zero-adapter-mqtt-vertx --url | grep 30883 | sed -e 's/^http:\/\///' -e 's/:.*$//')
+DEVICE_REGISTRY_URL=$(minikube service -n cloud2edge c2e-service-device-registry-ext --url --https | grep 31443)
+MQTT_ADAPTER_HOST=$(minikube service -n cloud2edge c2e-adapter-mqtt-vertx --url | grep 30883 | sed -e 's/^http:\/\///' -e 's/:.*$//')
 MQTT_ADAPTER_PORT=30883
 {% endclipboard %}
 {% endvariant %}
 
 {% variant Kubernetes %}
 {% clipboard %}
-DEVICE_REGISTRY_URL=https://$(kubectl get service package-zero-service-device-registry-ext --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n package-zero):28080
-MQTT_ADAPTER_HOST=$(kubectl get service package-zero-adapter-mqtt-vertx --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n package-zero)
+DEVICE_REGISTRY_URL=https://$(kubectl get service c2e-service-device-registry-ext --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n cloud2edge):28080
+MQTT_ADAPTER_HOST=$(kubectl get service c2e-adapter-mqtt-vertx --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n cloud2edge)
 MQTT_ADAPTER_PORT=8883
 {% endclipboard %}
 {% endvariant %}
 
 {% variant OpenShift %}
 {% clipboard %}
-DEVICE_REGISTRY_URL=https://$(oc get -n package-zero route package-zero-service-device-registry-https --template='{{"{{.spec.host"}}}}')
-MQTT_ADAPTER_URL=$(oc -n package-zero get route package-zero-adapter-http-vertx-sec --template='{{"{{.spec.host"}}}}')
+DEVICE_REGISTRY_URL=https://$(oc get -n cloud2edge route c2e-service-device-registry-https --template='{{"{{.spec.host"}}}}')
+MQTT_ADAPTER_URL=$(oc -n cloud2edge get route c2e-adapter-http-vertx-sec --template='{{"{{.spec.host"}}}}')
 MQTT_ADAPTER_PORT=443
 {% endclipboard %}
 {% endvariant %}
@@ -107,9 +107,7 @@ to assign a username/password combination:
       "type": "hashed-password",
       "auth-id": "my-auth-id-1",
       "secrets": [{
-        "salt": "Mq7wFw==",
-        "pwd-hash": "AQIDBAUGBwg=",
-        "hash-function": "sha-512"
+        "pwd-plain": "my-password"
       }]
     }]
     __EOF__
@@ -122,15 +120,15 @@ to assign a username/password combination:
 
 ### Understanding identities
 
-The previous step assigned the credentials of `my-auth-id-1` and `password` to the device `my-device-1`.
+The previous step assigned the credentials of `my-auth-id-1` and `my-password` to the device `my-device-1`.
 
 Please note that there is a difference between the *username* of the device (`my-auth-id-1`) and
 the name of the device (`my-device-1`). When connecting to e.g. the MQTT protocol adapter,
-you will need to use the full qualified username of `my-auth-id-1@my-tenant`
-(*authentication id* and *tenant name*), rather than the "device id" (`my-device-1`).
+you will need to use the fully qualified username of `my-auth-id-1@my-tenant`
+(*authentication id* and *tenant name*), rather than just the *device id* (`my-device-1`).
 
 The *authentication id* is only used for the authentication process. Later on, the messages will be marked
-with the *device id*, and the backend system isn't aware of the *authentication id* anymore.
+with the *device id* and the back end system isn't aware of the *authentication id* anymore.
 
 Of course you may use the same value for the *authentication id* and the *device id*. In this tutorial however,
 we use distinct values to show the difference. 
@@ -154,12 +152,16 @@ Publish a telemetry message using the MQTT endpoint:
 
 {% alert info: %}
 Although a certificate is provided, <strong>insecure</strong> is still required because
-the hostname would not match the certificate.
+the host name would not match the certificate.
 {% endalert %}
 
-## Fetch from Digital twin
+## Fetch from Digital Twin
+
+tbd
 
 ## Updating the firmware
+
+tbd
 
 {% endcapture %}
 
