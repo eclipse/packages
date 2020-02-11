@@ -242,11 +242,7 @@ adapters:
     # then be used in e.g. the service client specs.
     # The secrets are expected to exist in the same Kubernetes namespace
     # as the one that the adapter has been deployed to.
-    # If this property is set then the example key, cert, trust store and credentials
-    # will not be included in the adapters "config" secret, i.e. the extra
-    # secret(s) defined here need to include these artifacts if the adapter should
-    # use TLS and/or credentials for authentication.
-    extraSecretMounts:
+    extraSecretMounts: {}
     #  passwords:
     #    secretName: "my-passwords"
     #    mountPath: "/etc/pwd"
@@ -314,11 +310,7 @@ adapters:
     # then be used in e.g. the service client specs.
     # The secrets are expected to exist in the same Kubernetes namespace
     # as the one that the adapter has been deployed to.
-    # If this property is set then the example key, cert, trust store and credentials
-    # will not be included in the adapters "config" secret, i.e. the extra
-    # secret(s) defined here need to include these artifacts if the adapter should
-    # use TLS and/or credentials for authentication.
-    extraSecretMounts:
+    extraSecretMounts: {}
     #  passwords:
     #    secretName: "my-passwords"
     #    mountPath: "/etc/pwd"
@@ -373,11 +365,7 @@ adapters:
     # then be used in e.g. the service client specs.
     # The secrets are expected to exist in the same Kubernetes namespace
     # as the one that the adapter has been deployed to.
-    # If this property is set then the example key, cert, trust store and credentials
-    # will not be included in the adapters "config" secret, i.e. the extra
-    # secret(s) defined here need to include these artifacts if the adapter should
-    # use TLS and/or credentials for authentication.
-    extraSecretMounts:
+    extraSecretMounts: {}
     #  passwords:
     #    secretName: "my-passwords"
     #    mountPath: "/etc/pwd"
@@ -443,11 +431,7 @@ adapters:
     # then be used in e.g. the service client specs.
     # The secrets are expected to exist in the same Kubernetes namespace
     # as the one that the adapter has been deployed to.
-    # If this property is set then the example key, cert, trust store and credentials
-    # will not be included in the adapters "config" secret, i.e. the extra
-    # secret(s) defined here need to include these artifacts if the adapter should
-    # use TLS and/or credentials for authentication.
-    extraSecretMounts:
+    extraSecretMounts: {}
     #  passwords:
     #    secretName: "my-passwords"
     #    mountPath: "/etc/pwd"
@@ -513,11 +497,7 @@ adapters:
     # then be used in e.g. the service client specs.
     # The secrets are expected to exist in the same Kubernetes namespace
     # as the one that the adapter has been deployed to.
-    # If this property is set then the example key, cert, trust store and credentials
-    # will not be included in the adapters "config" secret, i.e. the extra
-    # secret(s) defined here need to include these artifacts if the adapter should
-    # use TLS and/or credentials for authentication.
-    extraSecretMounts:
+    extraSecretMounts: {}
     #  passwords:
     #    secretName: "my-passwords"
     #    mountPath: "/etc/pwd"
@@ -580,11 +560,7 @@ adapters:
     # then be used in e.g. the service client specs.
     # The secrets are expected to exist in the same Kubernetes namespace
     # as the one that the adapter has been deployed to.
-    # If this property is set then the example key, cert, trust store and credentials
-    # will not be included in the adapters "config" secret, i.e. the extra
-    # secret(s) defined here need to include these artifacts if the adapter should
-    # use TLS and/or credentials for authentication.
-    extraSecretMounts:
+    extraSecretMounts: {}
     #  passwords:
     #    secretName: "my-passwords"
     #    mountPath: "/etc/pwd"
@@ -647,11 +623,7 @@ authServer:
   # then be used in e.g. the configuration of the server's exposed ports.
   # The secrets are expected to exist in the same Kubernetes namespace
   # as the one that the server has been deployed to.
-  # If this property is set then the example key, cert, trust store and credentials
-  # will not be included in the Auth Server's' "config" secret, i.e. the extra
-  # secret(s) defined here need to include these artifacts if the Auth Server should
-  # use TLS and/or credentials for authentication.
-  extraSecretMounts:
+  extraSecretMounts: {}
   #  passwords:
   #    secretName: "my-passwords"
   #    mountPath: "/etc/pwd"
@@ -738,11 +710,7 @@ deviceRegistryExample:
   # then be used in e.g. the configuration of the server's exposed ports.
   # The secrets are expected to exist in the same Kubernetes namespace
   # as the one that the server has been deployed to.
-  # If this property is set then the example key, cert, trust store and example
-  # data files will not be included in the Registry's "config" secret, i.e. the extra
-  # secret(s) defined here need to include these artifacts if the Device Registry should
-  # use TLS and/or other example data.
-  extraSecretMounts:
+  extraSecretMounts: {}
   #  tls:
   #    secretName: "key-material"
   #    mountPath: "/etc/tls"
@@ -853,11 +821,7 @@ deviceConnectionService:
   # then be used in e.g. the configuration of the service's exposed ports.
   # The secrets are expected to exist in the same Kubernetes namespace
   # as the one that the service has been deployed to.
-  # If this property is set then the example key, cert and trust store will not be
-  # included in the service's "config" secret, i.e. the extra
-  # secret(s) defined here need to include these artifacts if the service should
-  # use TLS and/or other credentials.
-  extraSecretMounts:
+  extraSecretMounts: {}
   #  tls:
   #    secretName: "key-material"
   #    mountPath: "/etc/tls"

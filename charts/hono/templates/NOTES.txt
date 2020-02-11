@@ -1,8 +1,30 @@
-Thank you for installing {{ .Chart.Name }}.
+Thank you for installing Eclipse Hono.
 
 Your release is named {{ .Release.Name }}.
 
-To learn more about the release, try:
+It might take some time for all of Hono's services to start up.
+You can check the current status by issuing the following command:
+{{ if ( eq .Release.Namespace "default" ) }}
+  $ kubectl get pods
+{{- else }}
+  $ kubectl get -n {{ .Release.Namespace }} pods
+{{- end }}
 
-  $ helm status {{ .Release.Name }}
-  $ helm get {{ .Release.Name }}
+Once all services are up and running, the output should look similar to this:
+
+NAME                                          READY   STATUS    RESTARTS   AGE
+my-hono-adapter-amqp-vertx-65cfb4d675-g5wn4   1/1     Running   0          5m50s
+my-hono-adapter-http-vertx-66bd6bb89c-mng5t   1/1     Running   0          5m51s
+my-hono-adapter-mqtt-vertx-765fcd578b-5rl7n   1/1     Running   0          5m51s
+my-hono-artemis-f8f7dc7f4-864cj               1/1     Running   0          5m51s
+my-hono-dispatch-router-6c77dc78bd-hjn4l      1/1     Running   0          5m51s
+my-hono-service-auth-84d9695cfc-5wlfh         1/1     Running   0          5m51s
+my-hono-service-device-registry-0             1/1     Running   0          5m51s
+
+Once all pods have status 'RUNNING', Hono is ready to be used.
+
+To learn more about Hono's functionality, you should follow the Getting started guide at
+https://eclipse.org/hono/getting-started/
+
+Enjoy :-)
+
