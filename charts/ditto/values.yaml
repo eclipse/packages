@@ -130,15 +130,16 @@ concierge:
     tag: 1.0.0
     ## pullPolicy for the concierge docker image
     pullPolicy: IfNotPresent
-  ## systemProps used to define arbritrary system properties for concierge service
+  ## systemProps used to define arbitrary system properties for concierge service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps: []
-  ## extraEnv to add arbritrary environment variable to concierge container
+  ## extraEnv to add arbitrary environment variable to concierge container
   extraEnv: []
   ## resources for the concierge container
-  resources: {}
-    # requests:
-    #   memory: 512Mi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -203,15 +204,17 @@ connectivity:
     tag: 1.0.0
     ## pullPolicy for the connectivity docker image
     pullPolicy: IfNotPresent
-  ## systemProps used to define arbritrary system properties for connectivity service
+  ## systemProps used to define arbitrary system properties for connectivity service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
-  systemProps: []
-  ## extraEnv to add arbritrary environment variable to connectivity container
+  systemProps:
+    - "-Dakka.cluster.distributed-data.durable.lmdb.dir=/var/tmp/ddata"
+  ## extraEnv to add arbitrary environment variable to connectivity container
   extraEnv: []
   ## resources for the connectivity container
-  resources: {}
-    # requests:
-    #   memory: 512Mi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -286,17 +289,18 @@ gateway:
     tag: 1.0.0
     ## pullPolicy for the gateway docker image
     pullPolicy: IfNotPresent
-  ## systemProps used to define arbritrary system properties for gateway service
+  ## systemProps used to define arbitrary system properties for gateway service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps: []
-  ## extraEnv to add arbritrary environment variabled to gateway container
+  ## extraEnv to add arbitrary environment variabled to gateway container
   extraEnv: []
     # - name: LOG_LEVEL_APPLICATION
     #   value: "DEBUG"
   ## resources for the gateway container
-  resources: {}
-    # requests:
-    #   memory: 512Mi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -319,7 +323,7 @@ gateway:
   service:
     ## port number for gateway service
     port: 8080
-    ## annotations to add arbritrary annotations to nginx service
+    ## annotations to add arbitrary annotations to nginx service
     annotations: {}
   networkPolicy:
     ## enabled controls whether gateway related NetworkPolicy should be created
@@ -365,7 +369,7 @@ nginx:
     tag: 1.17.5-alpine
     ## pullPolicy for the nginx docker image
     pullPolicy: IfNotPresent
-  ## extraEnv to add arbritrary environment variables to nginx container
+  ## extraEnv to add arbitrary environment variables to nginx container
   extraEnv: []
   ## resources for the nginx container
   resources: {}
@@ -380,7 +384,7 @@ nginx:
     type: ClusterIP
     ## port of the nginx service
     port: 8080
-    ## annotations to add arbritrary annotations to nginx service
+    ## annotations to add arbitrary annotations to nginx service
     annotations: {}
   networkPolicy:
     ## enabled controls whether policies related NetworkPolicy should be created
@@ -422,15 +426,16 @@ policies:
     tag: 1.0.0
     ## pullPolicy for the policies docker image
     pullPolicy: IfNotPresent
-  ## systemProps used to define arbritrary system properties for policies service
+  ## systemProps used to define arbitrary system properties for policies service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps: []
-  ## extraEnv to add arbritrary environment variable to policies container
+  ## extraEnv to add arbitrary environment variable to policies container
   extraEnv: []
   ## resources for the policies container
-  resources: {}
-    # requests:
-    #   memory: 512Mi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -494,7 +499,7 @@ swaggerui:
     tag: 3.17.4
     ## pullPolicy for the swagger ui docker image
     pullPolicy: IfNotPresent
-  ## extraEnv to add arbritrary environment variable to swagger ui container
+  ## extraEnv to add arbitrary environment variable to swagger ui container
   extraEnv: []
   ## resources for the swagger ui container
   resources: {}
@@ -509,7 +514,7 @@ swaggerui:
   service:
     ## port of the swaggerui service
     port: 8080
-    ## annotations to add arbritrary annotations to swaggerui service
+    ## annotations to add arbitrary annotations to swaggerui service
     annotations: {}
 
 
@@ -539,15 +544,16 @@ things:
     tag: 1.0.0
     ## pullPolicy for the things docker image
     pullPolicy: IfNotPresent
-  ## systemProps used to define arbritrary system properties for things service
+  ## systemProps used to define arbitrary system properties for things service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps: []
-  ## extraEnv to add arbritrary environment variable to things container
+  ## extraEnv to add arbitrary environment variable to things container
   extraEnv: []
   ## resources for the things container
-  resources: {}
-    # requests:
-    #   memory: 512Mi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -612,15 +618,16 @@ thingsSearch:
     tag: 1.0.0
     ## pullPolicy for the things-search docker image
     pullPolicy: IfNotPresent
-  ## systemProps used to define arbritrary system properties for things-search service
+  ## systemProps used to define arbitrary system properties for things-search service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps: []
-  ## extraEnv to add arbritrary environment variable to things-search container
+  ## extraEnv to add arbitrary environment variable to things-search container
   extraEnv: []
   ## resources for the things-search container
-  resources: {}
-    # requests:
-    #   memory: 512Mi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
