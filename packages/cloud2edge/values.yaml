@@ -21,3 +21,31 @@ hono:
 
   grafana:
     enabled: false
+
+  authServer:
+    extraSecretMounts:
+      permissions:
+        secretName: "c2e-permissions"
+        mountPath: "/var/run/hono/auth"
+    hono:
+      auth:
+        svc:
+          permissionsPath: "file:///var/run/hono/auth/c2e-permissions.json"
+          supportedSaslMechanisms: "PLAIN"
+          signing:
+            # tokenExpiration contains the number of seconds after which tokens issued
+            # by the Auth server will expire.
+            tokenExpiration: 3600
+
+  deviceRegistryExample:
+    extraSecretMounts:
+      registrydata:
+        secretName: "c2e-registry-data"
+        mountPath: "/var/run/hono/registry"
+    data:
+      # the value of this property needs to be the name of the
+      # property defining the extra secret mount
+      volumeName: "registrydata"
+      tenantsFile: "c2e-tenants.json"
+      devicesFile: "c2e-devices.json"
+      credentialsFile: "c2e-credentials.json"
