@@ -1,0 +1,39 @@
+Thank you for installing the Cloud2Edge Eclipse IoT Package.
+
+Your release is named '{{ .Release.Name }}'.
+
+It might take some time for all of the package's services to start up.
+You can check the current status by issuing the following command:
+{{ if ( eq .Release.Namespace "default" ) }}
+  $ kubectl get pods
+{{- else }}
+  $ kubectl get -n {{ .Release.Namespace }} pods
+{{- end }}
+
+Once all services are up and running, the output should look similar to this:
+
+NAME                                   {{ "READY   STATUS    RESTARTS   AGE" | indent ( len .Release.Name ) }}
+ditto-mongodb-8ff6bb7cf-r7hh5          {{ "1/1     Running   0          3m15s" | indent ( len .Release.Name ) }}
+{{ .Release.Name }}-adapter-amqp-vertx-65cfb4d675-g5wn4   1/1     Running   0          3m15s
+{{ .Release.Name }}-adapter-http-vertx-66bd6bb89c-mng5t   1/1     Running   0          3m15s
+{{ .Release.Name }}-adapter-mqtt-vertx-765fcd578b-5rl7n   1/1     Running   0          3m15s
+{{ .Release.Name }}-artemis-f8f7dc7f4-864cj               1/1     Running   0          3m15s
+{{ .Release.Name }}-dispatch-router-6c77dc78bd-hjn4l      1/1     Running   0          3m15s
+{{ .Release.Name }}-ditto-concierge-5949cb449d-46vp5      1/1     Running   0          3m15s
+{{ .Release.Name }}-ditto-connectivity-779fc6f574-gd5gq   1/1     Running   0          3m15s
+{{ .Release.Name }}-ditto-gateway-5cfdc9f9fc-kl6mh        1/1     Running   0          3m15s
+{{ .Release.Name }}-ditto-nginx-864cffd948-mvcdg          1/1     Running   0          3m15s
+{{ .Release.Name }}-ditto-policies-86748888d6-g2xs7       1/1     Running   0          3m15s
+{{ .Release.Name }}-ditto-swaggerui-75677db684-h5ngx      1/1     Running   0          3m15s
+{{ .Release.Name }}-ditto-things-67b86569fb-z4w7b         1/1     Running   0          3m15s
+{{ .Release.Name }}-ditto-thingssearch-55fb58cd96-52zg8   1/1     Running   0          3m15s
+{{ .Release.Name }}-service-auth-84d9695cfc-5wlfh         1/1     Running   0          3m15s
+{{ .Release.Name }}-service-device-registry-0             1/1     Running   0          3m15s
+
+Once all pods have status 'Running', the Cloud2Edge package is ready to be used.
+
+Please refer to the Cloud2Edge home page (https://www.eclipse.org/packages/packages/cloud2edge/)
+to learn more about the package's functionality and next steps.
+
+Enjoy :-)
+
