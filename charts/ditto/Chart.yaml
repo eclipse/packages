@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,9 +11,15 @@
 ---
 apiVersion: v1
 appVersion: "1.0.0"
-description: A Helm chart for Eclipse Ditto
+description: |
+  Eclipse Ditto™ is a technology in the IoT implementing a software pattern called “digital twins”.
+  A digital twin is a virtual, cloud based, representation of his real world counterpart
+  (real world “Things”, e.g. devices like sensors, smart heating, connected cars, smart grids,
+  EV charging stations etc).
 name: ditto
-version: 1.1.0
+version: 1.1.1
+keywords:
+  - iot-chart
 home: https://www.eclipse.org/ditto
 sources:
 - https://github.com/eclipse/ditto
