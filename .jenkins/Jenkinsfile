@@ -103,6 +103,7 @@ podTemplate(
                                 echo "Building $(dirname $i) ..."
                                 echo ${WORKSPACE}/helm package -u "$(dirname $i)" -d helm-repository
                             done
+                            find helm-repository
                         '''
                     }
                 }
