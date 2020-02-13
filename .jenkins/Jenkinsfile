@@ -170,26 +170,30 @@ podTemplate(
                             sh 'git checkout -- charts/'
                         }
 
-                        // and only copy new packages, remove index when updating
+                        // and only copy new packages, add marker file
                         sh '''
+                            mkdir build/helm-add
                             for i in $(ls build/helm-repository/*.tgz); do
                               if [ ! -f "www/charts/$(basename $i)" ]; then
                                 echo "Publishing $(basename $i) ..."
-                                cp -v "$i" www/charts/
-                                rm -f www/charts/index.yaml
+                                cp -v "$i" build/helm-add/
+                                touch build/perform-merge
                               fi
                             done
                         '''
                     }
 
                     // only update the index, when it is missing
-                    if (!fileExists('www/charts/index.yaml')) {
+                    if (!fileExists('build/perform-merge')) {
                     stage ('Rebuild helm Index') {
-                        if ( isStaging() ) {
-                            sh '${WORKSPACE}/helm repo index www/charts/ --url https://staging.eclipse.org/packages/charts'
-                        } else {
-                            sh '${WORKSPACE}/helm repo index www/charts/ --url https://eclipse.org/packages/charts'
+                        // merge added content with existing index
+	                    if ( isStaging() ) {
+	                        sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://staging.eclipse.org/packages/charts'
+	                    } else {
+	                        sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://eclipse.org/packages/charts'
                         }
+                        // copy new content and index to www-repo
+                        sh 'cp -v build/helm-add/* www/charts/'
                     }
                     } /* if */
 
