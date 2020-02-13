@@ -46,7 +46,6 @@ podTemplate(
             "PROJECT_NAME=packages",
             "PROJECT_BOT_NAME=Eclipse IoT Packages Bot",
             "HELM_VERSION=${HELM_VERSION}",
-            "HELM_HOME=${env.WORKSPACE}/helm-home",
         ]) {
 
             deleteDir()
@@ -172,7 +171,7 @@ podTemplate(
 
                         // and only copy new packages, remove index when updating
                         sh '''
-                            for i in $(ls build/charts/helm-repository/*.tgz); do
+                            for i in $(ls build/helm-repository/*.tgz); do
                               if [ ! -f "www/charts/$(basename $i)" ]; then
                                 echo "Publishing $(basename $i) ..."
                                 cp -v "$i" www/charts/
@@ -180,12 +179,11 @@ podTemplate(
                               fi
                             done
                         '''
-                        sh 'cp -vn build/charts/helm-repository/*.tgz www/charts/'
                     }
 
                     // only update the index, when it is missing
                     if (!fileExists('www/charts/index.yaml')) {
-                    stage ('Helm Index') {
+                    stage ('Rebuild helm Index') {
                         if ( isStaging() ) {
                             sh '${WORKSPACE}/helm repo index www/charts/ --url https://staging.eclipse.org/packages/charts'
                         } else {
