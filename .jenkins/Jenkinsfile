@@ -40,7 +40,7 @@ podTemplate(
 
       timeout(time: 10, unit: "MINUTES") {
 
-      container('jekyll') {
+      container('jnlp') {
 
         withEnv([
             "PROJECT_NAME=packages",
@@ -66,12 +66,11 @@ podTemplate(
                     }
                 }
 
-                stage('Helm Init') {
+                stage('Helm Install') {
                     sh '''
                        curl --silent --location https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz --output helm.tar.gz
                        tar --strip-components=1 -xvzf helm.tar.gz linux-amd64/helm
                     '''
-                    sh '${WORKSPACE}/helm init --client-only'
                 }
 
             } catch (err) {
@@ -79,7 +78,7 @@ podTemplate(
                 throw err
             } /* try */
         } /* with-env */
-      } /* container (jekyll) */
+      } /* container (jnlp) */
 
       container('jekyll') {
         withEnv([
@@ -90,6 +89,12 @@ podTemplate(
         ]) {
 
             try {
+
+                stage('Helm Install') {
+                    sh '''
+                        ${WORKSPACE}/helm init --client-only
+                       '''
+                }
 
                 stage('Helm Build') {
                     dir("build") {
