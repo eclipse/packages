@@ -89,7 +89,7 @@ podTemplate(
 
             try {
 
-                stage('Helm Install') {
+                stage('Helm Init') {
                     sh '''
                         ${WORKSPACE}/helm init --client-only
                        '''
