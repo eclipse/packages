@@ -40,7 +40,7 @@ podTemplate(
 
       timeout(time: 10, unit: "MINUTES") {
 
-      container('jnlp') {
+      container('jekyll') {
 
         withEnv([
             "PROJECT_NAME=packages",
@@ -79,7 +79,7 @@ podTemplate(
                 throw err
             } /* try */
         } /* with-env */
-      } /* container (jnlp) */
+      } /* container (jekyll) */
 
       container('jekyll') {
         withEnv([
