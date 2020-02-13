@@ -1,6 +1,8 @@
 ---
 title: 'Installation'
 layout: package-page
+twitterTitle: Cloud2Edge | Installation
+description: Installations instructions for the Cloud2Edge package.
 ---
 
 {% capture main %}

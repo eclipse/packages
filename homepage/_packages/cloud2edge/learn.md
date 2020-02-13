@@ -1,6 +1,8 @@
 ---
 title: 'Learn more'
 layout: package-page
+twitterTitle: Cloud2Edge | Learn more
+description: Learn more about the Cloud2Edge package.
 ---
 
 {%- capture main -%}

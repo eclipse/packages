@@ -1,6 +1,8 @@
 ---
 title: 'Take a tour'
 layout: package-page
+twitterTitle: Cloud2Edge | Take a tour
+description: Take a tour once you installed the Cloud2Edge package.
 ---
 
 {% capture main %}
