@@ -101,7 +101,7 @@ podTemplate(
                             mkdir -p helm-repository
                             for i in $(ls charts/*/Chart.yaml packages/*/Chart.yaml); do
                                 echo "Building $(dirname $i) ..."
-                                echo ${WORKSPACE}/helm package -u "$(dirname $i)" -d helm-repository
+                                ${WORKSPACE}/helm package -u "$(dirname $i)" -d helm-repository
                             done
                             find helm-repository
                         '''
