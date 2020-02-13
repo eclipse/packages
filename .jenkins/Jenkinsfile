@@ -184,7 +184,7 @@ podTemplate(
                     }
 
                     // only update the index, when it is missing
-                    if (!fileExists('build/perform-merge')) {
+                    if (fileExists('build/perform-merge')) {
                     stage ('Rebuild helm Index') {
                         // merge added content with existing index
 	                    if ( isStaging() ) {
