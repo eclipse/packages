@@ -54,12 +54,9 @@ podTemplate(
             try {
 
                 stage ('Init') {
-                    sh "env | sort"
-                }
-
-                stage ('Setup') {
                     sh '''
                         pwd
+                        env | sort
                     '''
                 }
 
@@ -95,12 +92,12 @@ podTemplate(
             try {
 
                 stage('Helm Build') {
-                    dir("build/charts") {
-                        sh 'mkdir -p helm-repository'
+                    dir("build") {
                         sh '''
-                            for i in $(ls */Chart.yaml); do
+                            mkdir -p helm-repository
+                            for i in $(ls charts/*/Chart.yaml packages/*/Chart.yaml); do
                                 echo "Building $(dirname $i) ..."
-                                ${WORKSPACE}/helm package -u "$(dirname $i)" -d helm-repository
+                                echo ${WORKSPACE}/helm package -u "$(dirname $i)" -d helm-repository
                             done
                         '''
                     }
