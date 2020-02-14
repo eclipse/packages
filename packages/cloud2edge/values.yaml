@@ -22,6 +22,16 @@ hono:
   grafana:
     enabled: false
 
+  amqpMessagingNetworkExample:
+    dispatchRouter:
+      resources:
+        requests:
+          cpu: 150m
+    broker:
+      resources:
+        requests:
+          cpu: 150m
+
   authServer:
     extraSecretMounts:
       permissions:
@@ -38,6 +48,9 @@ hono:
             tokenExpiration: 3600
 
   deviceRegistryExample:
+    resources:
+      requests:
+        cpu: 150m
     extraSecretMounts:
       registrydata:
         secretName: "c2e-registry-data"
@@ -49,3 +62,95 @@ hono:
       tenantsFile: "c2e-tenants.json"
       devicesFile: "c2e-devices.json"
       credentialsFile: "c2e-credentials.json"
+
+  adapters:
+    amqp:
+      resources:
+        requests:
+          cpu: 150m
+    http:
+      resources:
+        requests:
+          cpu: 150m
+    mqtt:
+      resources:
+        requests:
+          cpu: 150m
+
+
+# Configuration properties for Eclipse Ditto.
+ditto:
+
+  concierge:
+    resources:
+      requests:
+        cpu: 150m
+      limits:
+        cpu: 1
+        memory: "512Mi"
+
+  connectivity:
+    resources:
+      requests:
+        cpu: 150m
+      limits:
+        cpu: 1
+        memory: "512Mi"
+
+  gateway:
+    resources:
+      requests:
+        cpu: 150m
+      limits:
+        cpu: 1
+        memory: "512Mi"
+
+  nginx:
+    resources:
+      requests:
+        cpu: 100m
+      limits:
+        cpu: 250m
+        memory: "64Mi"
+
+  policies:
+    resources:
+      requests:
+        cpu: 150m
+      limits:
+        cpu: 1
+        memory: "512Mi"
+
+  swaggerui:
+    resources:
+      requests:
+        cpu: 100m
+      limits:
+        cpu: 250m
+        memory: "128Mi"
+
+  things:
+    resources:
+      requests:
+        cpu: 150m
+      limits:
+        cpu: 1
+        memory: "512Mi"
+
+  thingsSearch:
+    resources:
+      requests:
+        cpu: 150m
+      limits:
+        cpu: 1
+        memory: "512Mi"
+
+  mongodb:
+    resources:
+      requests:
+        cpu: 150m
+        memory: "256Mi"
+      limits:
+        cpu: 1
+        memory: "512Mi"
+
