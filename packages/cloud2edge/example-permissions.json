@@ -80,19 +80,19 @@
     ],
     "application_c2e": [
       {
-        "resource": "telemetry/org.eclipse.packages.c2e",
+        "resource": "telemetry/{{ .Values.demoDevice.tenant }}",
         "activities": [ "READ" ]
       },
       {
-        "resource": "event/org.eclipse.packages.c2e",
+        "resource": "event/{{ .Values.demoDevice.tenant }}",
         "activities": [ "READ" ]
       },
       {
-        "resource": "command/org.eclipse.packages.c2e",
+        "resource": "command/{{ .Values.demoDevice.tenant }}",
         "activities": [ "WRITE" ]
       },
       {
-        "resource": "command_response/org.eclipse.packages.c2e",
+        "resource": "command_response/{{ .Values.demoDevice.tenant }}/*",
         "activities": [ "READ" ]
       }
     ]
@@ -142,9 +142,9 @@
       "password": "verysecret",
       "authorities": [ "application_all_tenants" ]
     },
-    "ditto@C2E": {
+    "{{ .Values.honoConnection.username }}": {
       "mechanism": "PLAIN",
-      "password": "verysecret",
+      "password": "{{ .Values.honoConnection.password }}",
       "authorities": [ "application_c2e" ]
     }
   }
