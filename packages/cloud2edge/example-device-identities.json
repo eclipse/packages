@@ -37,7 +37,7 @@
     "tenant": "C2E",
     "devices": [
       {
-        "device-id": "demo-device",
+        "device-id": "org.eclipse.packages.c2e:demo-device",
         "data": {
           "enabled": true
         }
