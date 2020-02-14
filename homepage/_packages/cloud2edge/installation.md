@@ -26,7 +26,7 @@ This should print out the version of the client, but must also print out the ver
     Server Version: version.Info{Major:"1", Minor:"13+", GitVersion:"v1.13.4+c2a5caf", GitCommit:"c2a5caf", GitTreeState:"clean", BuildDate:"2019-09-21T02:12:52Z", GoVersion:"go1.11.13", Compiler:"gc", Platform:"linux/amd64"}
 {% enddetails %}
 
-## Run the installation
+## Install the package
 
 The Cloud2Edge package consists of multiple components. In order to keep them together and separate
 from other components running in your Kubernetes cluster, it is feasible to install them into
@@ -34,21 +34,40 @@ their own name space. The following command creates the `cloud2edge` name space 
 other name as well.
 
 {% clipboard %}
-kubectl create namespace cloud2edge
+NS=cloud2edge
+kubectl create namespace $NS
 {% endclipboard %}
 
-Next, install the package to the name space using Helm
+Next, install the package to the name space using Helm.
+
+{% variants %}
+
+{% variant NodePort %}
+Kubernetes variants like *kind* or *Minikube* do not support exposing service endpoints via load balancers
+out of the box. Instead, services are exposed via *NodePorts*.
 
 {% clipboard %}
-helm install -n cloud2edge c2e eclipse-iot/cloud2edge
+RELEASE=c2e
+helm install -n $NS $RELEASE eclipse-iot/cloud2edge
 {% endclipboard %}
+{% endvariant %}
 
-and follow the instructions on screen regarding installation progress and next steps.
+{% variant LoadBalancer %}
+Managed Kubernetes variants usually support exposing service endpoints via load balancers on public
+IP addresses. To install the Cloud2Edge package using load balancers, run the following command:
+
+{% clipboard %}
+RELEASE=c2e
+helm install -n $NS --set hono.useLoadBalancer=true --set ditto.nginx.service.type=LoadBalancer $RELEASE eclipse-iot/cloud2edge
+{% endclipboard %}
+{% endvariant %}
+
+{% endvariants %}
 
 ## Ready to run
 
-Once the packages pods are all up and running, you can start using the package's services.
-For an initial walk-through of the functionality [take a tour](../tour) of the Cloud2Edge package ...
+Once the package's pods are all up and running, you can start using its services.
+The easiest way of getting to know the Cloud2Edge package is by [taking a little tour](../tour).
 
 {% endcapture %}
 

@@ -106,6 +106,8 @@ ditto:
         memory: "512Mi"
 
   nginx:
+    service:
+      type: NodePort
     resources:
       requests:
         cpu: 100m
