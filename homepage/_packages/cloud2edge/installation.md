@@ -7,7 +7,9 @@ description: Installations instructions for the Cloud2Edge package.
 
 {% capture main %}
 
-You will need a Kubernetes instance in order to deploy this package. If you haven't done so already, take a look at our [Kubernetes installation]({{ "/prereqs" | relative_url }}) page. Any Kubernetes compatible cluster will do, as long as it meets the requirements.
+You will need a Kubernetes instance, the `kubectl` and the `helm` tool in order to deploy this package.
+Please refer to our [pre-requisites]({{ "/prereqs" | relative_url }}) page for details.
+Any Kubernetes compatible cluster will do, as long as it meets the requirements.
 
 ## Check access
 
@@ -26,44 +28,27 @@ This should print out the version of the client, but must also print out the ver
 
 ## Run the installation
 
-First create a new namespace for the package:
+The Cloud2Edge package consists of multiple components. In order to keep them together and separate
+from other components running in your Kubernetes cluster, it is feasible to install them into
+their own name space. The following command creates the `cloud2edge` name space but you can select any
+other name as well.
 
 {% clipboard %}
 kubectl create namespace cloud2edge
 {% endclipboard %}
 
-Next, install the package using Helm:
+Next, install the package to the name space using Helm
 
 {% clipboard %}
-helm install --dependency-update -n cloud2edge c2e eclipse-iot/cloud2edge
+helm install -n cloud2edge c2e eclipse-iot/cloud2edge
 {% endclipboard %}
 
-## Monitor installation
-
-Installation and start-up of the package's services might take some minutes.
-You can track the start-up by means of the following command:
-
-{% clipboard %}
-kubectl get pods -n cloud2edge
-{% endclipboard %}
-
-You should see the pods being started and becoming ready.
-
-{% details Example of started pods %}
-    NAME                                               READY   STATUS    RESTARTS   AGE
-    c2e-adapter-amqp-vertx-57dc849d4c-tw25z            1/1     Running   0          148m
-    c2e-adapter-http-vertx-6bdffc59-t54h5              1/1     Running   0          148m
-    c2e-adapter-mqtt-vertx-74cdb9644b-6pgs6            1/1     Running   0          148m
-    c2e-artemis-54ffcff88f-7w85x                       1/1     Running   0          148m
-    c2e-dispatch-router-54d968954b-vrp7z               1/1     Running   0          148m
-    c2e-service-auth-6c9bcf8899-qmztm                  1/1     Running   0          148m
-    c2e-service-device-registry-0                      1/1     Running   0          148m
-{% enddetails %}
+and follow the instructions on screen regarding installation progress and next steps.
 
 ## Ready to run
 
-Once the pods are all ready, you can start using the package's services. For an initial walk-through of the functionality
-see the section [Take a tour](../tour).
+Once the packages pods are all up and running, you can start using the package's services.
+For an initial walk-through of the functionality [take a tour](../tour) of the Cloud2Edge package ...
 
 {% endcapture %}
 
