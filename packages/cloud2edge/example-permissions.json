@@ -80,19 +80,19 @@
     ],
     "application_c2e": [
       {
-        "resource": "telemetry/C2E",
+        "resource": "telemetry/org.eclipse.packages.c2e",
         "activities": [ "READ" ]
       },
       {
-        "resource": "event/C2E",
+        "resource": "event/org.eclipse.packages.c2e",
         "activities": [ "READ" ]
       },
       {
-        "resource": "command/C2E",
+        "resource": "command/org.eclipse.packages.c2e",
         "activities": [ "WRITE" ]
       },
       {
-        "resource": "command_response/C2E",
+        "resource": "command_response/org.eclipse.packages.c2e",
         "activities": [ "READ" ]
       }
     ]
