@@ -34,10 +34,10 @@
     ]
   },
   {
-    "tenant": "C2E",
+    "tenant": "org.eclipse.packages.c2e",
     "devices": [
       {
-        "device-id": "org.eclipse.packages.c2e:demo-device",
+        "device-id": "demo-device",
         "data": {
           "enabled": true
         }
