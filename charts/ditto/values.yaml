@@ -384,6 +384,9 @@ nginx:
     type: ClusterIP
     ## port of the nginx service
     port: 8080
+    ## in case of <type> NodePort the <nodePort> may additionally be set
+    #type: NodePort
+    #nodePort: 30880
     ## annotations to add arbitrary annotations to nginx service
     annotations: {}
   networkPolicy:
