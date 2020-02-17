@@ -209,7 +209,9 @@ connectivity:
   systemProps:
     - "-Dakka.cluster.distributed-data.durable.lmdb.dir=/var/tmp/ddata"
   ## extraEnv to add arbitrary environment variable to connectivity container
-  extraEnv: []
+  extraEnv:
+    - name: CONNECTIVITY_CONNECTION_BLACKLISTED_HOSTNAMES
+      value: ""
   ## resources for the connectivity container
   resources:
     requests:
