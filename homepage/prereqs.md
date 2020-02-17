@@ -80,27 +80,27 @@ Which should show a proper version for the client **and** the server:
 When you no longer need your cluster, you can stop it using:
 
 {%clipboard%}
-minishift stop
+minikube stop
 {%endclipboard%}
 
 This will suspend the VM so that you can, later on, resume it by
 executing:
 
 {%clipboard%}
-minishift start
+minikube start
 {%endclipboard%}
 
 Or delete it using:
 
 {%clipboard%}
-minishift delete
+minikube delete
 {%endclipboard%}
 
 #### Resources
 
 You can translate the package resources requirements into arguments for the `start` command like this:
 
-    minishift start --cpus <cpus> --disk-size <size> --memory <memory> --kubernetes-version <version>
+    minikube start --cpus <cpus> --disk-size <size> --memory <memory> --kubernetes-version <version>
 
 Using the following arguments:
 
