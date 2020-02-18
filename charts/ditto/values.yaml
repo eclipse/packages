@@ -209,7 +209,9 @@ connectivity:
   systemProps:
     - "-Dakka.cluster.distributed-data.durable.lmdb.dir=/var/tmp/ddata"
   ## extraEnv to add arbitrary environment variable to connectivity container
-  extraEnv: []
+  extraEnv:
+    - name: CONNECTIVITY_CONNECTION_BLACKLISTED_HOSTNAMES
+      value: ""
   ## resources for the connectivity container
   resources:
     requests:
@@ -384,6 +386,9 @@ nginx:
     type: ClusterIP
     ## port of the nginx service
     port: 8080
+    ## in case of <type> NodePort the <nodePort> may additionally be set
+    # type: NodePort
+    # nodePort: 30880
     ## annotations to add arbitrary annotations to nginx service
     annotations: {}
   networkPolicy:
