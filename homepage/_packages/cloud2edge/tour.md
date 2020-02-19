@@ -79,16 +79,24 @@ The updated state of the digital twin can then be retrieved using:
 curl -u ditto:ditto http://$DITTO_API_IP:$DITTO_API_PORT_HTTP/api/2/things/org.eclipse.packages.c2e:demo-device
 {% endclipboard %}
 
+Alternatively you can also use the following command to subscribe to Ditto's
+stream of thing update events:
+
+{% clipboard %}
+curl --http2 -u ditto:ditto -H "Accept:text/event-stream" -N http://$DITTO_API_IP:$DITTO_API_PORT_HTTP/api/2/things
+{% endclipboard %}
+
+
 ## Working with devices
 
 The next sections will create a new tenant and register a device for it.
 
 ### Create a new tenant
 
-Create a new tenant named `my-tenant`:
+Create a new tenant named `my-tenant` in Hono:
 
 {% clipboard %}
-curl -i --insecure -XPOST ${DEVICE_REGISTRY_URL}/v1/tenants/my-tenant
+curl -i -X POST http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/tenants/my-tenant
 {% endclipboard %}
 
 This should return a result of `201 Created`.
@@ -108,7 +116,7 @@ This should return a result of `201 Created`.
 Next we can register a new device, named `my-device-1` for the tenant we just created:
 
 {% clipboard %}
-    curl -i --insecure -XPOST ${DEVICE_REGISTRY_URL}/v1/devices/my-tenant/my-device-1
+    curl -i http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/devices/my-tenant/my-device-1
 {% endclipboard %}
 
 This should return a result of `201 Created`.
@@ -131,16 +139,14 @@ a *gateway device*, but we want this device to be able to connect, so the next s
 to assign a username/password combination:
 
 {% clipboard %}
-    curl -i --insecure -XPUT ${DEVICE_REGISTRY_URL}/v1/credentials/my-tenant/my-device-1 \
-      -H "Content-Type: application/json" --data-binary @- <<__EOF__
-    [{
-      "type": "hashed-password",
-      "auth-id": "my-auth-id-1",
-      "secrets": [{
-        "pwd-plain": "my-password"
-      }]
-    }]
-    __EOF__
+curl -i -X PUT -H "Content-Type: application/json" --data '[
+{
+  "type": "hashed-password",
+  "auth-id": "my-auth-id-1",
+  "secrets": [{
+    "pwd-plain": "my-password"
+  }]
+}]' http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/credentials/my-tenant/my-device-1
 {% endclipboard %}
 
 {% details Example of a successful result %}
