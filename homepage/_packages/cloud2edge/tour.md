@@ -19,37 +19,73 @@ or that you might experience some issues when testing.
 
 {% endalert %}
 
+## Preparing the environment
+
 The following examples will use information which depends on your
 environment. All of this information is listed in this section and will be
 set as environment variables so that all commands can easily make use
-of those variables:
+of those variables. Note that you will need to set the environment variables
+in every command shell separately.
 
 {% variants %}
-{% variant Minikube %}
-{% clipboard %}
-DEVICE_REGISTRY_URL=$(minikube service -n cloud2edge c2e-service-device-registry-ext --url --https | grep 31443)
-MQTT_ADAPTER_HOST=$(minikube service -n cloud2edge c2e-adapter-mqtt-vertx --url | grep 30883 | sed -e 's/^http:\/\///' -e 's/:.*$//')
-MQTT_ADAPTER_PORT=30883
-{% endclipboard %}
-{% endvariant %}
 
 {% variant Kubernetes %}
+<br>
+Download the [setCloud2EdgeEnv script](../scripts/setCloud2EdgeEnv.sh) and use it
+to set environment variables for the Cloud2Edge package's service endpoints.
+
 {% clipboard %}
-DEVICE_REGISTRY_URL=https://$(kubectl get service c2e-service-device-registry-ext --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n cloud2edge):28080
-MQTT_ADAPTER_HOST=$(kubectl get service c2e-adapter-mqtt-vertx --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n cloud2edge)
-MQTT_ADAPTER_PORT=8883
+RELEASE=c2e
+NS=cloud2edge
+./setCloud2EdgeEnv.sh $RELEASE $NS
 {% endclipboard %}
 {% endvariant %}
 
 {% variant OpenShift %}
 {% clipboard %}
-DEVICE_REGISTRY_URL=https://$(oc get -n cloud2edge route c2e-service-device-registry-https --template='{{"{{.spec.host"}}}}')
-MQTT_ADAPTER_URL=$(oc -n cloud2edge get route c2e-adapter-http-vertx-sec --template='{{"{{.spec.host"}}}}')
-MQTT_ADAPTER_PORT=443
+NS=cloud2edge
+RELEASE=c2e
+DEVICE_REGISTRY_URL=https://$(oc get -n $NS route ${RELEASE}-service-device-registry-https --template='{{"{{.spec.host"}}}}')
+HTTP_ADAPTER_URL=$(oc get -n $NS route ${RELEASE}-adapter-http-vertx-sec --template='{{"{{.spec.host"}}}}')
+HTTP_ADAPTER_PORT=443
 {% endclipboard %}
 {% endvariant %}
 
 {% endvariants %}
+
+## Publishing telemetry data
+
+The Cloud2Edge package comes with a pre-provisioned example device that we will use to publish
+some telemetry data via Hono's HTTP protocol adapter. The data will automatically be forwarded to Ditto
+where the device's twin representation will be updated with the data published by the device.
+
+The demo device's digital twin supports a temperature property which will be set to 45
+by means of the following command:
+
+{% clipboard %}
+curl -i -u demo-device@org.eclipse.packages.c2e:demo-secret -H "application/json" --data-binary '{
+  "topic": "org.eclipse.packages.c2e/demo-device/things/twin/commands/modify",
+  "headers": {},
+  "path": "/features/temperature/properties/value",
+  "value": "45"
+}' http://${HTTP_ADAPTER_IP}:${HTTP_ADAPTER_PORT_HTTP}/telemetry
+{% endclipboard %}
+
+## Retrieving the digital twin's current state
+
+The updated state of the digital twin can then be retrieved using:
+
+{% clipboard %}
+curl -u ditto:ditto http://$DITTO_API_IP:$DITTO_API_PORT_HTTP/api/2/things/org.eclipse.packages.c2e:demo-device
+{% endclipboard %}
+
+Alternatively you can also use the following command to subscribe to Ditto's
+stream of thing update events:
+
+{% clipboard %}
+curl --http2 -u ditto:ditto -H "Accept:text/event-stream" -N http://$DITTO_API_IP:$DITTO_API_PORT_HTTP/api/2/things
+{% endclipboard %}
+
 
 ## Working with devices
 
@@ -57,10 +93,10 @@ The next sections will create a new tenant and register a device for it.
 
 ### Create a new tenant
 
-Create a new tenant named `my-tenant`:
+Create a new tenant named `my-tenant` in Hono:
 
 {% clipboard %}
-curl -i --insecure -XPOST ${DEVICE_REGISTRY_URL}/v1/tenants/my-tenant
+curl -i -X POST http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/tenants/my-tenant
 {% endclipboard %}
 
 This should return a result of `201 Created`.
@@ -80,7 +116,7 @@ This should return a result of `201 Created`.
 Next we can register a new device, named `my-device-1` for the tenant we just created:
 
 {% clipboard %}
-    curl -i --insecure -XPOST ${DEVICE_REGISTRY_URL}/v1/devices/my-tenant/my-device-1
+    curl -i http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/devices/my-tenant/my-device-1
 {% endclipboard %}
 
 This should return a result of `201 Created`.
@@ -103,16 +139,14 @@ a *gateway device*, but we want this device to be able to connect, so the next s
 to assign a username/password combination:
 
 {% clipboard %}
-    curl -i --insecure -XPUT ${DEVICE_REGISTRY_URL}/v1/credentials/my-tenant/my-device-1 \
-      -H "Content-Type: application/json" --data-binary @- <<__EOF__
-    [{
-      "type": "hashed-password",
-      "auth-id": "my-auth-id-1",
-      "secrets": [{
-        "pwd-plain": "my-password"
-      }]
-    }]
-    __EOF__
+curl -i -X PUT -H "Content-Type: application/json" --data '[
+{
+  "type": "hashed-password",
+  "auth-id": "my-auth-id-1",
+  "secrets": [{
+    "pwd-plain": "my-password"
+  }]
+}]' http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/credentials/my-tenant/my-device-1
 {% endclipboard %}
 
 {% details Example of a successful result %}
@@ -135,31 +169,12 @@ with the *device id* and the back end system isn't aware of the *authentication 
 Of course you may use the same value for the *authentication id* and the *device id*. In this tutorial however,
 we use distinct values to show the difference. 
 
-## Working with data
+## Next Steps
 
-Now that the device is registered, and has credentials set up, we can start publishing data.
-
-### Start consumer
-
-### Publish telemetry data via MQTT
-
-Publish a telemetry message using the MQTT endpoint:
-
-{% clipboard %}
-    mosquitto_pub --insecure -h ${MQTT_ADAPTER_HOST} -p ${MQTT_ADAPTER_PORT} \
-      -u my-auth-id-1@my-tenant -P my-password \
-      --cafile charts/eclipse-hono/hono-demo-certs-jar/root-cert.pem \
-      -t telemetry -m '{"temperature": 5}'
-{% endclipboard %}
-
-{% alert info: %}
-Although a certificate is provided, <strong>insecure</strong> is still required because
-the host name would not match the certificate.
-{% endalert %}
-
-## Fetch from Digital Twin
-
-tbd
+* Check out the [User Guides of Hono's protocol adapters](https://www.eclipse.org/hono/docs/user-guide/) to learn more about
+the device protocols that are supported by Hono.
+* Learn about the [Ditto Protocol](https://www.eclipse.org/ditto/protocol-overview.html) which is used to interact with the
+digital twins that are maintained by Ditto.
 
 ## Updating the firmware
 

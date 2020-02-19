@@ -1,0 +1,59 @@
+{
+    "_policy": {
+        "entries": {
+            "DEFAULT": {
+                "subjects": {
+                    "nginx:ditto": {
+                        "type": "Ditto user authenticated via nginx"
+                    }
+                },
+                "resources": {
+                    "thing:/": {
+                        "grant": ["READ", "WRITE"],
+                        "revoke": []
+                    },
+                    "policy:/": {
+                        "grant": ["READ", "WRITE"],
+                        "revoke": []
+                    },
+                    "message:/": {
+                        "grant": ["READ", "WRITE"],
+                        "revoke": []
+                    }
+                }
+            },
+            "HONO": {
+                "subjects": {
+                    "pre-authenticated:hono-connection": {
+                        "type": "Connetion to Eclipse Hono"
+                    }
+                },
+                "resources": {
+                    "thing:/": {
+                        "grant": ["READ", "WRITE"],
+                        "revoke": []
+                    },
+                    "message:/": {
+                        "grant": ["READ", "WRITE"],
+                        "revoke": []
+                    }
+                }
+            }
+        }
+    },
+    "attributes": {
+        "location": "Germany"
+    },
+    "features": {
+        "temperature": {
+            "properties": {
+                "value": null
+            }
+        },
+        "humidity": {
+            "properties": {
+                "value": null
+            }
+        }
+    }
+}
