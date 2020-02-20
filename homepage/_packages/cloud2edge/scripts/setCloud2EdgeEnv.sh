@@ -53,7 +53,7 @@ function getService {
         if [ $? -eq 0 -a "$IP" != '' ]
         then
           echo "export ${ENV_VAR_PREFIX}_IP=\"$IP\""
-          getPorts $SERVICENAME $PORT_NAMES $ENV_VAR_PREFIX port
+          getPorts $SERVICENAME "$PORT_NAMES" $ENV_VAR_PREFIX port
         fi
         ;;
     esac
