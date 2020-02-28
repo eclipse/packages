@@ -1,5 +1,6 @@
+{{- if .Values.adapters.mqtt.enabled }}
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -40,4 +41,5 @@ spec:
 {{- end }}
 {{- with .Values.adapters.mqtt.svc.loadBalancerIP }}
   loadBalancerIP: {{ . | quote }}
+{{- end }}
 {{- end }}
