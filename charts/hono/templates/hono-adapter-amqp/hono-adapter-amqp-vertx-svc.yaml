@@ -1,3 +1,4 @@
+{{- if .Values.adapters.amqp.enabled }}
 #
 # Copyright (c) 2019 Contributors to the Eclipse Foundation
 #
@@ -40,4 +41,5 @@ spec:
 {{- end }}
 {{- with .Values.adapters.amqp.svc.loadBalancerIP }}
   loadBalancerIP: {{ . | quote }}
+{{- end }}
 {{- end }}

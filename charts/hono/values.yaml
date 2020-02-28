@@ -215,6 +215,8 @@ adapters:
   defaultTenantIdleTimeout: "1h"
 
   amqp:
+    # enabled indicates if Hono's AMQP 1.0 adapter should be deployed.
+    enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the AMQP adapter
     imageName: index.docker.io/eclipse/hono-adapter-amqp-vertx:1.1.0
@@ -280,8 +282,6 @@ adapters:
 
   coap:
     # enabled indicates if Hono's (experimental) CoAP adapter should be deployed.
-    # Note that this requires building the corresponding container image manually because
-    # there is no official image available from Docker Hub (yet).
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the CoAP adapter
@@ -338,6 +338,8 @@ adapters:
       #  certPath: "/etc/config/cert.pem"
 
   http:
+    # enabled indicates if Hono's HTTP adapter should be deployed.
+    enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the HTTP adapter
     imageName: index.docker.io/eclipse/hono-adapter-http-vertx:1.1.0
@@ -533,6 +535,8 @@ adapters:
       #  certPath: "/etc/config/cert.pem"
 
   mqtt:
+    # enabled indicates if Hono's MQTTP 3.1.1 adapter should be deployed.
+    enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the MQTT adapter
     imageName: index.docker.io/eclipse/hono-adapter-mqtt-vertx:1.1.0
