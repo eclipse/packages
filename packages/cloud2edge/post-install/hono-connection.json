@@ -47,7 +47,7 @@
       ],
       "targets": [
         {
-          "address": {{ printf "command/%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+          "address": {{ printf "command/%s" .Values.demoDevice.tenant | quote }},
           "authorizationContext": [
             "pre-authenticated:hono-connection"
           ],
@@ -64,7 +64,7 @@
           }
         },
         {
-          "address": {{ printf "command/%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+          "address": {{ printf "command/%s" .Values.demoDevice.tenant | quote }},
           "authorizationContext": [
             "pre-authenticated:hono-connection"
           ],
