@@ -1,19 +1,6 @@
-#
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
-#
-# See the NOTICE file(s) distributed with this work for additional
-# information regarding copyright ownership.
-#
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
-# http://www.eclipse.org/legal/epl-2.0
-#
-# SPDX-License-Identifier: EPL-2.0
-#
-{{- define "hono.qdrouterd-with-servicebus.json" -}}
 [
   ["router", {
-    "id": "Hono.Example.Router",
+    "id": "{{ .Release.Name }}.Example.Router",
     "mode": "standalone",
     "workerThreads": 3
   }],
@@ -26,29 +13,31 @@
   }],
 
   ["sslProfile", {
-    "name": "public",
-    "protocols": "TLSv1.2"
+    "name": "server",
+    "protocols": "TLSv1.2",
+    "certFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.certFile }}",
+    "privateKeyFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.keyFile }}"
   }],
 
   ["sslProfile", {
-    "name": "external",
-    "protocols": "TLSv1.2",
-    "caCertFile": "/etc/hono/trusted-certs.pem",
-    "certFile": "/etc/hono/qdrouter-cert.pem",
-    "privateKeyFile": "/etc/hono/qdrouter-key.pem"
+    "name": "broker-connection",
+    {{- if not .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
+    "caCertFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.trustStore }}",
+    {{- end }}
+    "protocols": "TLSv1.2"
   }],
 
   ["sslProfile", {
     "name": "internal",
     "protocols": "TLSv1.2",
-    "caCertFile": "/etc/hono/trusted-certs.pem",
-    "certFile": "/etc/hono/qdrouter-cert.pem",
-    "privateKeyFile": "/etc/hono/qdrouter-key.pem",
+    "caCertFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.trustStore }}",
+    "certFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.certFile }}",
+    "privateKeyFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.keyFile }}",
     "uidFormat": "ou"
   }],
 
   ["listener", {
-    "sslProfile": "external",
+    "sslProfile": "server",
     "requireSsl": true,
     "host": "0.0.0.0",
     "port": 5671,
@@ -87,30 +76,38 @@
   }],
 
   ["connector", {
-    "sslProfile": "public",
-    "name": "servicebus",
-    "port": 5671,
+    "sslProfile": "broker-connection",
+    "name": "broker",
     "role": "route-container",
-    "host": {{ .Values.amqpMessagingNetworkExample.broker.servicebus.host | quote }},
-    "idleTimeoutSeconds": 120,
+    "port": {{ .Values.amqpMessagingNetworkExample.broker.port }},
     "saslMechanisms": "PLAIN",
-    "saslUsername": {{ .Values.amqpMessagingNetworkExample.broker.servicebus.saslUsername | quote }},
-    "saslPassword": {{ .Values.amqpMessagingNetworkExample.broker.servicebus.saslPassword | quote }},
-    "verifyHostname": true
+    "saslUsername": "{{ .Values.amqpMessagingNetworkExample.broker.saslUsername }}",
+    "saslPassword": "{{ .Values.amqpMessagingNetworkExample.broker.saslPassword }}",
+    {{- if .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
+    "host": "{{ .Values.amqpMessagingNetworkExample.broker.serviceBus.host }}",
+    "idleTimeoutSeconds": 120
+    {{- else }}
+    "host": "{{ .Release.Name }}-artemis",
+    "verifyHostname": false
+    {{- end }}
   }],
 
   ["linkRoute", {
     "prefix": "event/",
     "direction": "in",
+    {{- if .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
     "delExternalPrefix": "event/",
-    "connection": "servicebus"
+    {{- end }}
+    "connection": "broker"
   }],
 
   ["linkRoute", {
     "prefix": "event/",
     "direction": "out",
+    {{- if .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
     "delExternalPrefix": "event/",
-    "connection": "servicebus"
+    {{- end }}
+    "connection": "broker"
   }],
 
   ["address", {
@@ -165,4 +162,3 @@
     "enable": "info+"
   }]
 ]
-{{- end }}
