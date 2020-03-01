@@ -32,7 +32,7 @@ spec:
         command:
         - /sbin/qdrouterd
         - -c
-        - /etc/hono/qdrouterd-with-{{ .Values.amqpMessagingNetworkExample.broker.type }}.json
+        - /etc/hono/qdrouterd.json
         env:
         - name: KUBERNETES_NAMESPACE
           valueFrom:

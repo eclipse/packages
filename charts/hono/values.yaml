@@ -20,10 +20,22 @@ amqpMessagingNetworkExample:
   # deployed and used. By default an internal Broker is deployed.
   # As alternative an external Broker can be configured as well.
   enabled: true
-  # dispatchRouter.imageName contains the name (including tag)
-  # of the container image to use for the example AQMP Messaging Network Router.
   dispatchRouter:
+    # imageName contains the name (including tag) of the container image
+    # to use for the example AQMP Messaging Network's Dispatch Router.
     imageName: quay.io/interconnectedcloud/qdrouterd:1.10.0
+    # certFile contains the absolute path to a PEM file containing
+    # the X.509 certificate that the router should use for authenticating
+    # to clients
+    certFile: "/etc/hono/qdrouter-cert.pem"
+    # keyFile contains the absolute path to a PEM file containing
+    # the private key that the router should use for authenticating
+    # to clients
+    keyFile: "/etc/hono/qdrouter-key.pem"
+    # trustStore contains the absolute path to a PEM file containing
+    # the X.509 certificates that the router should use as trust anchors
+    # when authentitcating peers
+    trustStore: "/etc/hono/trusted-certs.pem"
     svc:
       annotations: {}
       loadBalancerIP:
@@ -40,10 +52,19 @@ amqpMessagingNetworkExample:
         memory: "256Mi"
   # AMQP Messaging Network Broker configuration.
   broker:
-    type: artemis
+    # saslUsername contains the username that the Dispatch Router should use
+    # for authenticating to the broker
+    saslUsername: "artemis"
+    # saslPassword contains the password that the Dispatch Router should use
+    # for authenticating to the broker
+    saslPassword: "artemis"
+    # port contains the port that the Dispatch Router should use
+    # for connecting to the broker
+    port: 5671
+    # artemis contains configuration properties for the example Apache ActiveMQ Artemis broker
     artemis:
-    # imageName contains the name (including tag) of the container
-    # image to use for the example AMQP Messaging Network Broker
+      # imageName contains the name (including tag) of the container
+      # image to use for the example AMQP Messaging Network Broker
       imageName: quay.io/enmasse/artemis-base:2.10.1
       # resources contains the container's 'requests and limits for CPU and memory
       # as defined by the Kubernetes API.
@@ -56,10 +77,12 @@ amqpMessagingNetworkExample:
         limits:
           cpu: "1"
           memory: "512Mi"
-   # Azure Service Bus as alternative to self-hosted Artemis ActiveMQ for event persistence
+    # servicebus contains configuration properties for the Azure ServiceBus instance that
+    # should be used instead of the example Artemis broker.
     servicebus:
-      saslUsername:
-      saslPassword:
+      # host contains the FQDN of the Azure ServiceBus endpoint to connect to.
+      # If this property is set then the example Artemis broker will not be deployed
+      # and the Dispatch Router will be configured to connect to the ServiceBus.
       host:
 
 dataGridExample:
