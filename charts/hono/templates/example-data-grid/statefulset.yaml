@@ -43,27 +43,25 @@ spec:
         imagePullPolicy: IfNotPresent
         name: hono-data-grid
         ports:
-        - containerPort: 8080
+        - name: http
+          containerPort: 8080
           protocol: TCP
-        - containerPort: 8181
-          protocol: TCP
-        - containerPort: 8888
+        - name: https
+          containerPort: 8443
           protocol: TCP
         - containerPort: 9990
           protocol: TCP
-        - containerPort: 11211
-          protocol: TCP
-        - containerPort: 11222
+        - name: hotrod
+          containerPort: 11222
           protocol: TCP
         volumeMounts:
         - mountPath: /opt/jboss/infinispan-server/standalone/configuration/hono
           name: conf
           readOnly: true
         readinessProbe:
-          exec:
-            command:
-            - /usr/local/bin/is_healthy.sh
-          initialDelaySeconds: 10
+          tcpSocket:
+            port: hotrod
+          initialDelaySeconds: 60
           periodSeconds: 10
           successThreshold: 1
           failureThreshold: 5

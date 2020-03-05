@@ -1,6 +1,6 @@
 {{- if .Values.dataGridExample.enabled }}
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -18,14 +18,14 @@ metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   ports:
-  - name: rest
+  - name: http
     port: 8080
     protocol: TCP
-    targetPort: 8080
+    targetPort: http
   - name: hotrod
     port: 11222
     protocol: TCP
-    targetPort: 11222
+    targetPort: hotrod
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
   sessionAffinity: None
