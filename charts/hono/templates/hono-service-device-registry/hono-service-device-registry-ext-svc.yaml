@@ -32,6 +32,12 @@ spec:
     protocol: TCP
     targetPort: https
     nodePort: 31443
+  {{- if .Values.adapters.externalAdaptersEnabled }}
+  - name: amqps
+    port: 5671
+    protocol: TCP
+    targetPort: amqps
+  {{- end }}
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
 {{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}

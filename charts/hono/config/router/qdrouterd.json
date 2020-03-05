@@ -41,7 +41,6 @@
     "requireSsl": true,
     "host": "0.0.0.0",
     "port": 5671,
-    "maxSessionFrames": 200,
     "linkCapacity": 100,
     "authenticatePeer": true,
     "saslMechanisms": "PLAIN",
@@ -51,7 +50,6 @@
   ["listener", {
     "host": "0.0.0.0",
     "port": 5672,
-    "maxSessionFrames": 200,
     "linkCapacity": 100,
     "authenticatePeer": true,
     "saslMechanisms": "PLAIN",
@@ -63,7 +61,6 @@
     "requireSsl": true,
     "host": "0.0.0.0",
     "port": 5673,
-    "maxSessionFrames": 500,
     "linkCapacity": 100,
     "authenticatePeer": true,
     "saslMechanisms": "EXTERNAL"
@@ -135,6 +132,7 @@
       "groups": {
         "$default": {
           "remoteHosts": "*",
+          "maxSessionWindow": 3276800,
           "maxSessions": 10
         }
       }
@@ -148,11 +146,12 @@
           "users": "Eclipse IoT;Hono",
           "remoteHosts": "*",
           "maxSessions": 4,
+          "maxSessionWindow": 8192000,
           "maxMessageSize": 131072,
           "allowUserIdProxy": true,
           "allowAnonymousSender": true,
-          "sources": "control/*, command/*",
-          "targets": "telemetry/*, event/*, control/*, command_response/*"
+          "sources": "command/*",
+          "targets": "telemetry/*, event/*, command_response/*"
         }
       }
   }],
