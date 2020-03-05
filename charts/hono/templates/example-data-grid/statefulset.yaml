@@ -63,11 +63,11 @@ spec:
           exec:
             command:
             - /usr/local/bin/is_healthy.sh
-          initialDelaySeconds: 10
-          periodSeconds: 10
+          initialDelaySeconds: 50
+          periodSeconds: 40
           successThreshold: 1
           failureThreshold: 5
-          timeoutSeconds: 3
+          timeoutSeconds: 35
         {{- with .Values.dataGridExample.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
