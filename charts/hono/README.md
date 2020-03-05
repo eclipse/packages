@@ -51,6 +51,8 @@ kubectl create namespace hono
 The chart can then be installed to name space `hono` using release name `eclipse-hono`:
 
 ```bash
+helm repo add eclipse-iot https://eclipse.org/packages/charts
+helm repo update
 helm install --dependency-update -n hono eclipse-hono eclipse-iot/hono
 ```
 
