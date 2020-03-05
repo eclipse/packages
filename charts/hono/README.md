@@ -63,23 +63,23 @@ Kubernetes *Services*. The following command lists all services and their endpoi
 ```bash
 kubectl get service -n hono
 
-NAME                                    TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)
-hono-adapter-amqp-vertx                 LoadBalancer   10.109.123.153   10.109.123.153   5672:32672/TCP,5671:32671/TCP
-hono-adapter-amqp-vertx-headless        ClusterIP      None             <none>           <none>
-hono-adapter-http-vertx                 LoadBalancer   10.99.180.137    10.99.180.137    8080:30080/TCP,8443:30443/TCP
-hono-adapter-http-vertx-headless        ClusterIP      None             <none>           <none>
-hono-adapter-mqtt-vertx                 LoadBalancer   10.102.204.69    10.102.204.69    1883:31883/TCP,8883:30883/TCP
-hono-adapter-mqtt-vertx-headless        ClusterIP      None             <none>           <none>
-hono-artemis                            ClusterIP      10.97.31.154     <none>           5671/TCP
-hono-dispatch-router                    ClusterIP      10.98.111.236    <none>           5673/TCP
-hono-dispatch-router-ext                LoadBalancer   10.109.220.100   10.109.220.100   15671:30671/TCP,15672:30672/TCP
-hono-grafana                            ClusterIP      10.110.61.181    <none>           3000/TCP
-hono-prometheus-server                  ClusterIP      10.96.70.135     <none>           9090/TCP
-hono-service-auth                       ClusterIP      10.109.97.44     <none>           5671/TCP
-hono-service-auth-headless              ClusterIP      None             <none>           <none>
-hono-service-device-registry            ClusterIP      10.105.190.233   <none>           5671/TCP
-hono-service-device-registry-ext        LoadBalancer   10.101.42.99     10.101.42.99     28080:31080/TCP,28443:31443/TCP
-hono-service-device-registry-headless   ClusterIP      None             <none>           <none>
+NAME                                            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)
+eclipse-hono-adapter-amqp-vertx                 LoadBalancer   10.109.123.153   10.109.123.153   5672:32672/TCP,5671:32671/TCP
+eclipse-hono-adapter-amqp-vertx-headless        ClusterIP      None             <none>           <none>
+eclipse-hono-adapter-http-vertx                 LoadBalancer   10.99.180.137    10.99.180.137    8080:30080/TCP,8443:30443/TCP
+eclipse-hono-adapter-http-vertx-headless        ClusterIP      None             <none>           <none>
+eclipse-hono-adapter-mqtt-vertx                 LoadBalancer   10.102.204.69    10.102.204.69    1883:31883/TCP,8883:30883/TCP
+eclipse-hono-adapter-mqtt-vertx-headless        ClusterIP      None             <none>           <none>
+eclipse-hono-artemis                            ClusterIP      10.97.31.154     <none>           5671/TCP
+eclipse-hono-dispatch-router                    ClusterIP      10.98.111.236    <none>           5673/TCP
+eclipse-hono-dispatch-router-ext                LoadBalancer   10.109.220.100   10.109.220.100   15671:30671/TCP,15672:30672/TCP
+eclipse-hono-grafana                            ClusterIP      10.110.61.181    <none>           3000/TCP
+eclipse-hono-prometheus-server                  ClusterIP      10.96.70.135     <none>           9090/TCP
+eclipse-hono-service-auth                       ClusterIP      10.109.97.44     <none>           5671/TCP
+eclipse-hono-service-auth-headless              ClusterIP      None             <none>           <none>
+eclipse-hono-service-device-registry            ClusterIP      10.105.190.233   <none>           5671/TCP
+eclipse-hono-service-device-registry-ext        LoadBalancer   10.101.42.99     10.101.42.99     28080:31080/TCP,28443:31443/TCP
+eclipse-hono-service-device-registry-headless   ClusterIP      None             <none>           <none>
 ```
 
 The listing above has been retrieved from a Minikube cluster that emulates a load balancer via the `minikube tunnel`
@@ -91,7 +91,7 @@ The following command assigns the IP address of the device registry service to t
 variable so that it can easily be used from the command line:
 
 ```bash
-export REGISTRY_IP=$(kubectl get service hono-service-device-registry-ext --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n hono)
+export REGISTRY_IP=$(kubectl get service eclipse-hono-service-device-registry-ext --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n hono)
 ```
 
 The following command can then be used to check for the existence of the *DEFAULT_TENANT* which is created as part
