@@ -9,6 +9,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 ---
+{{- if .Values.nginx.enabled -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -162,3 +163,5 @@ data:
         {{- end }}
       }
     }
+
+{{- end }}
