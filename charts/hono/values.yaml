@@ -188,16 +188,17 @@ adapters:
   # The default setting is 'false' which prevents access from outside of the
   # cluster.
   # Setting this property to 'true' allows external adapters to connect to
-  # the Dispatch Router's 'interal' endpoint and the Device Registry's
+  # the Dispatch Router's 'internal' endpoint and the Device Registry's
   # service endpoints via AMQPS, i.e. AMQP over TLS.
-  # The Dispatch Router requires adapters to authenticate using SASL EXTERNAL,
-  # i.e. an adapter needs to provide a client certificate that has been signed
-  # by one of the CA certs contained in the router's trust store.
+  # The Dispatch Router's 'internal' endoint listens on port 15673 and requires
+  # adapters to authenticate using SASL EXTERNAL, i.e. an adapter needs to provide
+  # a client certificate that has been signed by one of the CA certs contained in
+  # the router's trust store.
   # When opening the AMQP connection to the router, the adapter needs to indicate
   # the 'hono-internal' virtual host name in its AMQP 1.0 'open' frame.
-  # The example Device Registry requires adapters to authenticate using SASL PLAIN,
-  # i.e. an adapter needs to provide a username and password which can be verified
-  # by the Auth Server component.
+  # The example Device Registry's AMQPS endpoint requires adapters to authenticate
+  # using SASL PLAIN, i.e. an adapter needs to provide a username and password which
+  # can be verified by the Auth Server component.
   externalAdaptersEnabled: false
 
   # amqpMessagingNetworkSpec contains Hono client properties used by all protocol
