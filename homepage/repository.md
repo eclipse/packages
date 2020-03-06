@@ -25,6 +25,12 @@ This will add the repository, using the name `eclipse-iot`. Of course you may ch
 a different name here. Just take extra care when working through tutorials, as they will
 expect the name to be `eclipse-iot`.
 
+After you have added the repository you should tell helm to download the index for its contents:
+
+{% clipboard %}
+    helm repo update
+{% endclipboard %}
+
 ## See the content <small><span class="badge badge-secondary">Helm v3</span></small>
 
 You can browse through the content using:
@@ -37,6 +43,18 @@ If you also want the search to include charts that are still under development, 
 
 {% clipboard %}
     helm search repo --devel
+{% endclipboard %}
+
+If you want to search for *charts* only, then you can use
+
+{% clipboard %}
+    helm search repo iot-chart
+{% endclipboard %}
+
+and if you want to search for *packages* only
+
+{% clipboard %}
+    helm search repo iot-package
 {% endclipboard %}
 
 ## How chart publishing works
