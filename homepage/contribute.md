@@ -55,10 +55,11 @@ All IoT Packages must
   integrated with each other in this way.
 * only contain artifacts that are distributed under a license that is compatible with the EPLv2.
 * only contain stable, released versions of project artifacts (no milestones or snapshots).
-* must contain
-  * a README covering a basic introduction and the idea behind the package,
-  * the Helm charts constituting the components of the package,
-  * some guidance regarding what users might want to do with the package after installation.
+* must
+  * contain a README covering a basic introduction and the idea behind the package,
+  * include the Helm charts constituting the components of the package,
+  * provide some guidance regarding what users might want to do with the package after installation.
+  * include the `iot-package` key word in their *Chart.yaml*
 
 IoT Packages are implemented by means of Helm charts that are combined together and configured in
 a particular way. An IoT Package must not *contain* the Helm charts of the projects it comprises of
@@ -114,6 +115,7 @@ Helm charts
     * instructions on how to access the application or service provided by the chart
 * must contain a `values.yaml` file which contains a reasonable default configuration and explains
   how the properties can be used to customize the chart
+* must include the `iot-chart` key word in their *Chart.yaml*
 
 ## Merge approval and release process
 
