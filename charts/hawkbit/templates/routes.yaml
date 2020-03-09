@@ -1,0 +1,24 @@
+{{- if .Values.routes.enabled -}}
+{{- $fullName := include "hawkbit.fullname" . -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $fullName }}
+  labels:
+{{ include "hawkbit.labels" . | indent 4 }}
+  {{- with .Values.routes.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: {{ include "hawkbit.fullname" . }}
+{{- if .Values.routes.tls }}
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+{{- end }}
+{{- end }}

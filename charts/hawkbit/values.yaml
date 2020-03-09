@@ -69,6 +69,10 @@ ingress:
   #    hosts:
   #      - hawkbit.local
 
+routes:
+  enabled: false
+  tls: true
+
 # env vars for configuration
 env:
   springDatasourceHost: "hawkbit-mysql"
