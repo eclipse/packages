@@ -13,6 +13,9 @@
 helm-extra-args: --timeout 600
 check-version-increment: true
 debug: true
+chart-dirs: 
+  - charts
+  - packages
 chart-repos:
   - stable=https://kubernetes-charts.storage.googleapis.com/
   - bitnami=https://charts.bitnami.com
