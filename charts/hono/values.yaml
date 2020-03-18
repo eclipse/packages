@@ -20,6 +20,8 @@ amqpMessagingNetworkExample:
   # deployed and used. By default an internal Broker is deployed.
   # As alternative an external Broker can be configured as well.
   enabled: true
+
+  # dispatchRouter contains properties for configuring the QPid Dispatch Router
   dispatchRouter:
     # imageName contains the name (including tag) of the container image
     # to use for the example AQMP Messaging Network's Dispatch Router.
@@ -34,12 +36,31 @@ amqpMessagingNetworkExample:
     keyFile: "/etc/hono/qdrouter-key.pem"
     # trustStore contains the absolute path to a PEM file containing
     # the X.509 certificates that the router should use as trust anchors
-    # when authentitcating peers
+    # when authentitcating clients connecting to the router in a TLS
+    # handshake
     trustStore: "/etc/hono/trusted-certs.pem"
+    # serverTrustStore contains the absolute path to a PEM file containing
+    # the X.509 certificates that the router should use as trust anchors
+    # when authentitcating to servers as part of a TLS handshake
+    serverTrustStore: "/etc/hono/trusted-certs.pem"
+    # uidFormat contains the format string to use for extracting the user ID from
+    # the subject DN of certificates that clients use for authenticating to the router's
+    # "internal" listener.
+    # See http://qpid.apache.org/releases/qpid-dispatch-1.10.0/man/qdrouterd.conf.html
+    # for details regarding the syntax.
+    # The default value ("ou") extracts the Organization ("O") and the Org Unit ("OU")
+    # and concatenates them using a semicolon, e.g. "Eclipse IoT;Hono"
+    uidFormat: "ou"
+    # adapterUids contains a comma separated list of uids of protocol adapters that authenticate
+    # by means of a client certificate.
+    # The default value ("Eclipse IoT;Hono") includes all adapters that authenticate with their
+    # demo certificate.
+    adapterUids: "Eclipse IoT;Hono"
+
     svc:
       annotations: {}
       loadBalancerIP:
-    # resources contains the container's 'requests and limits for CPU and memory
+    # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -50,6 +71,20 @@ amqpMessagingNetworkExample:
       limits:
         cpu: "1"
         memory: "256Mi"
+
+    # extraSecretMounts describes additional secrets that should be mounted into the
+    # router's container filesystem. The files from the secret(s) can
+    # then be used in the router configuration, e.g. for using custom key material and certificates.
+    # The secrets are expected to exist in the same Kubernetes namespace
+    # as the one that the router has been deployed to.
+    extraSecretMounts: {}
+    #  passwords:
+    #    secretName: "my-passwords"
+    #    mountPath: "/etc/pwd"
+    #  other:
+    #    secretName: "other-stuff"
+    #    mountPath: "/etc/other"
+
   # AMQP Messaging Network Broker configuration.
   broker:
     # saslUsername contains the username that the Dispatch Router should use
@@ -77,6 +112,20 @@ amqpMessagingNetworkExample:
         limits:
           cpu: "1"
           memory: "512Mi"
+
+      # extraSecretMounts describes additional secrets that should be mounted into the
+      # Artemis container's filesystem. The files from the secret(s) can
+      # then be used in the Artemis configuration, e.g. for using custom key material and certificates.
+      # The secrets are expected to exist in the same Kubernetes namespace
+      # as the one that the router has been deployed to.
+      extraSecretMounts: {}
+      #  passwords:
+      #    secretName: "my-passwords"
+      #    mountPath: "/etc/pwd"
+      #  other:
+      #    secretName: "other-stuff"
+      #    mountPath: "/etc/other"
+
     # servicebus contains configuration properties for the Azure ServiceBus instance that
     # should be used instead of the example Artemis broker.
     servicebus:

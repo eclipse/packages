@@ -327,10 +327,17 @@ Adds volume mounts to a component's container.
 The scope passed in is expected to be a dict with keys
 - "conf": the component's configuration properties as defined in .Values
 - "name": the name of the component.
+Optionally, the scope my contain key
+- "configMountPath": the mount path to use for the component's config secret
+                     instead of the default "/etc/hono"
 */}}
 {{- define "hono.container.secretVolumeMounts" }}
 - name: {{ printf "%s-conf" .name | quote }}
+  {{- if .configMountPath }}
+  mountPath: {{ .configMountPath | quote }}
+  {{- else }}
   mountPath: "/etc/hono"
+  {{- end }}
   readOnly: true
 {{- with .conf.extraSecretMounts }}
 {{- range $name,$spec := . }}

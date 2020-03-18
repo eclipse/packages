@@ -19,23 +19,6 @@
     "privateKeyFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.keyFile }}"
   }],
 
-  ["sslProfile", {
-    "name": "broker-connection",
-    {{- if not .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
-    "caCertFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.trustStore }}",
-    {{- end }}
-    "protocols": "TLSv1.2"
-  }],
-
-  ["sslProfile", {
-    "name": "internal",
-    "protocols": "TLSv1.2",
-    "caCertFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.trustStore }}",
-    "certFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.certFile }}",
-    "privateKeyFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.keyFile }}",
-    "uidFormat": "ou"
-  }],
-
   ["listener", {
     "sslProfile": "server",
     "requireSsl": true,
@@ -56,6 +39,15 @@
     "saslPlugin": "Hono Auth"
   }],
 
+  ["sslProfile", {
+    "name": "internal",
+    "protocols": "TLSv1.2",
+    "caCertFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.trustStore }}",
+    "certFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.certFile }}",
+    "privateKeyFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.keyFile }}",
+    "uidFormat": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.uidFormat }}"
+  }],
+
   ["listener", {
     "sslProfile": "internal",
     "requireSsl": true,
@@ -72,14 +64,22 @@
     "http": true
   }],
 
+  ["sslProfile", {
+    "name": "broker-profile",
+    {{- if not .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
+    "caCertFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.serverTrustStore }}",
+    {{- end }}
+    "protocols": "TLSv1.2"
+  }],
+
   ["connector", {
-    "sslProfile": "broker-connection",
-    "name": "broker",
+    "name": "broker-connection",
+    "sslProfile": "broker-profile",
     "role": "route-container",
     "port": {{ .Values.amqpMessagingNetworkExample.broker.port }},
     "saslMechanisms": "PLAIN",
     "saslUsername": "{{ .Values.amqpMessagingNetworkExample.broker.saslUsername }}",
-    "saslPassword": "{{ .Values.amqpMessagingNetworkExample.broker.saslPassword }}",
+    "saslPassword": "file:/etc/hono/broker-password",
     {{- if .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
     "host": "{{ .Values.amqpMessagingNetworkExample.broker.serviceBus.host }}",
     "idleTimeoutSeconds": 120
@@ -95,7 +95,7 @@
     {{- if .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
     "delExternalPrefix": "event/",
     {{- end }}
-    "connection": "broker"
+    "connection": "broker-connection"
   }],
 
   ["linkRoute", {
@@ -104,7 +104,7 @@
     {{- if .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
     "delExternalPrefix": "event/",
     {{- end }}
-    "connection": "broker"
+    "connection": "broker-connection"
   }],
 
   ["address", {
@@ -142,8 +142,8 @@
       "hostname": "hono-internal",
       "maxConnections": 50,
       "groups": {
-        "Hono": {
-          "users": "Eclipse IoT;Hono",
+        "Adapters": {
+          "users": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.adapterUids }}",
           "remoteHosts": "*",
           "maxSessions": 4,
           "maxSessionWindow": 8192000,

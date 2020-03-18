@@ -70,11 +70,7 @@ spec:
         securityContext:
           privileged: false
         volumeMounts:
-        - mountPath: /etc/hono
-          name: config
-          readOnly: true
+        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "conf" .Values.amqpMessagingNetworkExample.dispatchRouter ) | indent 8 }}
       volumes:
-      - name: config
-        secret:
-          secretName: {{ .Release.Name }}-dispatch-router-conf
+      {{- include "hono.pod.secretVolumes" ( dict "releaseName" .Release.Name "name" $args.name "conf" .Values.amqpMessagingNetworkExample.dispatchRouter ) | indent 6 }}
 {{- end }}
