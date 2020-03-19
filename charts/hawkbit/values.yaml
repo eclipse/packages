@@ -73,6 +73,12 @@ routes:
   enabled: false
   tls: true
 
+# enable local file storage
+fileStorage:
+  enabled: true
+  pvcSize: "1Gi"
+  mountPath: "/var/lib/hawkbit-storage"
+
 # env vars for configuration
 env:
   springDatasourceHost: "hawkbit-mysql"

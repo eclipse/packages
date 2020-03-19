@@ -52,6 +52,10 @@ spec:
                 secretKeyRef:
                   name: "{{ template "hawkbit.fullname" . }}-rabbitmq-pass"
                   key: "rabbitmq-pass"
+            {{- if .Values.fileStorage.enabled }}
+            - name: "org.eclipse.hawkbit.repository.file.path"
+              value: {{ .Values.fileStorage.mountPath }}
+            {{- end }}
             {{- range $key, $value := .Values.extraEnv }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
@@ -75,6 +79,10 @@ spec:
           volumeMounts:
             - name: configmap
               mountPath: {{ .Values.configMap.mountPath }}
+            {{- if .Values.fileStorage.enabled }}
+            - name: storage
+              mountPath: {{ .Values.fileStorage.mountPath }}
+            {{- end }}
             {{- if .Values.extraVolumeMounts }}
             {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
@@ -104,6 +112,11 @@ spec:
       - name: configmap
         configMap:
           name: {{ include "hawkbit.fullname" . }}
+      {{- if .Values.fileStorage.enabled }}
+      - name: storage
+        persistentVolumeClaim:
+          claimName: {{ include "hawkbit.fullname" . }}-data
+      {{- end}}
       {{- if .Values.extraVolumes }}
       {{ toYaml .Values.extraVolumes | nindent 6 }}
       {{- end }}
