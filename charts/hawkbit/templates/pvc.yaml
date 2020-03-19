@@ -1,0 +1,19 @@
+{{- if .Values.fileStorage.enabled -}}
+{{- $fullName := include "hawkbit.fullname" . -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ $fullName }}-data
+  labels:
+{{ include "hawkbit.labels" . | indent 4 }}
+  {{- with .Values.fileStorage.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+ accessModes:
+ - ReadWriteOnce
+ resources:
+   requests:
+     storage: {{ .Values.fileStorage.pvcSize }}
+{{- end }}
