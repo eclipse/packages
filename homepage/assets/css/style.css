@@ -21,6 +21,10 @@ h2, h3 {
     margin-top: 2rem;
 }
 
+img.card-img-top {
+    height: 15vw;
+}
+
 .toc-anchor {
     display: block;
     position: relative;

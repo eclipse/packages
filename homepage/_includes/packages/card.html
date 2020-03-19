@@ -2,7 +2,7 @@
 <div class="card">
 
   <a href="{{ package.url | relative_url }}">
-    <img src="{{ package.image }}" class="card-img-top" alt="{{ .Title | htmlEscape }}">
+    <img src="{{ package.url | append: package.image | relative_url }}" class="card-img-top" alt="{{ .Title | htmlEscape }}">
   </a>
 
   <div class="card-body">
