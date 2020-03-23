@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Run chart-testing (lint)
-        uses: helm/chart-testing-action@master
+        uses: helm/chart-testing-action@v1.0.0-alpha.3
         with:
           command: lint
           config: .github/ct.yaml
@@ -57,7 +57,7 @@ jobs:
         uses: actions/checkout@v1
       - name: Run kubeval
         env:
-          KUBERNETES_VERSION: ${{ matrix.k8s }}         
+          KUBERNETES_VERSION: ${{ matrix.k8s }}
         run: .github/kubeval.sh 
 
   install-chart:
@@ -79,12 +79,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Create kind ${{ matrix.k8s }} cluster
-        uses: helm/kind-action@master
+        uses: helm/kind-action@1.0.0-alpha.3
         with:
           config: .github/kind-config.yaml
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Run chart-testing (install)
-        uses: helm/chart-testing-action@master
+        uses: helm/chart-testing-action@v1.0.0-alpha.3
         with:
           command: install
           config: .github/ct.yaml
