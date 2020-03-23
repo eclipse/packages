@@ -35,9 +35,9 @@ spec:
         command:
         - sh
         - -c
-        - cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.devicesFile }} /var/lib/hono/device-registry/device-identities.json;
-          cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.credentialsFile }} /var/lib/hono/device-registry/credentials.json;
-          cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.tenantsFile }} /var/lib/hono/device-registry/tenants.json
+        - if [ ! -f "/var/lib/hono/device-registry/device-identities.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.devicesFile }} /var/lib/hono/device-registry/device-identities.json; fi;
+          if [ ! -f "/var/lib/hono/device-registry/credentials.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.credentialsFile }} /var/lib/hono/device-registry/credentials.json; fi;
+          if [ ! -f "/var/lib/hono/device-registry/tenants.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.tenantsFile }} /var/lib/hono/device-registry/tenants.json; fi;
         volumeMounts:
         - name: {{ default ( printf "%s-conf" $args.name ) .Values.deviceRegistryExample.data.volumeName | quote }}
           mountPath: "/tmp/hono"
