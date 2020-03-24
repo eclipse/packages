@@ -57,6 +57,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Fetch history for chart testing
+        run: git fetch --prune --unshallow
       - name: Run kubeval
         env:
           KUBERNETES_VERSION: ${{ matrix.k8s }}
