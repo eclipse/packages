@@ -1,6 +1,6 @@
 {{- if .Values.prometheus.createInstance }}
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -36,16 +36,22 @@ data:
     {{- if .Values.deviceConnectionService.enabled }}
       {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "service-device-connection") | nindent 4 }}
     {{- end }}
-    {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-amqp-vertx") | nindent 4 }}
-    {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-http-vertx") | nindent 4 }}
-    {{- if .Values.adapters.lora.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-lora-vertx") | nindent 4 }}
-    {{- end }}
-    {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-mqtt-vertx") | nindent 4 }}
-    {{- if .Values.adapters.kura.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-kura") | nindent 4 }}
+    {{- if .Values.adapters.amqp.enabled }}
+      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-amqp-vertx") | nindent 4 }}
     {{- end }}
     {{- if .Values.adapters.coap.enabled }}
       {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-coap-vertx") | nindent 4 }}
+    {{- end }}
+    {{- if .Values.adapters.http.enabled }}
+      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-http-vertx") | nindent 4 }}
+    {{- end }}
+    {{- if .Values.adapters.kura.enabled }}
+      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-kura") | nindent 4 }}
+    {{- end }}
+    {{- if .Values.adapters.lora.enabled }}
+      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-lora-vertx") | nindent 4 }}
+    {{- end }}
+    {{- if .Values.adapters.mqtt.enabled }}
+      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-mqtt-vertx") | nindent 4 }}
     {{- end }}
 {{ end }}
