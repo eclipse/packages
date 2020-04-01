@@ -123,6 +123,8 @@ spring:
 
 config:
   application:
+    server:
+      useForwardHeaders: true
     hawkbit:
       ## Configuration for the device management federation
       ## ref: https://www.eclipse.org/hawkbit/apis/dmf_api/
@@ -175,7 +177,7 @@ mysql:
     persistence:
       enabled: true
   volumePermissions:
-    enabled: false
+    enabled: true
   db:
     user: hawkbit
     password: hawkbit
