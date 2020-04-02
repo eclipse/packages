@@ -188,7 +188,7 @@ jaegerBackendExample:
   enabled: false
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
-  allInOneImage: jaegertracing/all-in-one:1.13.1
+  allInOneImage: jaegertracing/all-in-one:1.17
   # resources contains the container's 'requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -207,19 +207,18 @@ jaegerBackendExample:
 # jaegerAgentImage contains the name (including tag)
 # of the container image to use for the Jaeger Agent sidecar deployed
 # with Hono's components.
-jaegerAgentImage: jaegertracing/jaeger-agent:1.13.1
+jaegerAgentImage: jaegertracing/jaeger-agent:1.17
 # jaegerAgentConf contains environment variables for configuring the Jaeger Agent sidecar container
 # that is deployed with each of Hono's components.
 # The Jaeger Agent sidecar container is deployed with standard properties if
 # "jaegerBackendExample.enabled" is set to true.
 # Otherwise the sidecar container is deployed using the environment variables contained
 # in this property (if not nil).
-# Please refer to https://www.jaegertracing.io/docs/1.13/cli/ for syntax and semantics
+# Please refer to https://www.jaegertracing.io/docs/1.17/cli/ for syntax and semantics
 # of environment variables.
 jaegerAgentConf:
-#  REPORTER_TYPE: tchannel
-#  REPORTER_TCHANNEL_HOST_PORT: my-jaeger-collector:14267
-#  REPORTER_TCHANNEL_DISCOVERY_MIN_PEERS: 1
+#  REPORTER_GRPC_HOST_PORT: my-jaeger-collector:14250
+#  REPORTER_GRPC_DISCOVERY_MIN_PEERS: 1
 
 # defaultJavaOptions contains options to pass to the JVM when starting
 # up Hono's containers
