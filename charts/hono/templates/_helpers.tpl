@@ -282,7 +282,7 @@ Adds a Jaeger Agent container to a template spec.
 {{- $jaegerEnabled := or .Values.jaegerBackendExample.enabled .Values.jaegerAgentConf }}
 {{- if $jaegerEnabled }}
 - name: jaeger-agent-sidecar
-  image: {{ default "jaegertracing/jaeger-agent:1.13.1" .Values.jaegerAgentImage }}
+  image: {{ .Values.jaegerAgentImage }}
   ports:
   - name: agent-compact
     containerPort: 6831
@@ -300,11 +300,9 @@ Adds a Jaeger Agent container to a template spec.
     initialDelaySeconds: 5
   env:
   {{- if .Values.jaegerBackendExample.enabled }}
-  - name: REPORTER_TYPE
-    value: "tchannel"
-  - name: REPORTER_TCHANNEL_HOST_PORT
-    value: {{ printf "%s-jaeger-collector:14267" .Release.Name | quote }}
-  - name: REPORTER_TCHANNEL_DISCOVERY_MIN_PEERS
+  - name: REPORTER_GRPC_HOST_PORT
+    value: {{ printf "%s-jaeger-collector:14250" .Release.Name | quote }}
+  - name: REPORTER_GRPC_DISCOVERY_MIN_PEERS
     value: "1"
   {{- else }}
   {{- range $key, $value := .Values.jaegerAgentConf }}
