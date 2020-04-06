@@ -17,7 +17,7 @@ description: |
   (real world “Things”, e.g. devices like sensors, smart heating, connected cars, smart grids,
   EV charging stations etc).
 name: ditto
-version: 1.1.4
+version: 1.1.5
 keywords:
   - iot-chart
 home: https://www.eclipse.org/ditto

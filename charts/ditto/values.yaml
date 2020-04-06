@@ -138,7 +138,7 @@ concierge:
   ## resources for the concierge container
   resources:
     requests:
-      cpu: 250m
+      cpu: 200m
       memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
@@ -301,7 +301,7 @@ gateway:
   ## resources for the gateway container
   resources:
     requests:
-      cpu: 250m
+      cpu: 200m
       memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
@@ -439,7 +439,7 @@ policies:
   ## resources for the policies container
   resources:
     requests:
-      cpu: 250m
+      cpu: 150m
       memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
@@ -557,7 +557,7 @@ things:
   ## resources for the things container
   resources:
     requests:
-      cpu: 250m
+      cpu: 150m
       memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
@@ -631,7 +631,7 @@ thingsSearch:
   ## resources for the things-search container
   resources:
     requests:
-      cpu: 250m
+      cpu: 150m
       memory: 256Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
