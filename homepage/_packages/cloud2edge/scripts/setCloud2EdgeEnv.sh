@@ -70,7 +70,7 @@ getService ditto-nginx "http" DITTO_API
 
 echo "# Run this command to populate environment variables"
 echo "# with the NodePorts of Hono's and Ditto's API endpoints:"
-echo "# eval \"\$(./setCloude2EdgeEnv.sh RELEASE_NAME [NAMESPACE])\""
+echo "# eval \"\$(./setCloud2EdgeEnv.sh RELEASE_NAME [NAMESPACE])\""
 echo "# with NAMESPACE being the Kubernetes name space that you installed Hono to"
 echo "# if no name space is given, the default name space is used"
 
