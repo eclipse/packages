@@ -76,11 +76,14 @@ jobs:
     strategy:
       matrix:
         k8s:
+        # the versions supported by chart-testing are the tags
+        # available for the docker.io/kindest/node image
+        # https://hub.docker.com/r/kindest/node/tags
           - v1.13.12
           - v1.14.10
-          - v1.15.11
-          - v1.16.8
-          - v1.17.4
+          - v1.15.7
+          - v1.16.4
+          - v1.17.2
           - v1.18.0
     steps:
       - name: Checkout
