@@ -204,7 +204,7 @@ This should return a result of `201 Created`.
 Next we can register a new device, named `org.acme:my-device-1` for the tenant we just created:
 
 {% clipboard %}
-    curl -i http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/devices/my-tenant/org.acme:my-device-1
+    curl -i -X POST http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/devices/my-tenant/org.acme:my-device-1
 {% endclipboard %}
 
 This should return a result of `201 Created`.
