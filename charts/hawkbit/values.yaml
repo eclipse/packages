@@ -175,7 +175,7 @@ mysql:
     persistence:
       enabled: true
   volumePermissions:
-    enabled: false
+    enabled: true
   db:
     user: hawkbit
     password: hawkbit
