@@ -55,8 +55,8 @@ jobs:
           - v1.14.9
           - v1.15.7
           - v1.16.4
-          - v1.17.0
-          # kubeval doesn't seem to support 1.18.0 yet'
+          - v1.17.4
+          - v1.18.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
