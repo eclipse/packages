@@ -344,6 +344,16 @@ adapters:
   # https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-conversion-duration
   defaultTenantIdleTimeout: "1h"
 
+  # mapperEndpoints contains configuration properties for the adapter's
+  # used mapper endpoints.
+  # If not set, the adapter by default has no mappers configured
+  mapperEndpoints:
+  #  mapperName:
+  #    host: eclipse.org
+  #    uri: /hono/map
+  #    ssl: true
+  #    port: 443
+
   amqp:
     # enabled indicates if Hono's AMQP 1.0 adapter should be deployed.
     enabled: true
@@ -752,7 +762,7 @@ adapters:
         # to the vert.x runtime during start-up.
         maxInstances: 1
 
-      # http contains configuration properties for the adapter's
+      # mqtt contains configuration properties for the adapter's
       # exposed MQTT endpoints.
       # If not set, the adapter by default exposes the secure and insecure ports
       # using an example key and certificate.
@@ -771,7 +781,6 @@ adapters:
       #  port: 12000
       #  keyPath: "/etc/config/key.pem"
       #  certPath: "/etc/config/cert.pem"
-
 
 # authServer contains configuration properties for the Auth Server component.
 authServer:
