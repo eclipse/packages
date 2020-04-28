@@ -141,7 +141,7 @@ helm install --dependency-update -n hono --set useLoadBalancer=false eclipse-hon
 Alternatively, a YAML file that contains the values for the parameters can be provided when installing the chart:
 
 ```bash
-helm install --dependency-update -n hono -f /my/path/to/config.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono -f /path/to/config.yaml eclipse-hono eclipse-iot/hono
 ```
 
 
@@ -155,6 +155,46 @@ can be used to prevent installation of the Prometheus and Grafana servers.
 
 ```bash
 helm install --dependency-update -n hono --set prometheus.createInstance=false --set grafana.enabled=false eclipse-hono eclipse-iot/hono
+```
+
+## Using specific Container Images
+
+The chart can be customized to use container images other than the default ones.
+This can be used to install an older version of the images or to install a milestone
+using the chart. It can also be used to install custom built images that need to be
+pulled from a different (private) container registry.
+
+The `values.yaml` file contains configuration properties for setting the container
+image names and tags to use for Hono's components.
+The easiest way to override these values is to create a YAML file with the following content:
+
+```yaml
+deviceRegistryExample:
+  imageName: eclipse/hono-service-device-registry-file:1.2.0
+
+authServer:
+  imageName: eclipse/hono-service-auth:1.2.0
+
+adapters:
+  amqp:
+    imageName: eclipse/hono-adapter-amqp-vertx:1.2.0
+  coap:
+    imageName: eclipse/hono-adapter-coap-vertx:1.2.0
+  http:
+    imageName: eclipse/hono-adapter-http-vertx:1.2.0
+  kura:
+    imageName: eclipse/hono-adapter-kura:1.2.0
+  mqtt:
+    imageName: eclipse/hono-adapter-mqtt-vertx:1.2.0
+  lora:
+    imageName: eclipse/hono-adapter-lora-vertx:1.2.0
+```
+
+The names and tags can be set per component. Assuming that the file is named `customImages.yaml`,
+the values can then be passed in to the Helm `install` command as follows:
+
+```bash
+helm install --dependency-update -n hono -f /path/to/customImages.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ## Using a production grade AMQP Messaging Network and Device Registry
@@ -218,7 +258,7 @@ Assuming that the file is named `customAmqpNetwork.yaml`, the values can then be
 command as follows:
 
 ```bash
-helm install --dependency-update -n hono -f customAmqpNetwork.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono -f /path/to/customAmqpNetwork.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ### Integrating with a custom Device Registry
@@ -277,7 +317,7 @@ Assuming that the file is named `customRegistry.yaml`, the values can then be pa
 as follows:
 
 ```bash
-helm install --dependency-update -n hono -f customRegistry.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono -f /path/to/customRegistry.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ## Using the Device Connection Service
