@@ -110,9 +110,7 @@ podTemplate(
 
                 stage ('Jekyll Dependencies') {
                     dir ("build/homepage") {
-			// `chown jekyll:jekyll -R /usr/gem` is a workaround for jekyll-docker https://github.com/envygeeks/jekyll-docker/issues/268
                         sh '''
-                            chown jekyll:jekyll -R /usr/gem
                             cp -rd /usr/gem/. /usr/local/bundle/
                             bundle install
                         '''
