@@ -38,7 +38,7 @@ podTemplate(
 
     node(label) {
 
-      timeout(time: 15, unit: "MINUTES") {
+      timeout(time: 60, unit: "MINUTES") {
 
       container('jnlp') {
 
@@ -112,7 +112,7 @@ podTemplate(
                     dir ("build/homepage") {
                         sh '''
                             cp -rd /usr/gem/. /usr/local/bundle/
-                            bundle install
+                            bundle install --path /usr/local/bundle/
                         '''
                     }
                 }
