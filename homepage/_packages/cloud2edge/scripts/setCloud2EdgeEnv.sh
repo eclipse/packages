@@ -15,7 +15,7 @@
 RELEASE=$1
 NS=${2:-default}
 
-NODE_IP=$(kubectl get node -n $NS --output jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2> /dev/null)
+NODE_IP=$(kubectl get nodes -n $NS --output jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2> /dev/null)
 
 function getPorts {
   SERVICENAME=$1
