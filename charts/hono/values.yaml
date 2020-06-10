@@ -328,7 +328,7 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the AMQP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-amqp-vertx:1.2.2
+    imageName: index.docker.io/eclipse/hono-adapter-amqp-vertx:1.2.3
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -394,7 +394,7 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the CoAP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-coap-vertx:1.2.2
+    imageName: index.docker.io/eclipse/hono-adapter-coap-vertx:1.2.3
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -451,7 +451,7 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the HTTP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-http-vertx:1.2.2
+    imageName: index.docker.io/eclipse/hono-adapter-http-vertx:1.2.3
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -517,7 +517,7 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the Kura adapter
-    imageName: index.docker.io/eclipse/hono-adapter-kura:1.2.2
+    imageName: index.docker.io/eclipse/hono-adapter-kura:1.2.3
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -583,7 +583,7 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the LoRa adapter
-    imageName: index.docker.io/eclipse/hono-adapter-lora-vertx:1.2.2
+    imageName: index.docker.io/eclipse/hono-adapter-lora-vertx:1.2.3
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -648,7 +648,7 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the MQTT adapter
-    imageName: index.docker.io/eclipse/hono-adapter-mqtt-vertx:1.2.2
+    imageName: index.docker.io/eclipse/hono-adapter-mqtt-vertx:1.2.3
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -715,7 +715,7 @@ authServer:
 
   # imageName contains the name (including registry and tag)
   # of the container image to use for the Auth Server
-  imageName: index.docker.io/eclipse/hono-service-auth:1.2.2
+  imageName: index.docker.io/eclipse/hono-service-auth:1.2.3
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -798,7 +798,7 @@ deviceRegistryExample:
 
   # imageName contains the name (including registry and tag)
   # of the container image to use for the example Device Registry
-  imageName: index.docker.io/eclipse/hono-service-device-registry-file:1.2.2
+  imageName: index.docker.io/eclipse/hono-service-device-registry-file:1.2.3
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -910,7 +910,7 @@ deviceConnectionService:
 
   # imageName contains the name (including registry and tag)
   # of the container image to use for the Device Connection service
-  imageName: index.docker.io/eclipse/hono-service-device-connection:1.2.2
+  imageName: index.docker.io/eclipse/hono-service-device-connection:1.2.3
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
