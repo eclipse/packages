@@ -270,8 +270,6 @@ data:
               <transport initial-cluster-size="1" lock-timeout="60000"/>
               <global-state/>
               <distributed-cache name="device-connection">
-                  <!-- default expiration 28 days -->
-                  <expiration max-idle="2419200000" />
                   <memory>
                       <off-heap size="50000000" eviction="MEMORY" />
                   </memory>
