@@ -52,11 +52,17 @@ The scope passed in is expected to be a dict with keys
   - (mandatory) "imageName"
   - (optional) "imageTag"
   - (optional) "containerRegistry"
+  - (optional) "useImageType": should image type configuration be used
 */}}
 {{- define "hono.image" }}
   {{- $tag := default .dot.Chart.AppVersion ( default .dot.Values.honoImagesTag .component.imageTag ) }}
   {{- $registry := default .dot.Values.honoContainerRegistry .component.containerRegistry }}
-  {{- printf "%s/%s:%s" $registry .component.imageName $tag }}
+
+  {{- if and .useImageType ( contains "quarkus" .dot.Values.honoImagesType ) }}
+  {{- printf "%s/%s-quarkus:%s" $registry .component.imageName $tag -}}
+  {{- else }}
+  {{- printf "%s/%s:%s" $registry .component.imageName $tag -}}
+  {{- end }}
 {{- end }}
 
 {{/*
@@ -347,6 +353,7 @@ The scope passed in is expected to be a dict with keys
 - "conf": the component's configuration properties as defined in .Values
 - "name": the name of the component.
 Optionally, the scope my contain key
+- "dot": the root scope (".") and
 - "configMountPath": the mount path to use for the component's config secret
                      instead of the default "/etc/hono"
 */}}
@@ -365,6 +372,18 @@ Optionally, the scope my contain key
   readOnly: true
 {{- end }}
 {{- end }}
+{{- if .dot }}
+{{- if ( contains "quarkus" .dot.Values.honoImagesType ) }}
+- name: "config"
+{{- if ( eq "quarkus" .dot.Values.honoImagesType ) }}
+  mountPath: "/deployments/config"
+{{- end }}
+{{- if ( eq "quarkus-native" .dot.Values.honoImagesType ) }}
+  mountPath: "/work/config"
+{{- end }}
+  readOnly: true
+{{- end }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -373,6 +392,8 @@ The scope passed in is expected to be a dict with keys
 - "conf": the component's configuration properties as defined in .Values
 - "name": the name of the component
 - "releaseName": the .Release.Name
+Optionally, the scope my contain key
+- "dot": the root scope (".")
 */}}
 {{- define "hono.pod.secretVolumes" }}
 {{- $volumeName := printf "%s-conf" .name }}
@@ -384,6 +405,13 @@ The scope passed in is expected to be a dict with keys
 - name: {{ $name | quote }}
   secret:
     secretName: {{ $spec.secretName | quote }}
+{{- end }}
+{{- end }}
+{{- if .dot }}
+{{- if ( contains "quarkus" .dot.Values.honoImagesType ) }}
+- name: "config"
+  secret:
+    secretName: {{ printf "%s-%s" .releaseName $volumeName | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
