@@ -253,6 +253,15 @@ healthCheckPort: 8088
 # When setting to "openshift", Route resources will also be deployed.
 platform: kubernetes
 
+# Image type indicates which image will be used for services.
+# Supported values are:
+# - spring
+# - quarkus
+# - quarkus-native
+#
+# The default value is 'spring'
+honoImagesType: spring
+
 # useLoadBalancer indicates whether services should be deployed using the
 # "LoadBalancer" type (true) or the "NodePort" type (false).
 # This property will be ignored when deploying to platform "openshift".
