@@ -27,44 +27,41 @@ spec:
       {{- include "hono.metadata" $args | nindent 6 }}
     spec:
       containers:
-      - args:
-        - -c
-        - hono/hono-data-grid.xml
-        - -Djboss.default.jgroups.stack=dns-ping
-        - {{ printf "-Djgroups.dns_ping.dns_query=%s-%s" .Release.Name $args.name }}
-        env:
-        - name: JDK_JAVA_OPTIONS
-          value: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
-        - name: APP_USER
-          value: {{ .Values.dataGridExample.authUsername | quote }}
-        - name: APP_PASS
-          value: {{ .Values.dataGridExample.authPassword | quote }}
-        image: {{ default "jboss/infinispan-server:9.4.11.Final" .Values.dataGridExample.imageName | quote }}
+      - image: {{ .Values.dataGridExample.imageName | quote }}
         imagePullPolicy: IfNotPresent
         name: hono-data-grid
+        command:
+        - /opt/infinispan/bin/server.sh
+        - -c
+        - /opt/infinispan/server/conf/hono/hono-data-grid.xml
+        env:
+        - name: JDK_JAVA_OPTIONS
+          value: "-XX:MinRAMPercentage=85 -XX:MaxRAMPercentage=85"
+        - name: JAVA_OPTIONS
+          value: {{ printf "-Djgroups.dns.query=%s-%s" .Release.Name $args.name }}
         ports:
-        - name: http
-          containerPort: 8080
-          protocol: TCP
-        - name: https
-          containerPort: 8443
-          protocol: TCP
-        - containerPort: 9990
-          protocol: TCP
         - name: hotrod
           containerPort: 11222
           protocol: TCP
         volumeMounts:
-        - mountPath: /opt/jboss/infinispan-server/standalone/configuration/hono
+        - mountPath: /opt/infinispan/server/conf/hono
           name: conf
           readOnly: true
-        readinessProbe:
-          tcpSocket:
+        livenessProbe:
+          httpGet:
+            path: /rest/v2/cache-managers/routing-info/health/status
             port: hotrod
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          successThreshold: 1
           failureThreshold: 5
+          initialDelaySeconds: 50
+          successThreshold: 1
+          timeoutSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /rest/v2/cache-managers/routing-info/health/status
+            port: hotrod
+          failureThreshold: 5
+          initialDelaySeconds: 20
+          successThreshold: 1
           timeoutSeconds: 3
         {{- with .Values.dataGridExample.resources }}
         resources:
