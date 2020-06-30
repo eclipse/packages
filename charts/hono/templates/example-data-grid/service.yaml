@@ -18,10 +18,6 @@ metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   ports:
-  - name: http
-    port: 8080
-    protocol: TCP
-    targetPort: http
   - name: hotrod
     port: 11222
     protocol: TCP

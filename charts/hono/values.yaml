@@ -144,17 +144,17 @@ dataGridExample:
   enabled: false
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
-  imageName: jboss/infinispan-server:9.4.11.Final
+  imageName: infinispan/server:11.0.0.Final
   # resources contains the container's 'requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "100m"
-      memory: "256Mi"
+      cpu: "200m"
+      memory: "300Mi"
     limits:
-      cpu: "500m"
+      cpu: "1"
       memory: "512Mi"
   # authUsername contains the name of the user that is authorized to connect to the example data grid.
   authUsername: "hono"
