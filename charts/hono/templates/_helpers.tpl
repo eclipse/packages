@@ -208,6 +208,7 @@ deviceConnection:
   authServerName: {{ $serverName | quote }}
   authUsername: {{ .dot.Values.dataGridExample.authUsername | quote }}
   authPassword: {{ .dot.Values.dataGridExample.authPassword | quote }}
+  authRealm: "ApplicationRealm"
   saslMechanism: "DIGEST-MD5"
   socketTimeout: 5000
   connectTimeout: 5000
