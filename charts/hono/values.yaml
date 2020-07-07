@@ -14,6 +14,12 @@
 # Default values for eclipse-hono.
 # Declare variables to be passed into your templates.
 
+# honoImagesTag contains the (common) tag name of the Hono component
+# container images to deploy.
+# If not set explicitly, the chart's appVersion is used as the tag name.
+# Alternatively, the tag name can also be set per component image.
+# honoImagesTag:
+
 amqpMessagingNetworkExample:
   # enabled indicates whether the example AMQP Messaging Network
   # consisting of a single Dispatch Router and Broker should be
@@ -328,7 +334,10 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the AMQP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-amqp-vertx:1.2.3
+    imageName: index.docker.io/eclipse/hono-adapter-amqp-vertx
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -394,7 +403,10 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the CoAP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-coap-vertx:1.2.3
+    imageName: index.docker.io/eclipse/hono-adapter-coap-vertx
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -451,7 +463,10 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the HTTP adapter
-    imageName: index.docker.io/eclipse/hono-adapter-http-vertx:1.2.3
+    imageName: index.docker.io/eclipse/hono-adapter-http-vertx
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -517,7 +532,10 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the Kura adapter
-    imageName: index.docker.io/eclipse/hono-adapter-kura:1.2.3
+    imageName: index.docker.io/eclipse/hono-adapter-kura
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -583,7 +601,10 @@ adapters:
     enabled: false
     # imageName contains the name (including registry and tag)
     # of the container image to use for the LoRa adapter
-    imageName: index.docker.io/eclipse/hono-adapter-lora-vertx:1.2.3
+    imageName: index.docker.io/eclipse/hono-adapter-lora-vertx
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -648,7 +669,10 @@ adapters:
     enabled: true
     # imageName contains the name (including registry and tag)
     # of the container image to use for the MQTT adapter
-    imageName: index.docker.io/eclipse/hono-adapter-mqtt-vertx:1.2.3
+    imageName: index.docker.io/eclipse/hono-adapter-mqtt-vertx
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -715,7 +739,10 @@ authServer:
 
   # imageName contains the name (including registry and tag)
   # of the container image to use for the Auth Server
-  imageName: index.docker.io/eclipse/hono-service-auth:1.2.3
+  imageName: index.docker.io/eclipse/hono-service-auth
+  # imageTag contains the tag of the container image to deploy.
+  # If not specified, the value of the honoImagesTag property is used.
+  # imageTag:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -798,7 +825,10 @@ deviceRegistryExample:
 
   # imageName contains the name (including registry and tag)
   # of the container image to use for the example Device Registry
-  imageName: index.docker.io/eclipse/hono-service-device-registry-file:1.2.3
+  imageName: index.docker.io/eclipse/hono-service-device-registry-file
+  # imageTag contains the tag of the container image to deploy.
+  # If not specified, the value of the honoImagesTag property is used.
+  # imageTag:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
@@ -910,7 +940,10 @@ deviceConnectionService:
 
   # imageName contains the name (including registry and tag)
   # of the container image to use for the Device Connection service
-  imageName: index.docker.io/eclipse/hono-service-device-connection:1.2.3
+  imageName: index.docker.io/eclipse/hono-service-device-connection
+  # imageTag contains the tag of the container image to deploy.
+  # If not specified, the value of the honoImagesTag property is used.
+  # imageTag:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80

@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ .Values.adapters.lora.imageName }}
+      - image: {{ printf "%s:%s" .Values.adapters.lora.imageName ( default .Chart.AppVersion ( default .Values.honoImagesTag .Values.adapters.lora.tagName ) ) }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-adapter-lora-vertx
         ports:
