@@ -181,31 +181,31 @@ to do that is to create a YAML file that specifies the particular image and tag 
 ```yaml
 deviceRegistryExample:
   imageName: my-custom-registry/hono-service-device-registry-custom
-    tagName: 1.0.0
+  imageTag: 1.0.0
 
 authServer:
   imageName: eclipse/hono-service-auth
-  tagName: 1.3.0-M3
+  imageTag: 1.3.0-M3
 
 adapters:
   amqp:
     imageName: eclipse/hono-adapter-amqp-vertx
-    tagName: 1.2.3
+    imageTag: 1.2.3
   coap:
     imageName: eclipse/hono-adapter-coap-vertx
-    tagName: 1.2.3
+    imageTag: 1.2.3
   http:
     imageName: eclipse/hono-adapter-http-vertx
-    tagName: 1.2.3
+    imageTag: 1.2.3
   kura:
     imageName: eclipse/hono-adapter-kura
-    tagName: 1.2.3
+    imageTag: 1.2.3
   mqtt:
     imageName: eclipse/hono-adapter-mqtt-vertx
-    tagName: 1.2.3
+    imageTag: 1.2.3
   lora:
     imageName: eclipse/hono-adapter-lora-vertx
-    tagName: 1.2.3
+    imageTag: 1.2.3
 ```
 
 Assuming that the file is named `customImages.yaml`, the values can then be passed in to the

@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ printf "%s:%s" .Values.adapters.coap.imageName ( default .Chart.AppVersion ( default .Values.honoImagesTag .Values.adapters.coap.tagName ) ) }}
+      - image: {{ printf "%s:%s" .Values.adapters.coap.imageName ( default .Chart.AppVersion ( default .Values.honoImagesTag .Values.adapters.coap.imageTag ) ) }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-adapter-coap-vertx
         ports:
