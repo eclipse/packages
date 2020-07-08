@@ -15,7 +15,7 @@ name: hono
 description: |
   Eclipse Hono™ provides remote service interfaces for connecting large numbers of IoT devices to a back end and
   interacting with them in a uniform way regardless of the device communication protocol.
-version: 1.3.8
+version: 1.3.9
 # Version of Hono being deployed by the chart
 appVersion: 1.2.3
 keywords:

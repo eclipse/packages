@@ -160,38 +160,56 @@ helm install --dependency-update -n hono --set prometheus.createInstance=false -
 ## Using specific Container Images
 
 The chart can be customized to use container images other than the default ones.
-This can be used to install an older version of the images or to install a milestone
+This can be used to install an older version of the images or to install a Hono milestone
 using the chart. It can also be used to install custom built images that need to be
 pulled from a different (private) container registry.
 
 The `values.yaml` file contains configuration properties for setting the container
-image names and tags to use for Hono's components.
-The easiest way to override these values is to create a YAML file with the following content:
+image and tag names to use for Hono's components. The easiest way to override the version
+of all Hono components simultaneously is to set the `honoImagesTag` property to the desired
+value during installation.
+
+The following command installs Hono using the standard images published on Docker Hub with tag
+*1.3.0-M3* images instead of the ones indicated by the chart's *appVersion* property:
+
+```bash
+helm install --dependency-update -n hono --set honoImagesTag=1.3.0-M3 eclipse-hono eclipse-iot/hono
+```
+It is also possible to define the image and tag names for each component individually. The easiest way
+to do that is to create a YAML file that specifies the particular image and tag names:
 
 ```yaml
 deviceRegistryExample:
-  imageName: eclipse/hono-service-device-registry-file:1.2.0
+  imageName: my-custom-registry/hono-service-device-registry-custom
+  imageTag: 1.0.0
 
 authServer:
-  imageName: eclipse/hono-service-auth:1.2.0
+  imageName: eclipse/hono-service-auth
+  imageTag: 1.3.0-M3
 
 adapters:
   amqp:
-    imageName: eclipse/hono-adapter-amqp-vertx:1.2.0
+    imageName: eclipse/hono-adapter-amqp-vertx
+    imageTag: 1.2.3
   coap:
-    imageName: eclipse/hono-adapter-coap-vertx:1.2.0
+    imageName: eclipse/hono-adapter-coap-vertx
+    imageTag: 1.2.3
   http:
-    imageName: eclipse/hono-adapter-http-vertx:1.2.0
+    imageName: eclipse/hono-adapter-http-vertx
+    imageTag: 1.2.3
   kura:
-    imageName: eclipse/hono-adapter-kura:1.2.0
+    imageName: eclipse/hono-adapter-kura
+    imageTag: 1.2.3
   mqtt:
-    imageName: eclipse/hono-adapter-mqtt-vertx:1.2.0
+    imageName: eclipse/hono-adapter-mqtt-vertx
+    imageTag: 1.2.3
   lora:
-    imageName: eclipse/hono-adapter-lora-vertx:1.2.0
+    imageName: eclipse/hono-adapter-lora-vertx
+    imageTag: 1.2.3
 ```
 
-The names and tags can be set per component. Assuming that the file is named `customImages.yaml`,
-the values can then be passed in to the Helm `install` command as follows:
+Assuming that the file is named `customImages.yaml`, the values can then be passed in to the
+Helm `install` command as follows:
 
 ```bash
 helm install --dependency-update -n hono -f /path/to/customImages.yaml eclipse-hono eclipse-iot/hono

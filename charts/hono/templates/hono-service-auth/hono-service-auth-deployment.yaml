@@ -25,7 +25,7 @@ spec:
       {{- include "hono.metadata" $args | nindent 6 }}
     spec:
       containers:
-      - image: {{ .Values.authServer.imageName }}
+      - image: {{ printf "%s:%s" .Values.authServer.imageName ( default .Chart.AppVersion ( default .Values.honoImagesTag .Values.authServer.imageTag ) ) }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-service-auth
         ports:
