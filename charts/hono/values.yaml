@@ -31,7 +31,7 @@ amqpMessagingNetworkExample:
   dispatchRouter:
     # imageName contains the name (including tag) of the container image
     # to use for the example AQMP Messaging Network's Dispatch Router.
-    imageName: quay.io/interconnectedcloud/qdrouterd:1.10.0
+    imageName: quay.io/interconnectedcloud/qdrouterd:1.12.0
     # certFile contains the absolute path to a PEM file containing
     # the X.509 certificate that the router should use for authenticating
     # to clients
@@ -106,7 +106,7 @@ amqpMessagingNetworkExample:
     artemis:
       # imageName contains the name (including tag) of the container
       # image to use for the example AMQP Messaging Network Broker
-      imageName: quay.io/enmasse/artemis-base:2.10.1
+      imageName: quay.io/enmasse/artemis-base:2.10.1-1
       # resources contains the container's 'requests and limits for CPU and memory
       # as defined by the Kubernetes API.
       # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
