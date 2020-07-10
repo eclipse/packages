@@ -29,29 +29,47 @@ data:
     - /etc/config/alerts
 
     scrape_configs:
-    {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "service-auth") | nindent 4 }}
-    {{- if .Values.deviceRegistryExample.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "service-device-registry") | nindent 4 }}
-    {{- end }}
-    {{- if .Values.deviceConnectionService.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "service-device-connection") | nindent 4 }}
-    {{- end }}
-    {{- if .Values.adapters.amqp.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-amqp-vertx") | nindent 4 }}
-    {{- end }}
-    {{- if .Values.adapters.coap.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-coap-vertx") | nindent 4 }}
-    {{- end }}
-    {{- if .Values.adapters.http.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-http-vertx") | nindent 4 }}
-    {{- end }}
-    {{- if .Values.adapters.kura.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-kura") | nindent 4 }}
-    {{- end }}
-    {{- if .Values.adapters.lora.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-lora-vertx") | nindent 4 }}
-    {{- end }}
-    {{- if .Values.adapters.mqtt.enabled }}
-      {{- include "hono.prometheus.scrapeJob" (dict "dot" . "serviceName" "adapter-mqtt-vertx") | nindent 4 }}
-    {{- end }}
+        # Example scrape config for pods
+        #
+        # The relabeling allows the actual pod scrape endpoint to be configured via the
+        # following annotations:
+        #
+        # * `prometheus.io/scrape`: Only scrape pods that have a value of `true`
+        # * `prometheus.io/path`: If the metrics path is not `/metrics` override this.
+        # * `prometheus.io/port`: Scrape the pod on the indicated port instead of the default of `9102`.
+      - job_name: 'hono-pods'
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        kubernetes_sd_configs:
+          - role: pod
+            # make sure to only scrape pods of this release
+            namespaces:
+              names:
+              - {{ .Release.Namespace }}
+            selectors:
+            - role: pod
+              label: {{ printf "app.kubernetes.io/instance=%s,helm.sh/chart=%s" .Release.Name ( include "hono.chart" . ) }}
+
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
 {{ end }}

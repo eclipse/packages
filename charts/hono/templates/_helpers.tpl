@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -86,6 +86,15 @@ The scope passed in is expected to be a dict with keys
 app.kubernetes.io/name: {{ template "hono.name" .dot }}
 app.kubernetes.io/instance: {{ .dot.Release.Name }}
 app.kubernetes.io/component: {{ .component }}
+{{- end }}
+
+{{/*
+Add annotations for marking an object to be scraped by Prometheus.
+*/}}
+{{- define "hono.monitoringAnnotations" -}}
+prometheus.io/scrape: "true"
+prometheus.io/path: "/prometheus"
+prometheus.io/port: {{ default .Values.healthCheckPort .Values.monitoring.prometheus.port | quote }}
 {{- end }}
 
 
@@ -255,27 +264,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 {{- end -}}
 
-
-{{/*
-Create a scrape job for a service name.
-The scope passed in is expected to be a dict with keys
-- "dot": the root scope (".") and
-- "serviceName": the name of the service to scrape
-
-*/}}
-{{- define "hono.prometheus.scrapeJob" }}
-- job_name: {{ printf "%s-%s" .dot.Release.Name .serviceName }}
-  metrics_path: /prometheus
-  scheme: https
-  tls_config:
-    insecure_skip_verify: true
-  dns_sd_configs:
-  - names:
-    - {{ printf "%s-%s-headless" .dot.Release.Name .serviceName }}
-    type: A
-    port: {{ default 8088 .dot.Values.monitoring.prometheus.port }}
-    refresh_interval: 10s
-{{- end }}
 
 {{/*
 Adds a Jaeger Agent container to a template spec.
