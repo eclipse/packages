@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -12,7 +12,7 @@
 #
 dependencies:
   - name: prometheus
-    version: ~10.4.0
+    version: ~11.7.0
     repository: "https://kubernetes-charts.storage.googleapis.com/"
     condition: prometheus.createInstance
   - name: grafana
