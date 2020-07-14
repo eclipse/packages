@@ -1,0 +1,26 @@
+{{- if and .Values.mongodb.createInstance }}
+#
+# Copyright (c) 2020 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  {{- $args := dict "dot" . "component" "database" "name" "mongodb-init-scripts" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+data:
+  1_example_tenants.js: |
+    {{- tpl (.Files.Get "example/device-registry-mongodb/1_example_tenants.js") . | nindent 4 }}
+  2_example_devices.js: |
+    {{- tpl (.Files.Get "example/device-registry-mongodb/2_example_devices.js") . | nindent 4 }}
+  3_example_credentials.js: |
+    {{- tpl (.Files.Get "example/device-registry-mongodb/3_example_credentials.js") . | nindent 4 }}
+{{- end }}
