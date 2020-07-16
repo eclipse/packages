@@ -15,7 +15,7 @@
 RELEASE=$1
 NS=${2:-default}
 
-NODE_IP=$(kubectl get nodes -n $NS --output jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2> /dev/null)
+NODE_IP=$(kubectl get nodes -n $NS -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2> /dev/null)
 
 function getPorts {
   SERVICENAME=$1
@@ -25,7 +25,7 @@ function getPorts {
 
   for NAME in $PORT_NAMES
   do
-    PORT=$(kubectl get service $SERVICENAME -n $NS --output jsonpath='{.spec.ports[?(@.name=='"'$NAME'"')].'$TYPE'}' 2> /dev/null)
+    PORT=$(kubectl get service $SERVICENAME -n $NS -o jsonpath='{.spec.ports[?(@.name=='"'$NAME'"')].'$TYPE'}' 2> /dev/null)
     if [ $? -eq 0 -a "$PORT" != '' ]
     then
       UPPERCASE_PORT_NAME=$(echo $NAME | tr [a-z\-] [A-Z_])
@@ -40,7 +40,7 @@ function getService {
   PORT_NAMES=$2
   ENV_VAR_PREFIX=$3
 
-  SERVICE_TYPE=$(kubectl get service $SERVICENAME -n $NS --output jsonpath='{.spec.type}' 2> /dev/null)
+  SERVICE_TYPE=$(kubectl get service $SERVICENAME -n $NS -o jsonpath='{.spec.type}' 2> /dev/null)
   if [ $? -eq 0 ]
   then
     case $SERVICE_TYPE in
@@ -49,7 +49,7 @@ function getService {
         getPorts $SERVICENAME "$PORT_NAMES" $ENV_VAR_PREFIX nodePort
         ;;
       LoadBalancer)
-        IP=$(kubectl get service $SERVICENAME --output='jsonpath={.status.loadBalancer.ingress[0].ip}' -n $NS 2> /dev/null)
+        IP=$(kubectl get service $SERVICENAME -o jsonpath='{.status.loadBalancer.ingress[0].ip}' -n $NS 2> /dev/null)
         if [ $? -eq 0 -a "$IP" != '' ]
         then
           echo "export ${ENV_VAR_PREFIX}_IP=\"$IP\""
