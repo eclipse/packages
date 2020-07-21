@@ -18,4 +18,4 @@ chart-dirs:
   - packages
 chart-repos:
   - stable=https://kubernetes-charts.storage.googleapis.com/
-  - bitnami=https://charts.bitnami.com
+  - bitnami=https://charts.bitnami.com/bitnami

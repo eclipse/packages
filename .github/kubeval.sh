@@ -32,7 +32,7 @@ curl --silent --show-error --fail --location --output /tmp/kubeval.tar.gz https:
 sudo tar -C /usr/local/bin -xf /tmp/kubeval.tar.gz kubeval
 
 # add helm repos to resolve dependencies
-helm repo add bitnami https://charts.bitnami.com
+helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 
 # validate charts
