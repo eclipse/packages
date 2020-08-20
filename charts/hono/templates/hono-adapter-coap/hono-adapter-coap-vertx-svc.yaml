@@ -27,19 +27,17 @@ spec:
     port: 5683
     protocol: UDP
     targetPort: coap
-    nodePort: 30683
+    {{- $coapArgs := dict "dot" . "port" 30683 }}
+    {{- include "hono.nodePort" $coapArgs | nindent 4 }}
   - name: coaps
     port: 5684
     protocol: UDP
     targetPort: coaps
-    nodePort: 30684
+    {{- $coapsArgs := dict "dot" . "port" 30684 }}
+    {{- include "hono.nodePort" $coapsArgs | nindent 4 }}
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}
-  type: LoadBalancer
-{{- else }}
-  type: NodePort
-{{- end }}
+  {{- include "hono.serviceType" . }}
 {{- with .Values.adapters.coap.svc.loadBalancerIP }}
   loadBalancerIP: {{ . | quote }}
 {{- end }}

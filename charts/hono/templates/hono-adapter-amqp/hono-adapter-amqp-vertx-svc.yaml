@@ -26,19 +26,17 @@ spec:
     port: 5672
     protocol: TCP
     targetPort: amqp
-    nodePort: 32672
+    {{- $amqpArgs := dict "dot" . "port" 32672 }}
+    {{- include "hono.nodePort" $amqpArgs | nindent 4 }}
   - name: amqps
     port: 5671
     protocol: TCP
     targetPort: amqps
-    nodePort: 32671
+    {{- $amqpsArgs := dict "dot" . "port" 32671 }}
+    {{- include "hono.nodePort" $amqpsArgs | nindent 4 }}
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}
-  type: LoadBalancer
-{{- else }}
-  type: NodePort
-{{- end }}
+  {{- include "hono.serviceType" . }}
 {{- with .Values.adapters.amqp.svc.loadBalancerIP }}
   loadBalancerIP: {{ . | quote }}
 {{- end }}
