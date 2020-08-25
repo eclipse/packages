@@ -985,22 +985,20 @@ deviceRegistryExample:
     # the image from.
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
-    # hono contains the configuration properties for the MongoDb based device registry.
-    hono:
-      # mongodb contains the configuration properties to connect to the MongoDB database instance.
-      # If you would like to use an already existing MongoDB database instance, then configure
-      # the below section accordingly.
-      mongodb:
-      # The host name or IP address of the MongoDB instance.
-      # host:
-      # The port that the MongoDB instance is listening on.
-      # port:
-      # The name of the MongoDB database to be used by the device registry application.
-      # dbName:
-      # The user name to use for authenticating to the MongoDB instance.
-      # username:
-      # The password to use for authenticating to the MongoDB instance.
-      # password:
+    # mongodb contains the configuration properties to connect to the MongoDB database instance.
+    # If you would like to use an already existing MongoDB database instance, then configure
+    # the below section accordingly.
+    mongodb:
+    # The host name or IP address of the MongoDB instance.
+    # host:
+    # The port that the MongoDB instance is listening on.
+    # port:
+    # The name of the MongoDB database to be used by the device registry application.
+    # dbName:
+    # The user name to use for authenticating to the MongoDB instance.
+    # username:
+    # The password to use for authenticating to the MongoDB instance.
+    # password:
 
 mongodb:
   # createInstance indicates whether a MongoDB database instance should be created,

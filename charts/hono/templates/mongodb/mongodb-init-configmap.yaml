@@ -1,4 +1,4 @@
-{{- if and .Values.mongodb.createInstance }}
+{{- if .Values.mongodb.createInstance }}
 #
 # Copyright (c) 2020 Contributors to the Eclipse Foundation
 #
