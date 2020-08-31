@@ -56,8 +56,8 @@ spec:
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}-thingssearch
-          image: "{{ .Values.thingsSearch.image.repository }}:{{ .Values.thingsSearch.image.tag }}"
-          imagePullPolicy: {{ .Values.thingsSearch.image.imagePullPolicy }}
+          image: {{ printf "%s:%s" .Values.thingsSearch.image.repository ( default .Chart.AppVersion ( default .Values.dittoTag .Values.thingsSearch.image.tag ) ) }}
+          imagePullPolicy: {{ .Values.thingsSearch.image.pullPolicy }}
           args:
             - "java"
           {{- if .Values.thingsSearch.systemProps }}
