@@ -48,7 +48,7 @@ spec:
       initContainers:
         - name: {{ .Chart.Name }}-init
           image: "{{ .Values.swaggerui.image.repository }}:{{ .Values.swaggerui.image.tag }}"
-          imagePullPolicy: {{ .Values.swaggerui.image.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.swaggerui.image.pullPolicy }}
           command:
             - sh
             - -ec
@@ -67,7 +67,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-swaggerui
           image: "{{ .Values.swaggerui.image.repository }}:{{ .Values.swaggerui.image.tag }}"
-          imagePullPolicy: {{ .Values.swaggerui.image.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.swaggerui.image.pullPolicy }}
           env:
           {{- if .Values.swaggerui.extraEnv }}
             {{- toYaml .Values.swaggerui.extraEnv | nindent 12 }}
