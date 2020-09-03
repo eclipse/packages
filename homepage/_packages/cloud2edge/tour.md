@@ -304,12 +304,30 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
           "enforcement": {
             "input": "{%raw%}{{ header:device_id }}{%endraw%}",
             "filters": [
-              "{%raw%}{{ thing:id }}{%endraw%}"
+              "{%raw%}{{ entity:id }}{%endraw%}"
             ]
           },
           "headerMapping": {
             "hono-device-id": "{%raw%}{{ header:device_id }}{%endraw%}",
             "content-type": "{%raw%}{{ header:content-type }}{%endraw%}"
+          },
+          "replyTarget": {
+            "enabled": true,
+            "address": "{%raw%}{{ header:reply-to }}{%endraw%}",
+            "headerMapping": {
+              "to": "command/'"${HONO_TENANT}"'/{%raw%}{{ header:hono-device-id }}{%endraw%}",
+              "subject": "{%raw%}{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}{%endraw%}-response",
+              "correlation-id": "{%raw%}{{ header:correlation-id }}{%endraw%}",
+              "content-type": "{%raw%}{{ header:content-type | fn:default('"'"'application/vnd.eclipse.ditto+json'"'"') }}{%endraw%}"
+            },
+            "expectedResponseTypes": [
+              "response",
+              "error"
+            ]
+          },
+          "acknowledgementRequests": {
+            "includes": [],
+            "filter": "fn:filter(header:qos,'"'"'ne'"'"','"'"'0'"'"')"
           }
         },
         {
@@ -323,6 +341,13 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
             "content-type": "{%raw%}{{ header:content-type }}{%endraw%}",
             "correlation-id": "{%raw%}{{ header:correlation-id }}{%endraw%}",
             "status": "{%raw%}{{ header:status }}{%endraw%}"
+          },
+          "replyTarget": {
+            "enabled": false,
+            "expectedResponseTypes": [
+              "response",
+              "error"
+            ]
           }
         }
       ],
@@ -341,7 +366,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
             "subject": "{%raw%}{{ header:subject | fn:default(topic:action-subject) }}{%endraw%}",
             "content-type": "{%raw%}{{ header:content-type | fn:default('"'"'application/vnd.eclipse.ditto+json'"'"') }}{%endraw%}",
             "correlation-id": "{%raw%}{{ header:correlation-id }}{%endraw%}",
-            "reply-to": "command_response/'"${HONO_TENANT}"'/replies"
+            "reply-to": "{%raw%}{{ fn:default('"'"'command_response/'"${HONO_TENANT}"'/replies'"'"') | fn:filter(header:response-required,'"'"'ne'"'"','"'"'false'"'"') }}{%endraw%}"
           }
         },
         {
