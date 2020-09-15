@@ -1,6 +1,6 @@
-{{- if and ( and .Values.deviceRegistryExample.enabled ( eq .Values.deviceRegistryExample.type "mongodb" ) ) ( eq .Values.platform "openshift" ) }}
+{{- if and .Values.deviceRegistryExample.enabled ( eq .Values.platform "openshift" ) }}
 #
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -14,11 +14,13 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  {{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry-http" }}
+  {{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry-amqps" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   port:
     targetPort: amqps
+  tls:
+    termination: passthrough
   to:
     kind: Service
     name: {{ .Release.Name }}-service-device-registry

@@ -946,27 +946,6 @@ deviceRegistryExample:
     # the image from.
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
-    # data defines the location of files containing data
-    # that should be used to initialize the example Device Registry during startup.
-    data:
-      # volumeName contains the name of the service pod's volume that has been created for the
-      # secret containing the example data files.
-      # If not set, the files will be read from the volume created from the registry's default "conf" secret.
-      # Otherwise, the volume name needs to match the name used in the extraSecretMounts for the
-      # secret containing the data.
-      volumeName:
-      # tenantsFile indicates the name of the file that is used to initialize the
-      # Tenant service with example tenant data
-      tenantsFile: example-tenants.json
-      # devicesFile indicates the name of the file that is used to initialize the
-      # Device Registration service with example device data
-      devicesFile: example-device-identities.json
-      # credentialsFile indicates the name of the file that is used to initialize the
-      # Credentials service with example credentials
-      credentialsFile: example-credentials.json
-      # resetOnStartup indicates whether registration data should be reset to initial
-      # example data when the example Device Registry starts up
-      resetOnStartup: true
     # storageClass indicates the name of the kubernetes StorageClass that
     # should be used for the example registry's persistent volume claim.
     # If not set, the cluster's default storage class is used.
@@ -1008,10 +987,6 @@ mongodb:
   # In order to use it for production purposes and to horizontally scale,
   # refer https://github.com/bitnami/charts/tree/master/bitnami/mongodb#production-configuration-and-horizontal-scaling
   createInstance: false
-  # Define custom config map with init scripts. It includes the javascript scripts necessary to populate
-  # the MongoDB database with example tenants, devices and credentials data.
-  initConfigMap:
-    name: "eclipse-hono-mongodb-init-scripts"
   # If authentication to be enabled or not.
   # ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
   usePassword: true

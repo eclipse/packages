@@ -28,24 +28,6 @@ spec:
       annotations:
         {{- include "hono.monitoringAnnotations" . | nindent 8 }}
     spec:
-    {{- if .Values.deviceRegistryExample.fileBasedDeviceRegistry.data.resetOnStartup }}
-      initContainers:
-      # this container is used to copy example data from a secret to files
-      # in a persistent volume
-      - name: copy-example-data
-        image: busybox
-        command:
-        - sh
-        - -c
-        - if [ ! -f "/var/lib/hono/device-registry/device-identities.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.fileBasedDeviceRegistry.data.devicesFile }} /var/lib/hono/device-registry/device-identities.json; fi;
-          if [ ! -f "/var/lib/hono/device-registry/credentials.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.fileBasedDeviceRegistry.data.credentialsFile }} /var/lib/hono/device-registry/credentials.json; fi;
-          if [ ! -f "/var/lib/hono/device-registry/tenants.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.fileBasedDeviceRegistry.data.tenantsFile }} /var/lib/hono/device-registry/tenants.json; fi;
-        volumeMounts:
-        - name: {{ default ( printf "%s-conf" $args.name ) .Values.deviceRegistryExample.fileBasedDeviceRegistry.data.volumeName | quote }}
-          mountPath: "/tmp/hono"
-        - name: "registry"
-          mountPath: "/var/lib/hono/device-registry"
-    {{- end }}
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
       - image: {{ include "hono.image" ( dict "dot" . "component" .Values.deviceRegistryExample.fileBasedDeviceRegistry ) }}
