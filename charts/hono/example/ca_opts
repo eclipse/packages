@@ -1,0 +1,141 @@
+[ req ]
+default_bits        = 2048
+default_keyfile     = server-key.pem
+distinguished_name  = subject
+req_extensions      = req_ext
+x509_extensions     = x509_ext
+string_mask         = utf8only
+
+# The Subject DN can be formed using X501 or RFC 4514 (see RFC 4519 for a description).
+#   Its sort of a mashup. For example, RFC 4514 does not provide emailAddress.
+[ subject ]
+countryName         = Country Name (2 letter code)
+countryName_default     = CA
+
+stateOrProvinceName     = State or Province Name (full name)
+stateOrProvinceName_default = NY
+
+localityName            = Locality Name (eg, city)
+localityName_default        = Ottawa
+
+organizationName         = Organization Name (eg, company)
+organizationName_default    = Eclipse
+
+# Use a friendly name here because its presented to the user. The server's DNS
+#   names are placed in Subject Alternate Names. Plus, DNS names here is deprecated
+#   by both IETF and CA/Browser Forums. If you place a DNS name here, then you 
+#   must include the DNS name in the SAN too (otherwise, Chrome and others that
+#   strictly follow the CA/Browser Baseline Requirements will fail).
+commonName          = Common Name (e.g. server FQDN or YOUR name)
+commonName_default      = hono
+
+emailAddress            = Email Address
+emailAddress_default        = test@example.org
+
+# used when generating a self-signed certificate. I.e., openssl req -x509 ...
+[ x509_ext ]
+
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer:always
+basicConstraints = critical,CA:true
+keyUsage = keyCertSign,cRLSign
+
+[ intermediate_ext ]
+
+subjectKeyIdentifier=hash
+basicConstraints = critical,CA:true
+keyUsage = keyCertSign,cRLSign
+
+[ req_ext ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+
+# The following sections are used when generating the certificate signing request. I.e., openssl req ...
+# for the particular components (hono, qdrouter, auth-server etc.)
+# They are listed separately because this is only way to specify individual subjectAltNames for them
+
+[ req_ext_qdrouter ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-dispatch-router,DNS.2:hono-dispatch-router.hono,DNS.3:localhost
+
+[ req_ext_auth-server ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-service-auth,DNS.2:hono-service-auth.hono,DNS.3:localhost
+
+[ req_ext_device-registry ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-service-device-registry,DNS.2:hono-service-device-registry.hono,DNS.3:localhost
+
+[ req_ext_device-connection ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-service-device-connection,DNS.2:hono-service-device-connection.hono,DNS.3:localhost
+
+[ req_ext_http-adapter ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-adapter-http-vertx,DNS.2:hono-adapter-http-vertx.hono,DNS.3:localhost
+
+[ req_ext_lora-adapter ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-adapter-lora-vertx,DNS.2:hono-adapter-lora-vertx.hono,DNS.3:localhost
+
+[ req_ext_mqtt-adapter ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-adapter-mqtt-vertx,DNS.2:hono-adapter-mqtt-vertx.hono,DNS.3:localhost
+
+[ req_ext_amqp-adapter ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-adapter-amqp-vertx,DNS.2:hono-adapter-amqp-vertx.hono,DNS.3:localhost
+
+[ req_ext_kura-adapter ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-adapter-kura,DNS.2:hono-adapter-kura.hono,DNS.3:localhost
+
+[ req_ext_artemis ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-artemis,DNS.2:hono-artemis.hono,DNS.3:localhost
+
+[ req_ext_coap-adapter ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:hono-adapter-coap-vertx,DNS.2:hono-adapter-coap-vertx.hono,DNS.3:localhost
+
+[ req_ext_example-gateway ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:localhost
