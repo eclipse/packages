@@ -27,7 +27,7 @@ spec:
         {{- include "hono.monitoringAnnotations" . | nindent 8 }}
     spec:
       containers:
-      - image: {{ printf "%s:%s" .Values.authServer.imageName ( default .Chart.AppVersion ( default .Values.honoImagesTag .Values.authServer.imageTag ) ) }}
+      - image: {{ include "hono.image" ( dict "dot" . "component" .Values.authServer ) }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-service-auth
         ports:

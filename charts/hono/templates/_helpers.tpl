@@ -45,6 +45,21 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
+Create container image name.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "dot": the root (".") scope
+- (mandatory) "component": a dict with keys
+  - (mandatory) "imageName"
+  - (optional) "imageTag"
+  - (optional) "containerRegistry"
+*/}}
+{{- define "hono.image" }}
+  {{- $tag := default .dot.Chart.AppVersion ( default .dot.Values.honoImagesTag .component.imageTag ) }}
+  {{- $registry := default "index.docker.io" ( default .dot.Values.honoContainerRegistry .component.containerRegistry ) }}
+  {{- printf "%s/%s:%s" $registry .component.imageName $tag }}
+{{- end }}
+
+{{/*
 Add standard labels for resources as recommended by Helm best practices.
 */}}
 {{- define "hono.std.labels" -}}

@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ printf "%s:%s" .Values.adapters.http.imageName ( default .Chart.AppVersion ( default .Values.honoImagesTag .Values.adapters.http.imageTag ) ) }}
+      - image: {{ include "hono.image" ( dict "dot" . "component" .Values.adapters.http ) }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-adapter-http-vertx
         ports:

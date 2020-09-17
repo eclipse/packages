@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ printf "%s:%s" .Values.adapters.mqtt.imageName ( default .Chart.AppVersion ( default .Values.honoImagesTag .Values.adapters.mqtt.imageTag ) ) }}
+      - image: {{ include "hono.image" ( dict "dot" . "component" .Values.adapters.mqtt ) }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-adapter-mqtt-vertx
         ports:
