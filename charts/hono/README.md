@@ -65,11 +65,8 @@ kubectl get service -n hono
 
 NAME                                            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)
 eclipse-hono-adapter-amqp-vertx                 LoadBalancer   10.109.123.153   10.109.123.153   5672:32672/TCP,5671:32671/TCP
-eclipse-hono-adapter-amqp-vertx-headless        ClusterIP      None             <none>           <none>
 eclipse-hono-adapter-http-vertx                 LoadBalancer   10.99.180.137    10.99.180.137    8080:30080/TCP,8443:30443/TCP
-eclipse-hono-adapter-http-vertx-headless        ClusterIP      None             <none>           <none>
 eclipse-hono-adapter-mqtt-vertx                 LoadBalancer   10.102.204.69    10.102.204.69    1883:31883/TCP,8883:30883/TCP
-eclipse-hono-adapter-mqtt-vertx-headless        ClusterIP      None             <none>           <none>
 eclipse-hono-artemis                            ClusterIP      10.97.31.154     <none>           5671/TCP
 eclipse-hono-dispatch-router                    ClusterIP      10.98.111.236    <none>           5673/TCP
 eclipse-hono-dispatch-router-ext                LoadBalancer   10.109.220.100   10.109.220.100   15671:30671/TCP,15672:30672/TCP
