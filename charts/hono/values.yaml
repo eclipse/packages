@@ -22,9 +22,9 @@
 
 # honoContainerRegistry contains the name of the container registry that
 # the container images for Hono's components should be pulled from.
-# If not set explicitly, images are pulled from Docker Hub, which means that
-# 'index.docker.io' is used as the registry name.
-# honoContainerRegistry
+# The registry can also be set separately for each component, overriding
+# the value specified here.
+honoContainerRegistry: index.docker.io
 
 amqpMessagingNetworkExample:
   # enabled indicates whether the example AMQP Messaging Network
@@ -338,7 +338,7 @@ adapters:
   amqp:
     # enabled indicates if Hono's AMQP 1.0 adapter should be deployed.
     enabled: true
-    # imageName contains the name (exluding registry)
+    # imageName contains the name (excluding registry)
     # of the container image to use for the AMQP adapter
     imageName: eclipse/hono-adapter-amqp-vertx
     # imageTag contains the tag of the container image to deploy.
@@ -346,7 +346,7 @@ adapters:
     # imageTag:
     # containerRegistry contains the name of the container registry to pull
     # the image from.
-    # If not specified, the value of the "honoContainerRegistry"" property is used.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
@@ -419,7 +419,7 @@ adapters:
     # imageTag:
     # containerRegistry contains the name of the container registry to pull
     # the image from.
-    # If not specified, the value of the "honoContainerRegistry"" property is used.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
@@ -483,7 +483,7 @@ adapters:
     # imageTag:
     # containerRegistry contains the name of the container registry to pull
     # the image from.
-    # If not specified, the value of the "honoContainerRegistry"" property is used.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
@@ -556,7 +556,7 @@ adapters:
     # imageTag:
     # containerRegistry contains the name of the container registry to pull
     # the image from.
-    # If not specified, the value of the "honoContainerRegistry"" property is used.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
@@ -629,7 +629,7 @@ adapters:
     # imageTag:
     # containerRegistry contains the name of the container registry to pull
     # the image from.
-    # If not specified, the value of the "honoContainerRegistry"" property is used.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
@@ -701,7 +701,7 @@ adapters:
     # imageTag:
     # containerRegistry contains the name of the container registry to pull
     # the image from.
-    # If not specified, the value of the "honoContainerRegistry"" property is used.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
@@ -775,7 +775,7 @@ authServer:
   # imageTag:
   # containerRegistry contains the name of the container registry to pull
   # the image from.
-  # If not specified, the value of the "honoContainerRegistry"" property is used.
+  # If not specified, the value of the "honoContainerRegistry" property is used.
   # containerRegistry:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
@@ -865,7 +865,7 @@ deviceRegistryExample:
   # imageTag:
   # containerRegistry contains the name of the container registry to pull
   # the image from.
-  # If not specified, the value of the "honoContainerRegistry"" property is used.
+  # If not specified, the value of the "honoContainerRegistry" property is used.
   # containerRegistry:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
@@ -984,7 +984,7 @@ deviceConnectionService:
   # imageTag:
   # containerRegistry contains the name of the container registry to pull
   # the image from.
-  # If not specified, the value of the "honoContainerRegistry"" property is used.
+  # If not specified, the value of the "honoContainerRegistry" property is used.
   # containerRegistry:
   # javaOptions contains options to pass to the JVM when starting
   # up the service

@@ -55,7 +55,7 @@ The scope passed in is expected to be a dict with keys
 */}}
 {{- define "hono.image" }}
   {{- $tag := default .dot.Chart.AppVersion ( default .dot.Values.honoImagesTag .component.imageTag ) }}
-  {{- $registry := default "index.docker.io" ( default .dot.Values.honoContainerRegistry .component.containerRegistry ) }}
+  {{- $registry := default .dot.Values.honoContainerRegistry .component.containerRegistry }}
   {{- printf "%s/%s:%s" $registry .component.imageName $tag }}
 {{- end }}
 

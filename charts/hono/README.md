@@ -166,8 +166,8 @@ pulled from a different (private) container registry.
 
 The `values.yaml` file contains configuration properties for setting the container
 image and tag names to use for Hono's components. The easiest way to override the version
-of all Hono components simultaneously is to set the `honoImagesTag` property to the desired
-value during installation.
+of all Hono components simultaneously is to set the `honoImagesTag` and/or `honoContainerRegistry`
+properties to the desired values during installation.
 
 The following command installs Hono using the standard images published on Docker Hub with tag
 *1.3.0-M3* images instead of the ones indicated by the chart's *appVersion* property:
@@ -175,18 +175,30 @@ The following command installs Hono using the standard images published on Docke
 ```bash
 helm install --dependency-update -n hono --set honoImagesTag=1.3.0-M3 eclipse-hono eclipse-iot/hono
 ```
-It is also possible to define the image and tag names for each component individually. The easiest way
-to do that is to create a YAML file that specifies the particular image and tag names:
+
+The following command installs Hono using custom built images published on a private registry with tag
+*1.3.0-custom* instead of the ones indicated by the chart's *appVersion* property:
+
+```bash
+helm install --dependency-update -n hono --set honoImagesTag=1.3.0-custom --set honoContainerRegistry=my-registry:9090 eclipse-hono eclipse-iot/hono
+```
+
+It is also possible to define the image and tag names and container registry for each component separately.
+The easiest way to do that is to create a YAML file that specifies the particular properties:
 
 ```yaml
 deviceRegistryExample:
-  imageName: my-custom-registry/hono-service-device-registry-custom
+  # pull custom Device Registry image from private container registry
+  imageName: my-hono/hono-service-device-registry-custom
   imageTag: 1.0.0
+  containerRegistry: my-private-registry
 
 authServer:
+  # pull milestone release from Docker Hub
   imageName: eclipse/hono-service-auth
   imageTag: 1.3.0-M3
 
+# pull standard adapter images in version 1.2.3 from Docker Hub
 adapters:
   amqp:
     imageName: eclipse/hono-adapter-amqp-vertx
