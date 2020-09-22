@@ -36,7 +36,7 @@ amqpMessagingNetworkExample:
   # dispatchRouter contains properties for configuring the QPid Dispatch Router
   dispatchRouter:
     # imageName contains the name (including tag) of the container image
-    # to use for the example AQMP Messaging Network's Dispatch Router.
+    # to use for the example AMQP Messaging Network's Dispatch Router.
     imageName: quay.io/interconnectedcloud/qdrouterd:1.12.0
     # certFile contains the absolute path to a PEM file containing
     # the X.509 certificate that the router should use for authenticating
@@ -48,12 +48,12 @@ amqpMessagingNetworkExample:
     keyFile: "/etc/hono/qdrouter-key.pem"
     # trustStore contains the absolute path to a PEM file containing
     # the X.509 certificates that the router should use as trust anchors
-    # when authentitcating clients connecting to the router in a TLS
+    # when authenticating clients connecting to the router in a TLS
     # handshake
     trustStore: "/etc/hono/trusted-certs.pem"
     # serverTrustStore contains the absolute path to a PEM file containing
     # the X.509 certificates that the router should use as trust anchors
-    # when authentitcating to servers as part of a TLS handshake
+    # when authenticating to servers as part of a TLS handshake
     serverTrustStore: "/etc/hono/trusted-certs.pem"
     # uidFormat contains the format string to use for extracting the user ID from
     # the subject DN of certificates that clients use for authenticating to the router's
@@ -269,7 +269,7 @@ adapters:
   # Setting this property to 'true' allows external adapters to connect to
   # the Dispatch Router's 'internal' endpoint and the Device Registry's
   # service endpoints via AMQPS, i.e. AMQP over TLS.
-  # The Dispatch Router's 'internal' endoint listens on port 15673 and requires
+  # The Dispatch Router's 'internal' endpoint listens on port 15673 and requires
   # adapters to authenticate using SASL EXTERNAL, i.e. an adapter needs to provide
   # a client certificate that has been signed by one of the CA certs contained in
   # the router's trust store.
@@ -691,7 +691,7 @@ adapters:
       #  certPath: "/etc/config/cert.pem"
 
   mqtt:
-    # enabled indicates if Hono's MQTTP 3.1.1 adapter should be deployed.
+    # enabled indicates if Hono's MQTT 3.1.1 adapter should be deployed.
     enabled: true
     # imageName contains the name (excluding registry)
     # of the container image to use for the MQTT adapter
