@@ -21,6 +21,8 @@ deviceRegistryExample:
 
 mongodb:
   createInstance: true
+  persistence:
+    enabled: false
 
 useLoadBalancer: false
 
