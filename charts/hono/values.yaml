@@ -1006,7 +1006,7 @@ mongodb:
     targetPort: 27017
     annotations: {}
   # Use StatefulSet instead of Deployment when deploying standalone
-  useStatefulSet: true
+  useStatefulSet: false
   # Setting up replication
   # ref: https://github.com/bitnami/bitnami-docker-mongodb#setting-up-a-replication
   # Whether to create a MongoDB replica set for high availability or not
