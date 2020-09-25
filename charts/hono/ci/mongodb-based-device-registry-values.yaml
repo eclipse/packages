@@ -21,6 +21,7 @@ deviceRegistryExample:
 
 mongodb:
   createInstance: true
+  useStatefulSet: false
   persistence:
     enabled: false
 
