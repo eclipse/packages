@@ -19,3 +19,7 @@ dependencies:
     version: ~3.8.15
     repository: "https://kubernetes-charts.storage.googleapis.com/"
     condition: grafana.enabled
+  - name: mongodb
+    repository: "https://charts.bitnami.com/bitnami"
+    version: ~7.14.7
+    condition: mongodb.createInstance

@@ -1,4 +1,4 @@
-{{- if .Values.deviceRegistryExample.enabled }}
+{{- if and .Values.deviceRegistryExample.enabled ( eq .Values.deviceRegistryExample.type "file" ) }}
 #
 # Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
@@ -28,27 +28,9 @@ spec:
       annotations:
         {{- include "hono.monitoringAnnotations" . | nindent 8 }}
     spec:
-    {{- if .Values.deviceRegistryExample.data.resetOnStartup }}
-      initContainers:
-      # this container is used to copy example data from a secret to files
-      # in a persistent volume
-      - name: copy-example-data
-        image: busybox
-        command:
-        - sh
-        - -c
-        - if [ ! -f "/var/lib/hono/device-registry/device-identities.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.devicesFile }} /var/lib/hono/device-registry/device-identities.json; fi;
-          if [ ! -f "/var/lib/hono/device-registry/credentials.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.credentialsFile }} /var/lib/hono/device-registry/credentials.json; fi;
-          if [ ! -f "/var/lib/hono/device-registry/tenants.json" ]; then cp -u /tmp/hono/{{ .Values.deviceRegistryExample.data.tenantsFile }} /var/lib/hono/device-registry/tenants.json; fi;
-        volumeMounts:
-        - name: {{ default ( printf "%s-conf" $args.name ) .Values.deviceRegistryExample.data.volumeName | quote }}
-          mountPath: "/tmp/hono"
-        - name: "registry"
-          mountPath: "/var/lib/hono/device-registry"
-    {{- end }}
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ include "hono.image" ( dict "dot" . "component" .Values.deviceRegistryExample ) }}
+      - image: {{ include "hono.image" ( dict "dot" . "component" .Values.deviceRegistryExample.fileBasedDeviceRegistry ) }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-service-device-registry
         ports:

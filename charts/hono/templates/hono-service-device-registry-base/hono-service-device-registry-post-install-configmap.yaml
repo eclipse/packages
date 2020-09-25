@@ -1,0 +1,28 @@
+{{- if and .Values.deviceRegistryExample.enabled }}
+#
+# Copyright (c) 2020 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  {{- $args := dict "dot" . "component" "service-device-registry" "name" "post-install-device-registry-conf" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+data:
+  add_example_data_device_registry.sh: |
+    {{- tpl (.Files.Get "example/add_example_data_device_registry.sh") . | nindent 4 }}
+  example-tenants.sh: |
+    {{ .Files.Get "example/example-tenants.sh" | nindent 4 }}
+  example-devices.sh: |
+    {{ .Files.Get "example/example-devices.sh" | nindent 4 }}
+  example-credentials.sh: |
+    {{ .Files.Get "example/example-credentials.sh" | nindent 4 }}
+  {{- end }}
