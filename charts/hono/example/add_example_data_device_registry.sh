@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #*******************************************************************************
-HTTP_BASE_URL="http://{{ .Release.Name }}-service-device-registry-ext:28080/v1"
+HTTP_BASE_URL="http://{{ .Release.Name }}-service-device-registry:8080/v1"
 
 check_status() {
   EXIT_STATUS=$1
@@ -35,7 +35,7 @@ add_tenant(){
   HTTP_REQUEST_BODY=$2
 
   echo "Adding tenant [$TENANT_ID]"
-  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+  HTTP_RESPONSE=$(curl -w "%{http_code}" \
                     -X POST "$HTTP_BASE_URL/tenants/$TENANT_ID" \
                     --header 'Content-Type: application/json' \
                     --data-raw "$HTTP_REQUEST_BODY")
@@ -49,7 +49,7 @@ register_device(){
   HTTP_REQUEST_BODY=$3
 
   echo "Registering device [$TENANT_ID:$DEVICE_ID]"
-  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+  HTTP_RESPONSE=$(curl -w "%{http_code}" \
                   -X POST "$HTTP_BASE_URL/devices/$TENANT_ID/$DEVICE_ID" \
                   --header 'Content-Type: application/json' \
                   --data-raw "$HTTP_REQUEST_BODY")
@@ -64,7 +64,7 @@ add_credentials(){
   HTTP_REQUEST_BODY=$3
 
   echo "Adding credentials [$TENANT_ID:$DEVICE_ID]"
-  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+  HTTP_RESPONSE=$(curl -w "%{http_code}" \
                 -X PUT "$HTTP_BASE_URL/credentials/$1/$2" \
                 --header 'Content-Type: application/json' \
                 --data-raw "$3")

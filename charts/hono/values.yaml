@@ -1012,6 +1012,9 @@ mongodb:
   # Whether to create a MongoDB replica set for high availability or not
   replicaSet:
     enabled: false
+  # do not use the default name ("mongodb") because it will lead to a config
+  # property name clash in the device registry pod when using "hono" as the release name
+  nameOverride: monogodb-server
 
 # deviceConnectionService contains configuration properties for the
 # Device Connection service.

@@ -1,6 +1,6 @@
 {{- if .Values.deviceRegistryExample.enabled }}
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -22,6 +22,10 @@ spec:
     port: 5671
     protocol: TCP
     targetPort: amqps
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
   - name: https
     port: 8443
     protocol: TCP
