@@ -48,7 +48,7 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: authentication-impl,dev
         - name: LOGGING_CONFIG
-          value: classpath:logback-spring.xml
+          value: {{ default "classpath:logback-spring.xml" .Values.authServer.loggingConfig | quote }}
         - name: JDK_JAVA_OPTIONS
           value: {{ .Values.authServer.javaOptions | quote }}
         - name: KUBERNETES_NAMESPACE
