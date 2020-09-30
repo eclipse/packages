@@ -8,7 +8,7 @@ This chart uses hawkbit/hawkbit-update-server container to run Hawkbit update se
 
 ## Prerequisites
 
-- Has been tested on Kubernetes 1.11+
+- Has been tested on Kubernetes 1.14+
 
 ## Installing the Chart
 
