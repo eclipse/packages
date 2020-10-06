@@ -1,9 +1,9 @@
 dependencies:
   - name: mysql
-    version: 6.7.4
+    version: 6.14.10
     repository: https://charts.bitnami.com/bitnami
     condition: mysql.enabled
   - name: rabbitmq
-    version: 6.16.0
+    version: 6.28.1
     repository: https://charts.bitnami.com/bitnami
     condition: rabbitmq.enabled
