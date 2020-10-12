@@ -415,3 +415,29 @@ Optionally, the scope my contain key
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Adds port type declarations to a component's service spec.
+*/}}
+{{- define "hono.serviceType" }}
+{{- if eq .Values.platform "openshift" }}
+  type: ClusterIP
+{{- else if eq .Values.useLoadBalancer true }}
+  type: LoadBalancer
+{{- else }}
+  type: NodePort
+{{- end }}
+{{- end }}
+
+{{/*
+Configures NodePort on component's service spec.
+*/}}
+{{- define "hono.nodePort" }}
+{{- if ne .dot.Values.platform "openshift" }}
+nodePort: {{ .port  }}
+{{- end }}
+{{- end }}
+
+
+
+

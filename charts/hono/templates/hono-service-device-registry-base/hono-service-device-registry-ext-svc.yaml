@@ -26,12 +26,14 @@ spec:
     port: 28080
     protocol: TCP
     targetPort: http
-    nodePort: 31080
+    {{- $httpArgs := dict "dot" . "port" 31080 }}
+    {{- include "hono.nodePort" $httpArgs | nindent 4 }}
   - name: https
     port: 28443
     protocol: TCP
     targetPort: https
-    nodePort: 31443
+    {{- $httpsArgs := dict "dot" . "port" 31443 }}
+    {{- include "hono.nodePort" $httpsArgs | nindent 4 }}
   {{- if .Values.adapters.externalAdaptersEnabled }}
   - name: amqps
     port: 5671
@@ -40,11 +42,7 @@ spec:
   {{- end }}
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}
-  type: LoadBalancer
-{{- else }}
-  type: NodePort
-{{- end }}
+  {{- include "hono.serviceType" . }}
 {{- with .Values.deviceRegistryExample.svc.loadBalancerIP }}
   loadBalancerIP: {{ . | quote }}
 {{- end }}
