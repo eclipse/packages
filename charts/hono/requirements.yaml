@@ -13,11 +13,11 @@
 dependencies:
   - name: prometheus
     version: ~11.7.0
-    repository: "https://kubernetes-charts.storage.googleapis.com/"
+    repository: "https://prometheus-community.github.io/helm-charts"
     condition: prometheus.createInstance
   - name: grafana
     version: ~3.8.15
-    repository: "https://kubernetes-charts.storage.googleapis.com/"
+    repository: "https://grafana.github.io/helm-charts"
     condition: grafana.enabled
   - name: mongodb
     repository: "https://charts.bitnami.com/bitnami"
