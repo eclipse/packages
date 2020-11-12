@@ -881,6 +881,10 @@ deviceRegistryExample:
   # - mongodb: MongoDB based device registry. Also refer to the section "mongoDBBasedDeviceRegistry"
   # for additional configuration.
   type: file
+
+  # addExampleData indicates whether example data is inserted after the device registry is deployed
+  addExampleData: true
+
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
