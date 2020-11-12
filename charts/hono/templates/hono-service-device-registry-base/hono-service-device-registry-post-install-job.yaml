@@ -1,4 +1,4 @@
-{{- if and .Values.deviceRegistryExample.enabled }}
+{{- if and .Values.deviceRegistryExample.enabled .Values.deviceRegistryExample.addExampleData }}
 #
 # Copyright (c) 2020 Contributors to the Eclipse Foundation
 #
