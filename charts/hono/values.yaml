@@ -880,6 +880,8 @@ deviceRegistryExample:
   # for additional configuration.
   # - mongodb: MongoDB based device registry. Also refer to the section "mongoDBBasedDeviceRegistry"
   # for additional configuration.
+  # - jdbc: JDBC based device registry. Also refer to the section "jdbcBasedDeviceRegistry"
+  # for additional configuration.
   type: file
 
   # addExampleData indicates whether example data is inserted after the device registry is deployed
@@ -1000,6 +1002,68 @@ deviceRegistryExample:
     # username:
     # The password to use for authenticating to the MongoDB instance.
     # password:
+
+  # jdbcBasedDeviceRegistry contains configuration properties specific to the
+  # jdbc based device registry.
+  jdbcBasedDeviceRegistry:
+    # imageName contains the name (excluding registry)
+    # of the container image for the example jdbc based device registry.
+    imageName: eclipse/hono-service-device-registry-jdbc
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # registry.jdbc contains the configuration properties for device registry
+    # to connect to the database.
+    registry:
+      jdbc:
+        # the jdbc properties for read-only operations
+        adapter:
+          # The jdbc URL for the database
+          url:
+          # The jdbc driver class name
+          driverClass:
+          # The user name to use for authenticating to the database
+          username:
+          # The password to use for authenticating to the database
+          password:
+        # the jdbc properties for write operations
+        management:
+          # The jdbc URL for the database. For SQLServer, ";SelectMethod=Cursor" is required in the management url.
+          url:
+          # The jdbc driver class name
+          driverClass:
+          # The user name to use for authenticating to the database
+          username:
+          # The password to use for authenticating to the database
+          password:
+    # tenant.jdbc contains the configuration properties for tenant registry
+    # to connect to the database.
+    tenant:
+      jdbc:
+        # the jdbc properties for read-only operations
+        adapter:
+          # The jdbc URL for the database
+          url:
+          # The jdbc driver class name
+          driverClass:
+          # The user name to use for authenticating to the database
+          username:
+          # The password to use for authenticating to the database
+          password:
+        # the jdbc properties for write operations
+        management:
+          # The jdbc URL for the database. For SQLServer, ";SelectMethod=Cursor" is required in the management url.
+          url:
+          # The jdbc driver class name
+          driverClass:
+          # The user name to use for authenticating to the database
+          username:
+          # The password to use for authenticating to the database
+          password:
 
 mongodb:
   # createInstance indicates whether a MongoDB database instance should be created,
