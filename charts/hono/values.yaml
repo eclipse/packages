@@ -1044,11 +1044,13 @@ deviceConnectionService:
 
   # enabled indicates if the data grid based Device Connection service implementation
   # should be deployed and used.
-  # If set to false (the default) and "deviceRegistryExample.enabled" is set to true,
-  # the in-memory implementation that is part of the example Device Registry is used.
-  # If set to false (the default) and "deviceRegistryExample.enabled" is also set to false,
-  # then the "adapters.deviceConnectionSpec" is expected to contain the required
-  # Hono client config properties to connect to an already existing Device Connection service.
+  # If set to false (the default) and "deviceRegistryExample.enabled" is set to true and
+  # "deviceRegistryExample.type" is set to "file", the in-memory implementation that is part
+  # of the example file based Device Registry is used.
+  # If set to false (the default) and "deviceRegistryExample.enabled" is also set to false or
+  # "deviceRegistryExample.type" is not set to "file", then the "adapters.deviceConnectionSpec"
+  # is expected to contain the required Hono client config properties to connect to an already
+  # existing Device Connection service.
   enabled: false
 
   # imageName contains the name (excluding registry)
