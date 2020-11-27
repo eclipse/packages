@@ -1,4 +1,4 @@
-{{- if .Values.fileStorage.enabled -}}
+{{- if and .Values.fileStorage.enabled ( not .Values.fileStorage.azure.staticSecret ) -}}
 {{- $fullName := include "hawkbit.fullname" . -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -11,9 +11,12 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
- accessModes:
- - ReadWriteOnce
- resources:
-   requests:
-     storage: {{ .Values.fileStorage.pvcSize }}
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.fileStorage.pvcSize }}
+  {{- if .Values.fileStorage.azure.dynamicFileShare }}
+  storageClassName: azure-file-sc
+  {{- end }}
 {{- end }}

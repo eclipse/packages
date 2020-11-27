@@ -78,6 +78,10 @@ fileStorage:
   enabled: true
   pvcSize: "1Gi"
   mountPath: "/var/lib/hawkbit-storage"
+  azure:
+    dynamicFileShare: false
+    staticSecret:
+    staticShareName: hawkbit-share
 
 # env vars for configuration
 env:

@@ -114,8 +114,15 @@ spec:
           name: {{ include "hawkbit.fullname" . }}
       {{- if .Values.fileStorage.enabled }}
       - name: storage
+        {{- if .Values.fileStorage.azure.staticSecret }}
+        azureFile:
+          secretName: {{ .Values.fileStorage.azure.staticSecret }}
+          shareName: {{ .Values.fileStorage.azure.staticShareName }}
+          readOnly: false
+        {{- else }}
         persistentVolumeClaim:
           claimName: {{ include "hawkbit.fullname" . }}-data
+        {{- end }}
       {{- end}}
       {{- if .Values.extraVolumes }}
       {{ toYaml .Values.extraVolumes | nindent 6 }}
