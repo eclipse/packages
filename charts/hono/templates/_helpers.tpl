@@ -273,6 +273,26 @@ resource-limits:
 {{- end }}
 {{- end }}
 
+
+{{/*
+Add Quarkus related configuration properties to YAML file.
+The scope passed in is expected to be a dict with keys
+- "dot": the root scope (".") and
+- "component": the name of the adapter
+*/}}
+{{- define "hono.quarkusConfig" -}}
+{{- if ( contains "quarkus" .dot.Values.honoImagesType ) }}
+quarkus:
+  log:
+    console:
+      color: true
+    level: INFO
+  vertx:
+    prefer-native-transport: true
+{{- end }}
+{{- end }}
+
+
 {{/*
 Create a fully qualified Prometheus server name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -363,7 +383,8 @@ Optionally, the scope my contain key
                      instead of the default "/etc/hono"
 */}}
 {{- define "hono.container.secretVolumeMounts" }}
-- name: {{ printf "%s-conf" .name | quote }}
+{{- $volumeName := printf "%s-conf" .name }}
+- name: {{ $volumeName | quote }}
   {{- if .configMountPath }}
   mountPath: {{ .configMountPath | quote }}
   {{- else }}
@@ -377,15 +398,10 @@ Optionally, the scope my contain key
   readOnly: true
 {{- end }}
 {{- end }}
-{{- if .dot }}
-{{- if ( contains "quarkus" .dot.Values.honoImagesType ) }}
-- name: "config"
-{{- if ( eq "quarkus" .dot.Values.honoImagesType ) }}
-  mountPath: "/deployments/config"
-{{- end }}
-{{- if ( eq "quarkus-native" .dot.Values.honoImagesType ) }}
-  mountPath: "/work/config"
-{{- end }}
+{{-  with .dot }}
+{{- if ( contains "quarkus" .Values.honoImagesType ) }}
+- name: {{ $volumeName | quote }}
+  mountPath: "/opt/hono/config"
   readOnly: true
 {{- end }}
 {{- end }}
@@ -410,13 +426,6 @@ Optionally, the scope my contain key
 - name: {{ $name | quote }}
   secret:
     secretName: {{ $spec.secretName | quote }}
-{{- end }}
-{{- end }}
-{{- if .dot }}
-{{- if ( contains "quarkus" .dot.Values.honoImagesType ) }}
-- name: "config"
-  secret:
-    secretName: {{ printf "%s-%s" .releaseName $volumeName | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
