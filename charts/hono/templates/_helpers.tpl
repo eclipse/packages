@@ -59,7 +59,7 @@ The scope passed in is expected to be a dict with keys
   {{- $registry := default .dot.Values.honoContainerRegistry .component.containerRegistry }}
 
   {{- if and .useImageType ( contains "quarkus" .dot.Values.honoImagesType ) }}
-  {{- printf "%s/%s-quarkus:%s" $registry .component.imageName $tag -}}
+  {{- printf "%s/%s-%s:%s" $registry .component.imageName .dot.Values.honoImagesType $tag -}}
   {{- else }}
   {{- printf "%s/%s:%s" $registry .component.imageName $tag -}}
   {{- end }}
@@ -287,6 +287,13 @@ quarkus:
     console:
       color: true
     level: INFO
+    category:
+      "org.eclipse.hono":
+        level: INFO
+      "org.eclipse.hono.adapter":
+        level: INFO
+      "org.eclipse.hono.service":
+        level: INFO
   vertx:
     prefer-native-transport: true
 {{- end }}
