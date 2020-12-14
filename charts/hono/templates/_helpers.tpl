@@ -174,10 +174,10 @@ messaging:
   amqpHostname: hono-internal
   host: {{ .dot.Release.Name }}-dispatch-router
   port: 5673
-  keyPath: /etc/hono/key.pem
-  certPath: /etc/hono/cert.pem
-  trustStorePath: /etc/hono/trusted-certs.pem
-  hostnameVerificationRequired: false
+  keyPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.keyPath }}
+  certPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.certPath }}
+  trustStorePath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.trustStorePath }}
+  hostnameVerificationRequired: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.hostnameVerificationRequired }}
 {{- else }}
   {{- required ".Values.adapters.amqpMessagingNetworkSpec MUST be set if example AQMP Messaging Network is disabled" .dot.Values.adapters.amqpMessagingNetworkSpec | toYaml | nindent 2 }}
 {{- end }}
@@ -187,10 +187,10 @@ command:
   amqpHostname: hono-internal
   host: {{ .dot.Release.Name }}-dispatch-router
   port: 5673
-  keyPath: /etc/hono/key.pem
-  certPath: /etc/hono/cert.pem
-  trustStorePath: /etc/hono/trusted-certs.pem
-  hostnameVerificationRequired: false
+  keyPath: {{ .dot.Values.adapters.commandAndControlSpec.keyPath }}
+  certPath: {{ .dot.Values.adapters.commandAndControlSpec.certPath }}
+  trustStorePath: {{ .dot.Values.adapters.commandAndControlSpec.trustStorePath }}
+  hostnameVerificationRequired: {{ .dot.Values.adapters.commandAndControlSpec.hostnameVerificationRequired }}
 {{- else }}
   {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AQMP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
 {{- end }}
