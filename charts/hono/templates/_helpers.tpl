@@ -344,6 +344,11 @@ The scope passed in is expected to be a dict with keys
   value: "const"
 - name: JAEGER_SAMPLER_PARAM
   value: "1"
+{{- else if empty .dot.Values.jaegerAgentConf }}
+- name: JAEGER_SAMPLER_TYPE
+  value: "const"
+- name: JAEGER_SAMPLER_PARAM
+  value: "0"
 {{- end }}
 {{- end }}
 
