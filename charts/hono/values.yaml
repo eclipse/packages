@@ -37,7 +37,7 @@ amqpMessagingNetworkExample:
   dispatchRouter:
     # imageName contains the name (including tag) of the container image
     # to use for the example AMQP Messaging Network's Dispatch Router.
-    imageName: quay.io/interconnectedcloud/qdrouterd:1.12.0
+    imageName: quay.io/interconnectedcloud/qdrouterd:1.14.0
     # certFile contains the absolute path to a PEM file containing
     # the X.509 certificate that the router should use for authenticating
     # to clients
@@ -112,7 +112,7 @@ amqpMessagingNetworkExample:
     artemis:
       # imageName contains the name (including tag) of the container
       # image to use for the example AMQP Messaging Network Broker
-      imageName: quay.io/enmasse/artemis-base:2.10.1-1
+      imageName: quay.io/enmasse/artemis-base:2.13.0
       # resources contains the container's 'requests and limits for CPU and memory
       # as defined by the Kubernetes API.
       # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -156,7 +156,7 @@ dataGridExample:
   enabled: false
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
-  imageName: infinispan/server:11.0.0.Final
+  imageName: infinispan/server:11.0.7.Final-1
   # resources contains the container's 'requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -200,7 +200,7 @@ jaegerBackendExample:
   enabled: false
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
-  allInOneImage: jaegertracing/all-in-one:1.17
+  allInOneImage: jaegertracing/all-in-one:1.21
   # resources contains the container's 'requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -219,14 +219,14 @@ jaegerBackendExample:
 # jaegerAgentImage contains the name (including tag)
 # of the container image to use for the Jaeger Agent sidecar deployed
 # with Hono's components.
-jaegerAgentImage: jaegertracing/jaeger-agent:1.17
+jaegerAgentImage: jaegertracing/jaeger-agent:1.21
 # jaegerAgentConf contains environment variables for configuring the Jaeger Agent sidecar container
 # that is deployed with each of Hono's components.
 # The Jaeger Agent sidecar container is deployed with standard properties if
 # "jaegerBackendExample.enabled" is set to true.
 # Otherwise the sidecar container is deployed using the environment variables contained
 # in this property (if not nil).
-# Please refer to https://www.jaegertracing.io/docs/1.17/cli/ for syntax and semantics
+# Please refer to https://www.jaegertracing.io/docs/1.21/cli/ for syntax and semantics
 # of environment variables.
 jaegerAgentConf:
 #  REPORTER_GRPC_HOST_PORT: my-jaeger-collector:14250
