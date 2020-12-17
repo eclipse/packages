@@ -12,5 +12,5 @@
 dependencies:
   - name: mongodb
     repository: https://charts.bitnami.com/bitnami
-    version: 7.6.3
+    version: ~7.14.7
     condition: mongodb.enabled
