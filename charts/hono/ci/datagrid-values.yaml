@@ -12,7 +12,7 @@
 #
 
 # profile for installing Hono
-# - without monitoring infrastructre
+# - without monitoring infrastructure
 # - with example Infinispan data grid
 
 useLoadBalancer: false

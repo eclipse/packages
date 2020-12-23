@@ -342,8 +342,9 @@ adapters:
 
   # deviceConnectionSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Device Connection service.
-  # This property MUST be set if "deviceRegistryExample.enabled" and
-  # "deviceConnectionService.enabled" and "dataGridExample.enabled" are all set to false.
+  # This property MUST be set if "deviceRegistryExample.enabled",
+  # "deviceConnectionService.enabled" and "dataGridExample.enabled" are all set to false
+  # and no "dataGridSpec" is set.
   # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   deviceConnectionSpec:
@@ -439,7 +440,7 @@ adapters:
       #  certPath: "/etc/config/cert.pem"
 
   coap:
-    # enabled indicates if Hono's (experimental) CoAP adapter should be deployed.
+    # enabled indicates if Hono's CoAP adapter should be deployed.
     enabled: false
     # imageName contains the name (excluding registry)
     # of the container image to use for the CoAP adapter
@@ -883,7 +884,8 @@ deviceRegistryExample:
   # - "adapters.tenantSpec"
   # - "adapters.deviceRegistrationSpec"
   # - "adapters.credentialsSpec"
-  # - "adapters.deviceConnectionSpec"
+  # - "adapters.deviceConnectionSpec" (only needed if "deviceConnectionService.enabled" and "dataGridExample.enabled"
+  #                                   are also set to false and no "dataGridSpec" is set)
   enabled: true
 
   # Sets the type of the device registry to be deployed. The following types are defined:
@@ -1120,8 +1122,8 @@ deviceConnectionService:
   # enabled indicates if the data grid based Device Connection service implementation
   # should be deployed and used.
   # If set to false (the default) and "deviceRegistryExample.enabled" is set to true and
-  # "deviceRegistryExample.type" is set to "file", the in-memory implementation that is part
-  # of the example file based Device Registry is used.
+  # "deviceRegistryExample.type" is set to "file", the in-memory Device Connection service
+  # implementation that is part of the example file based Device Registry is used.
   # If set to false (the default) and "deviceRegistryExample.enabled" is also set to false or
   # "deviceRegistryExample.type" is not set to "file", then the "adapters.deviceConnectionSpec"
   # is expected to contain the required Hono client config properties to connect to an already
