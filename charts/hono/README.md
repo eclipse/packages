@@ -105,14 +105,14 @@ content-length: 260
 
 ## Accessing the Grafana dashboard
 
-Hono comes with an example Grafana dash board which provides some insight into the messages flowing through the protocol adapters.
+Hono comes with an example Grafana dashboard which provides some insight into the messages flowing through the protocol adapters.
 The following command needs to be run first in order to forward the Grafana service's endpoint to the local host:
 
 ```bash
 kubectl port-forward service/hono-grafana 3000 -n hono
 ```
 
-Then the dash board can be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.
+Then the dashboard can be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.
 
 
 ## Uninstalling the chart
@@ -145,7 +145,7 @@ helm install --dependency-update -n hono -f /path/to/config.yaml eclipse-hono ec
 ## Prevent installation of Prometheus and Grafana
 
 The chart by default installs a Prometheus instance for collecting metrics from Hono's
-components and a Grafana instance for visualizing the metrics on dash boards in a web browser.
+components and a Grafana instance for visualizing the metrics on dashboards in a web browser.
 
 Both Prometheus and Grafana are not required to run Hono. The following configuration properties
 can be used to prevent installation of the Prometheus and Grafana servers.
@@ -392,17 +392,48 @@ The following table provides an overview of the corresponding configuration prop
 | Property                     | Default  | Description                              |
 | :--------------------------- | :------- | :--------------------------------------- |
 | *adapters.amqp.enabled*      | `true`  | Indicates if the AMQP protocol adapter should be deployed. |
-| *adapters.coap.enabled*      | `false` | Indicates if the (experimental) CoAP protocol adapter should be deployed. |
+| *adapters.coap.enabled*      | `false` | Indicates if the CoAP protocol adapter should be deployed. |
 | *adapters.http.enabled*      | `true`  | Indicates if the HTTP protocol adapter should be deployed. |
 | *adapters.kura.enabled*      | `false` | Indicates if the deprecated Kura protocol adapter should be deployed. |
 | *adapters.lora.enabled*      | `false` | Indicates if the (experimental) LoRa WAN protocol adapter should be deployed. |
 | *adapters.mqtt.enabled*      | `true`  | Indicates if the MQTT protocol adapter should be deployed. |
 
-The following command will deploy the LoRa adapter along with Hono's standard adapters
+The following command will deploy the LoRa adapter along with Hono's standard adapters:
 
 ```bash
 helm install --dependency-update -n hono --set adapters.lora.enabled=true eclipse-hono eclipse-iot/hono
 ```
+
+### Jaeger Tracing
+
+Hono's components are instrumented using OpenTracing to allow tracking of the distributed processing of messages flowing through the system.
+The Hono chart can be configured to report tracing information to the [Jaeger tracing system](https://www.jaegertracing.io/).
+The *Spans* reported by the components can then be viewed in a web browser.
+
+The chart can be configured to deploy and use an example Jaeger back end by means of setting the *jaegerBackendExample.enabled* property
+to `true` when running Helm:
+
+~~~sh
+helm install --dependency-update -n hono --set jaegerBackendExample.enabled=true eclipse-hono eclipse-iot/hono
+~~~
+
+This will create a Jaeger back end instance suitable for testing purposes and will configure all deployed Hono components to use the
+Jaeger back end.
+
+Note that this can only be used with the standard Hono images published on Docker Hub with version 1.5.0 or later. Custom
+images must have been built with the Jaeger client included. For the standard Hono components that means using the
+`jaeger` Maven profile for the build.
+
+The following command can then be used to return the IP address at which the Jaeger UI can be accessed in a
+browser (ensure `minikube tunnel` is running when using minikube):
+
+~~~sh
+kubectl get service eclipse-hono-jaeger-query --output="jsonpath={.status.loadBalancer.ingress[0]['hostname','ip']}" -n hono
+~~~
+
+If no example Jaeger back end should be deployed but instead an existing Jaeger installation should be used,
+the chart's *jaegerAgentConf* property can be set to environment variables which are passed in to
+the Jaeger Agent that is deployed with each of Hono's components.
 
 ## Using Quarkus based services
 
