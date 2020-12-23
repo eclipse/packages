@@ -3,7 +3,7 @@
 # use kubeval to validate helm generated kubernetes manifest
 #
 
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -32,8 +32,11 @@ curl --silent --show-error --fail --location --output /tmp/kubeval.tar.gz https:
 sudo tar -C /usr/local/bin -xf /tmp/kubeval.tar.gz kubeval
 
 # add helm repos to resolve dependencies
+helm repo add stable https://charts.helm.sh/stable
+helm repo add packages https://eclipse.org/packages/charts
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
 
 # validate charts
 for CHART_DIR in ${CHART_DIRS};do
