@@ -1,6 +1,6 @@
 {{- if .Values.deviceConnectionService.enabled }}
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "service-device-connection" "name" "service-device-connection" }}
+{{- $args := dict "dot" . "component" "service-device-connection" "name" "service-device-connection" "componentConfig" .Values.deviceConnectionService }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ include "hono.image" ( dict "dot" . "component" .Values.deviceConnectionService ) }}
+      - image: {{ include "hono.image" $args }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-service-device-connection
         ports:
@@ -59,7 +59,7 @@ spec:
               fieldPath: metadata.namespace
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         volumeMounts:
-        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "conf" .Values.deviceConnectionService ) | indent 8 }}
+        {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
         {{- with .Values.deviceConnectionService.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
@@ -81,5 +81,5 @@ spec:
           periodSeconds: 5
           failureThreshold: 2
       volumes:
-      {{- include "hono.pod.secretVolumes" ( dict "releaseName" .Release.Name "name" $args.name "conf" .Values.deviceConnectionService ) | indent 6 }}
+      {{- include "hono.pod.secretVolumes" $args | indent 6 }}
 {{- end }}

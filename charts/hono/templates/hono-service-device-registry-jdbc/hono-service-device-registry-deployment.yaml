@@ -1,6 +1,6 @@
 {{- if and .Values.deviceRegistryExample.enabled ( eq .Values.deviceRegistryExample.type "jdbc" ) }}
 #
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry" }}
+{{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry" "componentConfig" .Values.deviceRegistryExample.jdbcBasedDeviceRegistry }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ include "hono.image" ( dict "dot" . "component" .Values.deviceRegistryExample.jdbcBasedDeviceRegistry ) }}
+      - image: {{ include "hono.image" $args }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-service-device-registry
         ports:
@@ -63,7 +63,7 @@ spec:
         securityContext:
           privileged: false
         volumeMounts:
-        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "conf" .Values.deviceRegistryExample ) | indent 8 }}
+        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 8 }}
         {{- with .Values.deviceRegistryExample.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
@@ -81,5 +81,5 @@ spec:
               scheme: HTTPS
             initialDelaySeconds: 100
       volumes:
-      {{- include "hono.pod.secretVolumes" ( dict "releaseName" .Release.Name "name" $args.name "conf" .Values.deviceRegistryExample ) | indent 6 }}
+      {{- include "hono.pod.secretVolumes" ( dict "dot" $args.dot "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 6 }}
 {{- end }}
