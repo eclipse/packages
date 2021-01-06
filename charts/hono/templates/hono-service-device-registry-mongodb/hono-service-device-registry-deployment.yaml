@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry" "componentConfig" .Values.deviceRegistryExample.mongoBasedDeviceRegistry }}
+{{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry" "componentConfig" .Values.deviceRegistryExample.mongoDBBasedDeviceRegistry }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,18 +47,13 @@ spec:
             containerPort: 5672
             protocol: TCP
         env:
-        - name: SPRING_CONFIG_LOCATION
-          value: file:///etc/hono/
-        - name: SPRING_PROFILES_ACTIVE
-          value: dev
-        - name: LOGGING_CONFIG
-          value: {{ default "classpath:logback-spring.xml" .Values.deviceRegistryExample.loggingConfig | quote }}
         - name: JDK_JAVA_OPTIONS
           value: {{ .Values.deviceRegistryExample.javaOptions | quote }}
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        {{- include "hono.component.springEnv" $args | indent 8 }}
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         securityContext:
           privileged: false

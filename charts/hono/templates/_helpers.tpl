@@ -275,10 +275,31 @@ resource-limits:
 
 
 {{/*
-Add Quarkus related configuration properties to YAML file.
+Adds environment variables for Spring Boot
+to a component's container.
+
 The scope passed in is expected to be a dict with keys
-- "dot": the root scope (".") and
-- "component": the name of the adapter
+- (mandatory) "dot": the root scope (".")
+- (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
+- (optional) "useImageType": indicates if image type (Quarkus, Spring) should be considered (defaults to false)
+*/}}
+{{- define "hono.component.springEnv" }}
+{{- if not ( and ( default false .useImageType ) ( contains "quarkus" .dot.Values.honoImagesType ) ) }}
+- name: SPRING_CONFIG_LOCATION
+  value: {{ default "file:///etc/hono/" .componentConfig.springConfigLocation | quote }}
+- name: LOGGING_CONFIG
+  value: {{ default "classpath:logback-spring.xml" .componentConfig.loggingConfig | quote }}
+- name: SPRING_PROFILES_ACTIVE
+  value: {{ default "dev" ( default .dot.Values.adapters.applicationProfiles .componentConfig.applicationProfiles ) | quote }}
+{{- end }}
+{{- end }}
+
+
+{{/*
+Add Quarkus related configuration properties to YAML file.
+
+The scope passed in is expected to be a dict with keys
+- (mandatory ) "dot": the root scope (".")
 */}}
 {{- define "hono.quarkusConfig" -}}
 {{- if ( contains "quarkus" .dot.Values.honoImagesType ) }}

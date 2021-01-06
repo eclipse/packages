@@ -45,18 +45,13 @@ spec:
         securityContext:
           privileged: false
         env:
-        - name: SPRING_CONFIG_LOCATION
-          value: file:///etc/hono/
-        - name: SPRING_PROFILES_ACTIVE
-          value: dev
-        - name: LOGGING_CONFIG
-          value: {{ default "classpath:logback-spring.xml" .Values.adapters.lora.loggingConfig | quote }}
         - name: JDK_JAVA_OPTIONS
           value: {{ .Values.adapters.lora.javaOptions | quote }}
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        {{- include "hono.component.springEnv" $args | indent 8 }}
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         volumeMounts:
         {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}

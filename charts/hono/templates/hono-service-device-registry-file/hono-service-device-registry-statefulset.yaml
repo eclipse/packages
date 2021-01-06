@@ -50,18 +50,13 @@ spec:
           containerPort: 5672
           protocol: TCP
         env:
-        - name: SPRING_CONFIG_LOCATION
-          value: file:///etc/hono/
-        - name: SPRING_PROFILES_ACTIVE
-          value: dev
-        - name: LOGGING_CONFIG
-          value: classpath:logback-spring.xml
         - name: JDK_JAVA_OPTIONS
           value: {{ .Values.deviceRegistryExample.javaOptions | quote }}
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        {{- include "hono.component.springEnv" $args | indent 8 }}
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         securityContext:
           privileged: false
