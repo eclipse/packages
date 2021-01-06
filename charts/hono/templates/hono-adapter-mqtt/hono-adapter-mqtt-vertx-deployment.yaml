@@ -1,6 +1,6 @@
 {{- if .Values.adapters.mqtt.enabled }}
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "adapter-mqtt-vertx" "name" "adapter-mqtt-vertx" }}
+{{- $args := dict "dot" . "component" "adapter-mqtt-vertx" "name" "adapter-mqtt-vertx" "componentConfig" .Values.adapters.mqtt }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ include "hono.image" ( dict "dot" . "component" .Values.adapters.mqtt "useImageType" true ) }}
+      - image: {{ include "hono.image" ( dict "dot" . "componentConfig" .Values.adapters.mqtt "useImageType" true ) }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-adapter-mqtt-vertx
         ports:
@@ -59,7 +59,7 @@ spec:
               fieldPath: metadata.namespace
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         volumeMounts:
-        {{- include "hono.container.secretVolumeMounts" ( dict "dot" $args.dot "name" $args.name "conf" .Values.adapters.mqtt ) | indent 8 }}
+        {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
         {{- with .Values.adapters.mqtt.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
@@ -77,5 +77,5 @@ spec:
             scheme: HTTPS
           initialDelaySeconds: 10
       volumes:
-      {{- include "hono.pod.secretVolumes" ( dict "dot" $args.dot "releaseName" .Release.Name "name" $args.name "conf" .Values.adapters.mqtt ) | indent 6 }}
+      {{- include "hono.pod.secretVolumes" $args | indent 6 }}
 {{- end }}

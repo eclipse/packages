@@ -48,20 +48,20 @@ Create chart name and version as used by the chart label.
 Create container image name.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root (".") scope
-- (mandatory) "component": a dict with keys
+- (mandatory) "componentConfig": a dict with keys
   - (mandatory) "imageName"
   - (optional) "imageTag"
   - (optional) "containerRegistry"
   - (optional) "useImageType": should image type configuration be used
 */}}
 {{- define "hono.image" }}
-  {{- $tag := default .dot.Chart.AppVersion ( default .dot.Values.honoImagesTag .component.imageTag ) }}
-  {{- $registry := default .dot.Values.honoContainerRegistry .component.containerRegistry }}
+  {{- $tag := default .dot.Chart.AppVersion ( default .dot.Values.honoImagesTag .componentConfig.imageTag ) }}
+  {{- $registry := default .dot.Values.honoContainerRegistry .componentConfig.containerRegistry }}
 
   {{- if and .useImageType ( contains "quarkus" .dot.Values.honoImagesType ) }}
-  {{- printf "%s/%s-%s:%s" $registry .component.imageName .dot.Values.honoImagesType $tag -}}
+  {{- printf "%s/%s-%s:%s" $registry .componentConfig.imageName .dot.Values.honoImagesType $tag -}}
   {{- else }}
-  {{- printf "%s/%s:%s" $registry .component.imageName $tag -}}
+  {{- printf "%s/%s:%s" $registry .componentConfig.imageName $tag -}}
   {{- end }}
 {{- end }}
 
@@ -379,26 +379,23 @@ The scope passed in is expected to be a dict with keys
 {{- end }}
 {{- end }}
 
+
 {{/*
 Adds volume mounts to a component's container.
+
 The scope passed in is expected to be a dict with keys
-- "conf": the component's configuration properties as defined in .Values
-- "name": the name of the component.
-Optionally, the scope my contain key
-- "dot": the root scope (".") and
-- "configMountPath": the mount path to use for the component's config secret
-                     instead of the default "/etc/hono"
+- (mandatory) "name": the name of the component
+- (mandatory) "componentConfig": the component's configuration properties as defined in .Values
+- (optional) "dot": the root scope (".")
+- (optional) "configMountPath": the mount path to use for the component's config secret
+                                instead of the default "/etc/hono"
 */}}
 {{- define "hono.container.secretVolumeMounts" }}
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
-  {{- if .configMountPath }}
-  mountPath: {{ .configMountPath | quote }}
-  {{- else }}
-  mountPath: "/etc/hono"
-  {{- end }}
+  mountPath: {{ default "/etc/hono" .configMountPath | quote }}
   readOnly: true
-{{- with .conf.extraSecretMounts }}
+{{- with .componentConfig.extraSecretMounts }}
 {{- range $name,$spec := . }}
 - name: {{ $name | quote }}
   mountPath: {{ $spec.mountPath | quote }}
@@ -414,21 +411,21 @@ Optionally, the scope my contain key
 {{- end }}
 {{- end }}
 
+
 {{/*
 Adds volume declarations to a component's pod spec.
+
 The scope passed in is expected to be a dict with keys
-- "conf": the component's configuration properties as defined in .Values
-- "name": the name of the component
-- "releaseName": the .Release.Name
-Optionally, the scope my contain key
-- "dot": the root scope (".")
+- (mandatory) "name": the name of the component
+- (mandatory) "componentConfig": the component's configuration properties as defined in .Values
+- (mandatory) "dot": the root scope (".")
 */}}
 {{- define "hono.pod.secretVolumes" }}
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
   secret:
-    secretName: {{ printf "%s-%s" .releaseName $volumeName | quote }}
-{{- with .conf.extraSecretMounts }}
+    secretName: {{ printf "%s-%s" .dot.Release.Name $volumeName | quote }}
+{{- with .componentConfig.extraSecretMounts }}
 {{- range $name,$spec := . }}
 - name: {{ $name | quote }}
   secret:
