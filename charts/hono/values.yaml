@@ -294,10 +294,15 @@ adapters:
   # This property MUST be set if "amqpMessagingNetworkExample.enabled" is set to false.
   # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
+  # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
+  # "keyPath", "keyPath", "trustStorePath", "hostnameVerificationRequired" can be set.
   amqpMessagingNetworkSpec:
+    keyPath: /etc/hono/key.pem
+    certPath: /etc/hono/cert.pem
+    trustStorePath: /etc/hono/trusted-certs.pem
+    hostnameVerificationRequired: false
   #  host: my-amqp-host
   #  port: 5671
-  #  trustStorePath: /etc/conf/amqp-trust-store.pem
   #  credentialsPath: /etc/conf/amqp-credentials.properties
 
   # commandAndControlSpec contains Hono client properties used by all protocol
@@ -306,7 +311,13 @@ adapters:
   # This property MUST be set if "amqpMessagingNetworkExample.enabled" is set to false.
   # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
+  # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
+  # "keyPath", "keyPath", "trustStorePath", "hostnameVerificationRequired" can be set.
   commandAndControlSpec:
+    keyPath: /etc/hono/key.pem
+    certPath: /etc/hono/cert.pem
+    trustStorePath: /etc/hono/trusted-certs.pem
+    hostnameVerificationRequired: false
 
   # tenantSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Tenant service.
