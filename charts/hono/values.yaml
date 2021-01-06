@@ -113,7 +113,7 @@ amqpMessagingNetworkExample:
       # imageName contains the name (including tag) of the container
       # image to use for the example AMQP Messaging Network Broker
       imageName: quay.io/enmasse/artemis-base:2.13.0
-      # resources contains the container's 'requests and limits for CPU and memory
+      # resources contains the container's requests and limits for CPU and memory
       # as defined by the Kubernetes API.
       # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
       # for a description of the properties' semantics.
@@ -157,7 +157,7 @@ dataGridExample:
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
   imageName: infinispan/server:11.0.7.Final-1
-  # resources contains the container's 'requests and limits for CPU and memory
+  # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   # for a description of the properties' semantics.
@@ -201,7 +201,7 @@ jaegerBackendExample:
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
   allInOneImage: jaegertracing/all-in-one:1.21
-  # resources contains the container's 'requests and limits for CPU and memory
+  # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   # for a description of the properties' semantics.
@@ -253,14 +253,12 @@ healthCheckPort: 8088
 # When setting to "openshift", Route resources will also be deployed.
 platform: kubernetes
 
-# Image type indicates which image will be used for services.
-# Supported values are:
+# honoImagesType indicates which kind of container image will be used for components
+# that are available in different variants. Supported values are:
 # - spring
 # - quarkus
 # - quarkus-native
-#
-# The default value is 'spring'
-honoImagesType: spring
+honoImagesType: "spring"
 
 # useLoadBalancer indicates whether services should be deployed using the
 # "LoadBalancer" type (true) or the "NodePort" type (false).
@@ -288,6 +286,12 @@ adapters:
   # using SASL PLAIN, i.e. an adapter needs to provide a username and password which
   # can be verified by the Auth Server component.
   externalAdaptersEnabled: false
+
+  # applicationProfiles contains the Spring application profiles that should be activated
+  # in all protocol adapters.
+  # The application profiles can be overridden per adapter using the corresponding
+  # "applicationProfiles" property at the adapter level.
+  applicationProfiles: "dev"
 
   # amqpMessagingNetworkSpec contains Hono client properties used by all protocol
   # adapters for connecting to the AMQP Messaging Network to forward downstream messages to.
@@ -382,7 +386,20 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # resources contains the container's 'requests and limits for CPU and memory
+    # springConfigLocation contains the location of the Spring application configuration file(s).
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+    # for details.
+    springConfigLocation: "file:///etc/hono/"
+    # loggingConfig contains the location of the logback configuration file that is used
+    # by the adapter.
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+    # for details.
+    springLoggingConfig: "classpath:logback-spring.xml"
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the adapter.
+    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
+    applicationProfiles:
+    # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -455,7 +472,20 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # resources contains the container's 'requests and limits for CPU and memory
+    # springConfigLocation contains the location of the Spring application configuration file(s).
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+    # for details.
+    springConfigLocation: "file:///etc/hono/"
+    # loggingConfig contains the location of the logback configuration file that is used
+    # by the adapter.
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+    # for details.
+    springLoggingConfig: "classpath:logback-spring.xml"
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the adapter.
+    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
+    applicationProfiles:
+    # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -519,7 +549,20 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # resources contains the container's 'requests and limits for CPU and memory
+    # springConfigLocation contains the location of the Spring application configuration file(s).
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+    # for details.
+    springConfigLocation: "file:///etc/hono/"
+    # loggingConfig contains the location of the logback configuration file that is used
+    # by the adapter.
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+    # for details.
+    springLoggingConfig: "classpath:logback-spring.xml"
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the adapter.
+    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
+    applicationProfiles:
+    # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -592,7 +635,20 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # resources contains the container's 'requests and limits for CPU and memory
+    # springConfigLocation contains the location of the Spring application configuration file(s).
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+    # for details.
+    springConfigLocation: "file:///etc/hono/"
+    # loggingConfig contains the location of the logback configuration file that is used
+    # by the adapter.
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+    # for details.
+    springLoggingConfig: "classpath:logback-spring.xml"
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the adapter.
+    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
+    applicationProfiles:
+    # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -665,7 +721,20 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # resources contains the container's 'requests and limits for CPU and memory
+    # springConfigLocation contains the location of the Spring application configuration file(s).
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+    # for details.
+    springConfigLocation: "file:///etc/hono/"
+    # loggingConfig contains the location of the logback configuration file that is used
+    # by the adapter.
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+    # for details.
+    springLoggingConfig: "classpath:logback-spring.xml"
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the adapter.
+    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
+    applicationProfiles:
+    # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -737,7 +806,20 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # resources contains the container's 'requests and limits for CPU and memory
+    # springConfigLocation contains the location of the Spring application configuration file(s).
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+    # for details.
+    springConfigLocation: "file:///etc/hono/"
+    # loggingConfig contains the location of the logback configuration file that is used
+    # by the adapter.
+    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+    # for details.
+    springLoggingConfig: "classpath:logback-spring.xml"
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the adapter.
+    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
+    applicationProfiles:
+    # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -810,7 +892,18 @@ authServer:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-  # resources contains the container's 'requests and limits for CPU and memory
+  # springConfigLocation contains the location of the Spring application configuration file(s).
+  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+  # for details.
+  springConfigLocation: "file:///etc/hono/"
+  # loggingConfig contains the location of the logback configuration file that is used by the service.
+  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+  # for details.
+  springLoggingConfig: "classpath:logback-spring.xml"
+  # applicationProfiles contains the Spring application profiles that should be activated
+  # in the service.
+  applicationProfiles: "authentication-impl,dev"
+  # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   # for a description of the properties' semantics.
@@ -903,7 +996,7 @@ deviceRegistryExample:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-  # resources contains the container's 'requests and limits for CPU and memory
+  # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   # for a description of the properties' semantics.
@@ -987,6 +1080,9 @@ deviceRegistryExample:
     # should be used for the example registry's persistent volume claim.
     # If not set, the cluster's default storage class is used.
     storageClass:
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the service.
+    applicationProfiles: "dev"
 
   # mongoDBBasedDeviceRegistry contains configuration properties specific to the
   # MongoDB based device registry.
@@ -1001,6 +1097,9 @@ deviceRegistryExample:
     # the image from.
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the service.
+    applicationProfiles: "dev"
     # mongodb contains the configuration properties to connect to the MongoDB database instance.
     # If you would like to use an already existing MongoDB database instance, then configure
     # the below section accordingly.
@@ -1029,6 +1128,9 @@ deviceRegistryExample:
     # the image from.
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the service.
+    applicationProfiles: "registry-adapter,registry-management,tenant-service,dev"
     # registry.jdbc contains the configuration properties for device registry
     # to connect to the database.
     registry:
@@ -1143,7 +1245,18 @@ deviceConnectionService:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-  # resources contains the container's 'requests and limits for CPU and memory
+  # springConfigLocation contains the location of the Spring application configuration file(s).
+  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+  # for details.
+  springConfigLocation: "file:///etc/hono/"
+  # loggingConfig contains the location of the logback configuration file that is used by the service.
+  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+  # for details.
+  springLoggingConfig: "classpath:logback-spring.xml"
+  # applicationProfiles contains the Spring application profiles that should be activated
+  # in the service.
+  applicationProfiles: "dev"
+  # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   # for a description of the properties' semantics.
