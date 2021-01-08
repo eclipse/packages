@@ -56,8 +56,8 @@ spec:
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}-concierge
-          image: "{{ .Values.concierge.image.repository }}:{{ .Values.concierge.image.tag }}"
-          imagePullPolicy: {{ .Values.concierge.image.imagePullPolicy }}
+          image: {{ printf "%s:%s" .Values.concierge.image.repository ( default .Chart.AppVersion ( default .Values.dittoTag .Values.concierge.image.tag ) ) }}
+          imagePullPolicy: {{ .Values.concierge.image.pullPolicy }}
           args:
             - "java"
           {{- if .Values.concierge.systemProps }}

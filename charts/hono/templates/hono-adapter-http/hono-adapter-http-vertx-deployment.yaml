@@ -1,6 +1,6 @@
 {{- if .Values.adapters.http.enabled }}
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "adapter-http-vertx" "name" "adapter-http-vertx" }}
+{{- $args := dict "dot" . "component" "adapter-http-vertx" "name" "adapter-http-vertx" "componentConfig" .Values.adapters.http "useImageType" true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,10 +24,12 @@ spec:
   template:
     metadata:
       {{- include "hono.metadata" $args | nindent 6 }}
+      annotations:
+        {{- include "hono.monitoringAnnotations" . | nindent 8 }}
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ .Values.adapters.http.imageName }}
+      - image: {{ include "hono.image" $args }}
         imagePullPolicy: IfNotPresent
         name: eclipse-hono-adapter-http-vertx
         ports:
@@ -43,21 +45,16 @@ spec:
         securityContext:
           privileged: false
         env:
-        - name: SPRING_CONFIG_LOCATION
-          value: file:///etc/hono/
-        - name: SPRING_PROFILES_ACTIVE
-          value: dev
-        - name: LOGGING_CONFIG
-          value: classpath:logback-spring.xml
         - name: JDK_JAVA_OPTIONS
           value: {{ .Values.adapters.http.javaOptions | quote }}
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        {{- include "hono.component.springEnv" $args | indent 8 }}
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         volumeMounts:
-        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "conf" .Values.adapters.http ) | indent 8 }}
+        {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
         {{- with .Values.adapters.http.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
@@ -75,5 +72,5 @@ spec:
             scheme: HTTPS
           initialDelaySeconds: 10
       volumes:
-      {{- include "hono.pod.secretVolumes" ( dict "releaseName" .Release.Name "name" $args.name "conf" .Values.adapters.http ) | indent 6 }}
+      {{- include "hono.pod.secretVolumes" $args | indent 6 }}
 {{- end }}

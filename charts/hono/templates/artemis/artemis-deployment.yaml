@@ -1,6 +1,6 @@
 {{- if and .Values.amqpMessagingNetworkExample.enabled ( not .Values.amqpMessagingNetworkExample.broker.servicebus.host ) }}
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -14,7 +14,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  {{- $args := dict "dot" . "component" "amqp-messaging-network-broker" "name" "artemis" }}
+  {{- $args := dict "dot" . "component" "amqp-messaging-network-broker" "name" "artemis" "componentConfig" .Values.amqpMessagingNetworkExample.broker.artemis }}
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   replicas: 1
@@ -68,7 +68,7 @@ spec:
         securityContext:
           privileged: false
         volumeMounts:
-        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "conf" .Values.amqpMessagingNetworkExample.broker "configMountPath" "/opt/apache-artemis/conf" ) | indent 8 }}
+        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "componentConfig" $args.componentConfig "configMountPath" "/opt/apache-artemis/conf" ) | indent 8 }}
       volumes:
-      {{- include "hono.pod.secretVolumes" ( dict "releaseName" .Release.Name "name" $args.name "conf" .Values.amqpMessagingNetworkExample.broker ) | indent 6 }}
+      {{- include "hono.pod.secretVolumes" $args | indent 6 }}
 {{- end }}

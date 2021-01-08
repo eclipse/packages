@@ -10,12 +10,15 @@
 # SPDX-License-Identifier: EPL-2.0
 
 # consider helm install to be failed after 10 minutes
-helm-extra-args: --timeout 600
+helm-extra-args: --timeout 600s
 check-version-increment: true
 debug: true
 chart-dirs: 
   - charts
   - packages
 chart-repos:
-  - stable=https://kubernetes-charts.storage.googleapis.com/
-  - bitnami=https://charts.bitnami.com
+  - stable=https://charts.helm.sh/stable
+  - packages=https://eclipse.org/packages/charts
+  - bitnami=https://charts.bitnami.com/bitnami
+  - prometheus-community=https://prometheus-community.github.io/helm-charts
+  - grafana=https://grafana.github.io/helm-charts

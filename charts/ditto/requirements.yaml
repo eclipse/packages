@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,6 +11,6 @@
 ---
 dependencies:
   - name: mongodb
-    repository: https://kubernetes-charts.storage.googleapis.com
-    version: 7.6.3
+    repository: https://charts.bitnami.com/bitnami
+    version: ~7.14.7
     condition: mongodb.enabled

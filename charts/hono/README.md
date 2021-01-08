@@ -65,11 +65,8 @@ kubectl get service -n hono
 
 NAME                                            TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)
 eclipse-hono-adapter-amqp-vertx                 LoadBalancer   10.109.123.153   10.109.123.153   5672:32672/TCP,5671:32671/TCP
-eclipse-hono-adapter-amqp-vertx-headless        ClusterIP      None             <none>           <none>
 eclipse-hono-adapter-http-vertx                 LoadBalancer   10.99.180.137    10.99.180.137    8080:30080/TCP,8443:30443/TCP
-eclipse-hono-adapter-http-vertx-headless        ClusterIP      None             <none>           <none>
 eclipse-hono-adapter-mqtt-vertx                 LoadBalancer   10.102.204.69    10.102.204.69    1883:31883/TCP,8883:30883/TCP
-eclipse-hono-adapter-mqtt-vertx-headless        ClusterIP      None             <none>           <none>
 eclipse-hono-artemis                            ClusterIP      10.97.31.154     <none>           5671/TCP
 eclipse-hono-dispatch-router                    ClusterIP      10.98.111.236    <none>           5673/TCP
 eclipse-hono-dispatch-router-ext                LoadBalancer   10.109.220.100   10.109.220.100   15671:30671/TCP,15672:30672/TCP
@@ -108,14 +105,14 @@ content-length: 260
 
 ## Accessing the Grafana dashboard
 
-Hono comes with an example Grafana dash board which provides some insight into the messages flowing through the protocol adapters.
+Hono comes with an example Grafana dashboard which provides some insight into the messages flowing through the protocol adapters.
 The following command needs to be run first in order to forward the Grafana service's endpoint to the local host:
 
 ```bash
 kubectl port-forward service/hono-grafana 3000 -n hono
 ```
 
-Then the dash board can be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.
+Then the dashboard can be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.
 
 
 ## Uninstalling the chart
@@ -141,20 +138,90 @@ helm install --dependency-update -n hono --set useLoadBalancer=false eclipse-hon
 Alternatively, a YAML file that contains the values for the parameters can be provided when installing the chart:
 
 ```bash
-helm install --dependency-update -n hono -f /my/path/to/config.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono -f /path/to/config.yaml eclipse-hono eclipse-iot/hono
 ```
 
 
 ## Prevent installation of Prometheus and Grafana
 
 The chart by default installs a Prometheus instance for collecting metrics from Hono's
-components and a Grafana instance for visualizing the metrics on dash boards in a web browser.
+components and a Grafana instance for visualizing the metrics on dashboards in a web browser.
 
 Both Prometheus and Grafana are not required to run Hono. The following configuration properties
 can be used to prevent installation of the Prometheus and Grafana servers.
 
 ```bash
 helm install --dependency-update -n hono --set prometheus.createInstance=false --set grafana.enabled=false eclipse-hono eclipse-iot/hono
+```
+
+## Using specific Container Images
+
+The chart can be customized to use container images other than the default ones.
+This can be used to install an older version of the images or to install a Hono milestone
+using the chart. It can also be used to install custom built images that need to be
+pulled from a different (private) container registry.
+
+The `values.yaml` file contains configuration properties for setting the container
+image and tag names to use for Hono's components. The easiest way to override the version
+of all Hono components simultaneously is to set the `honoImagesTag` and/or `honoContainerRegistry`
+properties to the desired values during installation.
+
+The following command installs Hono using the standard images published on Docker Hub with tag
+*1.3.0-M3* images instead of the ones indicated by the chart's *appVersion* property:
+
+```bash
+helm install --dependency-update -n hono --set honoImagesTag=1.3.0-M3 eclipse-hono eclipse-iot/hono
+```
+
+The following command installs Hono using custom built images published on a private registry with tag
+*1.3.0-custom* instead of the ones indicated by the chart's *appVersion* property:
+
+```bash
+helm install --dependency-update -n hono --set honoImagesTag=1.3.0-custom --set honoContainerRegistry=my-registry:9090 eclipse-hono eclipse-iot/hono
+```
+
+It is also possible to define the image and tag names and container registry for each component separately.
+The easiest way to do that is to create a YAML file that specifies the particular properties:
+
+```yaml
+deviceRegistryExample:
+  # pull custom Device Registry image from private container registry
+  imageName: my-hono/hono-service-device-registry-custom
+  imageTag: 1.0.0
+  containerRegistry: my-private-registry
+
+authServer:
+  # pull milestone release from Docker Hub
+  imageName: eclipse/hono-service-auth
+  imageTag: 1.3.0-M3
+
+# pull standard adapter images in version 1.2.3 from Docker Hub
+adapters:
+  amqp:
+    imageName: eclipse/hono-adapter-amqp-vertx
+    imageTag: 1.2.3
+  coap:
+    imageName: eclipse/hono-adapter-coap-vertx
+    imageTag: 1.2.3
+  http:
+    imageName: eclipse/hono-adapter-http-vertx
+    imageTag: 1.2.3
+  kura:
+    imageName: eclipse/hono-adapter-kura
+    imageTag: 1.2.3
+  mqtt:
+    imageName: eclipse/hono-adapter-mqtt-vertx
+    imageTag: 1.2.3
+  lora:
+    imageName: eclipse/hono-adapter-lora-vertx
+    imageTag: 1.2.3
+```
+
+Assuming that the file is named `customImages.yaml`, the values can then be passed in to the
+Helm `install` command as follows:
+
+```bash
+helm install --dependency-update -n hono -f /path/to/customImages.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ## Using a production grade AMQP Messaging Network and Device Registry
@@ -218,7 +285,7 @@ Assuming that the file is named `customAmqpNetwork.yaml`, the values can then be
 command as follows:
 
 ```bash
-helm install --dependency-update -n hono -f customAmqpNetwork.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono -f /path/to/customAmqpNetwork.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ### Integrating with a custom Device Registry
@@ -277,7 +344,7 @@ Assuming that the file is named `customRegistry.yaml`, the values can then be pa
 as follows:
 
 ```bash
-helm install --dependency-update -n hono -f customRegistry.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono -f /path/to/customRegistry.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ## Using the Device Connection Service
@@ -325,14 +392,64 @@ The following table provides an overview of the corresponding configuration prop
 | Property                     | Default  | Description                              |
 | :--------------------------- | :------- | :--------------------------------------- |
 | *adapters.amqp.enabled*      | `true`  | Indicates if the AMQP protocol adapter should be deployed. |
-| *adapters.coap.enabled*      | `false` | Indicates if the (experimental) CoAP protocol adapter should be deployed. |
+| *adapters.coap.enabled*      | `false` | Indicates if the CoAP protocol adapter should be deployed. |
 | *adapters.http.enabled*      | `true`  | Indicates if the HTTP protocol adapter should be deployed. |
 | *adapters.kura.enabled*      | `false` | Indicates if the deprecated Kura protocol adapter should be deployed. |
 | *adapters.lora.enabled*      | `false` | Indicates if the (experimental) LoRa WAN protocol adapter should be deployed. |
 | *adapters.mqtt.enabled*      | `true`  | Indicates if the MQTT protocol adapter should be deployed. |
 
-The following command will deploy the LoRa adapter along with Hono's standard adapters
+The following command will deploy the LoRa adapter along with Hono's standard adapters:
 
 ```bash
 helm install --dependency-update -n hono --set adapters.lora.enabled=true eclipse-hono eclipse-iot/hono
 ```
+
+### Jaeger Tracing
+
+Hono's components are instrumented using OpenTracing to allow tracking of the distributed processing of messages flowing through the system.
+The Hono chart can be configured to report tracing information to the [Jaeger tracing system](https://www.jaegertracing.io/).
+The *Spans* reported by the components can then be viewed in a web browser.
+
+The chart can be configured to deploy and use an example Jaeger back end by means of setting the *jaegerBackendExample.enabled* property
+to `true` when running Helm:
+
+~~~sh
+helm install --dependency-update -n hono --set jaegerBackendExample.enabled=true eclipse-hono eclipse-iot/hono
+~~~
+
+This will create a Jaeger back end instance suitable for testing purposes and will configure all deployed Hono components to use the
+Jaeger back end.
+
+Note that this can only be used with the standard Hono images published on Docker Hub with version 1.5.0 or later. Custom
+images must have been built with the Jaeger client included. For the standard Hono components that means using the
+`jaeger` Maven profile for the build.
+
+The following command can then be used to return the IP address at which the Jaeger UI can be accessed in a
+browser (ensure `minikube tunnel` is running when using minikube):
+
+~~~sh
+kubectl get service eclipse-hono-jaeger-query --output="jsonpath={.status.loadBalancer.ingress[0]['hostname','ip']}" -n hono
+~~~
+
+If no example Jaeger back end should be deployed but instead an existing Jaeger installation should be used,
+the chart's *jaegerAgentConf* property can be set to environment variables which are passed in to
+the Jaeger Agent that is deployed with each of Hono's components.
+
+## Using Quarkus based services
+
+The Helm chart can be configured to use Quarkus based images for services that support it. In order to do that, you need to set `honoImagesType` property to 
+`quarkus` or `quarkus-native` values depending on whether you want to use the JVM or the native version of the image.
+
+Here are the examples for deploying JVM:
+
+```bash
+helm install --dependency-update -n hono --set honoImagesType=quarkus eclipse-hono eclipse-iot/hono
+```
+
+and native alternatives:
+
+```bash
+helm install --dependency-update -n hono --set honoImagesType=quarkus-native eclipse-hono eclipse-iot/hono
+```
+
+of Quarkus based services images.

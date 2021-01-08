@@ -57,8 +57,8 @@ spec:
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}-gateway
-          image: "{{ .Values.gateway.image.repository }}:{{ .Values.gateway.image.tag }}"
-          imagePullPolicy: {{ .Values.gateway.image.imagePullPolicy }}
+          image: {{ printf "%s:%s" .Values.gateway.image.repository ( default .Chart.AppVersion ( default .Values.dittoTag .Values.gateway.image.tag ) ) }}
+          imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
           args:
             - "java"
           {{- if .Values.gateway.systemProps }}

@@ -23,7 +23,7 @@ podTemplate(
     containers: [
         containerTemplate(
             name: 'jekyll',
-            image: 'jekyll/jekyll:4',
+            image: 'docker.io/jekyll/jekyll:4',
             ttyEnabled: true,
             command: 'cat',
             resourceRequestMemory: '4Gi',
@@ -38,7 +38,7 @@ podTemplate(
 
     node(label) {
 
-      timeout(time: 15, unit: "MINUTES") {
+      timeout(time: 60, unit: "MINUTES") {
 
       container('jnlp') {
 
@@ -91,7 +91,7 @@ podTemplate(
 
                 stage('Helm Init') {
                     sh '''
-                        ${WORKSPACE}/helm init --client-only
+                        ${WORKSPACE}/helm init --client-only --stable-repo-url https://charts.helm.sh/stable
                        '''
                 }
 
@@ -112,7 +112,7 @@ podTemplate(
                     dir ("build/homepage") {
                         sh '''
                             cp -rd /usr/gem/. /usr/local/bundle/
-                            bundle install
+                            bundle install --path /usr/local/bundle/
                         '''
                     }
                 }

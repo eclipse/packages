@@ -1,0 +1,49 @@
+{{- if and .Values.deviceRegistryExample.enabled .Values.deviceRegistryExample.addExampleData }}
+#
+# Copyright (c) 2020 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+{{- $args := dict "dot" . "component" "service-device-registry" "name" "post-install-device-registry-job" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  {{- include "hono.metadata" $args | nindent 2 }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    helm.sh/hook: post-install
+    helm.sh/hook-weight: "-10"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ printf "%s-%s" .Release.Name "post-install" | quote }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: "post-install"
+          image: "curlimages/curl:7.71.0"
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cd /var/run/hono/post-install-data/
+              ./add_example_data_device_registry.sh
+          volumeMounts:
+          - name: post-install-data
+            mountPath: "/var/run/hono/post-install-data"
+      volumes:
+      - name: post-install-data
+        configMap:
+          name: {{ printf "%s-post-install-device-registry-conf" .Release.Name }}
+          defaultMode: 0555
+{{- end }}

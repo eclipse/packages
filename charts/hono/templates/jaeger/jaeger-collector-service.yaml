@@ -1,6 +1,6 @@
 {{- if .Values.jaegerBackendExample.enabled }}
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -18,14 +18,10 @@ metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   ports:
-  - name: jaeger-collector-tchannel
-    port: 14267
+  - name: collector-grpc
+    port: 14250
     protocol: TCP
-    targetPort: 14267
-  - name: jaeger-collector-http
-    port: 14268
-    protocol: TCP
-    targetPort: 14268
+    targetPort: collector-grpc
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
   type: ClusterIP

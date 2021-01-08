@@ -56,8 +56,8 @@ spec:
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}-policies
-          image: "{{ .Values.policies.image.repository }}:{{ .Values.policies.image.tag }}"
-          imagePullPolicy: {{ .Values.policies.image.imagePullPolicy }}
+          image: {{ printf "%s:%s" .Values.policies.image.repository ( default .Chart.AppVersion ( default .Values.dittoTag .Values.policies.image.tag ) ) }}
+          imagePullPolicy: {{ .Values.policies.image.pullPolicy }}
           args:
             - "java"
           {{- if .Values.policies.systemProps }}

@@ -49,7 +49,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}-nginx
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
-          imagePullPolicy: {{ .Values.nginx.image.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
           env:
           {{- if .Values.nginx.extraEnv }}
             {{- toYaml .Values.nginx.extraEnv | nindent 12 }}
