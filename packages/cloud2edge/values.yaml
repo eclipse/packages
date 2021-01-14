@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -23,6 +23,8 @@ honoConnection:
 # Configuration properties for Eclipse Hono.
 hono:
 
+  livenessProbeInitialDelaySeconds: 900
+  readinessProbeInitialDelaySeconds: 45
   useLoadBalancer: false
 
   prometheus:
@@ -35,11 +37,12 @@ hono:
     dispatchRouter:
       resources:
         requests:
-          cpu: 150m
+          cpu: 200m
     broker:
-      resources:
-        requests:
-          cpu: 150m
+      artemis:
+        resources:
+          requests:
+            cpu: 200m
 
   authServer:
     extraSecretMounts:
@@ -57,23 +60,29 @@ hono:
             tokenExpiration: 3600
 
   deviceRegistryExample:
+    type: mongodb
     resources:
       requests:
-        cpu: 150m
+        cpu: 200m
+    mongoDBBasedDeviceRegistry:
+      mongodb:
+        host: ditto-mongodb
+        port: 27017
+        dbName: hono
 
   adapters:
     amqp:
       resources:
         requests:
-          cpu: 150m
+          cpu: 200m
     http:
       resources:
         requests:
-          cpu: 150m
+          cpu: 200m
     mqtt:
       resources:
         requests:
-          cpu: 150m
+          cpu: 200m
 
 
 # Configuration properties for Eclipse Ditto.
@@ -82,7 +91,7 @@ ditto:
   concierge:
     resources:
       requests:
-        cpu: 150m
+        cpu: 200m
       limits:
         cpu: 1
         memory: "512Mi"
@@ -90,7 +99,7 @@ ditto:
   connectivity:
     resources:
       requests:
-        cpu: 150m
+        cpu: 200m
       limits:
         cpu: 1
         memory: "512Mi"
@@ -98,7 +107,7 @@ ditto:
   gateway:
     resources:
       requests:
-        cpu: 150m
+        cpu: 200m
       limits:
         cpu: 1
         memory: "512Mi"
@@ -116,7 +125,7 @@ ditto:
   policies:
     resources:
       requests:
-        cpu: 150m
+        cpu: 200m
       limits:
         cpu: 1
         memory: "512Mi"
@@ -132,7 +141,7 @@ ditto:
   things:
     resources:
       requests:
-        cpu: 150m
+        cpu: 200m
       limits:
         cpu: 1
         memory: "512Mi"
@@ -140,7 +149,7 @@ ditto:
   thingsSearch:
     resources:
       requests:
-        cpu: 150m
+        cpu: 200m
       limits:
         cpu: 1
         memory: "512Mi"
@@ -148,7 +157,7 @@ ditto:
   mongodb:
     resources:
       requests:
-        cpu: 150m
+        cpu: 250m
         memory: "256Mi"
       limits:
         cpu: 1
