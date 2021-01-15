@@ -402,6 +402,28 @@ The scope passed in is expected to be a dict with keys
 
 
 {{/*
+Adds liveness/readiness checks to a Hono component's container.
+
+The scope passed in is expected to be a dict with keys
+- (mandatory) "dot": the root scope (".")
+- (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
+*/}}
+{{- define "hono.component.healthChecks" }}
+livenessProbe:
+  httpGet:
+    path: /liveness
+    port: health
+    scheme: HTTPS
+  initialDelaySeconds: {{ default .dot.Values.livenessProbeInitialDelaySeconds .componentConfig.livenessProbeInitialDelaySeconds }}
+readinessProbe:
+  httpGet:
+    path: /readiness
+    port: health
+    scheme: HTTPS
+  initialDelaySeconds: {{ default .dot.Values.readinessProbeInitialDelaySeconds .componentConfig.readinessProbeInitialDelaySeconds }}
+{{- end }}
+
+{{/*
 Adds volume mounts to a component's container.
 
 The scope passed in is expected to be a dict with keys

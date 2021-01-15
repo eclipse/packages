@@ -26,9 +26,9 @@ spec:
       {{- include "hono.metadata" $args | nindent 6 }}
     spec:
       containers:
-      - image: {{ .Values.amqpMessagingNetworkExample.dispatchRouter.imageName | quote }}
+      - name: apache-qpid-dispatch-router
+        image: {{ .Values.amqpMessagingNetworkExample.dispatchRouter.imageName | quote }}
         imagePullPolicy: IfNotPresent
-        name: apache-qpid-dispatch-router
         command:
         - /sbin/qdrouterd
         - -c
@@ -56,13 +56,13 @@ spec:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
         livenessProbe:
-          initialDelaySeconds: 180
+          initialDelaySeconds: {{ .Values.amqpMessagingNetworkExample.dispatchRouter.livenessProbeInitialDelaySeconds }}
           periodSeconds: 9
           httpGet:
             path: /healthz
             port: health
         readinessProbe:
-          initialDelaySeconds: 10
+          initialDelaySeconds: {{ .Values.amqpMessagingNetworkExample.dispatchRouter.readinessProbeInitialDelaySeconds }}
           periodSeconds: 5
           httpGet:
             path: /healthz

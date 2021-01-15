@@ -52,7 +52,7 @@ spec:
             path: /rest/v2/cache-managers/routing-info/health/status
             port: hotrod
           failureThreshold: 5
-          initialDelaySeconds: 50
+          initialDelaySeconds: {{ .Values.dataGridExample.livenessProbeInitialDelaySeconds }}
           successThreshold: 1
           timeoutSeconds: 3
         readinessProbe:
@@ -60,7 +60,7 @@ spec:
             path: /rest/v2/cache-managers/routing-info/health/status
             port: hotrod
           failureThreshold: 5
-          initialDelaySeconds: 20
+          initialDelaySeconds: {{ .Values.dataGridExample.readinessProbeInitialDelaySeconds }}
           successThreshold: 1
           timeoutSeconds: 3
         {{- with .Values.dataGridExample.resources }}
