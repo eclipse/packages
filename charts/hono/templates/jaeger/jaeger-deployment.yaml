@@ -57,10 +57,10 @@ spec:
           httpGet:
             path: "/"
             port: health
-          initialDelaySeconds: 180
+          initialDelaySeconds: {{ .Values.jaegerBackendExample.livenessProbeInitialDelaySeconds }}
         readinessProbe:
           httpGet:
             path: "/"
             port: health
-          initialDelaySeconds: 5
+          initialDelaySeconds: {{ .Values.jaegerBackendExample.readinessProbeInitialDelaySeconds }}
 {{- end }}

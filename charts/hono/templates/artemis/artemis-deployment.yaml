@@ -26,7 +26,9 @@ spec:
       {{- include "hono.metadata" $args | nindent 6 }}
     spec:
       containers:
-      - command:
+      - name: apache-activemq-artemis
+        image: {{ .Values.amqpMessagingNetworkExample.broker.artemis.imageName | quote }}
+        command:
         - /opt/apache-artemis/bin/launch.sh
         - start
         env:
@@ -42,7 +44,6 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: {{ .Values.amqpMessagingNetworkExample.broker.artemis.imageName | quote }}
         ports:
         - name: amqps
           containerPort: 5671
@@ -53,14 +54,13 @@ spec:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
         livenessProbe:
-          initialDelaySeconds: 40
+          initialDelaySeconds: {{ $args.componentConfig.livenessProbeInitialDelaySeconds }}
           periodSeconds: 9
           tcpSocket:
             port: 5671
           timeoutSeconds: 1
-        name: apache-activemq-artemis
         readinessProbe:
-          initialDelaySeconds: 20
+          initialDelaySeconds: {{ $args.componentConfig.readinessProbeInitialDelaySeconds }}
           periodSeconds: 5
           tcpSocket:
             port: 5671

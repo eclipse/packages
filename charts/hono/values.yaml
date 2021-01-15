@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -25,6 +25,19 @@
 # The registry can also be set separately for each component, overriding
 # the value specified here.
 honoContainerRegistry: index.docker.io
+
+# livenessProbeInitialDelaySeconds contains the default value to use
+# for the "initialDelaySeconds" configuration property of a Hono
+# component's liveness probe.
+# The value can be overridden by the corresponding property at the
+# component level.
+livenessProbeInitialDelaySeconds: 300
+# readinessProbeInitialDelaySeconds contains the default value to use
+# for the "initialDelaySeconds" configuration property of a Hono
+# component's readiness probe.
+# The value can be overridden by the corresponding property at the
+# component level.
+readinessProbeInitialDelaySeconds: 20
 
 amqpMessagingNetworkExample:
   # enabled indicates whether the example AMQP Messaging Network
@@ -68,6 +81,12 @@ amqpMessagingNetworkExample:
     # The default value ("Eclipse IoT;Hono") includes all adapters that authenticate with their
     # demo certificate.
     adapterUids: "Eclipse IoT;Hono"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    livenessProbeInitialDelaySeconds: 300
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    readinessProbeInitialDelaySeconds: 20
 
     svc:
       annotations: {}
@@ -78,7 +97,7 @@ amqpMessagingNetworkExample:
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "100m"
+        cpu: "150m"
         memory: "64Mi"
       limits:
         cpu: "1"
@@ -113,13 +132,19 @@ amqpMessagingNetworkExample:
       # imageName contains the name (including tag) of the container
       # image to use for the example AMQP Messaging Network Broker
       imageName: quay.io/enmasse/artemis-base:2.13.0
+      # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+      # configuration property of the component's liveness probe.
+      livenessProbeInitialDelaySeconds: 300
+      # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+      # configuration property of the component's readiness probe.
+      readinessProbeInitialDelaySeconds: 20
       # resources contains the container's requests and limits for CPU and memory
       # as defined by the Kubernetes API.
       # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
       # for a description of the properties' semantics.
       resources:
         requests:
-          cpu: "100m"
+          cpu: "150m"
           memory: "256Mi"
         limits:
           cpu: "1"
@@ -157,6 +182,12 @@ dataGridExample:
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
   imageName: infinispan/server:11.0.7.Final-1
+  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's liveness probe.
+  livenessProbeInitialDelaySeconds: 300
+  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's readiness probe.
+  readinessProbeInitialDelaySeconds: 30
   # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -201,13 +232,19 @@ jaegerBackendExample:
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
   allInOneImage: jaegertracing/all-in-one:1.21
+  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's liveness probe.
+  livenessProbeInitialDelaySeconds: 300
+  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's readiness probe.
+  readinessProbeInitialDelaySeconds: 10
   # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "100m"
+      cpu: "150m"
       memory: "256Mi"
     limits:
       cpu: "1"
@@ -399,13 +436,21 @@ adapters:
     # in the adapter.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "100m"
+        cpu: "150m"
         memory: "300Mi"
       limits:
         cpu: "1"
@@ -485,13 +530,21 @@ adapters:
     # in the adapter.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "100m"
+        cpu: "150m"
         memory: "256Mi"
       limits:
         cpu: "1"
@@ -562,13 +615,21 @@ adapters:
     # in the adapter.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "100m"
+        cpu: "150m"
         memory: "300Mi"
       limits:
         cpu: "1"
@@ -648,13 +709,21 @@ adapters:
     # in the adapter.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "100m"
+        cpu: "150m"
         memory: "300Mi"
       limits:
         cpu: "1"
@@ -734,13 +803,21 @@ adapters:
     # in the adapter.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "100m"
+        cpu: "150m"
         memory: "300Mi"
       limits:
         cpu: "1"
@@ -819,13 +896,21 @@ adapters:
     # in the adapter.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
     resources:
       requests:
-        cpu: "100m"
+        cpu: "150m"
         memory: "300Mi"
       limits:
         cpu: "1"
@@ -903,6 +988,14 @@ authServer:
   # applicationProfiles contains the Spring application profiles that should be activated
   # in the service.
   applicationProfiles: "authentication-impl,dev"
+  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's liveness probe.
+  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+  livenessProbeInitialDelaySeconds:
+  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's readiness probe.
+  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+  readinessProbeInitialDelaySeconds:
   # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -1002,7 +1095,7 @@ deviceRegistryExample:
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "100m"
+      cpu: "150m"
       memory: "300Mi"
     limits:
       cpu: "1"
@@ -1083,6 +1176,14 @@ deviceRegistryExample:
     # applicationProfiles contains the Spring application profiles that should be activated
     # in the service.
     applicationProfiles: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
 
   # mongoDBBasedDeviceRegistry contains configuration properties specific to the
   # MongoDB based device registry.
@@ -1100,6 +1201,14 @@ deviceRegistryExample:
     # applicationProfiles contains the Spring application profiles that should be activated
     # in the service.
     applicationProfiles: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
     # mongodb contains the configuration properties to connect to the MongoDB database instance.
     # If you would like to use an already existing MongoDB database instance, then configure
     # the below section accordingly.
@@ -1131,6 +1240,14 @@ deviceRegistryExample:
     # applicationProfiles contains the Spring application profiles that should be activated
     # in the service.
     applicationProfiles: "registry-adapter,registry-management,tenant-service,dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
     # registry.jdbc contains the configuration properties for device registry
     # to connect to the database.
     registry:
@@ -1256,13 +1373,21 @@ deviceConnectionService:
   # applicationProfiles contains the Spring application profiles that should be activated
   # in the service.
   applicationProfiles: "dev"
+  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's liveness probe.
+  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+  livenessProbeInitialDelaySeconds:
+  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's readiness probe.
+  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+  readinessProbeInitialDelaySeconds:
   # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "100m"
+      cpu: "150m"
       memory: "256Mi"
     limits:
       cpu: "1"

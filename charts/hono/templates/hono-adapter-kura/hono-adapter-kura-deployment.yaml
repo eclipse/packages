@@ -59,18 +59,7 @@ spec:
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
-        readinessProbe:
-          httpGet:
-            path: /readiness
-            port: health
-            scheme: HTTPS
-          initialDelaySeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /liveness
-            port: health
-            scheme: HTTPS
-          initialDelaySeconds: 180
+        {{- include "hono.component.healthChecks" $args | indent 8 }}
       volumes:
       {{- include "hono.pod.secretVolumes" $args | indent 6 }}
 {{ end }}
