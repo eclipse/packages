@@ -54,13 +54,13 @@ spec:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
         livenessProbe:
-          initialDelaySeconds: {{ .Values.amqpMessagingNetworkExample.broker.artemis.livenessProbeInitialDelaySeconds }}
+          initialDelaySeconds: {{ $args.componentConfig.livenessProbeInitialDelaySeconds }}
           periodSeconds: 9
           tcpSocket:
             port: 5671
           timeoutSeconds: 1
         readinessProbe:
-          initialDelaySeconds: {{ .Values.amqpMessagingNetworkExample.broker.artemis.readinessProbeInitialDelaySeconds }}
+          initialDelaySeconds: {{ $args.componentConfig.readinessProbeInitialDelaySeconds }}
           periodSeconds: 5
           tcpSocket:
             port: 5671
