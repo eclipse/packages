@@ -83,7 +83,7 @@ amqpMessagingNetworkExample:
     adapterUids: "Eclipse IoT;Hono"
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
-    livenessProbeInitialDelaySeconds: 600
+    livenessProbeInitialDelaySeconds: 300
     # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     readinessProbeInitialDelaySeconds: 20
@@ -134,7 +134,7 @@ amqpMessagingNetworkExample:
       imageName: quay.io/enmasse/artemis-base:2.13.0
       # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
       # configuration property of the component's liveness probe.
-      livenessProbeInitialDelaySeconds: 600
+      livenessProbeInitialDelaySeconds: 300
       # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
       # configuration property of the component's readiness probe.
       readinessProbeInitialDelaySeconds: 20
@@ -184,7 +184,7 @@ dataGridExample:
   imageName: infinispan/server:11.0.7.Final-1
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
-  livenessProbeInitialDelaySeconds: 600
+  livenessProbeInitialDelaySeconds: 300
   # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's readiness probe.
   readinessProbeInitialDelaySeconds: 30
