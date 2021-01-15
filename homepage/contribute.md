@@ -18,9 +18,9 @@ Starting <time datetime="2019-12-02">2019-12-02</time>, we have a quick (30min),
 community call at <time datetime="16:00">16:00</time> CET. This is an open call,
 everyone is welcome to join.
 
-The URL to the call is: [https://eclipse.zoom.us/j/317801130](https://eclipse.zoom.us/j/317801130).
+The URL to the call is: [https://eclipse.zoom.us/j/317801130?pwd=UGpXL29PejRrZWIzT2pKRFJGVUNqUT09](https://eclipse.zoom.us/j/317801130?pwd=UGpXL29PejRrZWIzT2pKRFJGVUNqUT09).
 
-You may also directly subscribe to the [community calendar](https://calendar.google.com/calendar/ical/lu98p1vc1ed4itl7n9qno3oogc%40group.calendar.google.com/public/basic.ics).
+You may also directly subscribe to the [community calendar](https://calendar.google.com/calendar/embed?src=u5j68s710reqmr37vd78jdlbm4%40group.calendar.google.com).
 
 ## Contact us on Gitter
 
