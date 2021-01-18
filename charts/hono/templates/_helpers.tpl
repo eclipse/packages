@@ -442,6 +442,9 @@ The scope passed in is expected to be a dict with keys
 {{- range $name,$spec := . }}
 - name: {{ $name | quote }}
   mountPath: {{ $spec.mountPath | quote }}
+{{- if $spec.subPath }}
+  subPath: {{ $spec.subPath | quote }}
+{{- end }}
   readOnly: true
 {{- end }}
 {{- end }}
