@@ -48,6 +48,10 @@ amqpMessagingNetworkExample:
 
   # dispatchRouter contains properties for configuring the QPid Dispatch Router
   dispatchRouter:
+    # configPath contains the path to the configuration file of the
+    # Qpid Dispatch Router configuration file
+    # See http://qpid.apache.org/releases/qpid-dispatch-1.10.0/man/qdrouterd.conf.html
+    configPath: /etc/hono/qdrouterd.json
     # imageName contains the name (including tag) of the container image
     # to use for the example AMQP Messaging Network's Dispatch Router.
     imageName: quay.io/interconnectedcloud/qdrouterd:1.14.0
