@@ -32,7 +32,7 @@ spec:
         command:
         - /sbin/qdrouterd
         - -c
-        - /etc/hono/qdrouterd.json
+        - {{ .Values.amqpMessagingNetworkExample.dispatchRouter.configPath }}
         env:
         - name: KUBERNETES_NAMESPACE
           valueFrom:
