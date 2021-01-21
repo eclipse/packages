@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -161,16 +161,15 @@ healthCheck:
 
 
 {{/*
-Configuration for the service clients of protocol adapters.
+Configuration for the AMQP messaging network clients.
 The scope passed in is expected to be a dict with keys
-- "dot": the root scope (".") and
-- "component": the name of the adapter
+- (mandatory) "dot": the root scope (".") and
+- (mandatory) "component": the name of the component
 */}}
-{{- define "hono.serviceClientConfig" -}}
-{{- $adapter := default "adapter" .component -}}
+{{- define "hono.amqpMessagingNetworkClientConfig" -}}
 messaging:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
-  name: Hono {{ $adapter }}
+  name: Hono {{ .component }}
   amqpHostname: hono-internal
   host: {{ .dot.Release.Name }}-dispatch-router
   port: 5673
@@ -179,8 +178,20 @@ messaging:
   trustStorePath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.trustStorePath }}
   hostnameVerificationRequired: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.hostnameVerificationRequired }}
 {{- else }}
-  {{- required ".Values.adapters.amqpMessagingNetworkSpec MUST be set if example AQMP Messaging Network is disabled" .dot.Values.adapters.amqpMessagingNetworkSpec | toYaml | nindent 2 }}
+  {{- required ".Values.adapters.amqpMessagingNetworkSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.amqpMessagingNetworkSpec | toYaml | nindent 2 }}
 {{- end }}
+{{- end }}
+
+
+{{/*
+Configuration for the service clients of protocol adapters.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "dot": the root scope (".") and
+- (optional) "component": the name of the adapter
+*/}}
+{{- define "hono.serviceClientConfig" -}}
+{{- $adapter := default "adapter" .component -}}
+{{- include "hono.amqpMessagingNetworkClientConfig" ( dict "dot" .dot "component" $adapter ) }}
 command:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: Hono {{ $adapter }}
@@ -192,7 +203,7 @@ command:
   trustStorePath: {{ .dot.Values.adapters.commandAndControlSpec.trustStorePath }}
   hostnameVerificationRequired: {{ .dot.Values.adapters.commandAndControlSpec.hostnameVerificationRequired }}
 {{- else }}
-  {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AQMP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
+  {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
 {{- end }}
 tenant:
 {{- if .dot.Values.deviceRegistryExample.enabled }}
