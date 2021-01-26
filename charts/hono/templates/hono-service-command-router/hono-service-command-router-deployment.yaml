@@ -1,6 +1,6 @@
-{{- if and ( not .Values.useCommandRouter ) .Values.deviceConnectionService.enabled }}
+{{- if and .Values.useCommandRouter .Values.commandRouterService.enabled }}
 #
-# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "service-device-connection" "name" "service-device-connection" "componentConfig" .Values.deviceConnectionService }}
+{{- $args := dict "dot" . "component" "service-command-router" "name" "service-command-router" "componentConfig" .Values.commandRouterService }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,7 +31,7 @@ spec:
       {{- include "hono.jaeger.agent" . | indent 6 }}
       - image: {{ include "hono.image" $args }}
         imagePullPolicy: IfNotPresent
-        name: eclipse-hono-service-device-connection
+        name: eclipse-hono-service-command-router
         ports:
         - name: health
           containerPort: {{ .Values.healthCheckPort }}
@@ -46,16 +46,16 @@ spec:
           privileged: false
         env:
         - name: JDK_JAVA_OPTIONS
-          value: {{ .Values.deviceConnectionService.javaOptions | quote }}
+          value: {{ .Values.commandRouterService.javaOptions | quote }}
         - name: KUBERNETES_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        {{- include "hono.component.springEnv" ( merge $args ( dict "additionalProfile" ( ( or .Values.dataGridSpec ( or .Values.deviceConnectionService.hono.deviceConnection.remote .Values.dataGridExample.enabled ) ) | ternary "" "embedded-cache" ) ) ) | indent 8 }}
+        {{- include "hono.component.springEnv" ( merge $args ( dict "additionalProfile" ( ( or .Values.dataGridSpec .Values.dataGridExample.enabled ) | ternary "" "embedded-cache" ) ) ) | indent 8 }}
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         volumeMounts:
         {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
-        {{- with .Values.deviceConnectionService.resources }}
+        {{- with .Values.commandRouterService.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}

@@ -175,13 +175,14 @@ amqpMessagingNetworkExample:
       # and the Dispatch Router will be configured to connect to the ServiceBus.
       host:
 
+# dataGridExample contains properties for configuring an example data grid
+# to be used by either Device Connection service implementation or the Command
+# Router component.
 dataGridExample:
-  # enabled indicates whether the example data grid
-  # should be deployed and used.
-  # The default value of this property is false which is consistent with
-  # the default value (false) of the "deviceConnectionService.enabled" property,
-  # resulting in the in-memory implementation of the Device Connection
-  # service provided by the example device registry being used by default.
+  # enabled indicates whether the example data grid should be deployed and used.
+  # The default value of this property is false, meaning that if no "dataGridSpec" configuration is set,
+  # both the Device Connection service implementation and alternatively the Command Router service component
+  # will use in-memory storage instead of a data-grid.
   enabled: false
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
@@ -210,9 +211,9 @@ dataGridExample:
 
 # dataGridSpec contains properties for configuring the Infinispan Hotrod connection
 # to the existing data grid (i.e. not the example grid) that should be used for storing
-# the device connection data.
-# This property MUST be set if "deviceConnectionService.enabled" is set to true
-# and "dataGridExample.enabled" is set to false (the default).
+# the device connection data used for routing of command messages.
+# This property should be set in order to use a storage configuration suitable for production
+# if "dataGridExample.enabled" is set to false (the default).
 # Please refer to https://docs.jboss.org/infinispan/9.4/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
 # for a list of configuration properties.
 dataGridSpec:
@@ -306,6 +307,13 @@ honoImagesType: "spring"
 # This property will be ignored when deploying to platform "openshift".
 useLoadBalancer: true
 
+# useCommandRouter indicates whether the Command Router service instead of
+# the Device Connection service shall be used for routing Command & Control
+# messages from the AMQP messaging network to the target protocol adapters.
+# This property is provided for the transition period from the deprecated
+# Device Connection service towards the new Command Router service.
+useCommandRouter: false
+
 # Configuration properties for protocol adapters.
 adapters:
 
@@ -387,12 +395,20 @@ adapters:
 
   # deviceConnectionSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Device Connection service.
-  # This property MUST be set if "deviceRegistryExample.enabled",
+  # This property MUST be set if "useCommandRouter", "deviceRegistryExample.enabled",
   # "deviceConnectionService.enabled" and "dataGridExample.enabled" are all set to false
   # and no "dataGridSpec" is set.
   # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   deviceConnectionSpec:
+
+  # commandRouterSpec contains Hono client properties used by all protocol adapters for
+  # connecting to the Command Router service.
+  # This property MUST be set if "useCommandRouter" is set to true and "commandRouterService.enabled" is set to false,
+  # meaning it has to be set for a custom Command Router service component to be used.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # for a description of supported properties.
+  commandRouterSpec:
 
   # tenantIdleTimeout contains the amount of time of inactivity after
   # which protocol adapters close tenant specific links to services they
@@ -1340,6 +1356,7 @@ mongodb:
 
 # deviceConnectionService contains configuration properties for the
 # Device Connection service.
+# Note that the Device Connection service will only be used if "useCommandRouter" is false.
 deviceConnectionService:
 
   # enabled indicates if the data grid based Device Connection service implementation
@@ -1351,6 +1368,9 @@ deviceConnectionService:
   # "deviceRegistryExample.type" is not set to "file", then the "adapters.deviceConnectionSpec"
   # is expected to contain the required Hono client config properties to connect to an already
   # existing Device Connection service.
+  # If set to true and "dataGridExample.enabled" is set to false (the default) and neither
+  # "dataGridSpec" nor "deviceConnectionService.hono.deviceConnection.remote" is set, the
+  # Device Connection service implementation will use an embedded cache.
   enabled: false
 
   # imageName contains the name (excluding registry)
@@ -1444,6 +1464,107 @@ deviceConnectionService:
       #  authServerName: hono-data-grid
       #  authUsername: hono
       #  authPassword: hono-secret
+
+    # healthCheck contains configuration properties for the service's
+    # health check server as defined by
+    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+    # If not set, a TLS secured health check server is configured listening on
+    # all network interfaces on port 8088 using the service's
+    # example key and cert.'
+    healthCheck:
+    #  bindAddress: 0.0.0.0
+    #  port: 12000
+    #  keyPath: "/etc/config/key.pem"
+    #  certPath: "/etc/config/cert.pem"
+
+# commandRouterService contains configuration properties for the
+# Command Router service.
+# Note that "useCommandRouter" has to be set to "true" for the Command Router service
+# to be used instead of the Device Connection service.
+commandRouterService:
+
+  # enabled indicates if the in-memory or data grid based Command Router service implementation
+  # should be deployed and used.
+  enabled: true
+
+  # imageName contains the name (excluding registry)
+  # of the container image to use for the Command Router service
+  imageName: eclipse/hono-service-command-router
+  # imageTag contains the tag of the container image to deploy.
+  # If not specified, the value of the honoImagesTag property is used.
+  # imageTag:
+  # containerRegistry contains the name of the container registry to pull
+  # the image from.
+  # If not specified, the value of the "honoContainerRegistry" property is used.
+  # containerRegistry:
+  # javaOptions contains options to pass to the JVM when starting
+  # up the service
+  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+  # springConfigLocation contains the location of the Spring application configuration file(s).
+  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
+  # for details.
+  springConfigLocation: "file:///etc/hono/"
+  # loggingConfig contains the location of the logback configuration file that is used by the service.
+  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
+  # for details.
+  springLoggingConfig: "classpath:logback-spring.xml"
+  # applicationProfiles contains the Spring application profiles that should be activated
+  # in the service.
+  applicationProfiles: "dev"
+  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's liveness probe.
+  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+  livenessProbeInitialDelaySeconds:
+  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's readiness probe.
+  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+  readinessProbeInitialDelaySeconds:
+  # resources contains the container's requests and limits for CPU and memory
+  # as defined by the Kubernetes API.
+  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  # for a description of the properties' semantics.
+  resources:
+    requests:
+      cpu: "150m"
+      memory: "256Mi"
+    limits:
+      cpu: "1"
+      memory: "256Mi"
+
+  svc:
+    annotations: {}
+
+  # extraSecretMounts describes additional secrets that should be mounted into the
+  # service's' container filesystem. The files from the secret(s) can
+  # then be used in e.g. the configuration of the service's exposed ports.
+  # The secrets are expected to exist in the same Kubernetes namespace
+  # as the one that the service has been deployed to.
+  extraSecretMounts: {}
+  #  tls:
+  #    secretName: "key-material"
+  #    mountPath: "/etc/tls"
+
+  # hono contains the service's configuration properties as defined in
+  # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/
+  hono:
+    app:
+      # maxInstances defines the number of adapter Verticle instances to deploy
+      # to the vert.x runtime during start-up.
+      maxInstances: 1
+      startupTimeout: 180
+    # auth contains Hono client properties used by the service for
+    # connecting to the Authentication service.
+    # If not set, the service by default uses the Auth Server component to
+    # authenticate clients.
+    auth:
+    commandRouter:
+      # amqp contains configuration properties for the server's
+      # exposed AMQP endpoints.
+      # If not set, the registry by default exposes the secure port
+      # using an example key and certificate.
+      amqp:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
 
     # healthCheck contains configuration properties for the service's
     # health check server as defined by

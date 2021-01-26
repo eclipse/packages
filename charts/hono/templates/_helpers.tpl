@@ -238,6 +238,25 @@ credentials:
 {{- else }}
   {{- required ".Values.adapters.credentialsSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.credentialsSpec | toYaml | nindent 2 }}
 {{- end }}
+{{- if .dot.Values.useCommandRouter }}
+commandRouter:
+{{- if .dot.Values.adapters.commandRouterSpec }}
+  {{/* user has provided connection params for third party Command Router service */}}
+  {{- range $key, $value := .dot.Values.adapters.commandRouterSpec }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+{{- else if .dot.Values.commandRouterService.enabled }}
+  name: Hono {{ $adapter }}
+  host: {{ .dot.Release.Name }}-service-command-router
+  port: 5671
+  credentialsPath: /etc/hono/adapter.credentials
+  trustStorePath: /etc/hono/trusted-certs.pem
+  hostnameVerificationRequired: false
+{{- else }}
+  {{- required "Either .Values.adapters.commandRouterSpec MUST be set or .Values.commandRouterService.enabled MUST be 'true' if useCommandRouter is 'true'" nil }}
+{{- end }}
+{{- else }}
+  {{/* useCommandRouter is false - device connection service will be used */}}
 deviceConnection:
 {{- if .dot.Values.dataGridSpec }}
   {{/* user has specified connection parameters for existing data grid */}}
@@ -272,6 +291,7 @@ deviceConnection:
   trustStorePath: /etc/hono/trusted-certs.pem
   hostnameVerificationRequired: false
 {{- end }}
+{{- end }}
 {{- if .dot.Values.prometheus.createInstance }}
 resource-limits:
   prometheus-based:
@@ -293,15 +313,17 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".")
 - (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
 - (optional) "useImageType": indicates if image type (Quarkus, Spring) should be considered (defaults to false)
+- (optional) "additionalProfile": any additional application profile to add
 */}}
 {{- define "hono.component.springEnv" }}
 {{- if not ( and ( default false .useImageType ) ( contains "quarkus" .dot.Values.honoImagesType ) ) }}
+{{- $applicationProfiles := default "dev" ( default .dot.Values.adapters.applicationProfiles .componentConfig.applicationProfiles ) }}
 - name: SPRING_CONFIG_LOCATION
   value: {{ default "file:///etc/hono/" .componentConfig.springConfigLocation | quote }}
 - name: LOGGING_CONFIG
   value: {{ default "classpath:logback-spring.xml" .componentConfig.loggingConfig | quote }}
 - name: SPRING_PROFILES_ACTIVE
-  value: {{ default "dev" ( default .dot.Values.adapters.applicationProfiles .componentConfig.applicationProfiles ) | quote }}
+  value: {{ print $applicationProfiles ( ( empty .additionalProfile ) | ternary "" "," ) ( default "" .additionalProfile ) | quote }}
 {{- end }}
 {{- end }}
 

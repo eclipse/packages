@@ -38,11 +38,29 @@
         "activities": [ "EXECUTE" ]
       },
       {
+        "resource": "cmd_router/*",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "cmd_router/*:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
         "resource": "device_con/*",
         "activities": [ "READ", "WRITE" ]
       },
       {
         "operation": "device_con/*:*",
+        "activities": [ "EXECUTE" ]
+      }
+    ],
+    "command-router": [
+      {
+        "resource": "registration/*",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "registration/*:*",
         "activities": [ "EXECUTE" ]
       }
     ],
@@ -109,6 +127,11 @@
       "mechanism": "PLAIN",
       "password": "kura-secret",
       "authorities": [ "hono-component", "protocol-adapter" ]
+    },
+    "command-router@HONO": {
+      "mechanism": "PLAIN",
+      "password": "cmd-router-secret",
+      "authorities": [ "hono-component", "command-router" ]
     },
     "hono-client@HONO": {
       "mechanism": "PLAIN",
