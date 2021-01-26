@@ -1,6 +1,6 @@
-{{- if and (eq .Values.platform "openshift") ( and ( not .Values.useCommandRouter ) .Values.deviceConnectionService.enabled ) }}
+{{if and (eq .Values.platform "openshift") (and .Values.useCommandRouter .Values.commandRouterService.enabled) }}
 #
-# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -14,12 +14,12 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  {{- $args := dict "dot" . "component" "service-device-connection" "name" "service-device-connection" }}
+  {{- $args := dict "dot" . "component" "service-command-router" "name" "service-command-router" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   port:
     targetPort: 5671
   to:
     kind: Service
-    name: {{ .Release.Name}}-service-device-connection
+    name: {{ .Release.Name}}-service-command-router
 {{end}}

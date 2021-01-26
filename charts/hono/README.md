@@ -347,20 +347,23 @@ as follows:
 helm install --dependency-update -n hono -f /path/to/customRegistry.yaml eclipse-hono eclipse-iot/hono
 ```
 
-## Using the Device Connection Service
+## Configuring device connection data storage
 
-Hono's protocol adapters need a place where they can store information about the connection status of devices.
-In particular, this includes maintaining a mapping of devices to the gateway(s) they connect via.
+In Hono a place is needed where information about the connection status of devices can be stored.
+This kind of information is used for determining how [command & control](https://www.eclipse.org/hono/docs/concepts/command-and-control/) messages, 
+sent by business applications, can be routed to the protocol adapters that the target devices are connected to.
+
+### Alternative A: Using the deprecated Device Connection API (default)
 
 The [Device Connection API](https://www.eclipse.org/hono/docs/api/device-connection/) defines a service interface
-that protocol adapters can use to store, update and retrieve such information dynamically during runtime.
+that protocol adapters can use to store, update and retrieve information about the connection status of devices dynamically during runtime.
 
-### Example Implementation
+#### Example Implementation
 
 Hono's example Device Registry component contains a simple in-memory implementation of the Device Connection API.
 This example implementation is used by default when the example registry is deployed.
 
-### Data Grid based Implementation
+#### Data Grid based Implementation
 
 Hono also contains a production ready, data grid based implementation of the Device Connection API which can be deployed
 and used instead of the example implementation. The component can be deployed by means of setting the
@@ -368,7 +371,7 @@ and used instead of the example implementation. The component can be deployed by
 
 The service requires a connection to a data grid for storing the device connection data.
 The Helm chart supports deployment of an example data grid which can be used for experimenting by means of setting the
-*dataGridDeployExample* property to `true`:
+*dataGridExample.enabled* property to `true`:
 
 ```bash
 helm install --dependency-update -n hono --set deviceConnectionService.enabled=true --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
@@ -377,10 +380,46 @@ helm install --dependency-update -n hono --set deviceConnectionService.enabled=t
 This will deploy the data grid based Device Connection service and configure all protocol adapters to use it instead of
 the example Device Registry implementation.
 
-The Device Connection service can also be configured to connect to an already existing data grid. Please refer to the
-[admin guide](https://www.eclipse.org/hono/docs/admin-guide/device-connection-config/) for details regarding the
-corresponding configuration properties.
+The Device Connection service can also be configured to connect to an already existing data grid. Use the *dataGridSpec*
+property for this.
 
+Setting the *deviceConnectionService.enabled* property to `true` and neither setting *dataGridExample.enabled* to `true`
+nor configuring an already existing data grid using the *dataGridSpec* property will result in the Device Connection
+service using an embedded cache for storage. This is a lightweight deployment option but not suitable for production purposes.
+
+### Alternative B: Using the new Command Router API
+
+Hono's protocol adapters can use the [Command Router API](https://www.eclipse.org/hono/docs/api/command-router/) to supply
+device connection information with which a Command Router service component can route command & control messages to the
+protocol adapters that the target devices are connected to.
+
+The Command Router API will replace the now deprecated Device Connection API. The Command Router service component is provided as a tech preview.
+
+#### Example with in-memory storage
+
+In order to use the Command Router API, the *useCommandRouter* property has to be set to `true` when deploying the Helm chart.
+
+```bash
+helm install --dependency-update -n hono --set useCommandRouter=true eclipse-hono eclipse-iot/hono 
+```
+
+This will let the Command Router service component use in-memory storage for the device connection data. This is provided as an example for testing.
+For a storage configuration suitable for production, use the data grid configuration as described below.
+
+#### Data Grid based Implementation
+
+The Command Router service component can also be configured to use a data grid for storing the device connection data.
+The Helm chart supports deployment of an example data grid which can be used for experimenting by means of setting the
+*dataGridExample.enabled* property to `true`:
+
+```bash
+helm install --dependency-update -n hono --set useCommandRouter=true --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
+```
+
+This will deploy the data grid based Command Router service component.
+
+The Command Router service component can also be configured to connect to an already existing data grid. Use the *dataGridSpec*
+property for this.
 
 ## Enabling or disabling Protocol Adapters
 

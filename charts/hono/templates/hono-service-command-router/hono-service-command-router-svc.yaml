@@ -1,6 +1,6 @@
-{{- if and ( not .Values.useCommandRouter ) .Values.deviceConnectionService.enabled }}
+{{- if and .Values.useCommandRouter .Values.commandRouterService.enabled }}
 #
-# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -14,9 +14,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  {{- $args := dict "dot" . "component" "service-device-connection" "name" "service-device-connection" }}
+  {{- $args := dict "dot" . "component" "service-command-router" "name" "service-command-router" }}
   {{- include "hono.metadata" $args | nindent 2 }}
-  {{- with .Values.deviceConnectionService.svc.annotations }}
+  {{- with .Values.commandRouterService.svc.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -29,7 +29,7 @@ spec:
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
   {{- include "hono.serviceType" . }}
-{{- with .Values.deviceConnectionService.svc.loadBalancerIP }}
+{{- with .Values.commandRouterService.svc.loadBalancerIP }}
   loadBalancerIP: {{ . | quote }}
 {{- end }}
 {{- end }}
