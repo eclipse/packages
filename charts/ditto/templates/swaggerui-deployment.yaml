@@ -18,7 +18,6 @@ metadata:
     app.kubernetes.io/name: {{ include "ditto.name" . }}-swaggerui
 {{ include "ditto.labels" . | indent 4 }}
 spec:
-spec:
   replicas: {{ .Values.swaggerui.replicaCount }}
   strategy:
   {{- with .Values.swaggerui.updateStrategy }}
