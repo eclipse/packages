@@ -23,7 +23,7 @@ podTemplate(
     containers: [
         containerTemplate(
             name: 'jekyll',
-            image: 'docker.io/jekyll/jekyll:4',
+            image: 'docker.io/jekyll/jekyll:4.1.0',
             ttyEnabled: true,
             command: 'cat',
             resourceRequestMemory: '4Gi',
