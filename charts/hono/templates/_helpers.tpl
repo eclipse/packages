@@ -206,7 +206,11 @@ command:
   {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
 {{- end }}
 tenant:
-{{- if .dot.Values.deviceRegistryExample.enabled }}
+{{- if .dot.Values.adapters.tenantSpec }}
+  {{- range $key, $value := .dot.Values.adapters.tenantSpec }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+{{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
   port: 5671
@@ -217,7 +221,11 @@ tenant:
   {{- required ".Values.adapters.tenantSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.tenantSpec | toYaml | nindent 2 }}
 {{- end }}
 registration:
-{{- if .dot.Values.deviceRegistryExample.enabled }}
+{{- if .dot.Values.adapters.deviceRegistrationSpec }}
+  {{- range $key, $value := .dot.Values.adapters.deviceRegistrationSpec }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+{{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
   port: 5671
@@ -228,7 +236,11 @@ registration:
   {{- required ".Values.adapters.deviceRegistrationSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.deviceRegistrationSpec | toYaml | nindent 2 }}
 {{- end }}
 credentials:
-{{- if .dot.Values.deviceRegistryExample.enabled }}
+{{- if .dot.Values.adapters.credentialsSpec }}
+  {{- range $key, $value := .dot.Values.adapters.credentialsSpec }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+{{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
   port: 5671
