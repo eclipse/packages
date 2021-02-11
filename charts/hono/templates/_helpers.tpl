@@ -207,9 +207,7 @@ command:
 {{- end }}
 tenant:
 {{- if .dot.Values.adapters.tenantSpec }}
-  {{- range $key, $value := .dot.Values.adapters.tenantSpec }}
-  {{ $key }}: {{ $value }}
-  {{- end }}
+  {{- .dot.Values.adapters.tenantSpec | toYaml | nindent 2 }}
 {{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
@@ -222,9 +220,7 @@ tenant:
 {{- end }}
 registration:
 {{- if .dot.Values.adapters.deviceRegistrationSpec }}
-  {{- range $key, $value := .dot.Values.adapters.deviceRegistrationSpec }}
-  {{ $key }}: {{ $value }}
-  {{- end }}
+  {{- .dot.Values.adapters.deviceRegistrationSpec | toYaml | nindent 2 }}
 {{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
@@ -237,9 +233,7 @@ registration:
 {{- end }}
 credentials:
 {{- if .dot.Values.adapters.credentialsSpec }}
-  {{- range $key, $value := .dot.Values.adapters.credentialsSpec }}
-  {{ $key }}: {{ $value }}
-  {{- end }}
+  {{- .dot.Values.adapters.credentialsSpec | toYaml | nindent 2 }}
 {{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
@@ -254,9 +248,7 @@ credentials:
 commandRouter:
 {{- if .dot.Values.adapters.commandRouterSpec }}
   {{/* user has provided connection params for third party Command Router service */}}
-  {{- range $key, $value := .dot.Values.adapters.commandRouterSpec }}
-  {{ $key }}: {{ $value }}
-  {{- end }}
+  {{- .dot.Values.adapters.commandRouterSpec | toYaml | nindent 2 }}
 {{- else if .dot.Values.commandRouterService.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-command-router
@@ -286,9 +278,7 @@ deviceConnection:
   connectTimeout: 5000
 {{- else if .dot.Values.adapters.deviceConnectionSpec }}
   {{/* user has provided connection params for third party Device Connection service */}}
-  {{- range $key, $value := .dot.Values.adapters.deviceConnectionSpec }}
-  {{ $key }}: {{ $value }}
-  {{- end }}
+  {{- .dot.Values.adapters.deviceConnectionSpec | toYaml | nindent 2 }}
 {{- else }}
   name: Hono {{ $adapter }}
   {{- if .dot.Values.deviceConnectionService.enabled }}
