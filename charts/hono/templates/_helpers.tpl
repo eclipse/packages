@@ -206,7 +206,9 @@ command:
   {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
 {{- end }}
 tenant:
-{{- if .dot.Values.deviceRegistryExample.enabled }}
+{{- if .dot.Values.adapters.tenantSpec }}
+  {{- .dot.Values.adapters.tenantSpec | toYaml | nindent 2 }}
+{{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
   port: 5671
@@ -217,7 +219,9 @@ tenant:
   {{- required ".Values.adapters.tenantSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.tenantSpec | toYaml | nindent 2 }}
 {{- end }}
 registration:
-{{- if .dot.Values.deviceRegistryExample.enabled }}
+{{- if .dot.Values.adapters.deviceRegistrationSpec }}
+  {{- .dot.Values.adapters.deviceRegistrationSpec | toYaml | nindent 2 }}
+{{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
   port: 5671
@@ -228,7 +232,9 @@ registration:
   {{- required ".Values.adapters.deviceRegistrationSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.deviceRegistrationSpec | toYaml | nindent 2 }}
 {{- end }}
 credentials:
-{{- if .dot.Values.deviceRegistryExample.enabled }}
+{{- if .dot.Values.adapters.credentialsSpec }}
+  {{- .dot.Values.adapters.credentialsSpec | toYaml | nindent 2 }}
+{{- else if .dot.Values.deviceRegistryExample.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-device-registry
   port: 5671
@@ -242,9 +248,7 @@ credentials:
 commandRouter:
 {{- if .dot.Values.adapters.commandRouterSpec }}
   {{/* user has provided connection params for third party Command Router service */}}
-  {{- range $key, $value := .dot.Values.adapters.commandRouterSpec }}
-  {{ $key }}: {{ $value }}
-  {{- end }}
+  {{- .dot.Values.adapters.commandRouterSpec | toYaml | nindent 2 }}
 {{- else if .dot.Values.commandRouterService.enabled }}
   name: Hono {{ $adapter }}
   host: {{ .dot.Release.Name }}-service-command-router
@@ -274,9 +278,7 @@ deviceConnection:
   connectTimeout: 5000
 {{- else if .dot.Values.adapters.deviceConnectionSpec }}
   {{/* user has provided connection params for third party Device Connection service */}}
-  {{- range $key, $value := .dot.Values.adapters.deviceConnectionSpec }}
-  {{ $key }}: {{ $value }}
-  {{- end }}
+  {{- .dot.Values.adapters.deviceConnectionSpec | toYaml | nindent 2 }}
 {{- else }}
   name: Hono {{ $adapter }}
   {{- if .dot.Values.deviceConnectionService.enabled }}
