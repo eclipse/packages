@@ -14,7 +14,7 @@
         <role name="adapter" permissions="READ WRITE" />
       </authorization>
     </security>
-    <distributed-cache name="device-connection">
+    <distributed-cache name="{{ if .Values.useCommandRouter }}command-router{{ else }}device-connection{{ end }}">
       <encoding>
         <key media-type="text/plain" />
         <value media-type="text/plain" />
