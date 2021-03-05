@@ -35,7 +35,7 @@ spec:
         - name: AMQ_NAME
           value: custom
         - name: HOME
-          value: /var/run/artemis/
+          value: /run/artemis/split-1/
         - name: JAVA_INITIAL_MEM_RATIO
           value: "30"
         - name: JAVA_MAX_MEM_RATIO
