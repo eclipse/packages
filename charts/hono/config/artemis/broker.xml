@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 
 <!--
-    Copyright (c) 2016, 2020 Contributors to the Eclipse Foundation
+    Copyright (c) 2016, 2021 Contributors to the Eclipse Foundation
    
     See the NOTICE file(s) distributed with this work for additional
     information regarding copyright ownership.
@@ -96,7 +96,7 @@
          <!--<acceptor name="amqp">tcp://0.0.0.0:5672?protocols=AMQP</acceptor>-->
          <acceptor name="amqps">
              tcp://0.0.0.0:5671?protocols=AMQP;sslEnabled=true;
-             keyStorePath=file:/var/run/artemis/custom/etc/artemisKeyStore.p12;keyStorePassword=artemiskeys;
+             keyStorePath=file:/run/artemis/split-1/custom/etc/artemisKeyStore.p12;keyStorePassword=artemiskeys;
          </acceptor>
 
       </acceptors>
