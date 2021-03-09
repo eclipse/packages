@@ -70,6 +70,9 @@ hono:
         port: 27017
         dbName: hono
 
+  deviceConnectionService:
+    enabled: true
+
   adapters:
     amqp:
       resources:
