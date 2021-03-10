@@ -10,7 +10,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "service-auth" "name" "service-auth" "componentConfig" .Values.authServer }}
+{{- $args := dict "dot" . "component" "service-auth" "name" "service-auth" "componentConfig" .Values.authServer "useImageType" true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
