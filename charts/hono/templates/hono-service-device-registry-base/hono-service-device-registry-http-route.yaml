@@ -18,7 +18,7 @@ metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   port:
-    targetPort: amqps
+    targetPort: http
   to:
     kind: Service
     name: {{ .Release.Name }}-service-device-registry
