@@ -45,25 +45,33 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Create container image name.
+Adds an element to a Container array.
+Sets "name" and "image" values and adds an "Always" "imagePullPolicy"
+if the image tag contains "SNAPSHOT".
+
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root (".") scope
+- (mandatory) "name": the value to use as the container's name
 - (mandatory) "componentConfig": a dict with keys
   - (mandatory) "imageName"
   - (optional) "imageTag"
   - (optional) "containerRegistry"
   - (optional) "useImageType": should image type configuration be used
 */}}
-{{- define "hono.image" }}
-  {{- $tag := default .dot.Chart.AppVersion ( default .dot.Values.honoImagesTag .componentConfig.imageTag ) }}
-  {{- $registry := default .dot.Values.honoContainerRegistry .componentConfig.containerRegistry }}
-
-  {{- if and .useImageType ( contains "quarkus" .dot.Values.honoImagesType ) }}
-  {{- printf "%s/%s-%s:%s" $registry .componentConfig.imageName .dot.Values.honoImagesType $tag -}}
-  {{- else }}
-  {{- printf "%s/%s:%s" $registry .componentConfig.imageName $tag -}}
-  {{- end }}
+{{- define "hono.container" }}
+{{- $tag := default .dot.Chart.AppVersion ( default .dot.Values.honoImagesTag .componentConfig.imageTag ) }}
+{{- $registry := default .dot.Values.honoContainerRegistry .componentConfig.containerRegistry }}
+{{- $image := printf "%s/%s:%s" $registry .componentConfig.imageName $tag -}}
+{{- if and .useImageType ( contains "quarkus" .dot.Values.honoImagesType ) }}
+{{- $image = printf "%s/%s-%s:%s" $registry .componentConfig.imageName .dot.Values.honoImagesType $tag -}}
 {{- end }}
+- name: {{ .name | quote }}
+  image: {{ $image | quote }}
+{{- if contains "SNAPSHOT" $tag }}
+  imagePullPolicy: "Always"
+{{- end }}
+{{- end }}
+
 
 {{/*
 Add standard labels for resources as recommended by Helm best practices.

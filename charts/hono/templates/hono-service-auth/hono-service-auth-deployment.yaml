@@ -27,9 +27,7 @@ spec:
         {{- include "hono.monitoringAnnotations" . | nindent 8 }}
     spec:
       containers:
-      - image: {{ include "hono.image" $args }}
-        imagePullPolicy: IfNotPresent
-        name: eclipse-hono-service-auth
+      {{- include "hono.container" $args | indent 6 }}
         ports:
         - name: health
           containerPort: {{ .Values.healthCheckPort }}
