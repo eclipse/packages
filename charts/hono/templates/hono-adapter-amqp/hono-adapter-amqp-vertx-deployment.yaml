@@ -29,9 +29,7 @@ spec:
     spec:
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
-      - image: {{ include "hono.image" $args }}
-        imagePullPolicy: IfNotPresent
-        name: eclipse-hono-adapter-amqp-vertx
+      {{- include "hono.container" $args | indent 6 }}
         ports:
         - name: health
           containerPort: {{ .Values.healthCheckPort }}
