@@ -1529,7 +1529,7 @@ commandRouterService:
       memory: "256Mi"
     limits:
       cpu: "1"
-      memory: "256Mi"
+      memory: "512Mi"
 
   svc:
     annotations: {}
