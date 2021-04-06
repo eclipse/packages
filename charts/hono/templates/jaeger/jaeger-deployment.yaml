@@ -32,8 +32,8 @@ spec:
       - env:
         - name: MEMORY_MAX_TRACES
           value: "100000"
-        - name: ADMIN_HTTP_PORT
-          value: {{ .Values.healthCheckPort | quote }}
+        - name: ADMIN_HTTP_HOST_PORT
+          value: ":{{ .Values.healthCheckPort }}"
         image: {{ .Values.jaegerBackendExample.allInOneImage }}
         name: jaeger
         ports:

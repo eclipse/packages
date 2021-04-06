@@ -403,10 +403,13 @@ Adds a Jaeger Agent container to a template spec.
   - name: agent-configs
     containerPort: 5778
     protocol: TCP
+  - name: admin-http
+    containerPort: 14271
+    protocol: TCP
   readinessProbe:
     httpGet:
       path: "/"
-      port: 14271
+      port: admin-http
     initialDelaySeconds: 5
   env:
   {{- if .Values.jaegerBackendExample.enabled }}
