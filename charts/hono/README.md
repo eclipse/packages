@@ -353,54 +353,20 @@ In Hono a place is needed where information about the connection status of devic
 This kind of information is used for determining how [command & control](https://www.eclipse.org/hono/docs/concepts/command-and-control/) messages, 
 sent by business applications, can be routed to the protocol adapters that the target devices are connected to.
 
-### Alternative A: Using the deprecated Device Connection API (default)
-
-The [Device Connection API](https://www.eclipse.org/hono/docs/api/device-connection/) defines a service interface
-that protocol adapters can use to store, update and retrieve information about the connection status of devices dynamically during runtime.
-
-#### Example Implementation
-
-Hono's example Device Registry component contains a simple in-memory implementation of the Device Connection API.
-This example implementation is used by default when the example registry is deployed.
-
-#### Data Grid based Implementation
-
-Hono also contains a production ready, data grid based implementation of the Device Connection API which can be deployed
-and used instead of the example implementation. The component can be deployed by means of setting the
-*deviceConnectionService.enabled* property to `true`.
-
-The service requires a connection to a data grid for storing the device connection data.
-The Helm chart supports deployment of an example data grid which can be used for experimenting by means of setting the
-*dataGridExample.enabled* property to `true`:
-
-```bash
-helm install --dependency-update -n hono --set deviceConnectionService.enabled=true --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
-```
-
-This will deploy the data grid based Device Connection service and configure all protocol adapters to use it instead of
-the example Device Registry implementation.
-
-The Device Connection service can also be configured to connect to an already existing data grid. Use the *dataGridSpec*
-property for this.
-
-Setting the *deviceConnectionService.enabled* property to `true` and neither setting *dataGridExample.enabled* to `true`
-nor configuring an already existing data grid using the *dataGridSpec* property will result in the Device Connection
-service using an embedded cache for storage. This is a lightweight deployment option but not suitable for production purposes.
-
-### Alternative B: Using the new Command Router API
+### Alternative A: Using the Command Router API (default)
 
 Hono's protocol adapters can use the [Command Router API](https://www.eclipse.org/hono/docs/api/command-router/) to supply
 device connection information with which a Command Router service component can route command & control messages to the
 protocol adapters that the target devices are connected to.
 
-The Command Router API will replace the now deprecated Device Connection API. The Command Router service component is provided as a tech preview.
+The Command Router API will replace the now deprecated Device Connection API.
 
 #### Example with file-based storage in a persistent volume
 
-In order to use the Command Router API, the *useCommandRouter* property has to be set to `true` when deploying the Helm chart.
+The Command Router API is used by default when deploying the Helm chart.
 
 ```bash
-helm install --dependency-update -n hono --set useCommandRouter=true eclipse-hono eclipse-iot/hono 
+helm install --dependency-update -n hono eclipse-hono eclipse-iot/hono 
 ```
 
 This will let the Command Router service component use an embedded cache with file-based persistence for the device
@@ -416,13 +382,54 @@ The Helm chart supports deployment of an example data grid which can be used for
 *dataGridExample.enabled* property to `true`:
 
 ```bash
-helm install --dependency-update -n hono --set useCommandRouter=true --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
+helm install --dependency-update -n hono --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
 ```
 
 This will deploy the data grid based Command Router service component.
 
 The Command Router service component can also be configured to connect to an already existing data grid. Use the *dataGridSpec*
 property for this.
+
+### Alternative B: Using the deprecated Device Connection API
+
+The [Device Connection API](https://www.eclipse.org/hono/docs/api/device-connection/) defines a service interface
+that protocol adapters can use to store, update and retrieve information about the connection status of devices dynamically during runtime.
+
+The Device Connection API is deprecated and will be replaced by the Command Router API.
+In order to use the Device Connection API, the *useCommandRouter* property has to be set to `false` when deploying the Helm chart.
+
+```bash
+helm install --dependency-update -n hono --set useCommandRouter=false eclipse-hono eclipse-iot/hono 
+```
+
+#### Example Implementation
+
+Hono's example Device Registry component contains a simple in-memory implementation of the Device Connection API.
+This example implementation is used by default when the example registry is deployed and the *useCommandRouter* property is set to `false`.
+
+#### Data Grid based Implementation
+
+Hono also contains a production ready, data grid based implementation of the Device Connection API which can be deployed
+and used instead of the example implementation. The component can be deployed by means of setting the
+*deviceConnectionService.enabled* property to `true`.
+
+The service requires a connection to a data grid for storing the device connection data.
+The Helm chart supports deployment of an example data grid which can be used for experimenting by means of setting the
+*dataGridExample.enabled* property to `true`:
+
+```bash
+helm install --dependency-update -n hono --set useCommandRouter=false --set deviceConnectionService.enabled=true --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
+```
+
+This will deploy the data grid based Device Connection service and configure all protocol adapters to use it instead of
+the example Device Registry implementation.
+
+The Device Connection service can also be configured to connect to an already existing data grid. Use the *dataGridSpec*
+property for this.
+
+Setting the *deviceConnectionService.enabled* property to `true` and neither setting *dataGridExample.enabled* to `true`
+nor configuring an already existing data grid using the *dataGridSpec* property will result in the Device Connection
+service using an embedded cache for storage. This is a lightweight deployment option but not suitable for production purposes.
 
 ## Enabling or disabling Protocol Adapters
 

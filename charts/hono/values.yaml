@@ -312,7 +312,7 @@ useLoadBalancer: true
 # messages from the AMQP messaging network to the target protocol adapters.
 # This property is provided for the transition period from the deprecated
 # Device Connection service towards the new Command Router service.
-useCommandRouter: false
+useCommandRouter: true
 
 # Configuration properties for protocol adapters.
 adapters:
