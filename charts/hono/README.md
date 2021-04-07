@@ -395,7 +395,7 @@ protocol adapters that the target devices are connected to.
 
 The Command Router API will replace the now deprecated Device Connection API. The Command Router service component is provided as a tech preview.
 
-#### Example with in-memory storage
+#### Example with file-based storage in a persistent volume
 
 In order to use the Command Router API, the *useCommandRouter* property has to be set to `true` when deploying the Helm chart.
 
@@ -403,8 +403,11 @@ In order to use the Command Router API, the *useCommandRouter* property has to b
 helm install --dependency-update -n hono --set useCommandRouter=true eclipse-hono eclipse-iot/hono 
 ```
 
-This will let the Command Router service component use in-memory storage for the device connection data. This is provided as an example for testing.
-For a storage configuration suitable for production, use the data grid configuration as described below.
+This will let the Command Router service component use an embedded cache with file-based persistence for the device
+connection data. A persistent volume is required in the Kubernetes cluster for that.
+Note that with this configuration, only one Command Router service component instance can be used. For a storage
+configuration suitable for production, with the possibility to use multiple instances, use the data grid configuration
+as described below.
 
 #### Data Grid based Implementation
 
