@@ -186,7 +186,7 @@ dataGridExample:
   enabled: false
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
-  imageName: infinispan/server:11.0.7.Final-1
+  imageName: infinispan/server:11.0.9.Final-1
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   livenessProbeInitialDelaySeconds: 300
@@ -214,7 +214,7 @@ dataGridExample:
 # the device connection data used for routing of command messages.
 # This property should be set in order to use a storage configuration suitable for production
 # if "dataGridExample.enabled" is set to false (the default).
-# Please refer to https://docs.jboss.org/infinispan/9.4/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
+# Please refer to https://docs.jboss.org/infinispan/11.0/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
 # for a list of configuration properties.
 dataGridSpec:
   # serverList contains the hostname:port of the data grid node(s)
@@ -1457,7 +1457,7 @@ deviceConnectionService:
       # to the data grid that should be used for storing the device connection data.
       # This property MUST be set if "deviceConnectionService.enabled" is set to true
       # and "dataGridExample.enabled" is set to false (the default).
-      # Please refer to https://docs.jboss.org/infinispan/9.4/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
+      # Please refer to https://docs.jboss.org/infinispan/11.0/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
       # for a list of configuration properties.
       remote:
       #  serverList: hono-data-grid:11222
