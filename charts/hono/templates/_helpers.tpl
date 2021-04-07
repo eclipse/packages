@@ -195,6 +195,22 @@ messaging:
 
 
 {{/*
+Configuration for the clients accessing the example Device Registry.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "dot": the root scope (".") and
+- (mandatory) "component": the name of the component
+*/}}
+{{- define "hono.deviceRegistryExampleClientConfig" -}}
+name: Hono {{ .component }}
+host: {{ .dot.Release.Name }}-service-device-registry
+port: 5671
+credentialsPath: /etc/hono/adapter.credentials
+trustStorePath: /etc/hono/trusted-certs.pem
+hostnameVerificationRequired: false
+{{- end }}
+
+
+{{/*
 Configuration for the service clients of protocol adapters.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".") and
@@ -220,12 +236,7 @@ tenant:
 {{- if .dot.Values.adapters.tenantSpec }}
   {{- .dot.Values.adapters.tenantSpec | toYaml | nindent 2 }}
 {{- else if .dot.Values.deviceRegistryExample.enabled }}
-  name: Hono {{ $adapter }}
-  host: {{ .dot.Release.Name }}-service-device-registry
-  port: 5671
-  credentialsPath: /etc/hono/adapter.credentials
-  trustStorePath: /etc/hono/trusted-certs.pem
-  hostnameVerificationRequired: false
+  {{- include "hono.deviceRegistryExampleClientConfig" ( dict "dot" .dot "component" $adapter ) | nindent 2 }}
 {{- else }}
   {{- required ".Values.adapters.tenantSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.tenantSpec | toYaml | nindent 2 }}
 {{- end }}
@@ -233,12 +244,7 @@ registration:
 {{- if .dot.Values.adapters.deviceRegistrationSpec }}
   {{- .dot.Values.adapters.deviceRegistrationSpec | toYaml | nindent 2 }}
 {{- else if .dot.Values.deviceRegistryExample.enabled }}
-  name: Hono {{ $adapter }}
-  host: {{ .dot.Release.Name }}-service-device-registry
-  port: 5671
-  credentialsPath: /etc/hono/adapter.credentials
-  trustStorePath: /etc/hono/trusted-certs.pem
-  hostnameVerificationRequired: false
+  {{- include "hono.deviceRegistryExampleClientConfig" ( dict "dot" .dot "component" $adapter ) | nindent 2 }}
 {{- else }}
   {{- required ".Values.adapters.deviceRegistrationSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.deviceRegistrationSpec | toYaml | nindent 2 }}
 {{- end }}
@@ -246,12 +252,7 @@ credentials:
 {{- if .dot.Values.adapters.credentialsSpec }}
   {{- .dot.Values.adapters.credentialsSpec | toYaml | nindent 2 }}
 {{- else if .dot.Values.deviceRegistryExample.enabled }}
-  name: Hono {{ $adapter }}
-  host: {{ .dot.Release.Name }}-service-device-registry
-  port: 5671
-  credentialsPath: /etc/hono/adapter.credentials
-  trustStorePath: /etc/hono/trusted-certs.pem
-  hostnameVerificationRequired: false
+  {{- include "hono.deviceRegistryExampleClientConfig" ( dict "dot" .dot "component" $adapter ) | nindent 2 }}
 {{- else }}
   {{- required ".Values.adapters.credentialsSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.credentialsSpec | toYaml | nindent 2 }}
 {{- end }}

@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "service-command-router" "name" "service-command-router" "componentConfig" .Values.commandRouterService }}
+{{- $args := dict "dot" . "component" "service-command-router" "name" "service-command-router" "componentConfig" .Values.commandRouterService "useImageType" true }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,7 +49,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        {{- include "hono.component.springEnv" ( merge $args ( dict "additionalProfile" ( ( or .Values.dataGridSpec .Values.dataGridExample.enabled ) | ternary "" "embedded-cache" ) ) ) | indent 8 }}
+        {{- include "hono.component.springEnv" $args | indent 8 }}
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         volumeMounts:
         {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
