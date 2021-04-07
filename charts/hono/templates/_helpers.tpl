@@ -44,10 +44,12 @@ Create chart name and version as used by the chart label.
   {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+
 {{/*
 Adds an element to a Container array.
 Sets "name" and "image" values and adds an "Always" "imagePullPolicy"
-if the image tag contains "SNAPSHOT".
+if the image tag contains "SNAPSHOT" and a custom image name
+(not starting with "index.docker.io/eclipse/") is used.
 
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root (".") scope
@@ -67,7 +69,7 @@ The scope passed in is expected to be a dict with keys
 {{- end }}
 - name: {{ .name | quote }}
   image: {{ $image | quote }}
-{{- if contains "SNAPSHOT" $tag }}
+{{- if and ( contains "SNAPSHOT" $tag ) ( not ( hasPrefix "index.docker.io/eclipse/" $image ) ) }}
   imagePullPolicy: "Always"
 {{- end }}
 {{- end }}
@@ -83,6 +85,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- end }}
+
 
 {{/*
 Add standard labels and name for resources as recommended by Helm best practices.
