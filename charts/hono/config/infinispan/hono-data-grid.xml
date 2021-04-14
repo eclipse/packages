@@ -11,7 +11,7 @@
       <authorization>
         <identity-role-mapper /> 
         <role name="admin" permissions="ALL" /> 
-        <role name="adapter" permissions="READ WRITE" />
+        <role name="adapter" permissions="READ WRITE BULK_READ" />
       </authorization>
     </security>
     <distributed-cache name="{{ if .Values.useCommandRouter }}command-router{{ else }}device-connection{{ end }}">
