@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -187,15 +187,15 @@ mysql:
   metrics:
     enabled: true
 
-## ref: https://github.com/bitnami/charts/blob/master/upstreamed/rabbitmq/values.yaml
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/rabbitmq/values.yaml
 rabbitmq:
   enabled: true
   persistence:
     enabled: true
   volumePermissions:
     enabled: true
-  rabbitmq:
+  auth:
     username: hawkbit
     password: hawkbit
-    metrics:
-      enabled: true
+  metrics:
+    enabled: true
