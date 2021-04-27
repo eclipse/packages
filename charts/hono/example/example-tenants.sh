@@ -1,6 +1,6 @@
 #!/bin/sh
 #*******************************************************************************
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -12,19 +12,15 @@
 # SPDX-License-Identifier: EPL-2.0
 #*******************************************************************************
 
+DEFAULT_TENANT_TRUSTED_CA=`cat default_tenant-trusted-ca.json`
+
 add_tenant 'DEFAULT_TENANT' \
-          '{
-              "enabled": true,
-              "trusted-ca": [
-                {
-                  "subject-dn": "CN=DEFAULT_TENANT_CA,OU=Hono,O=Eclipse IoT,L=Ottawa,C=CA",
-                  "public-key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElkwCSPlO563eQb6ONdULAISm2XngGGSoAAz+I1s8zkS9guPUpNKoxeczLtKlObelHqBgIZtRXdrPRgXidGOnmQ==",
-                  "algorithm": "EC",
-                  "not-before": "2019-09-18T10:35:40+02:00",
-                  "not-after": "2020-09-17T10:35:40+02:00"
-                }
+          "{
+              \"enabled\": true,
+              \"trusted-ca\": [
+$DEFAULT_TENANT_TRUSTED_CA
               ]
-            }'
+            }"
 
 add_tenant 'HTTP_TENANT' \
           '{

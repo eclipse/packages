@@ -1,0 +1,7 @@
+{
+  "subject-dn": "CN=DEFAULT_TENANT_CA,OU=Hono,O=Eclipse IoT,L=Ottawa,C=CA",
+  "public-key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEQ3gE4u1z6GwtfeC2l6bPihBiZbAUdKHPJPz/YWTegzrwwIGjrvCj/uXzKUxHOeZiSmmWrYU7F9VvWicYN5IOsg==",
+  "algorithm": "EC",
+  "not-before": "2021-01-26T14:13:26+01:00",
+  "not-after": "2022-01-26T14:13:26+01:00"
+}
