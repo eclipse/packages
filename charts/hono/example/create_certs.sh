@@ -120,11 +120,13 @@ CA_SUBJECT=$(openssl x509 -in $DIR/default_tenant-cert.pem -noout -subject -name
 PK=$(openssl x509 -in $DIR/default_tenant-cert.pem -noout -pubkey | sed /^---/d | sed -z 's/\n//g')
 NOT_BEFORE=$(date --date="$(openssl x509 -in $DIR/default_tenant-cert.pem -noout -startdate -nameopt RFC2253 | sed s/^notBefore=//)" --iso-8601=seconds)
 NOT_AFTER=$(date --date="$(openssl x509 -in $DIR/default_tenant-cert.pem -noout -enddate -nameopt RFC2253 | sed s/^notAfter=//)" --iso-8601=seconds)
-echo "trusted-ca.subject-dn=$CA_SUBJECT" > $DIR/trust-anchor.properties
-echo "trusted-ca.public-key=$PK" >> $DIR/trust-anchor.properties
-echo "trusted-ca.algorithm=$KEY_ALG" >> $DIR/trust-anchor.properties
-echo "trusted-ca.not-before=$NOT_BEFORE" >> $DIR/trust-anchor.properties
-echo "trusted-ca.not-after=$NOT_AFTER" >> $DIR/trust-anchor.properties
+echo "{" > default_tenant-trusted-ca.json
+echo "  \"subject-dn\": \"$CA_SUBJECT\"," >> default_tenant-trusted-ca.json
+echo "  \"public-key\": \"$PK\"," >> default_tenant-trusted-ca.json
+echo "  \"algorithm\": \"$KEY_ALG\"," >> default_tenant-trusted-ca.json
+echo "  \"not-before\": \"$NOT_BEFORE\"," >> default_tenant-trusted-ca.json
+echo "  \"not-after\": \"$NOT_AFTER\"" >> default_tenant-trusted-ca.json
+echo "}" >> default_tenant-trusted-ca.json
 
 create_cert qdrouter
 create_cert auth-server $AUTH_SERVER_KEY_STORE $AUTH_SERVER_KEY_STORE_PWD
