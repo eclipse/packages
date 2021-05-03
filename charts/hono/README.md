@@ -253,14 +253,30 @@ The easiest way to set these properties is by means of putting them into a YAML 
 amqpMessagingNetworkExample:
   enabled: false
 
-adapters:
-
-  # mount (existing) Kubernetes secret which contains
-  # credentials for connecting to AMQP network
+# mount (existing) Kubernetes secret which contains
+# credentials for connecting to AMQP network
+# into Command Router and protocol adapter containers 
+commandRouterService:
   extraSecretMounts:
-  - amqpNetwork:
+    amqpNetwork:
       secretName: "my-secret"
       mountPath: "/etc/custom"
+adapters:
+  http:
+    extraSecretMounts:
+      amqpNetwork:
+        secretName: "my-secret"
+        mountPath: "/etc/custom"
+  mqtt:
+    extraSecretMounts:
+      amqpNetwork:
+        secretName: "my-secret"
+        mountPath: "/etc/custom"
+  amqp:
+    extraSecretMounts:
+      amqpNetwork:
+        secretName: "my-secret"
+        mountPath: "/etc/custom"
 
   # provide connection params
   # assuming that "my-secret" contains an "amqp-credentials.properties" file
