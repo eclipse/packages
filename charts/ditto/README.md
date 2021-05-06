@@ -2,8 +2,9 @@
 
 ## Introduction
 
-[Eclipse Ditto™](https://www.eclipse.org/ditto/) is a technology in the IoT implementing a software pattern called “digital twins”.
-A digital twin is a virtual, cloud based, representation of his real world counterpart (real world “Things”, e.g. devices like sensors, smart heating, connected cars, smart grids, EV charging stations, …).
+[Eclipse Ditto™](https://www.eclipse.org/ditto/) is a technology in the IoT implementing a software pattern 
+called “digital twins”. A digital twin is a virtual, cloud based, representation of his real world counterpart 
+(real world “Things”, e.g. devices like sensors, smart heating, connected cars, smart grids, EV charging stations, …).
 
 This chart uses `eclipse/ditto-XXX` containers to run Ditto inside Kubernetes.
 
@@ -49,7 +50,7 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 
 ### OpenID Connect (OIDC)
 
-To enable OIDC authentiaction adjust following properties:
+To enable OIDC authentication adjust following properties:
 
 ```yaml
 global:
@@ -135,9 +136,10 @@ kind delete cluster
 
 ### Troubleshooting
 
-If you experience high resource consumption (either CPU or RAM or both), you can limit the resource usage by specifing resource limits.
+If you experience high resource consumption (either CPU or RAM or both), you can limit the resource usage by
+specifying resource limits.
 This can be done individually for each single component.
-Here is an example how to limit CPU to 0.25 Cores and RAM to 512MiB for the `connectivity` service:
+Here is an example how to limit CPU to 0.25 Cores and RAM to 512 MiB for the `connectivity` service:
 
 ```bash
 helm upgrade eclipse-ditto . --install --set connectivity.resources.limits.cpu=0.25 --set connectivity.resources.limits.memory=512Mi
