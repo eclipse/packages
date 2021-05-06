@@ -14,10 +14,9 @@ name: ditto
 description: |
   Eclipse Ditto™ is a technology in the IoT implementing a software pattern called “digital twins”.
   A digital twin is a virtual, cloud based, representation of his real world counterpart
-  (real world “Things”, e.g. devices like sensors, smart heating, connected cars, smart grids,
-  EV charging stations etc).
-version: 1.5.3
-appVersion: 1.5.1
+  (real world “Things”, e.g. devices like sensors, smart heating, connected cars, smart grids, EV charging stations etc).
+version: 1.5.4
+appVersion: 2.0.0
 keywords:
   - iot-chart
   - IoT
@@ -31,3 +30,5 @@ maintainers:
   email: axel.koehler@kiwigrid.com
 - name: thjaeckle
   email: thomas.jaeckle@bosch-si.com
+- name: stmaute
+  email: stefan.maute@bosch-si.com
