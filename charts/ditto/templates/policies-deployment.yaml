@@ -85,7 +85,7 @@ spec:
             - name: TZ
               value: "{{ .Values.global.timezone }}"
             - name: OPENJ9_JAVA_OPTIONS
-              value: "-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -XX:InitialRAMPercentage=40 -Dakka.coordinated-shutdown.exit-jvm=on{{ if .Values.dbconfig.policies.ssl }} -Dorg.mongodb.async.type=netty{{ end }}"
+              value: "-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -XX:InitialRAMPercentage=40 -Dakka.coordinated-shutdown.exit-jvm=on"
             - name: MONGO_DB_SSL_ENABLED
               value: "{{ if .Values.dbconfig.policies.ssl }}true{{ else }}false{{ end }}"
             - name: MONGO_DB_URI
