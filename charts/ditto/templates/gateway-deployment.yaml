@@ -110,7 +110,7 @@ spec:
           {{- end }}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: {{ .Values.gateway.service.port }}
               protocol: TCP
             - name: remoting
               containerPort: {{ .Values.akka.remoting.port }}
