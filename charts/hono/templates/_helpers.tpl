@@ -307,12 +307,12 @@ deviceConnection:
 {{- end }}
 {{- end }}
 {{- if .dot.Values.prometheus.createInstance }}
-resource-limits:
-  prometheus-based:
+resourceLimits:
+  prometheusBased:
     host: {{ template "hono.prometheus.server.fullname" .dot }}
 {{- else if .dot.Values.prometheus.host }}
-resource-limits:
-  prometheus-based:
+resourceLimits:
+  prometheusBased:
     host: {{ .dot.Values.prometheus.host }}
     port: {{ default "9090" .dot.Values.prometheus.port }}
 {{- end }}
