@@ -469,7 +469,7 @@ The following command will deploy the LoRa adapter along with Hono's standard ad
 helm install --dependency-update -n hono --set adapters.lora.enabled=true eclipse-hono eclipse-iot/hono
 ```
 
-### Jaeger Tracing
+## Jaeger Tracing
 
 Hono's components are instrumented using OpenTracing to allow tracking of the distributed processing of messages flowing through the system.
 The Hono chart can be configured to report tracing information to the [Jaeger tracing system](https://www.jaegertracing.io/).
@@ -502,8 +502,9 @@ the Jaeger Agent that is deployed with each of Hono's components.
 
 ## Using Quarkus based services
 
-The Helm chart can be configured to use Quarkus based images for services that support it. In order to do that, you need to set `honoImagesType` property to 
-`quarkus` or `quarkus-native` values depending on whether you want to use the JVM or the native version of the image.
+The Helm chart can be configured to use Quarkus based images for services that support it. In order to do that, you need
+to set `honoImagesType` property to `quarkus` or `quarkus-native` values depending on whether you want to use the JVM or
+the native version of the image.
 
 Here are the examples for deploying JVM:
 
