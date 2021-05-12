@@ -437,12 +437,7 @@ The scope passed in is expected to be a dict with keys
 {{- $agentHost := printf "%s-jaeger-agent" .dot.Release.Name }}
 - name: JAEGER_SERVICE_NAME
   value: {{ printf "%s-%s" .dot.Release.Name .name | quote }}
-{{- if .dot.Values.jaegerBackendExample.enabled }}
-- name: JAEGER_SAMPLER_TYPE
-  value: "const"
-- name: JAEGER_SAMPLER_PARAM
-  value: "1"
-{{- else if empty .dot.Values.jaegerAgentConf }}
+{{- if and ( not .dot.Values.jaegerBackendExample.enabled ) ( empty .dot.Values.jaegerAgentConf ) }}
 - name: JAEGER_SAMPLER_TYPE
   value: "const"
 - name: JAEGER_SAMPLER_PARAM

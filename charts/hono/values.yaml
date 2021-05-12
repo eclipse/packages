@@ -258,6 +258,28 @@ jaegerBackendExample:
     annotations: {}
     loadBalancerIP:
 
+  # env contains environment variables to set for the Jaeger all-in-one container.
+  # The default variables configure the container to keep up to 100000 traces in memory
+  # and load the default sampling strategies file that comes with the chart.
+  env:
+  - name: MEMORY_MAX_TRACES
+    value: "100000"
+  - name: SAMPLING_STRATEGIES_FILE
+    value: "/etc/hono/default-sampling-strategies.json"
+
+  # extraSecretMounts describes additional secrets that should be mounted into the
+  # container's filesystem. The files from the secret(s) can
+  # then be used in environment variables referring to configuration files etc.
+  # The secrets are expected to exist in the same Kubernetes namespace
+  # as the one that the Jaeger back end has been deployed to.
+  extraSecretMounts: {}
+  #  passwords:
+  #    secretName: "my-passwords"
+  #    mountPath: "/etc/pwd"
+  #  other:
+  #    secretName: "other-stuff"
+  #    mountPath: "/etc/other"
+
 # jaegerAgentImage contains the name (including tag)
 # of the container image to use for the Jaeger Agent sidecar deployed
 # with Hono's components.
