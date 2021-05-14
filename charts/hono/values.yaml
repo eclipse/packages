@@ -1119,6 +1119,8 @@ deviceRegistryExample:
   # Sets the type of the device registry to be deployed. The following types are defined:
   # - file: File based device registry. Also refer to the section "fileBasedDeviceRegistry"
   # for additional configuration.
+  # - embedded: Embedded JDBC based device registry. Also refer to the section "embeddedJdbcDeviceRegistry"
+  # for additional configuration.
   # - mongodb: MongoDB based device registry. Also refer to the section "mongoDBBasedDeviceRegistry"
   # for additional configuration.
   # - jdbc: JDBC based device registry. Also refer to the section "jdbcBasedDeviceRegistry"
@@ -1218,6 +1220,35 @@ deviceRegistryExample:
     # applicationProfiles contains the Spring application profiles that should be activated
     # in the service.
     applicationProfiles: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+
+  # embeddedJdbcDeviceRegistry contains configuration properties specific to the
+  # embedded JDBC device registry.
+  embeddedJdbcDeviceRegistry:
+    # imageName contains the name (excluding registry)
+    # of the container image for the example embedded jdbc device registry.
+    imageName: eclipse/hono-service-device-registry-jdbc
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # storageClass indicates the name of the kubernetes StorageClass that
+    # should be used for the example registry's persistent volume claim.
+    # If not set, the cluster's default storage class is used.
+    storageClass:
+    # applicationProfiles contains the Spring application profiles that should be activated
+    # in the service.
+    applicationProfiles: "registry-adapter,registry-management,tenant-service,create-schema,dev"
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
