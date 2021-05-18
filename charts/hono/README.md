@@ -529,3 +529,65 @@ helm install --dependency-update -n hono --set honoImagesType=quarkus-native ecl
 ```
 
 of Quarkus based services images.
+
+
+## Using Kafka based Messaging
+
+The chart can be configured to use Kafka as the messaging network instead of an AMQP 1.0 messaging network.
+The property `messagingNetworkType` is used to select the type of the messaging network.
+
+The following command provides a quickstart for Kafka based messaging (ensure `minikube tunnel` is running when using Minikube):
+
+```bash
+helm install --dependency-update -n hono --set messagingNetworkType=kafka --set kafkaMessagingClusterExample.enabled=true --set amqpMessagingNetworkExample.enabled=false  eclipse-hono eclipse-iot/hono
+```
+
+It enables the deployment of an example Kafka cluster, disables the deployment of the AMQP 1.0 messaging network 
+and configures adapters and services to use Kafka based messaging.
+
+### Using a production grade Kafka cluster
+
+If Kafka based messaging is enabled by setting `messagingNetworkType` to `kafka`, the Kafka clients need to
+be configured with connection information for a Kafka cluster. The Helm chart can deploy an example Kafka cluster. 
+This is enabled by setting `kafkaMessagingClusterExample.enabled` to `true`. With this setting the chart
+deploys a Kafka cluster consisting of a single broker and a single Zookeeper instance and configures the 
+protocol adapters to connect to the example cluster.
+
+In a production environment, though, usage of the example Kafka cluster is strongly discouraged as it does not provide 
+any redundancy.
+
+The Helm chart can be configured to use an existing Kafka cluster instead of the example deployment.
+In order to do so, the protocol adapters need to be configured with information about the bootstrap server addresses
+and configuration properties.
+
+The easiest way to set these properties is by means of putting them into a YAML file with content like this:
+
+```yaml
+# configure protocol adapters for Kafka messaging
+messagingNetworkType: kafka
+
+# do not deploy example AMQP Messaging Network
+amqpMessagingNetworkExample:
+  enabled: false
+
+# do not deploy example Kafka cluster
+kafkaMessagingClusterExample:
+  enabled: false
+
+adapters:
+  # provide connection params
+  kafkaMessagingSpec:
+    commonClientConfig:
+      bootstrap.servers: broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092
+```
+
+*adapters.kafkaMessagingSpec* needs to contain configuration properties as described in Hono's
+[Kafka client admin guide](https://www.eclipse.org/hono/docs/admin-guide/hono-kafka-client-configuration/).
+Make sure to adapt/add properties as required by the Kafka cluster.
+
+Assuming that the file is named `customKafkaCluster.yaml`, the values can then be passed in to the Helm `install`
+command as follows:
+
+```bash
+helm install --dependency-update -n hono -f /path/to/customKafkaCluster.yaml eclipse-hono eclipse-iot/hono
+```

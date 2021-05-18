@@ -39,6 +39,8 @@ livenessProbeInitialDelaySeconds: 300
 # component level.
 readinessProbeInitialDelaySeconds: 20
 
+# amqpMessagingNetworkExample contains properties for configuring an example AMQP network
+# to be used for messaging if "messagingNetworkType" is set to "amqp"
 amqpMessagingNetworkExample:
   # enabled indicates whether the example AMQP Messaging Network
   # consisting of a single Dispatch Router and Broker should be
@@ -336,6 +338,14 @@ useLoadBalancer: true
 # Device Connection service towards the new Command Router service.
 useCommandRouter: true
 
+# messagingNetworkType indicates which type of messaging should be used.
+# The following types are defined:
+# - amqp: AMQP 1.0 based messaging. Also refer to the
+#     sections "amqpMessagingNetworkExample" and "adapters.amqpMessagingNetworkSpec".
+# - kafka: Apache Kafka based messaging. Also refer to the
+#     sections "kafkaMessagingClusterExample" and "adapters.kafkaMessagingSpec"
+messagingNetworkType: amqp
+
 # Configuration properties for protocol adapters.
 adapters:
 
@@ -366,11 +376,12 @@ adapters:
 
   # amqpMessagingNetworkSpec contains Hono client properties used by all protocol
   # adapters for connecting to the AMQP Messaging Network to forward downstream messages to.
-  # This property MUST be set if "amqpMessagingNetworkExample.enabled" is set to false.
+  # This property MUST be set if "messagingNetworkType" is "amqp" and
+  # "amqpMessagingNetworkExample.enabled" is set to false.
   # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
-  # "keyPath", "keyPath", "trustStorePath", "hostnameVerificationRequired" can be set.
+  # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
   amqpMessagingNetworkSpec:
     keyPath: /etc/hono/key.pem
     certPath: /etc/hono/cert.pem
@@ -383,16 +394,33 @@ adapters:
   # commandAndControlSpec contains Hono client properties used by all protocol
   # adapters for connecting to the AMQP Messaging Network which is used by applications
   # to send commands to devices.
-  # This property MUST be set if "amqpMessagingNetworkExample.enabled" is set to false.
+  # This property MUST be set if "messagingNetworkType" is "amqp" and
+  # "amqpMessagingNetworkExample.enabled" is set to false.
   # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
-  # "keyPath", "keyPath", "trustStorePath", "hostnameVerificationRequired" can be set.
+  # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
   commandAndControlSpec:
     keyPath: /etc/hono/key.pem
     certPath: /etc/hono/cert.pem
     trustStorePath: /etc/hono/trusted-certs.pem
     hostnameVerificationRequired: false
+
+  # kafkaMessagingSpec contains the configuration used by all protocol
+  # adapters for connecting to the Kafka cluster to be uses for messaging.
+  # This property MUST be set if "messagingNetworkType" is "kafka" and
+  # "kafkaMessagingClusterExample.enabled" is set to false.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-kafka-client-configuration/
+  # for a description of supported properties.
+  kafkaMessagingSpec:
+#    commonClientConfig:
+#      "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
+#    producerConfig:
+#      "compression.type": none
+#    consumerConfig:
+#      "compression.type": none
+#    adminClientConfig:
+#      "compression.type": none
 
   # tenantSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Tenant service.
@@ -1757,3 +1785,46 @@ grafana:
 
   rbac:
     namespaced: true
+
+# kafkaMessagingClusterExample contains properties for configuring an example Kafka cluster
+# to be used for messaging if "messagingNetworkType" is set to "kafka"
+kafkaMessagingClusterExample:
+  # enabled indicates whether the example Kafka cluster consisting of a single broker
+  # and one Zookeeper instance should be deployed. This minimal deployment is not suitable
+  # for production purposes. To use an already existing Kafka cluster instead,
+  # set this property to false and configure "adapters.kafkaMessagingSpec".
+  enabled: false
+
+# configuration of the example Kafka cluster to be deployed if "kafkaMessagingClusterExample.enabled" is "true"
+kafka:
+  replicaCount: 1
+  # Set to false for productive setups. Topic management then needs to be provided externally.
+  autoCreateTopicsEnable: true
+  # The data is stored in Persistent Volumes. For more information regarding persistence and
+  # potential problems with permissions refer to: https://github.com/bitnami/charts/tree/master/bitnami/kafka#persistence
+  persistence:
+    size: 1Gi
+  zookeeper:
+    persistence:
+      size: 1Gi
+  # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
+  # Alternatively use NodePort configuration, for more information refer to
+  # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
+  externalAccess:
+    enabled: true
+    service:
+      type: LoadBalancer
+      port: 9094
+      loadBalancerIPs: []
+    autoDiscovery:
+      enabled: true
+  serviceAccount:
+    create: true
+  rbac:
+    # Note that this could require creating RBAC rules, for more information refer to
+    # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
+    create: true
+  # the name of the template (maintains the release name)
+  nameOverride: kafka
+  service:
+    port: 9092
