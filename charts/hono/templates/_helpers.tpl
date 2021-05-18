@@ -172,6 +172,25 @@ healthCheck:
 
 
 {{/*
+Configuration for the messaging network clients.
+It configures for either AMQP based or Kafka based messaging.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "dot": the root scope (".") and
+- (mandatory) "component": the name of the component
+*/}}
+{{- define "hono.messagingNetworkClientConfig" -}}
+{{- $args := dict "dot" .dot "component" .component -}}
+{{- if eq .dot.Values.messagingNetworkType "amqp" -}}
+  {{- include "hono.amqpMessagingNetworkClientConfig" $args }}
+{{- else if eq .dot.Values.messagingNetworkType "kafka" -}}
+  {{- include "hono.kafkaMessagingConfig" $args }}
+{{- else }}
+  {{- required "Property messagingNetworkType MUST be either 'amqp' or 'kafka'" nil }}
+{{- end -}}
+{{- end }}
+
+
+{{/*
 Configuration for the AMQP messaging network clients.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".") and
@@ -191,6 +210,50 @@ messaging:
 {{- else }}
   {{- required ".Values.adapters.amqpMessagingNetworkSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.amqpMessagingNetworkSpec | toYaml | nindent 2 }}
 {{- end }}
+{{- end }}
+
+
+{{/*
+Add configuration properties for Kafka based messaging to YAML file.
+
+The scope passed in is expected to be a dict with keys
+- (mandatory) "dot": the root scope (".") and
+- (mandatory) "component": the name of the component
+*/}}
+{{- define "hono.kafkaMessagingConfig" -}}
+{{- include "hono.kafkaConfigCheck" (dict "dot" .dot) }}
+kafka:
+  defaultClientIdPrefix: {{ .component }}
+{{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
+  commonClientConfig:
+    bootstrap.servers: {{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-0.{{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-headless.{{ .dot.Release.Namespace }}:{{ .dot.Values.kafka.service.port }}
+{{- else if not .dot.Values.adapters.kafkaMessagingSpec }}
+  {{- required ".Values.adapters.kafkaMessagingSpec MUST be provided if example Kafka cluster is disabled" nil }}
+{{- else if not (index .dot.Values.adapters.kafkaMessagingSpec.commonClientConfig "bootstrap.servers") }}
+  {{- required ".Values.adapters.kafkaMessagingSpec.commonClientConfig MUST contain 'bootstrap.servers' if example Kafka cluster is disabled" nil }}
+{{- end }}
+{{- if .dot.Values.adapters.kafkaMessagingSpec }}
+  {{- .dot.Values.adapters.kafkaMessagingSpec | toYaml | nindent 2 }}
+{{- end }}
+{{- end }}
+
+
+{{/*
+Check configuration for consistency in case of Kafka based messaging.
+
+The scope passed in is expected to be a dict with keys
+- (mandatory) "dot": the root scope (".")
+*/}}
+{{- define "hono.kafkaConfigCheck" -}}
+  {{- if and (eq .dot.Values.messagingNetworkType "kafka") .dot.Values.kafkaMessagingClusterExample.enabled }}
+    {{- if .dot.Values.useLoadBalancer }}
+      {{- if not (eq .dot.Values.kafka.externalAccess.service.type "LoadBalancer") }}
+        {{- required ".Values.kafka.externalAccess.service.type MUST be 'LoadBalancer' if .Values.useLoadBalancer is true" nil }}
+      {{- end }}
+    {{- else if not (eq .dot.Values.kafka.externalAccess.service.type "NodePort") }}
+      {{- required ".Values.kafka.externalAccess.service.type MUST be 'NodePort' if .Values.useLoadBalancer is false" nil }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 
@@ -218,7 +281,8 @@ The scope passed in is expected to be a dict with keys
 */}}
 {{- define "hono.serviceClientConfig" -}}
 {{- $adapter := default "adapter" .component -}}
-{{- include "hono.amqpMessagingNetworkClientConfig" ( dict "dot" .dot "component" $adapter ) }}
+{{- include "hono.messagingNetworkClientConfig" ( dict "dot" .dot "component" $adapter ) }}
+{{- if eq .dot.Values.messagingNetworkType "amqp" }}
 command:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: Hono {{ $adapter }}
@@ -231,6 +295,8 @@ command:
   hostnameVerificationRequired: {{ .dot.Values.adapters.commandAndControlSpec.hostnameVerificationRequired }}
 {{- else }}
   {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
+{{- end }}
+{{/* commands with Kafka use the config from hono.messagingNetworkClientConfig */}}
 {{- end }}
 tenant:
 {{- if .dot.Values.adapters.tenantSpec }}
