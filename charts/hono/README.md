@@ -505,8 +505,8 @@ from the Jaeger back end's *Collector* service. The service loads the strategies
 `SAMPLING_STRATEGIES_FILE` environment variable points to. The example Jaeger back end server's environment variables
 can be set via the chart's *jaegerBackendExample.env* property.
 
-By default, the `SAMPLING_STRATEGIES_FILE` variable points to file which configures all components to sample every span.
-A custom file can be used by creating a Kubernetes secret containing the custom file and then configure the chart's
+By default, the `SAMPLING_STRATEGIES_FILE` variable points to a file which configures all components to sample every span.
+A custom file can be used by creating a Kubernetes secret containing the custom file and then configuring the chart's
 *jaegerBackendExample.extraSecretMounts* property to mount the secret's files into the Jaeger container where it then
 can be used by setting the `SAMPLING_STRATEGIES_FILE` variable accordingly.
 
