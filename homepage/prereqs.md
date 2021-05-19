@@ -37,7 +37,7 @@ expectations of what was tested at some point.
 <div class="row">
 
 <div class="col-12 col-sm-6 col-md-5 col-lg-4 mx-md-auto mb-3">
-{% include cluster-req.html reqs="Kubernetes=1.15.x;CPUs=2;Memory=1024 MiB;Disk=40 GiB" additional="Additional requirements."%}
+{% include cluster-req.html reqs="Kubernetes=1.17.x;CPUs=2;Memory=1024 MiB;Disk=40 GiB" additional="Additional requirements."%}
 </div>
 
 </div>
@@ -272,7 +272,7 @@ The amount of RAM allocated to the virtual machine. This is the amount in MiB (e
 
 <dt class="col-sm-2">version</dt>
 <dd class="col-sm-10">
-The Kubernetes version deployed into the virtual machine (e.g. <code>--kubernetes-version v1.15.4</code>). 
+The Kubernetes version deployed into the virtual machine (e.g. <code>--kubernetes-version v1.20.2</code>). 
 </dd>
 
 </dl>
