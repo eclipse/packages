@@ -1,4 +1,4 @@
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -37,7 +37,7 @@ jobs:
       - name: Fetch history for chart testing
         run: git fetch --prune --unshallow
       - name: Run chart-testing (lint)
-        uses: helm/chart-testing-action@v1.0.0
+        uses: helm/chart-testing-action@v2.0.1
         with:
           command: lint
           config: .github/ct.yaml
@@ -94,7 +94,8 @@ jobs:
           config: .github/kind-config.yaml
           node_image: kindest/node:${{ matrix.k8s }}
       - name: Run chart-testing (install)
-        uses: helm/chart-testing-action@v1.0.0
+        uses: helm/chart-testing-action@v2.0.1
         with:
+          version: v3.3.1
           command: install
           config: .github/ct.yaml

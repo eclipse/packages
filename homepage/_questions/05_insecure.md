@@ -1,6 +1,6 @@
 ---
 title: 'Why are you using insecure settings?'
-weight: 6
+weight: 5
 ---
 
 Every now and then, you might spot a `--insecure` (or equivalent settings)
