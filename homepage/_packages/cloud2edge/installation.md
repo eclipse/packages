@@ -48,7 +48,7 @@ out of the box. Instead, services are exposed via *NodePorts*.
 
 {% clipboard %}
 RELEASE=c2e
-helm install -n $NS --wait --timeout 10m $RELEASE eclipse-iot/cloud2edge
+helm install -n $NS --wait --timeout 15m $RELEASE eclipse-iot/cloud2edge
 {% endclipboard %}
 {% endvariant %}
 
@@ -58,7 +58,7 @@ IP addresses. To install the Cloud2Edge package using load balancers, run the fo
 
 {% clipboard %}
 RELEASE=c2e
-helm install -n $NS --wait --timeout 10m --set hono.useLoadBalancer=true --set ditto.nginx.service.type=LoadBalancer $RELEASE eclipse-iot/cloud2edge
+helm install -n $NS --wait --timeout 15m --set hono.useLoadBalancer=true --set ditto.nginx.service.type=LoadBalancer $RELEASE eclipse-iot/cloud2edge
 {% endclipboard %}
 {% endvariant %}
 
@@ -72,7 +72,7 @@ The easiest way of getting to know the Cloud2Edge package is by [taking a little
 {% endcapture %}
 
 {% capture aside %}
-{% include cluster-req.html reqs="Kubernetes=1.15.x;CPUs=4;Memory=8192 MiB;Disk=40 GiB" additional="Will require cluster admin privileges."%}
+{% include cluster-req.html reqs="Kubernetes=1.17.x;CPUs=4;Memory=8192 MiB;Disk=40 GiB" additional="Will require cluster admin privileges."%}
 {% endcapture %}
 
 {% include side-page.html main=main aside=aside %}
