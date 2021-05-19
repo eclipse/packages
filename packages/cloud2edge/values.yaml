@@ -45,6 +45,13 @@ hono:
             cpu: 200m
 
   authServer:
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "196Mi"
+      limits:
+        cpu: "1"
+        memory: "256Mi"
     extraSecretMounts:
       permissions:
         secretName: "permissions"
@@ -52,7 +59,7 @@ hono:
     hono:
       auth:
         svc:
-          permissionsPath: "file:///var/run/hono/auth/permissions.json"
+          permissionsPath: "/var/run/hono/auth/permissions.json"
           supportedSaslMechanisms: "PLAIN"
           signing:
             # tokenExpiration contains the number of seconds after which tokens issued
@@ -69,9 +76,6 @@ hono:
         host: ditto-mongodb
         port: 27017
         dbName: hono
-
-  deviceConnectionService:
-    enabled: true
 
   adapters:
     amqp:
