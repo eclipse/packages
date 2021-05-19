@@ -24,13 +24,7 @@ However, functional testing of Hono is done with the most recent version of Kube
 
 #### Helm client
 
-The chart can be installed using Helm versions 2 (2.15 or later) or 3.
-Helm 3 is recommended because it doesn't require installation of any
-additional components to the cluster like Helm 2 did (in particular the
-*Tiller* component).
-
-The command lines used below are based on Helm 3 syntax. Please refer to the Helm 2
-documentation for the corresponding Helm 2 command line parameters.
+The chart can be installed using Helm version 3.1 or later.
 
 ## Installing the chart
 
