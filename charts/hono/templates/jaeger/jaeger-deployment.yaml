@@ -1,6 +1,6 @@
 {{- if .Values.jaegerBackendExample.enabled }}
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -14,7 +14,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  {{- $args := dict "dot" . "component" "tracing" "name" "jaeger-all-in-one" }}
+  {{- $args := dict "dot" . "component" "tracing" "name" "jaeger-all-in-one" "componentConfig" .Values.jaegerBackendExample }}
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   replicas: 1
@@ -30,10 +30,14 @@ spec:
     spec:
       containers:
       - env:
-        - name: MEMORY_MAX_TRACES
-          value: "100000"
         - name: ADMIN_HTTP_HOST_PORT
           value: ":{{ .Values.healthCheckPort }}"
+        {{- with .Values.jaegerBackendExample.env }}
+        {{- range $name,$value := . }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        {{- end }}
         image: {{ .Values.jaegerBackendExample.allInOneImage }}
         name: jaeger
         ports:
@@ -49,6 +53,8 @@ spec:
         - name: health
           containerPort: {{ .Values.healthCheckPort }}
           protocol: TCP
+        volumeMounts:
+        {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
         {{- with .Values.jaegerBackendExample.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
@@ -63,4 +69,6 @@ spec:
             path: "/"
             port: health
           initialDelaySeconds: {{ .Values.jaegerBackendExample.readinessProbeInitialDelaySeconds }}
+      volumes:
+      {{- include "hono.pod.secretVolumes" $args | indent 6 }}
 {{- end }}

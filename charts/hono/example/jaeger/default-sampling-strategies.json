@@ -1,0 +1,64 @@
+{
+  "service_strategies": [
+    {
+      "service": {{ printf "%s-service-device-registry" .Release.Name | quote }},
+      "type": "probabilistic",
+      "param": 1.0,
+      "operation_strategies": [
+      ]
+    },
+    {
+      "service": {{ printf "%s-service-command-router" .Release.Name | quote }},
+      "type": "probabilistic",
+      "param": 1.0,
+      "operation_strategies": [
+      ]
+    },
+    {
+      "service": {{ printf "%s-adapter-amqp-vertx" .Release.Name | quote }},
+      "type": "probabilistic",
+      "param": 1.0,
+      "operation_strategies": [
+      ]
+    },
+    {
+      "service": {{ printf "%s-adapter-coap-vertx" .Release.Name | quote }},
+      "type": "probabilistic",
+      "param": 1.0,
+      "operation_strategies": [
+      ]
+    },
+    {
+      "service": {{ printf "%s-adapter-http-vertx" .Release.Name | quote }},
+      "type": "probabilistic",
+      "param": 1.0,
+      "operation_strategies": [
+      ]
+    },
+    {
+      "service": {{ printf "%s-adapter-kura" .Release.Name | quote }},
+      "type": "probabilistic",
+      "param": 1.0,
+      "operation_strategies": [
+      ]
+    },
+    {
+      "service": {{ printf "%s-adapter-lora-vertx" .Release.Name | quote }},
+      "type": "probabilistic",
+      "param": 1.0,
+      "operation_strategies": [
+      ]
+    },
+    {
+      "service": {{ printf "%s-adapter-mqtt-vertx" .Release.Name | quote }},
+      "type": "probabilistic",
+      "param": 1.0,
+      "operation_strategies": [
+      ]
+    }
+  ],
+  "default_strategy": {
+    "type": "probabilistic",
+    "param": 1.0
+  }
+}

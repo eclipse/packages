@@ -500,6 +500,19 @@ If no example Jaeger back end should be deployed but instead an existing Jaeger 
 the chart's *jaegerAgentConf* property can be set to environment variables which are passed in to
 the Jaeger Agent that is deployed with each of Hono's components.
 
+By default, the Jaeger Agent deployed with each of Hono's components is configured to retrieve its sampling strategy
+from the Jaeger back end's *Collector* service. The service loads the strategies from the file that the
+`SAMPLING_STRATEGIES_FILE` environment variable points to. The example Jaeger back end server's environment variables
+can be set via the chart's *jaegerBackendExample.env* property.
+
+By default, the `SAMPLING_STRATEGIES_FILE` variable points to a file which configures all components to sample every span.
+A custom file can be used by creating a Kubernetes secret containing the custom file and then configuring the chart's
+*jaegerBackendExample.extraSecretMounts* property to mount the secret's files into the Jaeger container where it then
+can be used by setting the `SAMPLING_STRATEGIES_FILE` variable accordingly.
+
+Please refer to the [Jaeger documentation](https://www.jaegertracing.io/docs/sampling/#collector-sampling-configuration)
+for details regarding the configuration of the sampling strategies.
+
 ## Using Quarkus based services
 
 The Helm chart can be configured to use Quarkus based images for services that support it. In order to do that, you need
