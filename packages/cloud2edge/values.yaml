@@ -45,6 +45,13 @@ hono:
             cpu: 200m
 
   authServer:
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "196Mi"
+      limits:
+        cpu: "1"
+        memory: "256Mi"
     extraSecretMounts:
       permissions:
         secretName: "permissions"
