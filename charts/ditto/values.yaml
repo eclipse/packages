@@ -141,7 +141,7 @@ concierge:
   resources:
     requests:
       cpu: 200m
-      memory: 256Mi
+      memory: 384Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -218,7 +218,7 @@ connectivity:
   resources:
     requests:
       cpu: 250m
-      memory: 256Mi
+      memory: 512Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -303,8 +303,8 @@ gateway:
   ## resources for the gateway container
   resources:
     requests:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 150m
+      memory: 384Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -442,7 +442,7 @@ policies:
   resources:
     requests:
       cpu: 150m
-      memory: 256Mi
+      memory: 384Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -560,7 +560,7 @@ things:
   resources:
     requests:
       cpu: 150m
-      memory: 256Mi
+      memory: 384Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
@@ -634,7 +634,7 @@ thingsSearch:
   resources:
     requests:
       cpu: 150m
-      memory: 256Mi
+      memory: 512Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
