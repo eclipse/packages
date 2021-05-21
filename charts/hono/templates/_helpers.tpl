@@ -440,7 +440,12 @@ The scope passed in is expected to be a dict with keys
 {{/* Note that for quarkus containers, the "quarkus.jaeger.service-name" property needs to be set instead, see https://github.com/quarkusio/quarkus/issues/17400 */}}
 - name: JAEGER_SERVICE_NAME
   value: {{ printf "%s-%s" .dot.Release.Name .component | quote }}
-{{- if and ( not .dot.Values.jaegerBackendExample.enabled ) ( empty .dot.Values.jaegerAgentConf ) }}
+{{- if and .dot.Values.jaegerBackendExample.enabled ( eq .dot.Values.honoImagesType "quarkus-native" ) }}
+- name: JAEGER_SAMPLER_TYPE
+  value: "const"
+- name: JAEGER_SAMPLER_PARAM
+  value: "1"
+{{- else if and ( not .dot.Values.jaegerBackendExample.enabled ) ( empty .dot.Values.jaegerAgentConf ) }}
 - name: JAEGER_SAMPLER_TYPE
   value: "const"
 - name: JAEGER_SAMPLER_PARAM

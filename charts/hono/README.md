@@ -507,6 +507,9 @@ can be used by setting the `SAMPLING_STRATEGIES_FILE` variable accordingly.
 Please refer to the [Jaeger documentation](https://www.jaegertracing.io/docs/sampling/#collector-sampling-configuration)
 for details regarding the configuration of the sampling strategies.
 
+Note that usage of the sampling strategy of the Collector service is currently not supported when using the quarkus-native
+Hono images. In that case the Jaeger Agent deployed with each of Hono's components is configured to sample all traces.
+
 ## Using Quarkus based services
 
 The Helm chart can be configured to use Quarkus based images for services that support it. In order to do that, you need
