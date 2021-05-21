@@ -351,6 +351,8 @@ The scope passed in is expected to be a dict with keys
 {{- define "hono.quarkusConfig" -}}
 {{- if ( contains "quarkus" .dot.Values.honoImagesType ) }}
 quarkus:
+  jaeger:
+    service-name: {{ printf "%s-%s" .dot.Release.Name .component | quote }}
   log:
     console:
       color: true
@@ -435,8 +437,9 @@ The scope passed in is expected to be a dict with keys
 */}}
 {{- define "hono.jaeger.clientConf" }}
 {{- $agentHost := printf "%s-jaeger-agent" .dot.Release.Name }}
+{{/* Note that for quarkus containers, the "quarkus.jaeger.service-name" property needs to be set instead, see https://github.com/quarkusio/quarkus/issues/17400 */}}
 - name: JAEGER_SERVICE_NAME
-  value: {{ printf "%s-%s" .dot.Release.Name .name | quote }}
+  value: {{ printf "%s-%s" .dot.Release.Name .component | quote }}
 {{- if and ( not .dot.Values.jaegerBackendExample.enabled ) ( empty .dot.Values.jaegerAgentConf ) }}
 - name: JAEGER_SAMPLER_TYPE
   value: "const"

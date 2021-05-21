@@ -37,6 +37,7 @@ data:
         # * `prometheus.io/scrape`: Only scrape pods that have a value of `true`
         # * `prometheus.io/path`: If the metrics path is not `/metrics` override this.
         # * `prometheus.io/port`: Scrape the pod on the indicated port instead of the default of `9102`.
+        # * `prometheus.io/scheme`: Scrape the pod using the indicated scheme instead of the default of `https`.
       - job_name: 'hono-pods'
         scheme: https
         tls_config:
@@ -64,6 +65,10 @@ data:
             regex: ([^:]+)(?::\d+)?;(\d+)
             replacement: $1:$2
             target_label: __address__
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+            action: replace
+            target_label: __scheme__
+            regex: (.+)
           - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
           - source_labels: [__meta_kubernetes_namespace]
