@@ -41,6 +41,9 @@ AMQP_ADAPTER_KEY_STORE=amqpKeyStore.p12
 AMQP_ADAPTER_KEY_STORE_PWD=amqpkeys
 EXAMPLE_GATEWAY_KEY_STORE=exampleGatewayKeyStore.p12
 EXAMPLE_GATEWAY_KEY_STORE_PWD=examplegatewaykeys
+KAFKA_KEY_STORE=kafkaKeyStore.jks
+# the bitnami Kafka chart expects truststore and keystore to have the same password
+KAFKA_KEY_STORE_PWD=honotrust
 # set to either EC or RSA
 KEY_ALG=EC
 
@@ -141,5 +144,6 @@ create_cert artemis $ARTEMIS_KEY_STORE $ARTEMIS_KEY_STORE_PWD
 create_cert coap-adapter $COAP_ADAPTER_KEY_STORE $COAP_ADAPTER_KEY_STORE_PWD
 create_cert amqp-adapter $AMQP_ADAPTER_KEY_STORE $AMQP_ADAPTER_KEY_STORE_PWD
 create_cert example-gateway $EXAMPLE_GATEWAY_KEY_STORE $EXAMPLE_GATEWAY_KEY_STORE_PWD
+create_cert kafka $KAFKA_KEY_STORE $KAFKA_KEY_STORE_PWD
 
 create_client_cert 4711

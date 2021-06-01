@@ -1835,7 +1835,7 @@ kafka:
   service:
     port: 9092
   auth:
-    clientProtocol: sasl
+    clientProtocol: sasl_tls
     sasl:
       jaas:
         clientUsers:
@@ -1844,3 +1844,7 @@ kafka:
           - "hono-secret"
         zookeeperUser: zookeeperUser
         zookeeperPassword: zookeeperPassword
+    tls:
+      type: jks
+      existingSecret: "{{ .Release.Name }}-kafka-jks"
+      password: honotrust
