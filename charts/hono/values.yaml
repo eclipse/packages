@@ -1228,6 +1228,10 @@ deviceRegistryExample:
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
 
   # embeddedJdbcDeviceRegistry contains configuration properties specific to the
   # embedded JDBC device registry.
@@ -1257,6 +1261,18 @@ deviceRegistryExample:
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # resources contains the container's requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "400Mi"
+      limits:
+        cpu: "1"
+        memory: "500Mi"
 
   # mongoDBBasedDeviceRegistry contains configuration properties specific to the
   # MongoDB based device registry.
@@ -1282,6 +1298,10 @@ deviceRegistryExample:
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
     # mongodb contains the configuration properties to connect to the MongoDB database instance.
     # If you would like to use an already existing MongoDB database instance, then configure
     # the below section accordingly.
@@ -1321,6 +1341,10 @@ deviceRegistryExample:
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
     # registry.jdbc contains the configuration properties for device registry
     # to connect to the database.
     registry:

@@ -57,7 +57,7 @@ spec:
           privileged: false
         volumeMounts:
         {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 8 }}
-        {{- with .Values.deviceRegistryExample.resources }}
+        {{- with ( default .Values.deviceRegistryExample.resources $args.componentConfig.resources ) }}
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
