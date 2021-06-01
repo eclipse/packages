@@ -146,3 +146,10 @@ subjectKeyIdentifier = hash
 keyUsage             = keyAgreement,keyEncipherment,digitalSignature
 extendedKeyUsage     = serverAuth, clientAuth
 subjectAltName       = DNS.1:localhost
+
+[ req_ext_kafka ]
+
+subjectKeyIdentifier = hash
+keyUsage             = keyAgreement,keyEncipherment,digitalSignature
+extendedKeyUsage     = serverAuth, clientAuth
+subjectAltName       = DNS.1:*.hono-kafka-headless,DNS.2:*.hono-kafka-headless.hono,DNS.3:localhost
