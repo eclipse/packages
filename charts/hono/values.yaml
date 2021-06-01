@@ -1807,6 +1807,12 @@ kafka:
   zookeeper:
     persistence:
       size: 1Gi
+    auth:
+      enabled: true
+      clientUser: zookeeperUser
+      clientPassword: zookeeperPassword
+      serverUsers: zookeeperUser
+      serverPasswords: zookeeperPassword
   # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
   # Alternatively use NodePort configuration, for more information refer to
   # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
@@ -1828,3 +1834,13 @@ kafka:
   nameOverride: kafka
   service:
     port: 9092
+  auth:
+    clientProtocol: sasl
+    sasl:
+      jaas:
+        clientUsers:
+          - "hono"
+        clientPasswords:
+          - "hono-secret"
+        zookeeperUser: zookeeperUser
+        zookeeperPassword: zookeeperPassword
