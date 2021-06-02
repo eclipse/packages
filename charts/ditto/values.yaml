@@ -88,7 +88,16 @@ global:
     enabled: true
     ## port where prometheus metrics will be provided
     port: 9095
-
+  ## logging configuration for ditto
+  logging:
+    ## configure if logs should be pushed to logstash endpoint (ELK stack)
+    logstash:
+      enabled: false
+      endpoint: ""
+    ## enable writing logs to log files
+    ## log files can be found on the host under /var/log/ditto
+    logFiles:
+      enabled: true
 ## ----------------------------------------------------------------------------
 ## akka actor configuration
 ## ref: https://doc.akka.io/docs/akka/current/typed/index.html
@@ -104,7 +113,7 @@ akka:
 
 # Set "dittoTag" in order to specify another Ditto version to use for all Ditto services:
 # you may also use "1" (for latest Ditto 1.x.x) or "1.5" (for latest Ditto 1.5.x)
-# dittotag: 2.0.1
+dittoTag: 0-SNAPSHOT
 
 ## ----------------------------------------------------------------------------
 ## concierge configuration
@@ -127,7 +136,8 @@ concierge:
   additionalAnnotations: {}
   image:
     ## repository for the concierge docker image
-    repository: docker.io/eclipse/ditto-concierge
+#    repository: docker.io/eclipse/ditto-concierge
+    repository: thingsdev.azurecr.io/eclipse-ditto/concierge
     ## tag for the concierge docker image - overwrite to specify something else than Chart.AppVersion
     # tag: 2.0.1
     ## pullPolicy for the concierge docker image
@@ -201,7 +211,8 @@ connectivity:
   additionalAnnotations: {}
   image:
     ## repository for the connectivity docker image
-    repository: docker.io/eclipse/ditto-connectivity
+#    repository: docker.io/eclipse/ditto-connectivity
+    repository: thingsdev.azurecr.io/eclipse-ditto/connectivity
     ## tag for the connectivity docker image - overwrite to specify something else than Chart.AppVersion
     # tag: 2.0.1
     ## pullPolicy for the connectivity docker image
@@ -224,6 +235,16 @@ connectivity:
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
     #   ## cpu: ""
     #   memory: 1Gi
+  ## logging configuration for connectivity
+  logging:
+    ## configure if logs should be pushed to a logstash endpoint
+    logstash:
+      enabled: false
+      endpoint: ""
+    ## enable writing logs to log files
+    ## log files can be found on the host under /var/log/ditto
+    logFiles:
+      enabled: false
   ## readinessProbe configuration for connectivity
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -288,7 +309,8 @@ gateway:
   additionalAnnotations: {}
   image:
     ## repository for the gateway docker image
-    repository: docker.io/eclipse/ditto-gateway
+#    repository: docker.io/eclipse/ditto-gateway
+    repository: thingsdev.azurecr.io/eclipse-ditto/gateway
     ## tag for the gateway docker image - overwrite to specify something else than Chart.AppVersion
     # tag: 2.0.1
     ## pullPolicy for the gateway docker image
@@ -310,6 +332,16 @@ gateway:
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
     #   ## cpu: ""
     #   memory: 1Gi
+  ## logging configuration for gateway
+  logging:
+    ## configure if logs should be pushed to a logstash endpoint
+    logstash:
+      enabled: false
+      endpoint: ""
+    ## enable writing logs to log files
+    ## log files can be found on the host under /var/log/ditto
+    logFiles:
+      enabled: false
   ## readinessProbe configuration for gateway
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -428,7 +460,8 @@ policies:
   additionalAnnotations: {}
   image:
     ## repository for the policies docker image
-    repository: docker.io/eclipse/ditto-policies
+#    repository: docker.io/eclipse/ditto-policies
+    repository: thingsdev.azurecr.io/eclipse-ditto/policies
     ## tag for the policies docker image - overwrite to specify something else than Chart.AppVersion
     # tag: 2.0.1
     ## pullPolicy for the policies docker image
@@ -448,6 +481,16 @@ policies:
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
     #   ## cpu: ""
     #   memory: 1Gi
+  ## logging configuration for policies
+  logging:
+    ## configure if logs should be pushed to a logstash endpoint
+    logstash:
+      enabled: false
+      endpoint: ""
+    ## enable writing logs to log files
+    ## log files can be found on the host under /var/log/ditto
+    logFiles:
+      enabled: false
   ## readinessProbe configuration for policies
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -546,7 +589,8 @@ things:
   additionalAnnotations: {}
   image:
     ## repository for the things docker image
-    repository: docker.io/eclipse/ditto-things
+#    repository: docker.io/eclipse/ditto-things
+    repository: thingsdev.azurecr.io/eclipse-ditto/things
     ## tag for the things docker image- overwrite to specify something else than Chart.AppVersion
     # tag: 2.0.1
     ## pullPolicy for the things docker image
@@ -566,6 +610,16 @@ things:
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
     #   ## cpu: ""
     #   memory: 1Gi
+  ## logging configuration for things
+  logging:
+    ## configure if logs should be pushed to a logstash endpoint
+    logstash:
+      enabled: false
+      endpoint: ""
+    ## enable writing logs to log files
+    ## log files can be found on the host under /var/log/ditto
+    logFiles:
+      enabled: false
   ## readinessProbe configuration for things
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -620,7 +674,8 @@ thingsSearch:
   additionalAnnotations: {}
   image:
     ## repository for the things-search docker image
-    repository: docker.io/eclipse/ditto-things-search
+#    repository: docker.io/eclipse/ditto-things-search
+    repository: thingsdev.azurecr.io/eclipse-ditto/thing-search
     ## tag for the things-search docker image- overwrite to specify something else than Chart.AppVersion
     # tag: 2.0.1
     ## pullPolicy for the things-search docker image
@@ -640,6 +695,16 @@ thingsSearch:
     #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
     #   ## cpu: ""
     #   memory: 1Gi
+  ## logging configuration for things-search
+  logging:
+    ## configure if logs should be pushed to a logstash endpoint
+    logstash:
+      enabled: false
+      endpoint: ""
+    ## enable writing logs to log files
+    ## log files can be found on the host under /var/log/ditto
+    logFiles:
+      enabled: false
   ## readinessProbe configuration for things-search
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
