@@ -113,7 +113,7 @@ akka:
 
 # Set "dittoTag" in order to specify another Ditto version to use for all Ditto services:
 # you may also use "1" (for latest Ditto 1.x.x) or "1.5" (for latest Ditto 1.5.x)
-# dittotag: 2.0.1
+# dittoTag: 2.0.1
 
 ## ----------------------------------------------------------------------------
 ## concierge configuration
