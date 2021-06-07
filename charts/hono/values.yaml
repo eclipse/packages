@@ -385,7 +385,8 @@ adapters:
   amqpMessagingNetworkSpec:
     keyPath: /etc/hono/key.pem
     certPath: /etc/hono/cert.pem
-    trustStorePath: /etc/hono/trusted-certs.pem
+    trustStorePath: /etc/hono/truststore.jks
+    trustStorePassword: honotrust
     hostnameVerificationRequired: false
   #  host: my-amqp-host
   #  port: 5671
@@ -403,7 +404,8 @@ adapters:
   commandAndControlSpec:
     keyPath: /etc/hono/key.pem
     certPath: /etc/hono/cert.pem
-    trustStorePath: /etc/hono/trusted-certs.pem
+    trustStorePath: /etc/hono/truststore.jks
+    trustStorePassword: honotrust
     hostnameVerificationRequired: false
 
   # kafkaMessagingSpec contains the configuration used by all protocol

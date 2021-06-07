@@ -206,6 +206,7 @@ messaging:
   keyPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.keyPath }}
   certPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.certPath }}
   trustStorePath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.trustStorePath }}
+  trustStorePassword: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.trustStorePassword }}
   hostnameVerificationRequired: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.hostnameVerificationRequired }}
 {{- else }}
   {{- required ".Values.adapters.amqpMessagingNetworkSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.amqpMessagingNetworkSpec | toYaml | nindent 2 }}
@@ -221,7 +222,7 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "component": the name of the component
 */}}
 {{- define "hono.kafkaMessagingConfig" -}}
-{{- include "hono.kafkaConfigCheck" (dict "dot" .dot) }}
+{{- include "hono.kafkaConfigCheck" (dict "dot" .dot) -}}
 kafka:
   defaultClientIdPrefix: {{ .component }}
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
@@ -274,7 +275,8 @@ name: Hono {{ .component }}
 host: {{ .dot.Release.Name }}-service-device-registry
 port: 5671
 credentialsPath: /etc/hono/adapter.credentials
-trustStorePath: /etc/hono/trusted-certs.pem
+trustStorePath: /etc/hono/truststore.jks
+trustStorePassword: honotrust
 hostnameVerificationRequired: false
 {{- end }}
 
@@ -298,6 +300,7 @@ command:
   keyPath: {{ .dot.Values.adapters.commandAndControlSpec.keyPath }}
   certPath: {{ .dot.Values.adapters.commandAndControlSpec.certPath }}
   trustStorePath: {{ .dot.Values.adapters.commandAndControlSpec.trustStorePath }}
+  trustStorePassword: {{ .dot.Values.adapters.commandAndControlSpec.trustStorePassword }}
   hostnameVerificationRequired: {{ .dot.Values.adapters.commandAndControlSpec.hostnameVerificationRequired }}
 {{- else }}
   {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
@@ -338,7 +341,8 @@ commandRouter:
   host: {{ .dot.Release.Name }}-service-command-router
   port: 5671
   credentialsPath: /etc/hono/adapter.credentials
-  trustStorePath: /etc/hono/trusted-certs.pem
+  trustStorePath: /etc/hono/truststore.jks
+  trustStorePassword: honotrust
   hostnameVerificationRequired: false
 {{- else }}
   {{- required "Either .Values.adapters.commandRouterSpec MUST be set or .Values.commandRouterService.enabled MUST be 'true' if useCommandRouter is 'true'" nil }}
@@ -374,7 +378,8 @@ deviceConnection:
   {{- end }}
   port: 5671
   credentialsPath: /etc/hono/adapter.credentials
-  trustStorePath: /etc/hono/trusted-certs.pem
+  trustStorePath: /etc/hono/truststore.jks
+  trustStorePassword: honotrust
   hostnameVerificationRequired: false
 {{- end }}
 {{- end }}
