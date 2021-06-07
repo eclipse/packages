@@ -97,7 +97,7 @@ global:
     ## enable writing logs to log files
     ## log files can be found on the host under /var/log/ditto
     logFiles:
-      enabled: true
+      enabled: false
 ## ----------------------------------------------------------------------------
 ## akka actor configuration
 ## ref: https://doc.akka.io/docs/akka/current/typed/index.html
