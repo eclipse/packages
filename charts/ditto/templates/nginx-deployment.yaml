@@ -54,7 +54,7 @@ spec:
             - -c
             - >
               set -x;
-              while [[ "$(curl -sL -w "%{http_code}\n" http://ditto-gateway:8080/health -o /dev/null)" != "200" ]]; do
+              while [[ "$(curl -sL -w "%{http_code}\n" http://{{ include "ditto.name" . }}-gateway:8080/health -o /dev/null)" != "200" ]]; do
                 echo '.'
                 sleep 15;
               done
