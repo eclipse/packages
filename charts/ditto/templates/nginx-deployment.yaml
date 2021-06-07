@@ -42,10 +42,22 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.global.imagePullSecrets }}
+      {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
+      initContainers:
+        - name: wait-for-gateway
+          image: curlimages/curl:latest
+          args:
+            - /bin/sh
+            - -c
+            - >
+              set -x;
+              while [[ "$(curl -sL -w "%{http_code}\n" http://ditto-gateway:8080/health -o /dev/null)" != "200" ]]; do
+                echo '.'
+                sleep 15;
+              done
       containers:
         - name: {{ .Chart.Name }}-nginx
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
@@ -118,12 +130,12 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.nginx.affinity }}
+      {{- with .Values.nginx.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.nginx.tolerations }}
+      {{- end }}
+      {{- with .Values.nginx.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
 {{- end }}
