@@ -50,10 +50,25 @@ spec:
       {{- if .Values.rbac.enabled }}
       serviceAccountName: {{ template "ditto.serviceAccountName" . }}
       {{- end }}
-    {{- with .Values.global.imagePullSecrets }}
+      {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      {{- if .Values.global.logging.logFiles.enabled }}
+      initContainers:
+        - name: change-volume-owner
+          image: busybox
+          securityContext:
+            runAsUser: 0
+          command: [ "sh", "-c", "chown -R 1000:1000 /var/log/ditto && echo 'changed ownership of /var/log/ditto to 1000:1000'" ]
+          volumeMounts:
+            - name: ditto-log-files-directory
+              mountPath: /var/log/ditto
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}-connectivity
           image: {{ printf "%s:%s" .Values.connectivity.image.repository ( default .Chart.AppVersion ( default .Values.dittoTag .Values.connectivity.image.tag ) ) }}
@@ -66,6 +81,12 @@ spec:
             - "-jar"
             - "/opt/ditto/starter.jar"
           env:
+            - name: DITTO_LOGGING_FILE_APPENDER
+              value: "{{ if .Values.global.logging.logFiles.enabled }}true{{ else }}false{{ end }}"
+            {{- if .Values.global.logging.logstash.enabled }}
+            - name: DITTO_LOGGING_LOGSTASH_SERVER
+              value: "{{ .Values.global.logging.logstash.endpoint }}"
+            {{- end }}
             - name: POD_LABEL_SELECTOR
               value: "app.kubernetes.io/name=%s"
             - name: POD_NAMESPACE
@@ -93,13 +114,13 @@ spec:
                 secretKeyRef:
                   name: {{ include "ditto.fullname" . }}-mongodb-secret
                   key: connectivity-uri
-          {{- if .Values.global.prometheus.enabled }}
+            {{- if .Values.global.prometheus.enabled }}
             - name: PROMETHEUS_PORT
               value: "{{ .Values.global.prometheus.port }}"
-          {{- end }}
-          {{- if .Values.connectivity.extraEnv }}
-            {{- toYaml .Values.connectivity.extraEnv | nindent 12 }}
-          {{- end }}
+            {{- end }}
+            {{- if .Values.connectivity.extraEnv }}
+              {{- toYaml .Values.connectivity.extraEnv | nindent 12 }}
+            {{- end }}
           ports:
             - name: remoting
               containerPort: {{ .Values.akka.remoting.port }}
@@ -123,18 +144,30 @@ spec:
             periodSeconds: {{ .Values.connectivity.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.connectivity.livenessProbe.timeoutSeconds }}
             failureThreshold: {{ .Values.connectivity.livenessProbe.failureThreshold }}
+          {{- if .Values.global.logging.logFiles.enabled }}
+          volumeMounts:
+            - name: ditto-log-files-directory
+              mountPath: /var/log/ditto
+          {{- end }}
           resources:
             {{- toYaml .Values.connectivity.resources | nindent 12 }}
       {{- with .Values.connectivity.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.connectivity.affinity }}
+      {{- with .Values.connectivity.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.connectivity.tolerations }}
+      {{- end }}
+      {{- with .Values.connectivity.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
+      {{- if .Values.global.logging.logFiles.enabled }}
+      volumes:
+        - name: ditto-log-files-directory
+          hostPath:
+            path: /var/log/ditto
+            type: DirectoryOrCreate
+      {{- end }}
 {{- end }}
