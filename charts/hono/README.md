@@ -546,8 +546,11 @@ The following command provides a quickstart for Kafka based messaging (ensure `m
 helm install --dependency-update -n hono --set messagingNetworkTypes[0]=kafka --set kafkaMessagingClusterExample.enabled=true --set amqpMessagingNetworkExample.enabled=false eclipse-hono eclipse-iot/hono
 ```
 
-It enables the deployment of an example Kafka cluster, disables the deployment of the AMQP 1.0 messaging network 
-and configures adapters and services to use Kafka based messaging.
+The parameters enable the deployment of an example Kafka cluster, disable the deployment of the AMQP 1.0 messaging network 
+and configure adapters and services to use Kafka based messaging.
+
+To use the service type `NodePort` instead of `LoadBalancer`, the following parameters must be added: 
+`--set useLoadBalancer=false --set kafka.externalAccess.service.type=NodePort`.
 
 ### Using a production grade Kafka cluster
 
