@@ -88,7 +88,16 @@ global:
     enabled: true
     ## port where prometheus metrics will be provided
     port: 9095
-
+  ## logging configuration for ditto
+  logging:
+    ## configure if logs should be pushed to a logstash endpoint
+    logstash:
+      enabled: false
+      endpoint: ""
+    ## enable writing logs to log files
+    ## log files can be found on the host under /var/log/ditto
+    logFiles:
+      enabled: false
 ## ----------------------------------------------------------------------------
 ## akka actor configuration
 ## ref: https://doc.akka.io/docs/akka/current/typed/index.html
@@ -104,7 +113,7 @@ akka:
 
 # Set "dittoTag" in order to specify another Ditto version to use for all Ditto services:
 # you may also use "1" (for latest Ditto 1.x.x) or "1.5" (for latest Ditto 1.5.x)
-# dittotag: 2.0.1
+# dittoTag: 2.0.1
 
 ## ----------------------------------------------------------------------------
 ## concierge configuration
@@ -140,7 +149,7 @@ concierge:
   ## resources for the concierge container
   resources:
     requests:
-      cpu: 200m
+      cpu: 250m
       memory: 384Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
@@ -303,7 +312,7 @@ gateway:
   ## resources for the gateway container
   resources:
     requests:
-      cpu: 150m
+      cpu: 250m
       memory: 384Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
@@ -559,7 +568,7 @@ things:
   ## resources for the things container
   resources:
     requests:
-      cpu: 150m
+      cpu: 250m
       memory: 384Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits
@@ -633,7 +642,7 @@ thingsSearch:
   ## resources for the things-search container
   resources:
     requests:
-      cpu: 150m
+      cpu: 250m
       memory: 512Mi
     # limits:
     #   ## no cpu limit to avoid CFS scheduler limits

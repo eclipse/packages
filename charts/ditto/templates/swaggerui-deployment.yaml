@@ -40,10 +40,10 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.global.imagePullSecrets }}
+      {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
       initContainers:
         - name: {{ .Chart.Name }}-init
           image: "{{ .Values.swaggerui.image.repository }}:{{ .Values.swaggerui.image.tag }}"
