@@ -229,12 +229,20 @@ kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
     bootstrap.servers: {{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-0.{{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-headless.{{ .dot.Release.Namespace }}:{{ .dot.Values.kafka.service.port }}
+{{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
     security.protocol: SASL_SSL
     sasl.mechanism: SCRAM-SHA-512
     sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
     ssl.truststore.location: /etc/hono/truststore.jks
     ssl.truststore.password: {{ .dot.Values.kafka.auth.tls.password }}
     ssl.endpoint.identification.algorithm: "" # Disables hostname verification. Don't do this in productive setups!
+{{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
+    security.protocol: SASL_PLAINTEXT
+    sasl.mechanism: SCRAM-SHA-512
+    sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
+{{- else }}
+  {{- required ".Values.kafka.auth.clientProtocol has unsuppported value" nil }}
+{{- end }}
 {{- else if not .dot.Values.adapters.kafkaMessagingSpec }}
   {{- required ".Values.adapters.kafkaMessagingSpec MUST be provided if example Kafka cluster is disabled" nil }}
 {{- else if not (index .dot.Values.adapters.kafkaMessagingSpec.commonClientConfig "bootstrap.servers") }}
