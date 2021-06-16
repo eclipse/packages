@@ -23,8 +23,32 @@ NAME                                   {{ "READY   STATUS    RESTARTS   AGE" | i
 
 Once all pods have status 'Running', Hono is ready to be used.
 
+{{ if (eq .Values.messagingNetworkType "kafka") -}}
+{{- if .Values.kafkaMessagingClusterExample.enabled -}}
+Hono is configured to use an example Kafka cluster for messaging. To learn more
+about it, you should follow the guide for Getting started with Kafka messaging at
+https://eclipse.org/hono/getting-started-kafka/
+
+Clients can connect to the Kafka cluster with the configuration properties below.
+The Getting started guide shows how to obtain the actual values of the IP address
+and the path to the truststore. Please don't forget to replace them before using
+this config:
+
+  bootstrap.servers=$KAFKA_IP:9094
+  ssl.truststore.location=$KAFKA_TRUSTSTORE_PATH
+  security.protocol=SASL_SSL
+  sasl.mechanism=SCRAM-SHA-512
+  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="{{ first .Values.kafka.auth.sasl.jaas.clientUsers }}" password="{{ first .Values.kafka.auth.sasl.jaas.clientPasswords }}";
+  ssl.truststore.password={{ .Values.kafka.auth.tls.password | quote }}
+  ssl.endpoint.identification.algorithm=""
+{{- else -}}
+The messaging in Hono is configured to use the Kafka cluster with the boostrap servers:
+{{ index .Values.adapters.kafkaMessagingSpec.commonClientConfig "bootstrap.servers" }}
+{{- end }}
+{{- else -}}
 To learn more about Hono's functionality, you should follow the Getting started guide at
 https://eclipse.org/hono/getting-started/
+{{- end }}
 
 Enjoy :-)
 
