@@ -534,12 +534,16 @@ of Quarkus based services images.
 ## Using Kafka based Messaging
 
 The chart can be configured to use Kafka as the messaging network instead of an AMQP 1.0 messaging network.
-The property `messagingNetworkType` is used to select the type of the messaging network.
+The configuration `messagingNetworkTypes[0]=kafka` deploys Hono configured to use Kafka for messaging.
+It is possible to enable AMQP _and_ Kafka based messaging at the same time (command line parameters of the deployment 
+would be `--set messagingNetworkTypes[0]=amqp --set messagingNetworkTypes[1]=kafka`). Each tenant in Hono can then be 
+[configured](https://www.eclipse.org/hono/docs/admin-guide/hono-kafka-client-configuration/#configure-for-kafka-based-messaging)
+to use Kafka _or_ AMQP for messaging.
 
 The following command provides a quickstart for Kafka based messaging (ensure `minikube tunnel` is running when using Minikube):
 
 ```bash
-helm install --dependency-update -n hono --set messagingNetworkType=kafka --set kafkaMessagingClusterExample.enabled=true --set amqpMessagingNetworkExample.enabled=false  eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono --set messagingNetworkTypes[0]=kafka --set kafkaMessagingClusterExample.enabled=true --set amqpMessagingNetworkExample.enabled=false eclipse-hono eclipse-iot/hono
 ```
 
 It enables the deployment of an example Kafka cluster, disables the deployment of the AMQP 1.0 messaging network 
@@ -547,7 +551,7 @@ and configures adapters and services to use Kafka based messaging.
 
 ### Using a production grade Kafka cluster
 
-If Kafka based messaging is enabled by setting `messagingNetworkType` to `kafka`, the Kafka clients need to
+If Kafka based messaging is enabled by adding `kafka` to `messagingNetworkTypes`, the Kafka clients need to
 be configured with connection information for a Kafka cluster. The Helm chart can deploy an example Kafka cluster. 
 This is enabled by setting `kafkaMessagingClusterExample.enabled` to `true`. With this setting the chart
 deploys a Kafka cluster consisting of a single broker and a single Zookeeper instance and configures the 
@@ -564,7 +568,8 @@ The easiest way to set these properties is by means of putting them into a YAML 
 
 ```yaml
 # configure protocol adapters for Kafka messaging
-messagingNetworkType: kafka
+messagingNetworkTypes: 
+  - kafka
 
 # do not deploy example AMQP Messaging Network
 amqpMessagingNetworkExample:

@@ -180,12 +180,14 @@ The scope passed in is expected to be a dict with keys
 */}}
 {{- define "hono.messagingNetworkClientConfig" -}}
 {{- $args := dict "dot" .dot "component" .component -}}
-{{- if eq .dot.Values.messagingNetworkType "amqp" -}}
+{{- if has "amqp" .dot.Values.messagingNetworkTypes -}}
   {{- include "hono.amqpMessagingNetworkClientConfig" $args }}
-{{- else if eq .dot.Values.messagingNetworkType "kafka" -}}
-  {{- include "hono.kafkaMessagingConfig" $args }}
-{{- else }}
-  {{- required "Property messagingNetworkType MUST be either 'amqp' or 'kafka'" nil }}
+{{- end }}
+{{- if has "kafka" .dot.Values.messagingNetworkTypes -}}
+  {{ include "hono.kafkaMessagingConfig" $args }}
+{{- end -}}
+{{- if and (not (has "amqp" .dot.Values.messagingNetworkTypes)) (not (has "kafka" .dot.Values.messagingNetworkTypes)) -}}
+  {{- required "Property messagingNetworkTypes MUST contain 'amqp' and/or 'kafka'" nil }}
 {{- end -}}
 {{- end }}
 
@@ -251,7 +253,7 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".")
 */}}
 {{- define "hono.kafkaConfigCheck" -}}
-  {{- if and (eq .dot.Values.messagingNetworkType "kafka") .dot.Values.kafkaMessagingClusterExample.enabled }}
+  {{- if and (has "kafka" .dot.Values.messagingNetworkTypes) .dot.Values.kafkaMessagingClusterExample.enabled }}
     {{- if .dot.Values.useLoadBalancer }}
       {{- if not (eq .dot.Values.kafka.externalAccess.service.type "LoadBalancer") }}
         {{- required ".Values.kafka.externalAccess.service.type MUST be 'LoadBalancer' if .Values.useLoadBalancer is true" nil }}
@@ -288,7 +290,7 @@ The scope passed in is expected to be a dict with keys
 {{- define "hono.serviceClientConfig" -}}
 {{- $adapter := default "adapter" .component -}}
 {{- include "hono.messagingNetworkClientConfig" ( dict "dot" .dot "component" $adapter ) }}
-{{- if eq .dot.Values.messagingNetworkType "amqp" }}
+{{- if has "amqp" .dot.Values.messagingNetworkTypes }}
 command:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: Hono {{ $adapter }}
@@ -301,7 +303,7 @@ command:
   hostnameVerificationRequired: {{ .dot.Values.adapters.commandAndControlSpec.hostnameVerificationRequired }}
 {{- else }}
   {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
-{{- end }}
+{{- end -}}
 {{/* commands with Kafka use the config from hono.messagingNetworkClientConfig */}}
 {{- end }}
 tenant:
