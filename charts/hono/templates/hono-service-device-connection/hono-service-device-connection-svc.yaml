@@ -28,8 +28,4 @@ spec:
     targetPort: amqps
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-  {{- include "hono.serviceType" . }}
-{{- with .Values.deviceConnectionService.svc.loadBalancerIP }}
-  loadBalancerIP: {{ . | quote }}
-{{- end }}
 {{- end }}
