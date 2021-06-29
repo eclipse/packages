@@ -104,13 +104,20 @@ openssl req -config ca_opts -reqexts intermediate_ext -new -key $DIR/ca-key.pem 
  openssl x509 -req -extfile ca_opts -extensions intermediate_ext -out $DIR/ca-cert.pem -days 365 -CA $DIR/root-cert.pem -CAkey $DIR/root-key.pem -CAcreateserial
 
 echo ""
-echo "creating PEM trust store ($DIR/trusted-certs.pem) containing CA certificate"
-cat $DIR/ca-cert.pem $DIR/root-cert.pem > $DIR/trusted-certs.pem
+echo "downloading CA and root certificates from Let's Encrypt"
+curl https://letsencrypt.org/certs/lets-encrypt-r3.pem > $DIR/lets-encrypt-r3.pem
+curl https://letsencrypt.org/certs/isrgrootx1.pem > $DIR/isrgrootx1.pem
 
 echo ""
-echo "creating JKS trust store ($DIR/$HONO_TRUST_STORE) containing CA certificate"
+echo "creating PEM trust store ($DIR/trusted-certs.pem) containing CA certificates"
+cat $DIR/ca-cert.pem $DIR/root-cert.pem $DIR/lets-encrypt-r3.pem $DIR/isrgrootx1.pem > $DIR/trusted-certs.pem
+
+echo ""
+echo "creating JKS trust store ($DIR/$HONO_TRUST_STORE) containing CA certificates"
 keytool -import -trustcacerts -noprompt -alias root -file $DIR/root-cert.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
 keytool -import -trustcacerts -noprompt -alias ca -file $DIR/ca-cert.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
+keytool -import -trustcacerts -noprompt -alias le-root -file $DIR/isrgrootx1.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
+keytool -import -trustcacerts -noprompt -alias le-ca -file $DIR/lets-encrypt-r3.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
 
 echo ""
 echo "creating CA key and certificate for DEFAULT_TENANT"
