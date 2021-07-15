@@ -1821,7 +1821,7 @@ kafka:
     enabled: true
     service:
       type: LoadBalancer
-      port: 9094
+      port: 9092
       loadBalancerIPs: []
     autoDiscovery:
       enabled: true
@@ -1834,7 +1834,7 @@ kafka:
   # the name of the template (maintains the release name)
   nameOverride: kafka
   service:
-    port: 9092
+    port: 9094
   auth:
     clientProtocol: sasl_tls
     sasl:
