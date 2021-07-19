@@ -19,7 +19,7 @@
         <key media-type="text/plain" />
         <value media-type="text/plain" />
       </encoding>
-      <memory storage="OFF_HEAP" max-size="30 MB" when-full="REMOVE"/>
+      <memory storage="OFF_HEAP" max-size="{{ .Values.dataGridExample.dataMaxSize }}" when-full="REMOVE"/>
       <security>
         <authorization enabled="true" />
       </security>
@@ -29,7 +29,7 @@
   <server xmlns="urn:infinispan:server:11.0">
     <interfaces>
       <interface name="public">
-        <non-loopback />
+        <inet-address value="${infinispan.bind.address:0.0.0.0}" />
       </interface>
       <interface name="admin">
         <loopback />
@@ -45,27 +45,28 @@
       <security-realms>
         <security-realm name="ManagementRealm">
           <properties-realm groups-attribute="Roles">
-            <user-properties path="hono/users.properties"
+            <user-properties path="users.properties"
                              relative-to="infinispan.server.config.path"
                              plain-text="true" />
-            <group-properties path="hono/mgmt-groups.properties"
+            <group-properties path="mgmt-groups.properties"
                              relative-to="infinispan.server.config.path"/>
           </properties-realm>
         </security-realm>
         <security-realm name="ApplicationRealm">
           <server-identities>
             <ssl>
-              <keystore path="application.keystore" relative-to="infinispan.server.config.path"
-                             keystore-password="password" alias="server" key-password="password"
-                             generate-self-signed-certificate-host="localhost"/>
+              <keystore path="infinispanKeyStore.p12"
+                        relative-to="infinispan.server.config.path"
+                        alias="infinispan"
+                        keystore-password="infinispanKeys" />
               <engine enabled-protocols="TLSv1.2"/>
             </ssl>
           </server-identities>
           <properties-realm groups-attribute="Roles">
-            <user-properties path="hono/users.properties"
+            <user-properties path="users.properties"
                              relative-to="infinispan.server.config.path"
                              plain-text="true" />
-            <group-properties path="hono/public-groups.properties"
+            <group-properties path="public-groups.properties"
                              relative-to="infinispan.server.config.path" />
           </properties-realm>
         </security-realm>
