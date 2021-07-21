@@ -188,7 +188,7 @@ dataGridExample:
   enabled: false
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
-  imageName: infinispan/server:11.0.9.Final-1
+  imageName: infinispan/server-native:11.0.7.Final-2
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   livenessProbeInitialDelaySeconds: 300
@@ -201,15 +201,17 @@ dataGridExample:
   # for a description of the properties' semantics.
   resources:
     requests:
-      cpu: "200m"
-      memory: "300Mi"
+      cpu: "150m"
+      memory: "100Mi"
     limits:
       cpu: "1"
-      memory: "512Mi"
+      memory: "200Mi"
   # authUsername contains the name of the user that is authorized to connect to the example data grid.
   authUsername: "hono"
   # authPassword contains the secret of the user that is authorized to connect to the example data grid
   authPassword: "hono-secret"
+  # dataMaxSize contains the maximum size of off-heap memory used for storing data per Infinispan node
+  dataMaxSize: "30 MB"
 
 # dataGridSpec contains properties for configuring the Infinispan Hotrod connection
 # to the existing data grid (i.e. not the example grid) that should be used for storing
@@ -1605,7 +1607,7 @@ commandRouterService:
   # containerRegistry:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
-  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80 -Djava.security.properties=/etc/hono/dns-cache-config.properties
   # springConfigLocation contains the location of the Spring application configuration file(s).
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
   # for details.
