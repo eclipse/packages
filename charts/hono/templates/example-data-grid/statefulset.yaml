@@ -1,6 +1,6 @@
 {{- if .Values.dataGridExample.enabled }}
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -33,7 +33,7 @@ spec:
         command:
         - /opt/infinispan/bin/server.sh
         - -c
-        - /opt/infinispan/server/conf/hono/hono-data-grid.xml
+        - hono-data-grid.xml
         env:
         - name: JDK_JAVA_OPTIONS
           value: "-XX:MinRAMPercentage=85 -XX:MaxRAMPercentage=85"
@@ -44,7 +44,7 @@ spec:
           containerPort: 11222
           protocol: TCP
         volumeMounts:
-        - mountPath: /opt/infinispan/server/conf/hono
+        - mountPath: /opt/infinispan/server/conf
           name: conf
           readOnly: true
         livenessProbe:
