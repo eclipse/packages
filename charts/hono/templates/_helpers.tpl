@@ -438,6 +438,7 @@ quarkus:
   log:
     console:
       color: true
+    min-level: TRACE
     level: INFO
     category:
       "org.eclipse.hono":
@@ -448,6 +449,8 @@ quarkus:
         level: INFO
   vertx:
     prefer-native-transport: true
+    resolver:
+      cache-max-time-to-live: 0
 {{- end }}
 {{- end }}
 
