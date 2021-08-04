@@ -377,10 +377,10 @@ deviceConnection:
   name: Hono {{ $adapter }}
   {{- if .dot.Values.deviceConnectionService.enabled }}
   host: {{ .dot.Release.Name }}-service-device-connection
-  {{- else if .dot.Values.deviceRegistryExample.enabled }}
+  {{- else if and .dot.Values.deviceRegistryExample.enabled ( eq .dot.Values.deviceRegistryExample.type "file" ) }}
   host: {{ .dot.Release.Name }}-service-device-registry
   {{- else }}
-  {{- required ".Values.deviceConnectionService.enabled MUST be set to true if example Device Registry is disabled and no other Device Connection service is configured" nil }}
+  {{- required ".Values.deviceRegistryExample.type MUST be 'file' and .Values.deviceConnectionService.enabled set to true if example Device Registry is disabled and no other Device Connection service is configured" nil }}
   {{- end }}
   port: 5671
   credentialsPath: /etc/hono/adapter.credentials
