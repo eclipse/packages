@@ -409,13 +409,13 @@ The Device Connection API is deprecated and will be replaced by the Command Rout
 In order to use the Device Connection API, the *useCommandRouter* property has to be set to `false` when deploying the Helm chart.
 
 ```bash
-helm install --dependency-update -n hono --set useCommandRouter=false eclipse-hono eclipse-iot/hono 
+helm install --dependency-update -n hono --set useCommandRouter=false --set deviceRegistryExample.type=file eclipse-hono eclipse-iot/hono 
 ```
 
 #### Example Implementation
 
-Hono's example Device Registry component contains a simple in-memory implementation of the Device Connection API.
-This example implementation is used by default when the example registry is deployed and the *useCommandRouter* property is set to `false`.
+Hono's file based example Device Registry component contains a simple in-memory implementation of the Device Connection API.
+To use this example implementation, deploy the example registry, set *deviceRegistryExample.type* to 'file' and *useCommandRouter* to `false`.
 
 #### Data Grid based Implementation
 

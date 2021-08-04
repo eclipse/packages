@@ -1156,7 +1156,7 @@ deviceRegistryExample:
   # for additional configuration.
   # - jdbc: JDBC based device registry. Also refer to the section "jdbcBasedDeviceRegistry"
   # for additional configuration.
-  type: file
+  type: embedded
 
   # addExampleData indicates whether example data is inserted after the device registry is deployed
   addExampleData: true
@@ -1210,12 +1210,12 @@ deviceRegistryExample:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
-      # rest contains configuration properties for the server's
+      # http contains configuration properties for the server's
       # exposed HTTP endpoints.
       # If not set, the registry by default exposes the insecure and secure ports
       # using an example key and certificate.
-      # NOTE: For MongoDB based device registry use "http" instead of "rest".
-      rest:
+      # NOTE: For the file based device registry use "rest" instead of "http".
+      http:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
