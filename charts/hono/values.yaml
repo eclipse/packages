@@ -1817,14 +1817,16 @@ kafka:
       serverUsers: zookeeperUser
       serverPasswords: zookeeperPassword
   # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
-  # Alternatively use NodePort configuration, for more information refer to
+  # To use service type NodePort instead of LoadBalancer, refer to
   # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
   externalAccess:
     enabled: true
     service:
       type: LoadBalancer
       port: 9092
-      loadBalancerIPs: []
+      # length of the array must match replicaCount
+      nodePorts:
+        - 32092
     autoDiscovery:
       enabled: true
   serviceAccount:
