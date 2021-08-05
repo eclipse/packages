@@ -25,4 +25,6 @@ data:
     {{ .Files.Get "example/example-devices.sh" | nindent 4 }}
   example-credentials.sh: |
     {{ .Files.Get "example/example-credentials.sh" | nindent 4 }}
+  default_tenant-trusted-ca.json: |
+    {{ .Files.Get "example/default_tenant-trusted-ca.json" | nindent 4 }}
   {{- end }}
