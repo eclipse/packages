@@ -45,6 +45,8 @@ dbconfig:
   policies:
     uri: mongodb://ditto-mongodb:27017/policies
     ssl: false
+  ## If following property is set, an existing secret will be used to retrieve the mongodb connectionUris from.
+  # uriSecret: my-uri-secret
 
 ## ingress configuration
 ingress:
