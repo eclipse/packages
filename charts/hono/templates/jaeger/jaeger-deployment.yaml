@@ -60,6 +60,7 @@ spec:
         volumeMounts:
         {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
         {{- with .Values.jaegerBackendExample.resources }}
+        {{- include "hono.component.envConfigMap" $args | indent 8 }}
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
