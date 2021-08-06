@@ -284,6 +284,9 @@ jaegerBackendExample:
   #    secretName: "other-stuff"
   #    mountPath: "/etc/other"
 
+  # The configMap to get additional environment variables from for this deploy.
+  envConfigMap:
+
 # jaegerAgentImage contains the name (including tag)
 # of the container image to use for the Jaeger Agent sidecar deployed
 # with Hono's components.
@@ -546,6 +549,9 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
+    # The configMap to get additional environment variabes from for this adapter.
+    envConfigMap:
+
     # hono contains the adapter's configuration properties as defined in
     # https://www.eclipse.org/hono/docs/admin-guide/amqp-adapter-config/
     hono:
@@ -640,6 +646,9 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
+    # The configMap to get additional environment variabes from for this adapter.
+    envConfigMap:
+
     # hono contains the adapter's configuration properties
     hono:
       app:
@@ -724,6 +733,9 @@ adapters:
     #  other:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
+
+    # The configMap to get additional environment variabes from for this adapter.
+    envConfigMap:
 
     # hono contains the adapter's configuration properties as defined in
     # https://www.eclipse.org/hono/docs/admin-guide/http-adapter-config/
@@ -819,6 +831,9 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
+    # The configMap to get additional environment variabes from for this adapter.
+    envConfigMap:
+
     # hono contains the adapter's configuration properties as defined in
     # https://www.eclipse.org/hono/docs/admin-guide/kura-adapter-config/
     hono:
@@ -913,6 +928,9 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
+    # The configMap to get additional environment variabes from for this adapter.
+    envConfigMap:
+
     # hono contains the adapter's configuration properties
     hono:
       app:
@@ -1006,6 +1024,9 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
+    # The configMap to get additional environment variabes from for this adapter.
+    envConfigMap:
+
     # hono contains the adapter's configuration properties as defined in
     # https://www.eclipse.org/hono/docs/admin-guide/mqtt-adapter-config/
     hono:
@@ -1093,6 +1114,9 @@ authServer:
   #  other:
   #    secretName: "other-stuff"
   #    mountPath: "/etc/other"
+
+  # The configMap to get additional environment variabes from for this auth server.
+  envConfigMap:
 
   # hono contains the Auth Server's configuration properties as defined in
   # https://www.eclipse.org/hono/docs/admin-guide/auth-server-config/
@@ -1264,6 +1288,9 @@ deviceRegistryExample:
     # for a description of the properties' semantics.
     resources:
 
+    # The configMap to get additional environment variabes from for this device registry.
+    envConfigMap:
+
   # embeddedJdbcDeviceRegistry contains configuration properties specific to the
   # embedded JDBC device registry.
   embeddedJdbcDeviceRegistry:
@@ -1304,6 +1331,9 @@ deviceRegistryExample:
       limits:
         cpu: "1"
         memory: "500Mi"
+
+    # The configMap to get additional environment variabes from for this device registry.
+    envConfigMap:
 
   # mongoDBBasedDeviceRegistry contains configuration properties specific to the
   # MongoDB based device registry.
@@ -1348,6 +1378,9 @@ deviceRegistryExample:
     # The password to use for authenticating to the MongoDB instance.
     # password:
 
+    # The configMap to get additional environment variabes from for this device registry.
+    envConfigMap:
+
   # jdbcBasedDeviceRegistry contains configuration properties specific to the
   # jdbc based device registry.
   jdbcBasedDeviceRegistry:
@@ -1378,6 +1411,10 @@ deviceRegistryExample:
     resources:
     # registry.jdbc contains the configuration properties for device registry
     # to connect to the database.
+
+    # The configMap to get additional environment variabes from for this device registry.
+    envConfigMap:
+
     registry:
       jdbc:
         # the jdbc properties for read-only operations
@@ -1538,6 +1575,9 @@ deviceConnectionService:
   #    secretName: "key-material"
   #    mountPath: "/etc/tls"
 
+  # The configMap to get additional environment variabes from for this device connection service.
+  envConfigMap:
+
   # hono contains the service's configuration properties as defined in
   # https://www.eclipse.org/hono/docs/admin-guide/device-connection-config/
   hono:
@@ -1657,6 +1697,9 @@ commandRouterService:
   #  tls:
   #    secretName: "key-material"
   #    mountPath: "/etc/tls"
+
+  # The configMap to get additional environment variabes from for this command router service.
+  envConfigMap:
 
   # hono contains the service's configuration properties as defined in
   # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/
