@@ -13,6 +13,7 @@
 
 # profile for installing Hono
 # - without monitoring infrastructure
+# - with example Infinispan data grid
 # - using Quarkus based native images
 
 useLoadBalancer: false
@@ -22,5 +23,8 @@ prometheus:
 
 grafana:
   enabled: false
+
+dataGridExample:
+  enabled: true
 
 honoImagesType: quarkus-native
