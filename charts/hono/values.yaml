@@ -326,7 +326,7 @@ platform: kubernetes
 # - spring
 # - quarkus
 # - quarkus-native
-honoImagesType: "spring"
+honoImagesType: "quarkus"
 
 # useLoadBalancer indicates whether services should be deployed using the
 # "LoadBalancer" type (true) or the "NodePort" type (false).

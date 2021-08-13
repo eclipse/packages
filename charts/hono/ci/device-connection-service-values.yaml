@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -15,6 +15,7 @@
 # - without monitoring infrastructure
 # - with example Infinispan data grid
 # - with Device Connection service
+# - using Spring Boot based images
 
 useLoadBalancer: false
 
@@ -29,3 +30,5 @@ dataGridExample:
 
 deviceConnectionService:
   enabled: true
+
+honoImagesType: "spring"
