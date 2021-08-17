@@ -103,7 +103,7 @@ Hono comes with an example Grafana dashboard which provides some insight into th
 The following command needs to be run first in order to forward the Grafana service's endpoint to the local host:
 
 ```bash
-kubectl port-forward service/hono-grafana 3000 -n hono
+kubectl port-forward service/eclipse-hono-grafana 3000 -n hono
 ```
 
 Then the dashboard can be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.

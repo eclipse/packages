@@ -549,7 +549,7 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
-    # The configMap to get additional environment variabes from for this adapter.
+    # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
     # hono contains the adapter's configuration properties as defined in
@@ -646,7 +646,7 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
-    # The configMap to get additional environment variabes from for this adapter.
+    # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
     # hono contains the adapter's configuration properties
@@ -734,7 +734,7 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
-    # The configMap to get additional environment variabes from for this adapter.
+    # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
     # hono contains the adapter's configuration properties as defined in
@@ -831,7 +831,7 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
-    # The configMap to get additional environment variabes from for this adapter.
+    # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
     # hono contains the adapter's configuration properties as defined in
@@ -928,7 +928,7 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
-    # The configMap to get additional environment variabes from for this adapter.
+    # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
     # hono contains the adapter's configuration properties
@@ -1024,7 +1024,7 @@ adapters:
     #    secretName: "other-stuff"
     #    mountPath: "/etc/other"
 
-    # The configMap to get additional environment variabes from for this adapter.
+    # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
     # hono contains the adapter's configuration properties as defined in
@@ -1115,7 +1115,7 @@ authServer:
   #    secretName: "other-stuff"
   #    mountPath: "/etc/other"
 
-  # The configMap to get additional environment variabes from for this auth server.
+  # The configMap to get additional environment variables from for this auth server.
   envConfigMap:
 
   # hono contains the Auth Server's configuration properties as defined in
@@ -1288,7 +1288,7 @@ deviceRegistryExample:
     # for a description of the properties' semantics.
     resources:
 
-    # The configMap to get additional environment variabes from for this device registry.
+    # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
 
   # embeddedJdbcDeviceRegistry contains configuration properties specific to the
@@ -1332,7 +1332,7 @@ deviceRegistryExample:
         cpu: "1"
         memory: "500Mi"
 
-    # The configMap to get additional environment variabes from for this device registry.
+    # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
 
   # mongoDBBasedDeviceRegistry contains configuration properties specific to the
@@ -1378,7 +1378,7 @@ deviceRegistryExample:
     # The password to use for authenticating to the MongoDB instance.
     # password:
 
-    # The configMap to get additional environment variabes from for this device registry.
+    # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
 
   # jdbcBasedDeviceRegistry contains configuration properties specific to the
@@ -1412,7 +1412,7 @@ deviceRegistryExample:
     # registry.jdbc contains the configuration properties for device registry
     # to connect to the database.
 
-    # The configMap to get additional environment variabes from for this device registry.
+    # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
 
     registry:
@@ -1575,7 +1575,7 @@ deviceConnectionService:
   #    secretName: "key-material"
   #    mountPath: "/etc/tls"
 
-  # The configMap to get additional environment variabes from for this device connection service.
+  # The configMap to get additional environment variables from for this device connection service.
   envConfigMap:
 
   # hono contains the service's configuration properties as defined in
@@ -1698,7 +1698,7 @@ commandRouterService:
   #    secretName: "key-material"
   #    mountPath: "/etc/tls"
 
-  # The configMap to get additional environment variabes from for this command router service.
+  # The configMap to get additional environment variables from for this command router service.
   envConfigMap:
 
   # hono contains the service's configuration properties as defined in
