@@ -996,7 +996,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "(100 * sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"undeliverable\"}[$__range])))\n/\nsum(irate(hono_commands_received_seconds_count{direction=\"one-way|request\"}[$__range]))",
+          "expr": "(100 * sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"undeliverable\"}[$__range])))\n/\nsum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\"}[$__range]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "not forwarded",
