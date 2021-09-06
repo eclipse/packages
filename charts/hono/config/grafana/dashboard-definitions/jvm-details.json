@@ -263,14 +263,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(jvm_gc_pause_seconds_sum{host=~\"$instance\"}[$__interval]))",
+          "expr": "sum(rate(jvm_gc_pause_seconds_sum{host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "GC Pause - {{host}}",
           "refId": "A"
         },
         {
-          "expr": "rate(jvm_gc_memory_promoted_bytes_total{host=~\"$instance\"}[$__interval])",
+          "expr": "rate(jvm_gc_memory_promoted_bytes_total{host=~\"$instance\"}[$__rate_interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Allocated - {{host}}",
@@ -745,7 +745,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(logback_events_total{host=~\"$instance\"}[$__interval])",
+          "expr": "rate(logback_events_total{host=~\"$instance\"}[$__rate_interval])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{level}} - {{host}}",
