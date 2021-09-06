@@ -139,21 +139,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",status=\"unprocessable\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "unprocessable",
           "refId": "C"
         },
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",status=\"undeliverable\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "undeliverable",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",status=\"forwarded\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -263,21 +263,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"event\",status=\"unprocessable\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"event\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "unprocessable",
           "refId": "C"
         },
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"event\",status=\"undeliverable\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"event\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "undeliverable",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"event\",status=\"forwarded\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_received_seconds_count{type=\"event\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -367,7 +367,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"unprocessable\"}[$__range]))",
+          "expr": "sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -375,7 +375,7 @@
           "refId": "C"
         },
         {
-          "expr": "sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"undeliverable\"}[$__range]))",
+          "expr": "sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -384,7 +384,7 @@
           "refId": "B"
         },
         {
-          "expr": "sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"forwarded\"}[$__range]))",
+          "expr": "sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -473,21 +473,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"telemetry\",status=\"unprocessable\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"telemetry\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "unprocessable",
           "refId": "C"
         },
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"telemetry\",status=\"undeliverable\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"telemetry\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "undeliverable",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"telemetry\",status=\"forwarded\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"telemetry\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -575,21 +575,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"event\",status=\"unprocessable\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"event\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "unprocessable",
           "refId": "C"
         },
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"event\",status=\"undeliverable\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"event\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "undeliverable",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"event\",status=\"forwarded\"}[$__range]))",
+          "expr": "sum(irate(hono_messages_payload_bytes_sum{type=\"event\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -679,21 +679,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_commands_payload_bytes_sum{direction=~\"one-way|request\",status=\"unprocessable\"}[$__range]))",
+          "expr": "sum(irate(hono_commands_payload_bytes_sum{direction=~\"one-way|request\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "unprocessable",
           "refId": "C"
         },
         {
-          "expr": "sum(irate(hono_commands_payload_bytes_sum{direction=~\"one-way|request\",status=\"undeliverable\"}[$__range]))",
+          "expr": "sum(irate(hono_commands_payload_bytes_sum{direction=~\"one-way|request\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "undeliverable",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(hono_commands_payload_bytes_sum{direction=~\"one-way|request\",status=\"forwarded\"}[$__range]))",
+          "expr": "sum(irate(hono_commands_payload_bytes_sum{direction=~\"one-way|request\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -781,14 +781,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "(100 * sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",qos=\"0\",status=\"undeliverable\"}[$__range])))\n/\nsum(irate(hono_messages_received_seconds_count{type=\"telemetry\",qos=\"0\"}[$__range]))",
+          "expr": "(100 * sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",qos=\"0\",status=\"undeliverable\"}[$__rate_interval])))\n/\nsum(irate(hono_messages_received_seconds_count{type=\"telemetry\",qos=\"0\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "QoS 0",
           "refId": "C"
         },
         {
-          "expr": "(100 * sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",qos=\"1\",status=\"undeliverable\"}[$__range])))\n/\nsum(irate(hono_messages_received_seconds_count{type=\"telemetry\",qos=\"1\"}[$__range]))",
+          "expr": "(100 * sum(irate(hono_messages_received_seconds_count{type=\"telemetry\",qos=\"1\",status=\"undeliverable\"}[$__rate_interval])))\n/\nsum(irate(hono_messages_received_seconds_count{type=\"telemetry\",qos=\"1\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "QoS 1",
@@ -892,7 +892,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "(100 * sum(irate(hono_messages_received_seconds_count{type=\"event\",status=\"undeliverable\"}[$__range])))\n/\nsum(irate(hono_messages_received_seconds_count{type=\"event\"}[$__range]))",
+          "expr": "(100 * sum(irate(hono_messages_received_seconds_count{type=\"event\",status=\"undeliverable\"}[$__rate_interval])))\n/\nsum(irate(hono_messages_received_seconds_count{type=\"event\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "not forwarded",
@@ -996,7 +996,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "(100 * sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"undeliverable\"}[$__range])))\n/\nsum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\"}[$__range]))",
+          "expr": "(100 * sum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\",status=\"undeliverable\"}[$__rate_interval])))\n/\nsum(irate(hono_commands_received_seconds_count{direction=~\"one-way|request\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "not forwarded",

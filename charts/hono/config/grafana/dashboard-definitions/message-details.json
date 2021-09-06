@@ -166,7 +166,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__interval]))",
+          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -247,7 +247,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__interval]))",
+          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -328,7 +328,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__interval]))",
+          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -509,7 +509,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__interval]))",
+          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -590,7 +590,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__interval]))",
+          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -671,7 +671,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__interval]))",
+          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -846,7 +846,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "(sum(rate(hono_messages_received_seconds_count{component_name=~\"$componentname\",type=~\"$type\",status!=\"forwarded\",tenant=~\"$tenant\",host=~\"$instance\"}[$__interval]))\n/\n sum(rate(hono_messages_received_seconds_count{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__interval])))\n* 100\n",
+          "expr": "(sum(rate(hono_messages_received_seconds_count{component_name=~\"$componentname\",type=~\"$type\",status!=\"forwarded\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))\n/\n sum(rate(hono_messages_received_seconds_count{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval])))\n* 100\n",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
