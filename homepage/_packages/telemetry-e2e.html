@@ -1,0 +1,67 @@
+---
+name: Telemetry end-to-end
+title: Overview
+image: images/telemetry-e2e-logo.svg
+projects:
+- iot.ditto
+- iot.kura
+- iot.mosquitto
+- iot.streamsheets
+description: "A package showing telemetry data acquisition end-to-end: Microcontroller firmware to cloud side data processing, using Drogue IoT and Apache Kafka in the process."
+layout: package-page
+twitterTitle: Telemetry E2E
+---
+
+<p>
+The "Telemetry end-to-end" package demonstrates an end-to-end use case of acquiring sensor information, transmitting
+  it to a cloud side solution, persisting and structuring the data, with the goal to process or visualize it.
+</p>
+
+<p>
+The following diagram outlines the overall architecture of this package:
+</p>
+
+<div class="row">
+
+<div class="col-sm-6">
+  <img class="img-fluid" src="images/overview.svg" title="Overview diagram" alt="Architectural overview diagram">
+</div>
+
+<div class="col-sm-6">
+
+<p class="border-callout-left" style="border-color: #ffb66c;">
+  <strong>Drogue Device</strong> in combination with the Embassy runtime is the basis for the device
+  firmware. The device will acquire a temperate value and announce this locally using Bluetooth.
+</p>
+
+<p class="border-callout-left" style="border-color: #b4c7dc;">
+  <strong>Eclipse Kura</strong> is the IoT gateway, running on the edge and bridging the connectivity from Bluetooth
+  to the TCP/IP based communication with the cloud.
+</p>
+
+<p class="border-callout-left" style="border-color: #d4ea6b;">
+  <strong>Drogue Cloud</strong> is the cloud side IoT connectivity platform which handles the MQTT connection,
+  authentication the peer, normalizes the device specific communication, and forwards events to the Kafka topic.
+</p>
+
+<p class="border-callout-left" style="border-color: #b3cac7;">
+  <strong>Eclipse Ditto</strong> reads from Kafka, normalizes the data structures, extracts and persists its.
+  Sending off the detected changes to the Streamsheets internal MQTT broker.
+</p>
+
+<p class="border-callout-left" style="border-color: #bf819e;">
+  <strong>Eclipse Streamsheets</strong> visualizes the structured data received from Ditto in an end-user friendly way.
+</p>
+
+  {% alert primary: Requirements %}
+  As this example uses some actual hardware in addition to the cloud side software, you will need:
+  <ul>
+    <li>A <a class="alert-link" href="https://microbit.org/buy/" target="_blank">micro:bit v2</a></li>
+    <li>A <a class="alert-link" href="https://www.raspberrypi.org/products/raspberry-pi-4-model-b/" target="_blank">Raspberry Pi 3+</a></li>
+  </ul>
+
+  {% endalert %}
+
+</div>
+
+</div>
