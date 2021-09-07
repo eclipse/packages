@@ -12,3 +12,18 @@ iot.hono:
   shortName: Hono
   fullName: Eclipse Hono™
   projectUrl: https://eclipse.org/hono
+
+iot.streamsheets:
+  shortName: Streamsheets
+  fullName: Eclipse Streamsheets™
+  projectUrl: https://eclipse.org/streamsheets
+
+iot.kura:
+  shortName: Kura
+  fullName: Eclipse Kura™
+  projectUrl: https://eclipse.org/kura
+
+iot.mosquitto:
+  shortName: Mosquitto
+  fullName: Eclipse Mosquitto
+  projectUrl: https://eclipse.org/mosquitto
