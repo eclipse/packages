@@ -23,6 +23,7 @@ spec:
   {{- with .Values.thingsSearch.updateStrategy }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
+  minReadySeconds: {{ .Values.thingsSearch.minReadySeconds }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "ditto.name" . }}-thingssearch

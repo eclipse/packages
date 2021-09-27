@@ -23,6 +23,7 @@ spec:
   {{- with .Values.connectivity.updateStrategy }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
+  minReadySeconds: {{ .Values.connectivity.minReadySeconds }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "ditto.name" . }}-connectivity

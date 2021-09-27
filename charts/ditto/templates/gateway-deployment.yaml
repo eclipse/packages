@@ -23,6 +23,7 @@ spec:
   {{- with .Values.gateway.updateStrategy }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
+  minReadySeconds: {{ .Values.gateway.minReadySeconds }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "ditto.name" . }}-gateway
