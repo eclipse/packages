@@ -23,6 +23,7 @@ spec:
   {{- with .Values.things.updateStrategy }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
+  minReadySeconds: {{ .Values.things.minReadySeconds }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "ditto.name" . }}-things

@@ -23,6 +23,7 @@ spec:
   {{- with .Values.policies.updateStrategy }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
+  minReadySeconds: {{ .Values.policies.minReadySeconds }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "ditto.name" . }}-policies

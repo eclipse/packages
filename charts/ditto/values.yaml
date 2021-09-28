@@ -115,7 +115,7 @@ akka:
 
 # Set "dittoTag" in order to specify another Ditto version to use for all Ditto services:
 # you may also use "1" (for latest Ditto 1.x.x) or "1.5" (for latest Ditto 1.5.x)
-# dittoTag: 2.0.1
+# dittoTag: 2.1.0
 
 ## ----------------------------------------------------------------------------
 ## concierge configuration
@@ -132,6 +132,7 @@ concierge:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
+  minReadySeconds: 45
   ## additionalLabels on concierge pods
   additionalLabels: {}
   ## additionalAnnotations on concierge pods
@@ -140,12 +141,16 @@ concierge:
     ## repository for the concierge docker image
     repository: docker.io/eclipse/ditto-concierge
     ## tag for the concierge docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.0.1
+    # tag: 2.1.0
     ## pullPolicy for the concierge docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for concierge service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
-  systemProps: []
+  systemProps:
+    - "-Dakka.cluster.failure-detector.threshold=15.0"
+    - "-Dakka.cluster.failure-detector.expected-response-after=10s"
+    - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
+    - "-Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s"
   ## extraEnv to add arbitrary environment variable to concierge container
   extraEnv: []
   ## resources for the concierge container
@@ -161,14 +166,14 @@ concierge:
   ## readinessProbe configuration for concierge
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
-    initialDelaySeconds: 45
+    initialDelaySeconds: 90
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 3
   ## livenessProbe configuration for concierge
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   livenessProbe:
-    initialDelaySeconds: 180
+    initialDelaySeconds: 160
     periodSeconds: 10
     timeoutSeconds: 3
     failureThreshold: 4
@@ -206,6 +211,7 @@ connectivity:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
+  minReadySeconds: 45
   ## additionalLabels on connectivity pods
   additionalLabels: {}
   ## additionalAnnotations on connectivity pods
@@ -214,13 +220,17 @@ connectivity:
     ## repository for the connectivity docker image
     repository: docker.io/eclipse/ditto-connectivity
     ## tag for the connectivity docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.0.1
+    # tag: 2.1.0
     ## pullPolicy for the connectivity docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for connectivity service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps:
     - "-Dakka.cluster.distributed-data.durable.lmdb.dir=/var/tmp/ddata"
+    - "-Dakka.cluster.failure-detector.threshold=15.0"
+    - "-Dakka.cluster.failure-detector.expected-response-after=10s"
+    - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
+    - "-Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s"
   ## extraEnv to add arbitrary environment variable to connectivity container
   extraEnv:
     - name: CONNECTIVITY_CONNECTION_BLOCKED_HOSTNAMES
@@ -238,14 +248,14 @@ connectivity:
   ## readinessProbe configuration for connectivity
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
-    initialDelaySeconds: 45
+    initialDelaySeconds: 90
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 3
   ## livenessProbe configuration for connectivity
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   livenessProbe:
-    initialDelaySeconds: 180
+    initialDelaySeconds: 160
     periodSeconds: 10
     timeoutSeconds: 3
     failureThreshold: 4
@@ -293,6 +303,7 @@ gateway:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
+  minReadySeconds: 45
   ## additionalLabels on gateway pods
   additionalLabels: {}
   ## additionalAnnotations on gateway pods
@@ -301,12 +312,16 @@ gateway:
     ## repository for the gateway docker image
     repository: docker.io/eclipse/ditto-gateway
     ## tag for the gateway docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.0.1
+    # tag: 2.1.0
     ## pullPolicy for the gateway docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for gateway service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
-  systemProps: []
+  systemProps:
+    - "-Dakka.cluster.failure-detector.threshold=15.0"
+    - "-Dakka.cluster.failure-detector.expected-response-after=10s"
+    - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
+    - "-Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s"
   ## extraEnv to add arbitrary environment variabled to gateway container
   extraEnv: []
     # - name: LOG_LEVEL_APPLICATION
@@ -324,14 +339,14 @@ gateway:
   ## readinessProbe configuration for gateway
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
-    initialDelaySeconds: 45
+    initialDelaySeconds: 90
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 3
   ## livenessProbe configuration for gateway
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   livenessProbe:
-    initialDelaySeconds: 180
+    initialDelaySeconds: 160
     periodSeconds: 10
     timeoutSeconds: 3
     failureThreshold: 4
@@ -433,6 +448,7 @@ policies:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
+  minReadySeconds: 45
   ## additionalLabels on policies pods
   additionalLabels: {}
   ## additionalAnnotations on policies pods
@@ -441,12 +457,16 @@ policies:
     ## repository for the policies docker image
     repository: docker.io/eclipse/ditto-policies
     ## tag for the policies docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.0.1
+    # tag: 2.1.0
     ## pullPolicy for the policies docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for policies service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
-  systemProps: []
+  systemProps:
+    - "-Dakka.cluster.failure-detector.threshold=15.0"
+    - "-Dakka.cluster.failure-detector.expected-response-after=10s"
+    - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
+    - "-Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s"
   ## extraEnv to add arbitrary environment variable to policies container
   extraEnv: []
   ## resources for the policies container
@@ -462,14 +482,14 @@ policies:
   ## readinessProbe configuration for policies
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
-    initialDelaySeconds: 45
+    initialDelaySeconds: 90
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 3
   ## livenessProbe configuration for policies
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   livenessProbe:
-    initialDelaySeconds: 180
+    initialDelaySeconds: 160
     periodSeconds: 10
     timeoutSeconds: 3
     failureThreshold: 4
@@ -551,6 +571,7 @@ things:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
+  minReadySeconds: 45
   ## additionalLabels on things pods
   additionalLabels: {}
   ## additionalAnnotations on things pods
@@ -559,12 +580,16 @@ things:
     ## repository for the things docker image
     repository: docker.io/eclipse/ditto-things
     ## tag for the things docker image- overwrite to specify something else than Chart.AppVersion
-    # tag: 2.0.1
+    # tag: 2.1.0
     ## pullPolicy for the things docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for things service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
-  systemProps: []
+  systemProps:
+    - "-Dakka.cluster.failure-detector.threshold=15.0"
+    - "-Dakka.cluster.failure-detector.expected-response-after=10s"
+    - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
+    - "-Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s"
   ## extraEnv to add arbitrary environment variable to things container
   extraEnv: []
   ## resources for the things container
@@ -580,14 +605,14 @@ things:
   ## readinessProbe configuration for things
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
-    initialDelaySeconds: 45
+    initialDelaySeconds: 90
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 3
   ## livenessProbe configuration for things
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   livenessProbe:
-    initialDelaySeconds: 180
+    initialDelaySeconds: 160
     periodSeconds: 10
     timeoutSeconds: 3
     failureThreshold: 4
@@ -625,6 +650,7 @@ thingsSearch:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 0
+  minReadySeconds: 45
   ## additionalLabels on things-search pods
   additionalLabels: {}
   ## additionalAnnotations on things-search pods
@@ -633,12 +659,16 @@ thingsSearch:
     ## repository for the things-search docker image
     repository: docker.io/eclipse/ditto-things-search
     ## tag for the things-search docker image- overwrite to specify something else than Chart.AppVersion
-    # tag: 2.0.1
+    # tag: 2.1.0
     ## pullPolicy for the things-search docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for things-search service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
-  systemProps: []
+  systemProps:
+    - "-Dakka.cluster.failure-detector.threshold=15.0"
+    - "-Dakka.cluster.failure-detector.expected-response-after=10s"
+    - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
+    - "-Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s"
   ## extraEnv to add arbitrary environment variable to things-search container
   extraEnv: []
   ## resources for the things-search container
@@ -654,14 +684,14 @@ thingsSearch:
   ## readinessProbe configuration for things-search
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
-    initialDelaySeconds: 45
+    initialDelaySeconds: 90
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 3
   ## livenessProbe configuration for things-search
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   livenessProbe:
-    initialDelaySeconds: 180
+    initialDelaySeconds: 160
     periodSeconds: 10
     timeoutSeconds: 3
     failureThreshold: 4
