@@ -40,9 +40,6 @@ spec:
         {{- end }}
         {{- end }}
         image: {{ .Values.jaegerBackendExample.allInOneImage }}
-        # the Dockerfile for the all-in-one container defines the "sampling.strategies-file" param in the CMD entry
-        # - this has to be overwritten here so that the SAMPLING_STRATEGIES_FILE env var value will be used instead (see https://github.com/jaegertracing/jaeger/issues/3022)
-        args: [""]
         name: jaeger
         ports:
         - name: collector-grpc

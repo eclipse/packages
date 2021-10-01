@@ -240,7 +240,7 @@ jaegerBackendExample:
   enabled: false
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
-  allInOneImage: jaegertracing/all-in-one:1.22
+  allInOneImage: jaegertracing/all-in-one:1.26
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   livenessProbeInitialDelaySeconds: 300
