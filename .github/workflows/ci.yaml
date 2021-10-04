@@ -13,8 +13,8 @@ name: ci
 
 env:
   CONFIG_OPTION_CHART_TESTING: "--config .github/ct.yaml"
-  VERSION_CHART_TESTING: "v3.3.1"
-  VERSION_HELM: "v3.1.3"
+  VERSION_CHART_TESTING: "v3.4.0"
+  VERSION_HELM: "v3.5.4"
   VERSION_PYTHON: "3.7"
 on:
   pull_request:
@@ -49,7 +49,7 @@ jobs:
         with:
           python-version: ${{ env.VERSION_PYTHON }}
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
+        uses: helm/chart-testing-action@v2.1.0
         with:
           version: ${{ env.VERSION_CHART_TESTING }}
       - name: Run chart-testing (lint)
@@ -79,7 +79,7 @@ jobs:
   install-chart:
     name: install-chart
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - lint-chart
       - kubeval-chart
     strategy:
