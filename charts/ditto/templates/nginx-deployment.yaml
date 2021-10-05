@@ -47,8 +47,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       initContainers:
-        - name: wait-for-gateway
-          image: curlimages/curl:latest
+        - name: {{ .Values.nginx.initContainers.waitForGateway.name }}
+          image: {{ .Values.nginx.initContainers.waitForGateway.image }}
           args:
             - /bin/sh
             - -c
