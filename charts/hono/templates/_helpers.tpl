@@ -284,7 +284,7 @@ name: Hono {{ .component }}
 host: {{ .dot.Release.Name }}-service-device-registry
 port: 5671
 credentialsPath: /etc/hono/adapter.credentials
-trustStorePath: /etc/hono/trusted-certs.pem
+trustStorePath: {{ .dot.Values.deviceRegistryExample.clientTrustStorePath | default "/etc/hono/trusted-certs.pem" | quote }}
 hostnameVerificationRequired: false
 {{- end }}
 
@@ -348,7 +348,7 @@ commandRouter:
   host: {{ .dot.Release.Name }}-service-command-router
   port: 5671
   credentialsPath: /etc/hono/adapter.credentials
-  trustStorePath: /etc/hono/trusted-certs.pem
+  trustStorePath: {{ .dot.Values.commandRouterService.clientTrustStorePath | default "/etc/hono/trusted-certs.pem" | quote }}
   hostnameVerificationRequired: false
 {{- else }}
   {{- required "Either .Values.adapters.commandRouterSpec MUST be set or .Values.commandRouterService.enabled MUST be 'true' if useCommandRouter is 'true'" nil }}

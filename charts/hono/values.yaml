@@ -1217,6 +1217,10 @@ deviceRegistryExample:
     #    secretName: "example-data"
     #    mountPath: "/etc/data"
 
+  # clientTrustStorePath points to the trustStore the client of this example Device Registry should use to verify the certificates.
+  # This can be used when using your own certificates in combination with the example Device Registry
+  clientTrustStorePath:
+
   # hono contains the Device Registry's configuration properties as defined in
   # https://www.eclipse.org/hono/docs/admin-guide/device-registry-config/
   hono:
@@ -1700,6 +1704,10 @@ commandRouterService:
 
   # The configMap to get additional environment variables from for this command router service.
   envConfigMap:
+
+  # clientTrustStorePath points to the trustStore the client of this command router service should use to verify the certificates.
+  # This can be used when using your own certificates in combination with this command router service.
+  clientTrustStorePath:
 
   # hono contains the service's configuration properties as defined in
   # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/
