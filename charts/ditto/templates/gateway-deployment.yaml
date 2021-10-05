@@ -78,7 +78,9 @@ spec:
           args:
             - "java"
           {{- if .Values.gateway.systemProps }}
-            {{- toYaml .Values.gateway.systemProps | nindent 12 }}
+            {{- range .Values.gateway.systemProps }}
+            - {{ . | quote }}
+            {{- end }}
           {{- end }}
             - "-jar"
             - "/opt/ditto/starter.jar"
