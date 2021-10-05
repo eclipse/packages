@@ -59,7 +59,7 @@ global:
 gateway:
   enableDummyAuth: false
   systemProps:
-    - "-Dditto.gateway.authentication.oauth.openid-connect-issuers.myprovider=openid-connect.onelogin.com/oidc"
+    - "-Dditto.gateway.authentication.oauth.openid-connect-issuers.myprovider.issuer=openid-connect.onelogin.com/oidc"
 ```
 
 ### Securing Devops Resource
