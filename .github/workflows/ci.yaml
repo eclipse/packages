@@ -111,7 +111,7 @@ jobs:
         with:
           python-version: ${{ env.VERSION_PYTHON }}
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.0.1
+        uses: helm/chart-testing-action@v2.1.0
         with:
           version: ${{ env.VERSION_CHART_TESTING }}
       - name: Check for changed charts
@@ -122,11 +122,40 @@ jobs:
             echo "::set-output name=changed::true"
           fi
       - name: Create kind ${{ matrix.k8s }} cluster
-        uses: helm/kind-action@v1.1.0
+        uses: helm/kind-action@v1.2.0
         with:
           version: v0.11.1
           config: .github/kind-config.yaml
           node_image: kindest/node:${{ matrix.k8s }}
-        if: steps.list-changed.outputs.changed == 'true'
+        if: ${{ steps.list-changed.outputs.changed == 'true' }}
+      - name: Deploy ingress controller
+        if: ${{ steps.list-changed.outputs.changed == 'true' }}
+        run: |
+          # upgrade after: https://github.com/kubernetes/ingress-nginx/issues/6245
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.3/deploy/static/provider/kind/deploy.yaml
+      - name: Wait for the ingress controller to become ready
+        if: ${{ steps.list-changed.outputs.changed == 'true' }}
+        run: |
+          kubectl wait --namespace ingress-nginx \
+            --for=condition=ready pod \
+            --selector=app.kubernetes.io/component=controller \
+            --timeout=180s
+          kubectl -n ingress-nginx set resources deployment ingress-nginx-controller --requests=cpu=0
+          sleep 120
+          kubectl wait --namespace ingress-nginx \
+            --for=condition=ready pod \
+            --selector=app.kubernetes.io/component=controller \
+            --timeout=180s
+      - if: ${{ failure() }}
+        run: |
+          kubectl -n ingress-nginx describe pods
+          kubectl describe nodes
       - name: Run chart-testing (install)
         run: ct install ${{ env.CONFIG_OPTION_CHART_TESTING }}
+
+      - name: Record logs
+        if: ${{ failure() }}
+        run: |
+          # drop after: https://github.com/kubernetes/ingress-nginx/issues/6245
+          kubectl -n ingress-nginx describe pods
+          kubectl -n ingress-nginx logs deployment/ingress-nginx-controller
