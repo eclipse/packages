@@ -62,10 +62,13 @@ jobs:
       matrix:
         # the versions supported by kubeval are the ones for
         # which a folder exists at
-        # https://github.com/instrumenta/kubernetes-json-schema
+        # https://github.com/yannh/kubernetes-json-schema/
         k8s:
-          - v1.17.4
           - v1.18.1
+          - v1.19.7
+          - v1.20.9
+          - v1.21.5
+          - v1.22.2
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -92,11 +95,11 @@ jobs:
         # the versions supported by chart-testing are the tags
         # available for the docker.io/kindest/node image
         # https://hub.docker.com/r/kindest/node/tags
-          - v1.17.17
           - v1.18.19
           - v1.19.11
           - v1.20.7
           - v1.21.1
+          - v1.22.1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
