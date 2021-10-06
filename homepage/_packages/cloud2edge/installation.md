@@ -72,7 +72,7 @@ The easiest way of getting to know the Cloud2Edge package is by [taking a little
 {% endcapture %}
 
 {% capture aside %}
-{% include cluster-req.html reqs="Kubernetes=1.17.x;CPUs=4;Memory=8192 MiB;Disk=40 GiB" additional="Will require cluster admin privileges."%}
+{% include cluster-req.html reqs="Kubernetes=1.19.x;CPUs=4;Memory=8192 MiB;Disk=40 GiB" additional="Will require cluster admin privileges."%}
 {% endcapture %}
 
 {% include side-page.html main=main aside=aside %}
