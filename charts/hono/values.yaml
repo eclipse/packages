@@ -333,8 +333,14 @@ honoImagesType: "quarkus"
 
 # useLoadBalancer indicates whether services should be deployed using the
 # "LoadBalancer" type (true) or the "NodePort" type (false).
-# This property will be ignored when deploying to platform "openshift".
+# This property will be ignored when deploying to platform "openshift" or when serviceType
+# (see below) is configured.
 useLoadBalancer: true
+
+# serviceType indicates which service type services should have.
+# Possible serivceTypes are described on
+# https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+serviceType:
 
 # useCommandRouter indicates whether the Command Router service instead of
 # the Device Connection service shall be used for routing Command & Control

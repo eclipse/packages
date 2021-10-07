@@ -637,7 +637,9 @@ The scope passed in is expected to be a dict with keys
 Adds port type declarations to a component's service spec.
 */}}
 {{- define "hono.serviceType" }}
-{{- if eq .Values.platform "openshift" }}
+{{- if .Values.serviceType }}
+  type: {{ .Values.serviceType }}
+{{- else if eq .Values.platform "openshift" }}
   type: ClusterIP
 {{- else if eq .Values.useLoadBalancer true }}
   type: LoadBalancer
