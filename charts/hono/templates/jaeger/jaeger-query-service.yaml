@@ -28,7 +28,9 @@ spec:
       targetPort: query-http
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}
+{{- if .Values.serviceType }}
+  type: {{ .Values.serviceType }}
+{{- else if and ( eq .Values.useLoadBalancer true ) ( ne .Values.platform "openshift" ) }}
   type: LoadBalancer
 {{- else }}
   type: NodePort
