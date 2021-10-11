@@ -70,4 +70,5 @@ spec:
         persistentVolumeClaim:
           claimName: {{ printf "%s-%s" .Release.Name $args.name | quote }}
       {{- end }}
+      serviceAccountName: {{ printf "%s-%s" .Release.Name $args.name | quote }}
 {{- end }}
