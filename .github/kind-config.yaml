@@ -27,6 +27,3 @@ nodes:
     - containerPort: 443
       hostPort: 443
       protocol: TCP
-# the 2 workers
-- role: worker
-- role: worker
