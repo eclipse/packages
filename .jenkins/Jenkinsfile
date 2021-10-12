@@ -32,7 +32,7 @@ podTemplate(
     ],
     volumes: [
         emptyDirVolume(mountPath: '/home/jenkins', memory: false),
-        configMapVolume(mountPath: '/home/jenkins/.ssh', configMapName: 'known-hosts')
+        configMapVolume(mountPath: '/home/jenkins/.ssh', configMapName: 'known-hosts', subPath: '.')
     ]
 ) {
 
