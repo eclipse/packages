@@ -33,7 +33,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo add grafana https://grafana.github.io/helm-charts
 
 # validate charts
-for CHART_DIR in ${CHART_DIRS};do
+for CHART_DIR in ${CHART_DIRS}; do
   echo "helm dependency build..."
   helm dependency build "${CHART_DIR}"
 
