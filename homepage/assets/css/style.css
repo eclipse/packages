@@ -32,11 +32,16 @@ img.card-img-top {
     visibility: hidden;
 }
 
-footer {
+footer.page-footer {
     background: #F0F0F0;
     padding: 3rem;
     margin-top: 3rem;
     font-size: small;
+}
+
+.blockquote{
+    border-left: lightgray 4px solid;
+    padding-left: 1rem;
 }
 
 .border-callout-left {
@@ -64,6 +69,16 @@ pre {
     padding-left: 1rem;
 }
 
+.toc-list > .toc-item {
+    margin-top: .25rem;
+    margin-bottom: .25rem;
+}
+
+.toc-list > .toc-item > ul {
+    margin-top: .25rem;
+    margin-bottom: .25rem;
+}
+
 .toc-item {
     list-style: none;
 }
@@ -78,6 +93,12 @@ pre {
     margin-bottom: 0;
 }
 
+/* tabs */
+
+.nav-tabs {
+    margin-bottom: 1rem;
+}
+
 /* clipboard */
 
 .clipboard {
@@ -88,7 +109,6 @@ pre {
     position: absolute;
     top: .4rem;
     right: .4rem;
-    font-size: 100%;
     padding: .25rem .5rem;
     color: #818a91;
     font-size: 85%;
