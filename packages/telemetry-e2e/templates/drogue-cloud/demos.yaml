@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-ditto
+  labels:
+    demo: drogue
+data:
+  label: Eclipse Ditto Console
+  href: {{ include "ditto.app-url" . | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-streamsheets
+  labels:
+    demo: drogue
+data:
+  label: Eclipse Streamsheets Console
+  href: {{ include "streamsheets.app-url" ( dict "Values" .Values.streamsheets "Release" .Release ) | quote }}

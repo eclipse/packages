@@ -1,0 +1,11 @@
+apiVersion: iofog.org/v2
+kind: Agent
+metadata:
+  name: node-1
+spec:
+  host: raspberrypi.fritz.box
+  ssh:
+    user: pi
+    keyFile: ~/.ssh/id_rsa
+  package:
+    version: 3.0.0-alpha2

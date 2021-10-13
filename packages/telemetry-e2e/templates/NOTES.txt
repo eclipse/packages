@@ -1,0 +1,18 @@
+Default credentials:
+  User:     admin
+  Password: {{ .Values.drogueCloud.keycloak.adminPassword }}
+
+Console: {{ include "drogue-cloud-common.ingress.url" (dict "root" . "prefix" "console" "ingress" .Values.drogueCloud.services.console.ingress ) }}
+API: {{ include "drogue-cloud-common.ingress.url" (dict "root" . "prefix" "api" "ingress" .Values.drogueCloud.services.api.ingress ) }}
+
+Log in using 'drg':
+
+    drg login {{ include "drogue-cloud-common.ingress.url" (dict "root" . "prefix" "api" "ingress" .Values.drogueCloud.services.api.ingress ) }}
+
+HTTP Endpoint: {{ include "drogue-cloud-common.ingress.url" (dict "root" . "prefix" "http-endpoint" "ingress" .Values.drogueCloud.endpoints.http.ingress "insecure" .Values.drogueCloud.endpoints.http.insecure ) }}
+
+Device credentials for Kura:
+  User: {{ .Values.demoDevice.id }}@{{ .Values.drogueApplication.name }}
+  Password: {{ .Values.demoDevice.password }}
+
+.

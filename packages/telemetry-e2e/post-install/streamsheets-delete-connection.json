@@ -1,0 +1,10 @@
+{
+  "targetActorSelection": "/system/sharding/connection",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:deleteConnection",
+    "connectionId": "streamsheets-via-mqtt"
+  }
+}

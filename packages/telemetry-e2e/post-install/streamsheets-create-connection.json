@@ -1,0 +1,37 @@
+{
+  "targetActorSelection": "/system/sharding/connection",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:createConnection",
+    "connection": {
+      "id": "streamsheets-via-mqtt",
+      "connectionType": "mqtt",
+      "connectionStatus": "open",
+      "failoverEnabled": true,
+      "uri": "tcp://{{ .Values.streamsheets.internalBroker.username | urlquery }}:{{ .Values.streamsheets.internalBroker.password | urlquery }}@streamsheets-broker:1883",
+      "validateCertificates": false,
+      "specificConfig": {
+        "reconnectForRedelivery": false,
+        "cleanSession": true,
+        "separatePublisherClient": false
+      },
+      "sources": [
+      ],
+      "targets": [
+        {
+          "address": "ditto-twin-events",
+          "topics": [
+            "_/_/things/twin/events"
+          ],
+          "authorizationContext": ["pre-authenticated:streamsheets"],
+          "qos": 0,
+          "payloadMapping": [
+            "Normalized"
+          ]
+        }
+      ]
+    }
+  }
+}

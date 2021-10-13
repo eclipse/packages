@@ -1,0 +1,7 @@
+apiVersion: iofog.org/v2
+kind: AgentConfig
+metadata:
+  name: agent-1
+spec:
+  name: agent-1
+  host: raspberrypi.fritz.box

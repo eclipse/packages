@@ -1,0 +1,428 @@
+{
+  "version": 2,
+  "machines": [
+    {
+      "machine": {
+        "id": "rybIEm3_zF",
+        "name": "Eclipse IoT",
+        "state": "stopped",
+        "metadata": {
+          "owner": "anon",
+          "lastModified": 1631278075551,
+          "lastModifiedBy": "unknown",
+          "fileVersion": "2.0.0"
+        },
+        "streamsheets": [
+          {
+            "id": "HJVUN72OzF",
+            "name": "S1",
+            "loop": {
+              "path": "",
+              "enabled": false,
+              "recursively": false
+            },
+            "inbox": {
+              "max": 20,
+              "type": "MessageBox",
+              "id": "HySLVXh_Mt",
+              "stream": {
+                "id": "S1eMm7hOGK",
+                "name": "EclipseDittoConsumer"
+              }
+            },
+            "sheet": {
+              "cells": {
+                "B3": {
+                  "value": "Temp",
+                  "type": "string",
+                  "level": 0,
+                  "ref": {
+                    "col": "B",
+                    "row": 3
+                  }
+                },
+                "C3": {
+                  "formula": "READ(INBOXDATA(,,\"features\",\"temperature\",\"properties\",\"value\"),D3,\"Number\",,TRUE)",
+                  "value": "value",
+                  "type": "undefined",
+                  "level": 0,
+                  "ref": {
+                    "col": "C",
+                    "row": 3
+                  }
+                },
+                "D3": {
+                  "value": "#NA!",
+                  "type": "string",
+                  "level": 0,
+                  "ref": {
+                    "col": "D",
+                    "row": 3
+                  }
+                },
+                "B4": {
+                  "value": "Hum",
+                  "type": "string",
+                  "level": 0,
+                  "ref": {
+                    "col": "B",
+                    "row": 4
+                  }
+                },
+                "C4": {
+                  "formula": "READ(INBOXDATA(,,\"features\",\"humidity\",\"properties\",\"value\"),D4,\"Number\",,TRUE)",
+                  "value": "value",
+                  "type": "undefined",
+                  "level": 0,
+                  "ref": {
+                    "col": "C",
+                    "row": 4
+                  }
+                },
+                "D4": {
+                  "value": "#NA!",
+                  "type": "string",
+                  "level": 0,
+                  "ref": {
+                    "col": "D",
+                    "row": 4
+                  }
+                },
+                "B5": {
+                  "value": "Battery",
+                  "type": "string",
+                  "level": 0,
+                  "ref": {
+                    "col": "B",
+                    "row": 5
+                  }
+                },
+                "C5": {
+                  "formula": "READ(INBOXDATA(,,\"features\",\"battery\",\"properties\",\"value\"),D5,\"Number\",,TRUE)",
+                  "value": "value",
+                  "type": "undefined",
+                  "level": 0,
+                  "ref": {
+                    "col": "C",
+                    "row": 5
+                  }
+                },
+                "D5": {
+                  "value": "#NA!",
+                  "type": "string",
+                  "level": 0,
+                  "ref": {
+                    "col": "D",
+                    "row": 5
+                  }
+                },
+                "B7": {
+                  "value": "Location",
+                  "type": "string",
+                  "level": 0
+                },
+                "C7": {
+                  "formula": "READ(INBOXDATA(,,\"features\",\"location\",\"properties\",\"latitude\"),D7,\"Number\",,TRUE)",
+                  "value": "latitude",
+                  "type": "undefined",
+                  "level": 0,
+                  "ref": {
+                    "col": "C",
+                    "row": 7
+                  }
+                },
+                "D7": {
+                  "value": 1,
+                  "type": "number",
+                  "level": 0,
+                  "ref": {
+                    "col": "D",
+                    "row": 7
+                  }
+                },
+                "C8": {
+                  "formula": "READ(INBOXDATA(,,\"features\",\"location\",\"properties\",\"longitude\"),D8,\"Number\",,TRUE)",
+                  "value": "longitude",
+                  "type": "undefined",
+                  "level": 0,
+                  "ref": {
+                    "col": "C",
+                    "row": 8
+                  }
+                },
+                "D8": {
+                  "value": 1,
+                  "type": "number",
+                  "level": 0,
+                  "ref": {
+                    "col": "D",
+                    "row": 8
+                  }
+                }
+              },
+              "namedCells": {},
+              "shapes": {
+                "shapes": [],
+                "changed": 487512673183,
+                "version": 1
+              },
+              "properties": {
+                "cols": [],
+                "rows": [],
+                "cells": []
+              },
+              "settings": {
+                "maxchars": 1000,
+                "minrow": 1,
+                "maxrow": 100,
+                "mincol": -2,
+                "maxcol": 50,
+                "protected": false
+              }
+            },
+            "trigger": {
+              "repeat": "once",
+              "type": "arrival"
+            }
+          }
+        ],
+        "settings": {
+          "view": {
+            "maximize": "HJVUN72OzF",
+            "showInbox": false,
+            "showGrid": false,
+            "showHeader": false,
+            "showOutbox": false,
+            "allowZoom": false,
+            "allowScroll": true
+          },
+          "locale": "en",
+          "isOPCUA": false,
+          "cycletime": 100
+        },
+        "extensionSettings": {},
+        "className": "Machine",
+        "scope": {
+          "id": "root"
+        },
+        "namedCells": {
+          "|Wind_Data": {
+            "value": {
+              "id": "HkZRIJtchH",
+              "name": "Wind_Data",
+              "type": "stream",
+              "state": "connected",
+              "timestamp": 1631269491893,
+              "scope": {
+                "id": "root"
+              }
+            },
+            "type": "object",
+            "info": {
+              "rawtype": "object"
+            },
+            "level": 0
+          },
+          "|MQTT_Consumer": {
+            "value": {
+              "id": "CONSUMER_MQTT",
+              "name": "MQTT_Consumer",
+              "type": "stream",
+              "state": "connected",
+              "timestamp": 1631269491893,
+              "scope": {
+                "id": "root"
+              }
+            },
+            "type": "object",
+            "info": {
+              "rawtype": "object"
+            },
+            "level": 0
+          },
+          "|MQTT_Producer": {
+            "value": {
+              "id": "PRODUCER_MQTT",
+              "name": "MQTT_Producer",
+              "type": "producer",
+              "state": "connected",
+              "timestamp": 1631269491894,
+              "scope": {
+                "id": "root"
+              }
+            },
+            "type": "object",
+            "info": {
+              "rawtype": "object"
+            },
+            "level": 0
+          },
+          "|EclipseDittoConsumer": {
+            "value": {
+              "id": "S1eMm7hOGK",
+              "name": "EclipseDittoConsumer",
+              "type": "stream",
+              "state": "connected",
+              "timestamp": 1631269664359,
+              "scope": {
+                "id": "root"
+              }
+            },
+            "type": "object",
+            "info": {
+              "rawtype": "object"
+            },
+            "level": 0
+          }
+        }
+      },
+      "graph": {
+        "id": "SkP4XndfF",
+        "graphdef": {
+          "version": "3",
+          "uniqueid": "1",
+          "o-outbox": {
+            "split": "5000",
+            "width": "5000"
+          },
+          "a-graphitem": [
+            {
+              "id": "1000",
+              "o-attributes": {
+                "o-sheetid": {
+                  "v": "HJVUN72OzF",
+                  "t": "s"
+                }
+              },
+              "o-pin": {
+                "o-p": {
+                  "o-x": {
+                    "v": "11000"
+                  },
+                  "o-y": {
+                    "v": "7000"
+                  }
+                },
+                "o-lp": {
+                  "o-x": {
+                    "f": "WIDTH%20*%200.5",
+                    "v": "10500"
+                  },
+                  "o-y": {
+                    "f": "HEIGHT%20*%200.5",
+                    "v": "6500"
+                  }
+                }
+              },
+              "o-size": {
+                "o-w": {
+                  "v": "21000"
+                },
+                "o-h": {
+                  "v": "13000"
+                }
+              },
+              "o-inbox": {
+                "split": "5000",
+                "width": "9207"
+              },
+              "o-processsheet": {
+                "o-attributes": {
+                  "o-calcondemand": {
+                    "v": "true",
+                    "t": "b"
+                  }
+                },
+                "o-name": {
+                  "v": "S1",
+                  "t": "s"
+                },
+                "o-rows": {
+                  "outline": "above"
+                },
+                "o-columns": {
+                  "outline": "above",
+                  "a-section": [
+                    {
+                      "index": "0",
+                      "size": "0",
+                      "visible": "0"
+                    },
+                    {
+                      "index": "1",
+                      "size": "700",
+                      "visible": "1"
+                    }
+                  ]
+                },
+                "o-defaultcell": {
+                  "o-cell": {}
+                },
+                "o-data": {}
+              }
+            }
+          ],
+          "o-images": {}
+        },
+        "machineId": "rybIEm3_zF"
+      }
+    }
+  ],
+  "streams": [
+    {
+      "id": "Syx0g7ndfY",
+      "name": "EclipseDitto",
+      "disabled": false,
+      "className": "ConnectorConfiguration",
+      "lastModified": "2021-09-10T10:27:26.616Z",
+      "lastAccessed": "2021-09-10T10:27:01.622Z",
+      "provider": {
+        "_id": "@cedalo/stream-mqtt",
+        "id": "@cedalo/stream-mqtt",
+        "className": "ProviderConfiguration",
+        "isRef": true
+      },
+      "protocolVersion": 4,
+      "url": "mqtt://streamsheets-broker:1883",
+      "userPropertiesConnect": [],
+      "userName": {{ .Values.streamsheets.internalBroker.username | quote }},
+      "password": {{ .Values.streamsheets.internalBroker.password | quote }},
+      "baseTopic": "ditto-twin-events/",
+      "retain": false,
+      "qos": 0,
+      "scope": {
+        "id": "root"
+      },
+      "state": "disconnected"
+    },
+    {
+      "id": "S1eMm7hOGK",
+      "name": "EclipseDittoConsumer",
+      "className": "ConsumerConfiguration",
+      "lastModified": "2021-09-10T10:27:44.347Z",
+      "lastAccessed": "2021-09-10T10:27:37.987Z",
+      "connector": {
+        "_id": "Syx0g7ndfY",
+        "id": "Syx0g7ndfY",
+        "className": "ConnectorConfiguration",
+        "disabled": false,
+        "lastModified": "2021-09-10T10:27:26.616Z",
+        "lastAccessed": "2021-09-10T10:27:01.622Z",
+        "isRef": true
+      },
+      "providerId": "@cedalo/stream-mqtt",
+      "mimeType": "auto",
+      "fixedClientId": false,
+      "clientId": "",
+      "clean": true,
+      "userPropertiesSubscribe": [],
+      "topics": [
+        "#"
+      ],
+      "scope": {
+        "id": "root"
+      },
+      "state": "connected"
+    }
+  ]
+}
