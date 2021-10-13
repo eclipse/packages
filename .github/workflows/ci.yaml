@@ -150,6 +150,9 @@ jobs:
         run: |
           kubectl -n ingress-nginx describe pods
           kubectl describe nodes
+      - name: Run CI chart customization
+        if: ${{ steps.list-changed.outputs.changed == 'true' }}
+        run: .github/chart-ci-init.sh
       - name: Run chart-testing (install)
         run: ct install ${{ env.CONFIG_OPTION_CHART_TESTING }}
 
