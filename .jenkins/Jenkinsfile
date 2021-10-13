@@ -8,7 +8,7 @@ properties([
 ])
 
 def label = "packages-${UUID.randomUUID().toString()}"
-def HELM_VERSION = "3.1.3"
+def HELM_VERSION = "3.5.4"
 
 def needToDeploy() {
     return BRANCH_NAME == 'master' || BRANCH_NAME == 'develop'
