@@ -1,0 +1,30 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: ditto-kafka-user
+  labels:
+    strimzi.io/cluster: drogue-iot
+spec:
+  authentication:
+    type: scram-sha-512
+    password:
+      valueFrom:
+        secretKeyRef:
+          name: ditto-kafka-user-credentials
+          key: password
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: {{ include "drogue-cloud-common.kafka-event-topic" (dict "application" .Values.drogueApplication ) | quote }}
+          patternType: literal
+        operation: Read
+        host: "*"
+
+      - resource:
+          type: group
+          name: "*"
+          patternType: literal
+        operation: Read
+        host: "*"

@@ -1,0 +1,7 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: streamsheets-init
+data:
+  init.json: |
+    {{- tpl ( .Files.Get "config/streamsheets/init.json" ) . | b64enc | nindent 4 }}

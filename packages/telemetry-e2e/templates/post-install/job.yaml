@@ -1,0 +1,94 @@
+{{ $ref := (dict "root" . "partOf" "deployment" "component" "post-install" "name" "post-install-ditto" ) }}
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: post-install-ditto
+  labels:
+    {{- include "eclipse-iot-telemetry.labels" $ref | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  backoffLimit: 1000
+  completions: 1
+  parallelism: 1
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        {{- include "eclipse-iot-telemetry.labels" $ref  | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: "post-install"
+          image: "ghcr.io/ctron/kubectl:1.19"
+          env:
+            - name: SSO_URL
+              value: {{ include "drogue-cloud-common.ingress.url" (dict "root" . "prefix" "sso" "ingress" .Values.drogueCloud.services.sso.ingress ) }}
+            - name: DROGUE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-client-secret-services
+                  key: CLIENT_ID
+            - name: DROGUE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-client-secret-services
+                  key: CLIENT_SECRET
+            - name: DITTO_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: ditto-gateway-secret
+                  key: devops-password
+            - name: DROGUE_REGISTRY_URL
+              value: http://device-management-service:80
+            - name: DITTO_URL
+              value: http://ditto-nginx:8080
+          command:
+            - /bin/bash
+            - -exc
+            - |
+              # get bearer token for client
+              DROGUE_TOKEN="$(curl -sL -k -o - -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=$DROGUE_CLIENT_ID" -d "client_secret=$DROGUE_CLIENT_SECRET" -d "grant_type=client_credentials" ${SSO_URL}/auth/realms/drogue/protocol/openid-connect/token | jq -r .access_token)"
+              echo
+
+              # test access
+              curl -svL -f -X GET -H "Authorization: Bearer $DROGUE_TOKEN" -H "Content-Type: application/json" ${DROGUE_REGISTRY_URL}/api/registry/v1alpha1/apps
+              echo
+
+              # create Drogue Cloud application
+              curl -svL -f -X POST -H "Authorization: Bearer $DROGUE_TOKEN" -H "Content-Type: application/json" --data-binary @/etc/config/post-install-data/drogue-cloud-application.json ${DROGUE_REGISTRY_URL}/api/registry/v1alpha1/apps || true
+              echo
+
+              # create Drogue Cloud device
+              curl -svL -f -X POST -H "Authorization: Bearer $DROGUE_TOKEN" -H "Content-Type: application/json" --data-binary @/etc/config/post-install-data/drogue-cloud-device.json ${DROGUE_REGISTRY_URL}/api/registry/v1alpha1/apps/{{ .Values.drogueApplication.name | urlquery }}/devices || true
+              echo
+
+              # delete and re-create a thing
+              curl -svL -X DELETE -u ditto:ditto "${DITTO_URL}/api/2/things/{{ regexReplaceAll "-" .Values.drogueApplication.name "_" | urlquery }}%3A{{ .Values.demoDevice.id | urlquery }}"
+              echo
+              curl -svL -X DELETE -u ditto:ditto "${DITTO_URL}/api/2/policies/{{ regexReplaceAll "-" .Values.drogueApplication.name "_" | urlquery }}%3A{{ .Values.demoDevice.id | urlquery }}"
+              echo
+              curl -svL -f -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data-binary @/etc/config/post-install-data/thing-definition.json "${DITTO_URL}/api/2/things/{{ regexReplaceAll "-" .Values.drogueApplication.name "_" | urlquery }}:{{ .Values.demoDevice.id | urlquery }}"
+              echo
+
+              # drop and re-create connection between Drogue Cloud and Ditto
+              curl -svL -f -X POST -u devops:$DITTO_PWD -H 'Content-Type: application/json' --data-binary @/etc/config/post-install-data/drogue-cloud-delete-connection.json ${DITTO_URL}/devops/piggyback/connectivity
+              echo
+              curl -svL -f -X POST -u devops:$DITTO_PWD -H 'Content-Type: application/json' --data-binary @/etc/config/post-install-data/drogue-cloud-create-connection.json ${DITTO_URL}/devops/piggyback/connectivity
+              echo
+
+              # drop and re-create connection between Ditto and Streamsheets
+              curl -svL -f -X POST -u devops:$DITTO_PWD -H 'Content-Type: application/json' --data-binary @/etc/config/post-install-data/streamsheets-delete-connection.json ${DITTO_URL}/devops/piggyback/connectivity
+              echo
+              curl -svL -f -X POST -u devops:$DITTO_PWD -H 'Content-Type: application/json' --data-binary @/etc/config/post-install-data/streamsheets-create-connection.json ${DITTO_URL}/devops/piggyback/connectivity
+              echo
+
+          volumeMounts:
+            - name: post-install-data
+              mountPath: "/etc/config/post-install-data"
+              readOnly: true
+      volumes:
+        - name: post-install-data
+          secret:
+            secretName: "post-install-data"

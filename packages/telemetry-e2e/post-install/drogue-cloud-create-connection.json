@@ -1,0 +1,57 @@
+{
+  "targetActorSelection": "/system/sharding/connection",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:createConnection",
+    "connection": {
+      "id": "drogue-iot-eclipse-iot-kafka",
+      "connectionType": "kafka",
+      "connectionStatus": "open",
+      "failoverEnabled": true,
+      "uri": "tcp://ditto-kafka-user:{{ .Values.kafka.password | urlquery }}@drogue-iot-kafka-bootstrap:9092",
+      "specificConfig": {
+        "bootstrapServers": "drogue-iot-kafka-bootstrap:9092",
+        "saslMechanism": "SCRAM-SHA-512",
+        "groupId": "ditto"
+      },
+      "sources": [
+        {
+          "addresses": [
+            {{ include "drogue-cloud-common.kafka-event-topic" (dict "application" .Values.drogueApplication ) | quote }}
+          ],
+          "consumerCount": 1,
+          "authorizationContext": ["pre-authenticated:drogue-cloud"],
+          "enforcement": {
+            "input": {{ "{{ header:ce_application }}:{{ header:ce_device }}" | quote }},
+            "filters": [
+              {{ "{{ entity:id }}" | quote }}
+            ]
+          },
+          "headerMapping": {
+            "application": {{ "{{ header:ce_application }}" | quote }},
+            "device": {{ "{{ header:ce_device }}" | quote }},
+            "content-type": {{ "{{ header:content-type }}" | quote }}
+          },
+          "payloadMapping": [
+            "drogue-cloud-events-mapping"
+          ]
+        }
+      ],
+      "targets": [],
+      "mappingDefinitions": {
+        "drogue-cloud-events-mapping": {
+          "mappingEngine": "JavaScript",
+          "options": {
+            "_comment": "This code comes from ../extra/drogue-cloud-incoming.js",
+            "incomingScript": "// this needs to be JSON encoded and updated in ../post-install/drogue-cloud-connection.json\n\nfunction mapToDittoProtocolMsg(\n    headers,\n    textPayload,\n    bytePayload,\n    contentType) {\n\n    let application = headers[\"ce_application\"].replace(\"-\", \"_\");\n    let device = headers[\"ce_device\"];\n\n    let datacontenttype = headers[\"content-type\"];\n    let dataschema = headers[\"ce_dataschema\"];\n    let type = headers[\"ce_type\"];\n    let subject = headers[\"ce_subject\"];\n\n    if (datacontenttype !== \"application/json\") {\n        return null;\n    }\n    /*\n    if (subject !== \"state\") {\n        return null;\n    }\n    */\n    /*\n    if (dataschema !== \"urn:drogue:iot:temperature\") {\n        return null;\n    }\n    */\n    if (type !== \"io.drogue.event.v1\") {\n        return null;\n    }\n\n    let payload = JSON.parse(textPayload);\n\n    let attributesObj = {\n        drogue: {\n            instance: headers[\"ce_instance\"],\n            application: headers[\"ce_application\"],\n            device: headers[\"ce_device\"],\n            modelNumber: payload[\"metrics\"][\"modelNumber\"],\n            serialNumber: payload[\"metrics\"][\"serialNumber\"]\n        }\n    };\n\n    let featuresObj = {\n        temperature: {\n            properties: {\n                value: payload[\"metrics\"][\"temperature\"]\n            }\n        },\n        humidity: {\n            properties: {\n                value: payload[\"metrics\"][\"humidity\"]\n            }\n        }\n    };\n\n    // optionally map the battery level\n    let battery = payload[\"batt\"];\n    if (battery != null) {\n        featuresObj[\"battery\"] = {\n            properties: {\n                value: battery,\n            }\n        };\n    } else {\n        featuresObj[\"battery\"] = {\n            properties: null\n        };\n    }\n\n    // optionally map the location\n    let geoloc = payload[\"geoloc\"];\n    if (geoloc != null && geoloc[\"lat\"] != null && geoloc[\"lon\"] != null ) {\n        featuresObj[\"location\"] = {\n            properties: {\n                latitude: geoloc[\"lat\"],\n                longitude: geoloc[\"lon\"]\n            }\n        };\n    } else {\n        featuresObj[\"location\"] = {\n            properties: null,\n        };\n    }\n\n    let dittoHeaders = {\n        \"response-required\": false,\n        \"content-type\": \"application/merge-patch+json\",\n        \"If-Match\": \"*\"\n    };\n\n    return Ditto.buildDittoProtocolMsg(\n        application,\n        device,\n        \"things\",\n        \"twin\",\n        \"commands\",\n        \"merge\",\n        \"/\",\n        dittoHeaders,\n        {\n            attributes: attributesObj,\n            features: featuresObj\n        }\n    );\n}\n",
+            "outgoingScript": "function mapFromDittoProtocolMsg() { return null; }",
+            "loadBytebufferJS": "false",
+            "loadLongJS": "false"
+          }
+        }
+      }
+    }
+  }
+}

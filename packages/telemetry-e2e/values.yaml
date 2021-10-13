@@ -1,0 +1,203 @@
+global:
+  domain: .change.me
+  cluster: minikube
+
+kafka:
+  # password for the Kafka user generated to give Ditto access to the event topic for "eclipse-iot"
+  password: changeme
+
+drogueApplication:
+  name: eclipse
+
+demoDevice:
+  id: device-1
+  password: device12
+
+drogueCloud:
+
+  defaults:
+    ingress:
+      className: nginx
+
+  endpoints:
+    coap:
+      insecure: true
+      ingress:
+        port: 30003
+    mqtt:
+      insecure: true
+      ingress:
+        port: 30001
+    http:
+      insecure: true
+      ingress:
+        port: 30443
+
+  integrations:
+    mqtt:
+      insecure: true
+      ingress:
+        port: 30002
+    websocket:
+      insecure: true
+      ingress:
+        port: 30004
+
+  services:
+    console:
+      ingress: {}
+    api:
+      ingress: {}
+    sso:
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+          nginx.ingress.kubernetes.io/server-snippet: |2-
+                              location ~* "^/auth/realms/master/metrics" {
+                                  return 301 /auth/realms/master;
+                              }
+
+  postgres:
+    resources:
+      limits:
+        memory: 256Mi
+        cpu: "100m"
+      requests:
+        memory: 256Mi
+        cpu: "100m"
+
+  keycloak:
+    resources:
+      requests:
+        memory: 1536Mi
+        cpu: "200m"
+      limits:
+        memory: 2048Mi
+        cpu: "1"
+
+  kafka:
+    kafka:
+      resources:
+        requests:
+          memory: 128Mi
+          cpu: "200m"
+        limits:
+          memory: 1Gi
+          cpu: "1"
+    zookeeper:
+      resources:
+        requests:
+          memory: 128Mi
+          cpu: "50m"
+        limits:
+          memory: 512Mi
+          cpu: "500m"
+    topicOperator:
+      resources:
+        requests:
+          memory: 128Mi
+          cpu: "50m"
+        limits:
+          memory: 256Mi
+          cpu: "250m"
+    userOperator:
+      resources:
+        requests:
+          memory: 128Mi
+          cpu: "50m"
+        limits:
+          memory: 256Mi
+          cpu: "250m"
+    tlsSidecar:
+      resources:
+        requests: {}
+        limits: {}
+
+ditto:
+  fullnameOverride: ditto
+
+  concierge:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 384Mi
+  connectivity:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 512Mi
+  gateway:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 384Mi
+  policies:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 384Mi
+  things:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 384Mi
+  thingsSearch:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 384Mi
+
+streamsheets:
+  images:
+    tag: latest
+  mongodb:
+    fullnameOverride: streamsheets-mongodb
+  redis:
+    fullnameOverride: streamsheets-redis
+  initialize:
+    enabled: true
+    secretName: streamsheets-init
+  ingress:
+    protocol: http
+
+keycloak:
+  version: 15.0.1
+
+strimzi:
+  resources:
+    requests:
+      cpu: "100m"
+      memory: 256Mi
+    limits:
+      cpu: "200m"
+      memory: 384Mi
+
+# iofog:
+#   controlPlane:
+#     controller:
+#       serviceType: ClusterIP
+#
+#   ingress:
+#     annotations: {}
+#     api:
+#       protocol: http
+#     viewer:
+#       protocol: http

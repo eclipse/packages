@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "application": {{ .Values.drogueApplication.name | quote }},
+    "name": {{ .Values.demoDevice.id | quote }}
+  },
+  "spec": {
+    "credentials": {
+      "credentials": [
+        { "pass": {{ .Values.demoDevice.password | quote }} }
+      ]
+    }
+  }
+}
