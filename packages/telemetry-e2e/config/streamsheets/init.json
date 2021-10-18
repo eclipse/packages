@@ -5,7 +5,7 @@
       "machine": {
         "id": "rybIEm3_zF",
         "name": "Eclipse IoT",
-        "state": "stopped",
+        "state": "running",
         "metadata": {
           "owner": "anon",
           "lastModified": 1631278075551,
