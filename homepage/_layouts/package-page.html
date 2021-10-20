@@ -4,19 +4,21 @@ layout: default
 
 {% capture package %}/packages/{% include package-id.html id=page.id %}/{% endcapture %}
 
-
+<div>
 {%- for p in site.packages -%}
 {% capture pid %}/packages/{% include package-id.html id=p.id %}/{% endcapture %}
 {%- assign p2 = p.id | split:"/" | shift | shift | shift | join:"/" -%}
 {%- if pid == package and p2 == "" -%}
-{%- include page-heading.html title=p.name lead=p.description -%}
+{%- if p.pageLogo %}{%- assign plogo = p.url | append: p.pageLogo -%}{% else %}{%- assign plogo = p.url | append: p.image -%}{% endif%}
+{%- include page-heading.html title=p.name lead=p.description logo=plogo -%}
 {%- endif -%}
-
 {%- endfor -%}
 
-<div class="container mt-5">
+</div>
 
-<nav class="nav nav-pills nav-fill mt-5 mb-5">
+<div class="container">
+
+<nav class="nav nav-pills nav-fill mt-2 mb-5">
 
 {%- for p in site.packages -%}
 {% capture pid %}/packages/{% include package-id.html id=p.id %}/{% endcapture %}

@@ -58,6 +58,23 @@ helm upgrade --install eclipse-iot-telemetry eclipse-iot/telemetry-e2e \
   --set global.domain=$DOMAIN
 {% endclipboard %}
 
+{% alert warning: Ingress validation error %}
+
+It may be that the deployment fails due to some "ingress" validation error. This is a know issue in the
+NGINX ingress controllers (see <a class="alert-link" href="https://github.com/kubernetes/ingress-nginx/issues/6245" target="_blank">#6245</a>). Unfortunately,
+there is currently no proper fix for this.
+
+<hr/>
+
+<p>However, a workaround exists. You can delete the validation webhook causing the issue:</p>
+{% clipboard %}
+kubectl delete validatingwebhookconfigurations ingress-nginx-admission
+{% endclipboard %}
+
+<p class="mb-0">After that, re-run the <code>helm upgrade</code> command above.</p>
+
+{% endalert %}
+
 ## Be patient
 
 Depending on your internet speed and overall I/O and CPU performance, this installation may take a bit. Normally it
