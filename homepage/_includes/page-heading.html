@@ -1,6 +1,15 @@
 <div class="container mt-5">
-<h1>{{ include.title | escape }}</h1>
+  <div class="row">
+  <div class="col-12 col-sm-9 col-xl-8">
+  <h1>{{ include.title | escape }}</h1>
 {% if include.lead -%}
-<p class="lead">{{ include.lead | escape }}</p>
-{%- endif %}
+  <p class="lead">{{ include.lead | escape }}</p>
+{%- endif -%}
+  </div>
+  {% if include.logo %}
+  <div class="col-12 col-sm-3 col-xl-4 d-flex flex-sm-row-reverse">
+      <img alt="Page logo"  src="{{ include.logo | relative_url }}" class="img-fluid m-lg-3 d-block align-self-center " style="max-height: 10rem;"/>
+  </div>
+  {%- endif %}
+  </div>
 </div>
