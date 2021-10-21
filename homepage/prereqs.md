@@ -7,10 +7,10 @@ layout: page
 {%capture main%}
 ## Kubernetes Client
 
-First of all, you will need a command tool named `kubectl`. This application allows you to interact with
+First, you will need a command tool named `kubectl`. This application allows you to interact with
 your Kubernetes cluster from the command line. While Kubernetes also comes with a Web UI, it is much simpler
 to document the installation procedures using command line tool. Also does the Web UI change over time, and
-with different Kubernetes variants. However the `kubectl` tool works with all variations of Kubernetes, as it
+with different Kubernetes variants. However, the `kubectl` tool works with all variations of Kubernetes, as it
 uses the standardized API in the background.
 
 You can find more information in the Kubernetes documentation: [Install and Set Up kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
@@ -64,6 +64,7 @@ microk8s enable storage
 microk8s enable dns
 microk8s enable metallb:$LOCAL_ADDRESS-$LOCAL_ADDRESS
 ```
+
 These commands enable
 - the metrics server, which is helpful for further investigating your cluster usage
 - the storage module, which enables persistent volumes
@@ -71,8 +72,10 @@ These commands enable
 - and the load balancing module, which enables external access to your cluster
 
 In order to control the cluster using the Kubernetes CLI (`kubectl`) you can either use integrated option which ships with MicroK8s. Alternatively, e.g. if you want to control your cluster from another machine you can extract the cluster config file and use it with a native install of `kubectl`.
+
 #### Integrated option
 Use `microk8s kubectl <command>`
+
 #### Native option
 Execute `microk8s kubectl config view --raw > $HOME/.kube/config`
 
@@ -112,77 +115,77 @@ We are using the [Ambassador](https://www.getambassador.io/) controller, as it i
 2. Create a namespace for Ambassador: `kubectl create namespace ambassador`
 3. Add the Helm repository: `helm repo add datawire https://www.getambassador.io`
 4. Create a file named `override.yaml`, that contains all necessary Ambassador configurations:
-```yaml
-enableAES: false
-image:
-  repository: docker.io/datawire/ambassador
-replicaCount: 1
-service:
-  ports:
-    - name: mqtt-adapter
-      port: 1883
-      targetPort: 1883
-    - name: http-adapter
-      port: 18080
-      targetPort: 18080
-    - name: device-registry
-      port: 28080
-      targetPort: 28080
-    - name: dispatch-router
-      port: 5671
-      targetPort: 15671
-    - name: ditto
-      port: 38080
-      targetPort: 38080
-```
+   ```yaml
+   enableAES: false
+   image:
+     repository: docker.io/datawire/ambassador
+   replicaCount: 1
+   service:
+     ports:
+       - name: mqtt-adapter
+         port: 1883
+         targetPort: 1883
+       - name: http-adapter
+         port: 18080
+         targetPort: 18080
+       - name: device-registry
+         port: 28080
+         targetPort: 28080
+       - name: dispatch-router
+         port: 5671
+         targetPort: 15671
+       - name: ditto
+         port: 38080
+         targetPort: 38080
+   ```
 5. Start Ambassador by running `helm install ambassador -n ambassador -f override.yaml datawire/ambassador`
 6. Then we create the necessary mappings, such that the controller knows where to route incoming traffic. These mappings are specifically adjusted to the Cloud2Edge deployment, so you will have to create your own mappings for other packages. Create a new file named `ambassador-mappings.yaml` and replace the release name and the namespace of your deployment:
-```yaml
-apiVersion: getambassador.io/v2
-kind:  TCPMapping
-metadata:
-  name: ambassador-http-adapter
-  namespace: ambassador
-spec:
-  port: 18080
-  service: {name-of-helm-release}-adapter-http-vertx.{kubernetes-namespace}:8080
----
-apiVersion: getambassador.io/v2
-kind:  TCPMapping
-metadata:
-  name: ambassador-mqtt-adapter
-  namespace: ambassador
-spec:
-  port: 1883
-  service: {name-of-helm-release}-adapter-mqtt-vertx.{kubernetes-namespace}:1883
----
-apiVersion: getambassador.io/v2
-kind:  TCPMapping
-metadata:
-  name: ambassador-device-registry
-  namespace: ambassador
-spec:
-  port: 28080
-  service: {name-of-helm-release}-service-device-registry-ext.{kubernetes-namespace}:28080
----
-apiVersion: getambassador.io/v2
-kind:  TCPMapping
-metadata:
-  name: ambassador-dispatch-router
-  namespace: ambassador
-spec:
-  port: 15671
-  service: {name-of-helm-release}-service-device-registry-ext.{kubernetes-namespace}:15671
----
-apiVersion: getambassador.io/v2
-kind:  TCPMapping
-metadata:
-  name: ambassador-ditto
-  namespace: ambassador
-spec:
-  port: 38080
-  service: {name-of-helm-release}-ditto-nginx.{kubernetes-namespace}:8080
-```
+   ```yaml
+   apiVersion: getambassador.io/v2
+   kind:  TCPMapping
+   metadata:
+     name: ambassador-http-adapter
+     namespace: ambassador
+   spec:
+     port: 18080
+     service: {name-of-helm-release}-adapter-http-vertx.{kubernetes-namespace}:8080
+   ---
+   apiVersion: getambassador.io/v2
+   kind:  TCPMapping
+   metadata:
+     name: ambassador-mqtt-adapter
+     namespace: ambassador
+   spec:
+     port: 1883
+     service: {name-of-helm-release}-adapter-mqtt-vertx.{kubernetes-namespace}:1883
+   ---
+   apiVersion: getambassador.io/v2
+   kind:  TCPMapping
+   metadata:
+     name: ambassador-device-registry
+     namespace: ambassador
+   spec:
+     port: 28080
+     service: {name-of-helm-release}-service-device-registry-ext.{kubernetes-namespace}:28080
+   ---
+   apiVersion: getambassador.io/v2
+   kind:  TCPMapping
+   metadata:
+     name: ambassador-dispatch-router
+     namespace: ambassador
+   spec:
+     port: 15671
+     service: {name-of-helm-release}-service-device-registry-ext.{kubernetes-namespace}:15671
+   ---
+   apiVersion: getambassador.io/v2
+   kind:  TCPMapping
+   metadata:
+     name: ambassador-ditto
+     namespace: ambassador
+   spec:
+     port: 38080
+     service: {name-of-helm-release}-ditto-nginx.{kubernetes-namespace}:8080
+   ```
 7. Now add the mappings to your cluster: `kubectl apply -f ambassador-mappings.yaml`
 
 You are now able to access the deployed Cloud2Edge services externally. Check what IP address you are using by running `kubectl get service -n ambassador`.
@@ -193,11 +196,11 @@ Navigate to http://<your_ip>:38080 and check whether Ditto is running.
 
 [Minikube](https://kubernetes.io/docs/setup/learning-environment/minikube/) is Kubernetes in a bottle.
 
-Instead of provisioning a full blown cluster, it will create a virtual machine on your local system, and
-provision a small, single-node cluster inside of it. As it puts the operating system in a VM, Minikube itself
-can run on all major operating systems, including Windows and Mac OS.
+Instead of provisioning a full-blown cluster, it will create a virtual machine on your local system, and
+provision a small, single-node cluster inside it. As it puts the operating system in a VM, Minikube itself
+can run on all major operating systems, including Windows and macOS.
 
-Instead of duplicating the effort, documenting how to get Minikube up an running, we leave this to the
+Instead of duplicating the effort, documenting how to get Minikube up and running, we leave this to the
 excellent [documentation of Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) itself.
 
 #### Getting started
@@ -290,7 +293,7 @@ Such addons can be enabled when starting the Minikube instance, using the follow
 You will need an installation of Helm on the machine which is used to deploy the packages. You can find
 installation instructions for Helm in the Helm documentation under [Installing Helm](https://helm.sh/docs/using_helm/#installing-helm).
 
-The required Helm version is 3.1 or later.
+The required Helm version is 3.4 or later.
 
 ### Repository
 
@@ -318,11 +321,11 @@ you are supposed to execute can be executed in Bash, version 3 or newer.
 
 ### curl
 
-For downloading files and execution API call the tool `curl` will be used.
+For downloading files and execution API calls the tool `curl` will be used.
 
 ### Mosquitto CLI
 
-Mosquitto command line tools: e.g. `moquitto_pub`
+Mosquitto command line tools: e.g. `mosquitto_pub`
 
 {%endcapture%}
 

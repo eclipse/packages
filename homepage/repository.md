@@ -5,7 +5,7 @@ layout: page
 lead: All the charts, in a single location.
 ---
 
-The Eclipse IoT packages project decided to host a Helm chart repository in order to share the
+The Eclipse IoT Packages™ project decided to host a Helm chart repository in order to share the
 effort of validating and publishing charts. Eclipse IoT projects are welcome to re-use that
 infrastructure to publish their charts, whether they are part of an IoT package or not. Of course
 projects can still host their own repositories and charts.

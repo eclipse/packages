@@ -2,7 +2,7 @@
 title: 'Contributions welcome'
 date: 2019-09-24T14:51:12+2:00
 layout: page
-lead: Contributions to this project are very welcome. And contributions can come in many different forms, one of the is code.
+lead: Contributions to this project are very welcome. And contributions can come in many different forms, one of it is code.
 ---
 
 ## Providing feedback
@@ -51,7 +51,7 @@ are some qualitative requirements that all packages and the charts they contain 
 
 All IoT Packages must
 
-* comprise of at least two Eclipse IoT projects that provide a real benefit when being
+* be comprised of at least two Eclipse IoT projects that provide a real benefit when being
   integrated with each other in this way.
 * only contain artifacts that are distributed under a license that is compatible with the EPLv2.
 * only contain stable, released versions of project artifacts (no milestones or snapshots).
@@ -61,8 +61,8 @@ All IoT Packages must
   * provide some guidance regarding what users might want to do with the package after installation.
   * include the `iot-package` key word in their *Chart.yaml*
 
-IoT Packages are implemented by means of Helm charts that are combined together and configured in
-a particular way. An IoT Package must not *contain* the Helm charts of the projects it comprises of
+IoT Packages are implemented by means of Helm charts that are combined and configured in
+a particular way. An IoT Package must not *contain* the Helm charts of the projects it comprises,
 but instead must only *refer* to the projects' Helm charts which are maintained and distributed separately.
 This allows for a modular approach where projects can easily be (re)used in multiple IoT Packages.
 
