@@ -14,14 +14,14 @@ apiVersion: v2
 type: application
 name: telemetry-e2e
 
-version: 0.0.1-alpha2
+version: 0.1.0
 appVersion: "0.1.0"
 
 kubeVersion: ">= 1.19.0"
 
 description: |
   The Eclipse IoT Telemetry end-to-end package is an example on how to acquire telemetry data and process it
-  in the cloud. Covering all three tiers of IoT (Sensor, Gateway, Cloud) with Eclipse IoT and other Open Source
+  in the cloud. Covering the three tiers of IoT (Sensor, Gateway, Cloud) with Eclipse IoT and other Open Source
   technologies.
 
 keywords:
@@ -32,7 +32,7 @@ keywords:
   - kafka
 
 home: https://eclipse.org/packages/packages/telemetry-e2e/
-icon: https://eclipse.org/packages/packages/telemetry-e2e/images/telemetry-e2e-logo.svg
+icon: https://eclipse.org/packages/packages/telemetry-e2e/images/telemetry-e2e-icon.svg
 
 sources:
   - https://github.com/eclipse/packages/packages/telemetry-e2e/
