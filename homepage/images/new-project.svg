@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg8"
    version="1.1"
    viewBox="0 0 70 39.375"
    height="39.375mm"
    width="70mm"
    sodipodi:docname="new-project.svg"
-   inkscape:version="0.92.4 5da689c313, 2019-01-14">
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -23,17 +23,19 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1483"
-     inkscape:window-height="892"
+     inkscape:window-width="2364"
+     inkscape:window-height="1492"
      id="namedview18"
      showgrid="false"
      inkscape:zoom="2.4592396"
-     inkscape:cx="106.59517"
-     inkscape:cy="18.707362"
-     inkscape:window-x="2095"
-     inkscape:window-y="107"
+     inkscape:cx="63.840872"
+     inkscape:cy="18.704969"
+     inkscape:window-x="631"
+     inkscape:window-y="181"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg8" />
+     inkscape:current-layer="svg8"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm" />
   <defs
      id="defs2" />
   <metadata
@@ -44,7 +46,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -57,11 +59,11 @@
      y="-0.4303498" />
   <g
      id="layer1"
-     transform="matrix(0.6630212,0,0,0.6630212,-30.155064,-73.053212)"
+     transform="matrix(0.6630212,0,0,0.6630212,-26.215901,-73.053212)"
      style="fill:#999999">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40.80289459px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#999999;fill-opacity:1;stroke:none;stroke-width:1.02007234"
+       style="font-style:normal;font-weight:normal;font-size:40.8029px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#999999;fill-opacity:1;stroke:none;stroke-width:1.02007"
        x="80.699898"
        y="152.22205"
        id="text81"><tspan
@@ -69,10 +71,10 @@
          x="80.699898"
          y="152.22205"
          id="tspan79"
-         style="fill:#999999;stroke-width:1.02007234"><tspan
+         style="fill:#999999;stroke-width:1.02007"><tspan
            x="80.699898"
            y="152.22205"
            id="tspan77"
-           style="fill:#999999;stroke-width:1.02007234">+</tspan></tspan></text>
+           style="fill:#999999;stroke-width:1.02007">+</tspan></tspan></text>
   </g>
 </svg>
