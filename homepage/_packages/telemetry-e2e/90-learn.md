@@ -15,7 +15,7 @@ A few noteworthy links specific to this package are:
 
 * [The code to the micro:bit firmware](https://github.com/drogue-iot/drogue-device/tree/main/examples/nrf52/microbit/ble-temperature)
 * [The code to the Eclipse Kura addon](https://github.com/ctron/kura-addons/tree/master/examples/de.dentrassi.kura.addons.example.microbit)
-* The snippet of the Ditto payload mapper – `<add link once merged>`
+* [The snippet of the Ditto payload mapper](https://github.com/eclipse/packages/blob/master/packages/telemetry-e2e/extra/drogue-cloud-incoming.js)
 * [The Streamsheets Kubernetes deployment](https://github.com/ctron/streamsheets-kubernetes)
 
 ## Reach out
