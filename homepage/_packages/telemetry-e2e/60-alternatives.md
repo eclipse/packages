@@ -76,6 +76,20 @@ in the newer version.
 
 ### Time series database
 
+In order to build up a history of all measured and reported temperature values and make this history accessible in an
+optimized way for asking advanced queries (e.g. using filtering, aggregation, grouping and downsampling), a time series
+database is the obvious choice to store data in an optimized way.
+
+You can create another connection in Ditto, additionally to the MQTT connection which sends data to Streamsheets.
+But this time, using an HTTP outbound connection. As Ditto supports formatting the outbound data with a JavaScript
+snippet too, it is easy to generate a [CloudEvent](https://cloudevents.io/) from the Ditto change event.
+
+Directing the CloudEvent towards a [Knative](https://knative.dev) service, changes can be pushed directly into a
+[TimescaleDB](https://www.timescale.com/) instance, using the [serverless function for pushing to PostgreSQL](https://github.com/drogue-iot/drogue-postgresql-pusher) (of course you can also push to other time series database with that approach,
+or even to other serverless functions or services, which accept CloudEvents).
+
+Finishing up by creating a nice dashboard with [Grafana](https://grafana.com/), based on this data.
+
 {% endcapture %}
 
 {% capture aside %}
