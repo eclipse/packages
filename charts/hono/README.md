@@ -9,28 +9,21 @@ This repository contains a *chart* that can be used to install Hono to a Kuberne
 
 ## Prerequisites
 
-Please follow the instructions provided on the
+Installing Hono using the chart requires the Helm tool to be installed as described on the
 [IoT Packages chart repository prerequisites](https://www.eclipse.org/packages/prereqs/)
 page.
 
-#### Kubernetes cluster
-
-The most basic requirement is, of course, a Kubernetes cluster to deploy to.
+In addition, a Kubernetes cluster to deploy to is required.
 Hono's [Kubernetes setup guide](https://www.eclipse.org/hono/docs/deployment/create-kubernetes-cluster/)
 describes options available for setting up a cluster suitable for running Hono.
 
-The Helm chart has been tested to successfully install on Kubernetes 1.11+.
-However, functional testing of Hono is done with the most recent version of Kubernetes.
-
-#### Helm client
-
-The chart can be installed using Helm version 3.1 or later.
+The Helm chart is being tested to successfully install on the five most recent Kubernetes versions.
 
 ## Installing the chart
 
 Helm can be used to install applications multiple times to the same cluster. Each such
 installation is called a *release* in Helm. Each release needs to have a unique name within
-each Kubernetes name space.
+a Kubernetes name space.
 
 The instructions below illustrate how Hono can be installed to the `hono` name space
 in a Kubernetes cluster using release name `eclipse-hono`. The commands can easily be adapted
@@ -65,7 +58,6 @@ eclipse-hono-artemis                            ClusterIP      10.97.31.154     
 eclipse-hono-dispatch-router                    ClusterIP      10.98.111.236    <none>           5673/TCP
 eclipse-hono-dispatch-router-ext                LoadBalancer   10.109.220.100   10.109.220.100   15671:30671/TCP,15672:30672/TCP
 eclipse-hono-service-auth                       ClusterIP      10.109.97.44     <none>           5671/TCP
-eclipse-hono-service-auth-headless              ClusterIP      None             <none>           <none>
 eclipse-hono-service-device-registry            ClusterIP      10.105.190.233   <none>           5671/TCP
 eclipse-hono-service-device-registry-ext        LoadBalancer   10.101.42.99     10.101.42.99     28080:31080/TCP,28443:31443/TCP
 eclipse-hono-service-device-registry-headless   ClusterIP      None             <none>           <none>
@@ -88,14 +80,18 @@ of the installation:
 
 ```bash
 curl -sIX GET http://$REGISTRY_IP:28080/v1/tenants/DEFAULT_TENANT
+```
 
+the output should look similar to
+
+```
 HTTP/1.1 200 OK
 etag: 89d40d26-5956-4cc6-b978-b15fda5d1823
 content-type: application/json; charset=utf-8
 content-length: 260
 ```
 
-## Uninstalling the chart
+## Uninstalling the Chart
 
 To uninstall/delete the `eclipse-hono` release from the target name space:
 
@@ -109,16 +105,17 @@ The command removes all the Kubernetes components associated with the chart and 
 
 The `values.yaml` file contains all possible configuration values along with documentation.
 
-Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example:
+In order to set a property to a non-default value, the `--set key=value[,key=value]` command line parameter can be passed to
+`helm install`. For example:
 
 ```bash
 helm install --dependency-update -n hono --set useLoadBalancer=false eclipse-hono eclipse-iot/hono
 ```
 
-Alternatively, a YAML file that contains the values for the parameters can be provided when installing the chart:
+Alternatively, one or more YAML files that contain the properties can be provided when installing the chart:
 
 ```bash
-helm install --dependency-update -n hono -f /path/to/config.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono -f /path/to/config.yaml -f /path/to/other-config.yaml eclipse-hono eclipse-iot/hono
 ```
 
 
@@ -143,7 +140,7 @@ adapters. The following command needs to be run first in order to forward the Gr
 kubectl port-forward service/eclipse-hono-grafana 3000 -n hono
 ```
 
-Then the dashboard can be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.
+The dashboard can then be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.
 
 
 
@@ -156,21 +153,21 @@ pulled from a different (private) container registry.
 
 The `values.yaml` file contains configuration properties for setting the container
 image and tag names to use for Hono's components. The easiest way to override the version
-of all Hono components simultaneously is to set the `honoImagesTag` and/or `honoContainerRegistry`
+of all Hono components in one go is to set the `honoImagesTag` and/or `honoContainerRegistry`
 properties to the desired values during installation.
 
 The following command installs Hono using the standard images published on Docker Hub with tag
-*1.3.0-M3* images instead of the ones indicated by the chart's *appVersion* property:
+*1.9.0* instead of the ones indicated by the chart's *appVersion* property:
 
 ```bash
-helm install --dependency-update -n hono --set honoImagesTag=1.3.0-M3 eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono --set honoImagesTag=1.9.0 eclipse-hono eclipse-iot/hono
 ```
 
 The following command installs Hono using custom built images published on a private registry with tag
-*1.3.0-custom* instead of the ones indicated by the chart's *appVersion* property:
+*1.9.0-custom* instead of the ones indicated by the chart's *appVersion* property:
 
 ```bash
-helm install --dependency-update -n hono --set honoImagesTag=1.3.0-custom --set honoContainerRegistry=my-registry:9090 eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono --set honoImagesTag=1.9.0-custom --set honoContainerRegistry=my-registry:9090 eclipse-hono eclipse-iot/hono
 ```
 
 It is also possible to define the image and tag names and container registry for each component separately.
@@ -186,7 +183,7 @@ deviceRegistryExample:
 authServer:
   # pull milestone release from Docker Hub
   imageName: eclipse/hono-service-auth
-  imageTag: 1.3.0-M3
+  imageTag: 1.9.0
 
 # pull standard adapter images in version 1.2.3 from Docker Hub
 adapters:
@@ -356,11 +353,11 @@ as follows:
 helm install --dependency-update -n hono -f /path/to/customRegistry.yaml eclipse-hono eclipse-iot/hono
 ```
 
-## Configuring device connection data storage
+## Configuring Storage for Command Routing Data
 
 In Hono a place is needed where information about the connection status of devices can be stored.
-This kind of information is used for determining how [command & control](https://www.eclipse.org/hono/docs/concepts/command-and-control/) messages, 
-sent by business applications, can be routed to the protocol adapters that the target devices are connected to.
+This kind of information is used for determining how [command & control](https://www.eclipse.org/hono/docs/concepts/command-and-control/)
+messages, sent by business applications, can be routed to the protocol adapters that the target devices are connected to.
 
 ### Alternative A: Using the Command Router API (default)
 
@@ -368,25 +365,25 @@ Hono's protocol adapters can use the [Command Router API](https://www.eclipse.or
 device connection information with which a Command Router service component can route command & control messages to the
 protocol adapters that the target devices are connected to.
 
-The Command Router API will replace the now deprecated Device Connection API.
-
-#### Example with file-based storage in a persistent volume
-
-The Command Router API is used by default when deploying the Helm chart.
+Hono comes with a ready to use implementation of the Command Router API which is used by default when
+deploying Hono using the Helm chart:
 
 ```bash
 helm install --dependency-update -n hono eclipse-hono eclipse-iot/hono 
 ```
 
-This will let the Command Router service component use an embedded cache with file-based persistence for the device
-connection data. A persistent volume is required in the Kubernetes cluster for that.
-Note that with this configuration, only one Command Router service component instance can be used. For a storage
+#### Using File based Storage
+
+This will let the Command Router service component use an embedded cache with file-based persistence for the command
+routing data. A persistent volume is required in the Kubernetes cluster for this purpose.
+
+**NB** With this configuration, only one Command Router service component instance can be used. For a storage
 configuration suitable for production, with the possibility to use multiple instances, use the data grid configuration
 as described below.
 
-#### Data Grid based Implementation
+#### Using a Data Grid
 
-The Command Router service component can also be configured to use a data grid for storing the device connection data.
+The Command Router service component can also be configured to use a data grid for storing the command routing data.
 The Helm chart supports deployment of an example data grid which can be used for experimenting by means of setting the
 *dataGridExample.enabled* property to `true`:
 
@@ -396,30 +393,30 @@ helm install --dependency-update -n hono --set dataGridExample.enabled=true ecli
 
 This will deploy the data grid based Command Router service component.
 
-The Command Router service component can also be configured to connect to an already existing data grid. Use the *dataGridSpec*
-property for this.
+The Command Router service component can also be configured to connect to an already existing data grid.
+In this case the *dataGridSpec* property needs to be configured with the data grid's connection information.
 
 ### Alternative B: Using the deprecated Device Connection API
 
 The [Device Connection API](https://www.eclipse.org/hono/docs/api/device-connection/) defines a service interface
-that protocol adapters can use to store, update and retrieve information about the connection status of devices dynamically during runtime.
+that protocol adapters can use to store, update and retrieve information about the connection status of devices
+dynamically during runtime.
 
 The Device Connection API is deprecated and will be replaced by the Command Router API.
-In order to use the Device Connection API, the *useCommandRouter* property has to be set to `false` when deploying the Helm chart.
+
+#### File based Example Implementation
+
+Hono's file based example Device Registry component contains a simple in-memory implementation of the Device
+Connection API. To use this implementation, deploy the example registry as follows:
 
 ```bash
 helm install --dependency-update -n hono --set useCommandRouter=false --set deviceRegistryExample.type=file eclipse-hono eclipse-iot/hono 
 ```
 
-#### Example Implementation
-
-Hono's file based example Device Registry component contains a simple in-memory implementation of the Device Connection API.
-To use this example implementation, deploy the example registry, set *deviceRegistryExample.type* to 'file' and *useCommandRouter* to `false`.
-
 #### Data Grid based Implementation
 
 Hono also contains a production ready, data grid based implementation of the Device Connection API which can be deployed
-and used instead of the example implementation. The component can be deployed by means of setting the
+and used instead of the example implementation. The service component can be deployed by means of setting the
 *deviceConnectionService.enabled* property to `true`.
 
 The service requires a connection to a data grid for storing the device connection data.
@@ -438,7 +435,8 @@ property for this.
 
 Setting the *deviceConnectionService.enabled* property to `true` and neither setting *dataGridExample.enabled* to `true`
 nor configuring an already existing data grid using the *dataGridSpec* property will result in the Device Connection
-service using an embedded cache for storage. This is a lightweight deployment option but not suitable for production purposes.
+service using an embedded cache for storage. This is a lightweight deployment option but not suitable for production
+purposes.
 
 ## Enabling or disabling Protocol Adapters
 
@@ -449,14 +447,14 @@ The following table provides an overview of the corresponding configuration prop
 
 | Property                     | Default  | Description                              |
 | :--------------------------- | :------- | :--------------------------------------- |
-| *adapters.amqp.enabled*      | `true`  | Indicates if the AMQP protocol adapter should be deployed. |
-| *adapters.coap.enabled*      | `false` | Indicates if the CoAP protocol adapter should be deployed. |
-| *adapters.http.enabled*      | `true`  | Indicates if the HTTP protocol adapter should be deployed. |
-| *adapters.kura.enabled*      | `false` | Indicates if the deprecated Kura protocol adapter should be deployed. |
-| *adapters.lora.enabled*      | `false` | Indicates if the (experimental) LoRa WAN protocol adapter should be deployed. |
-| *adapters.mqtt.enabled*      | `true`  | Indicates if the MQTT protocol adapter should be deployed. |
+| *adapters.amqp.enabled*      | `true`    | Indicates if the AMQP protocol adapter should be deployed. |
+| *adapters.coap.enabled*      | `false`   | Indicates if the CoAP protocol adapter should be deployed. |
+| *adapters.http.enabled*      | `true`    | Indicates if the HTTP protocol adapter should be deployed. |
+| *adapters.kura.enabled*      | `false`   | Indicates if the deprecated Kura protocol adapter should be deployed. |
+| *adapters.lora.enabled*      | `false`   | Indicates if the (experimental) LoRa WAN protocol adapter should be deployed. |
+| *adapters.mqtt.enabled*      | `true`    | Indicates if the MQTT protocol adapter should be deployed. |
 
-The following command will deploy the LoRa adapter along with Hono's standard adapters:
+The following command will deploy the LoRa adapter along with Hono's standard adapters (AMQP, HTTP and MQTT):
 
 ```bash
 helm install --dependency-update -n hono --set adapters.lora.enabled=true eclipse-hono eclipse-iot/hono
@@ -464,23 +462,24 @@ helm install --dependency-update -n hono --set adapters.lora.enabled=true eclips
 
 ## Jaeger Tracing
 
-Hono's components are instrumented using OpenTracing to allow tracking of the distributed processing of messages flowing through the system.
-The Hono chart can be configured to report tracing information to the [Jaeger tracing system](https://www.jaegertracing.io/).
-The *Spans* reported by the components can then be viewed in a web browser.
+Hono's components are instrumented using OpenTracing to allow tracking of the distributed processing of messages flowing
+through the system. The Hono chart can be configured to report tracing information to the
+[Jaeger tracing system](https://www.jaegertracing.io/). The *Spans* reported by the components can then be viewed in a
+web browser.
 
-The chart can be configured to deploy and use an example Jaeger back end by means of setting the *jaegerBackendExample.enabled* property
-to `true` when running Helm:
+The chart can be configured to deploy and use an example Jaeger back end by means of setting the
+*jaegerBackendExample.enabled* property to `true` when running Helm:
 
 ~~~sh
 helm install --dependency-update -n hono --set jaegerBackendExample.enabled=true eclipse-hono eclipse-iot/hono
 ~~~
 
-This will create a Jaeger back end instance suitable for testing purposes and will configure all deployed Hono components to use the
-Jaeger back end.
+This will create a Jaeger back end instance suitable for testing purposes and will configure all deployed Hono
+components to use the Jaeger back end.
 
-Note that this can only be used with the standard Hono images published on Docker Hub with version 1.5.0 or later. Custom
-images must have been built with the Jaeger client included. For the standard Hono components that means using the
-`jaeger` Maven profile for the build.
+Note that this can only be used with the standard Hono images published on Docker Hub with version 1.5.0 or later.
+Custom built images need to include the Jaeger client in order to be able to report data to the Jaeger back end.
+For the standard Hono components this can be achieved by means of activating the `jaeger` Maven during the build process.
 
 The following command can then be used to return the IP address at which the Jaeger UI can be accessed in a
 browser (ensure `minikube tunnel` is running when using minikube):
@@ -509,26 +508,21 @@ for details regarding the configuration of the sampling strategies.
 Note that usage of the sampling strategy of the Collector service is currently not supported when using the quarkus-native
 Hono images. In that case the Jaeger Agent deployed with each of Hono's components is configured to sample all traces.
 
-## Using Quarkus based services
+## Using Native Executable Images
 
-The Helm chart can be configured to use Quarkus based images for services that support it. In order to do that, you need
-to set `honoImagesType` property to `quarkus` or `quarkus-native` values depending on whether you want to use the JVM or
-the native version of the image.
+The Hono container images that are used by default contain Java byte code that is being executed using a standard Java VM.
+For most of the images there also exists a variant that contains a native OS executable that has been created from the
+Java byte code using the [Graal project](https://www.graalvm.org)'s *native-image* compiler. These images start up
+more quickly than their corresponding JVM based counterparts. However, for these images no *just-in-time* compilation
+is taking place during runtime because the byte code has been compiled *ahead of time* already. Consequently, the code
+can also not be optimized during runtime which may result in a reduced performance when compared to the JVM based images.
 
-Here are the examples for deploying JVM:
-
-```bash
-helm install --dependency-update -n hono --set honoImagesType=quarkus eclipse-hono eclipse-iot/hono
-```
-
-and native alternatives:
+The Helm chart can be configured to use these *native* images by means of setting the `honoImagesType` property
+to `quarkus-native` during installation:
 
 ```bash
 helm install --dependency-update -n hono --set honoImagesType=quarkus-native eclipse-hono eclipse-iot/hono
 ```
-
-of Quarkus based services images.
-
 
 ## Using Kafka based Messaging
 
@@ -537,9 +531,9 @@ The configuration `messagingNetworkTypes[0]=kafka` deploys Hono configured to us
 It is possible to enable AMQP _and_ Kafka based messaging at the same time (command line parameters of the deployment 
 would be `--set messagingNetworkTypes[0]=amqp --set messagingNetworkTypes[1]=kafka`). Each tenant in Hono can then be 
 [configured](https://www.eclipse.org/hono/docs/admin-guide/hono-kafka-client-configuration/#configure-for-kafka-based-messaging)
-to use Kafka _or_ AMQP for messaging.
+separately to use either Kafka _or_ AMQP for messaging.
 
-The following command provides a quickstart for Kafka based messaging (ensure `minikube tunnel` is running when using Minikube):
+The following command provides a quick start for Kafka based messaging (ensure `minikube tunnel` is running when using Minikube):
 
 ```bash
 helm install --dependency-update -n hono --set messagingNetworkTypes[0]=kafka --set kafkaMessagingClusterExample.enabled=true --set amqpMessagingNetworkExample.enabled=false eclipse-hono eclipse-iot/hono
@@ -548,19 +542,20 @@ helm install --dependency-update -n hono --set messagingNetworkTypes[0]=kafka --
 The parameters enable the deployment of an example Kafka cluster, disable the deployment of the AMQP 1.0 messaging network 
 and configure adapters and services to use Kafka based messaging.
 
-To use the service type `NodePort` instead of `LoadBalancer`, the following parameters must be added: 
+To use the service type `NodePort` instead of `LoadBalancer`, the following parameters must be added:
 `--set useLoadBalancer=false --set kafka.externalAccess.service.type=NodePort`.
 
 ### Using a production grade Kafka cluster
 
 If Kafka based messaging is enabled by adding `kafka` to `messagingNetworkTypes`, the Kafka clients need to
-be configured with connection information for a Kafka cluster. The Helm chart can deploy an example Kafka cluster. 
+be configured with connection information for a Kafka cluster. The Helm chart can deploy an example Kafka cluster.
 This is enabled by setting `kafkaMessagingClusterExample.enabled` to `true`. With this setting the chart
 deploys a Kafka cluster consisting of a single broker and a single Zookeeper instance and configures the 
 protocol adapters to connect to the example cluster.
 
-In a production environment, though, usage of the example Kafka cluster is strongly discouraged as it does not provide 
-any redundancy.
+However, usage of the example Kafka cluster in a production environment is
+strongly discouraged as it is a single node cluster only which does not
+provide any redundancy.
 
 The Helm chart can be configured to use an existing Kafka cluster instead of the example deployment.
 In order to do so, the protocol adapters need to be configured with information about the bootstrap server addresses
@@ -570,8 +565,8 @@ The easiest way to set these properties is by means of putting them into a YAML 
 
 ```yaml
 # configure protocol adapters for Kafka messaging
-messagingNetworkTypes: 
-  - kafka
+messagingNetworkTypes:
+- kafka
 
 # do not deploy example AMQP Messaging Network
 amqpMessagingNetworkExample:
@@ -585,7 +580,7 @@ adapters:
   # provide connection params
   kafkaMessagingSpec:
     commonClientConfig:
-      bootstrap.servers: broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092
+      bootstrap.servers: "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
 ```
 
 *adapters.kafkaMessagingSpec* needs to contain configuration properties as described in Hono's
