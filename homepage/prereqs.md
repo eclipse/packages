@@ -331,7 +331,7 @@ The required Helm version is 3.4 or later.
 
 ### Repository
 
-The Eclipse IoT Packages projects hosts a Helm chart repository for Eclipse IoT projects.
+The Eclipse IoT Packages project hosts a Helm chart repository for Eclipse IoT projects.
 Adding the repository can be done on your local machine be executing:
 
 {% clipboard %}
