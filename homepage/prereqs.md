@@ -23,10 +23,11 @@ and you are welcome to try all of them. All packages should be able to run on an
 you provide.
 
 Generally, you can either use a cloud provider, such as Azure (AKS) or AWS (EKS) to provide a Kubernetes cluster for you, or you can set up one by yourself.
-[Here](https://landscape.cncf.io/category=platform&format=card-mode&grouping=category) you can find a list of Kubernetes options.
+[Here](https://landscape.cncf.io/card-mode?category=platform&grouping=category) you can find a list of Kubernetes options.
 As the Kubernetes API is standardized both ways will work.
 However, setting up Kubernetes yourself is not trivial and requires some more effort.
-As part of this tutorial, we present two different K8s distributions (and how to deploy Eclipse IoT Packages with them), namely [MicroK8s](microk8s) and [Minikube](minikube).
+As part of this tutorial, we present two different K8s distributions (and how to deploy Eclipse IoT Packages with them),
+namely [MicroK8s](microk8s) and [Minikube](minikube).
 
 Packages are encouraged to give you an estimate of what resources they require. The following is
 an example of what this may look like. You will need to translate this into the specific
@@ -42,12 +43,13 @@ expectations of what was tested at some point.
 
 </div>
 
-For each documentation Kubernetes environment on this page, you will
-find a section that explains how to do this.
+For each documentation Kubernetes environment on this page, you will find a section that explains how to do this.
 
 ### MicroK8s
-[MicroK8s](https://microk8s.io/) is a Kubernetes distribution, maintained by Canonical and enables developers to run a fully-fledged Kubernetes cluster on their own infrastructure.
-In contrast to minikube it is not only intended for testing purposes but also for production scenarios, e.g. in cases where a cloud setup is not possible or desirable.
+
+[MicroK8s](https://microk8s.io/) is a Kubernetes distribution, maintained by Canonical and enables developers to run a
+fully-fledged Kubernetes cluster on their own infrastructure. In contrast to *minikube* it is not only intended for testing
+purposes but also for production scenarios, e.g. in cases where a cloud setup is not possible or desirable.
 
 All you need is a virtual or physical machine with root access and the [snap package manager](https://snapcraft.io/docs/installing-snapd).
 
@@ -55,9 +57,10 @@ Install MicroK8s, executing `sudo snap install microk8s --classic`
 
 Check the cluster status, by running `microk8s status --wait-ready`
 
-Once the cluster is up and running you will need to enable a few modules that are required for installing an Eclipse IoT Packages package, such as Cloud2Edge.
+Once the cluster is up and running you will need to enable a few modules that are required for installing an
+Eclipse IoT Packages package such as Cloud2Edge.
 
-```
+```sh
 LOCAL_ADDRESS=$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 microk8s enable metrics-server
 microk8s enable storage
@@ -71,12 +74,16 @@ These commands enable
 - the cluster dns server
 - and the load balancing module, which enables external access to your cluster
 
-In order to control the cluster using the Kubernetes CLI (`kubectl`) you can either use integrated option which ships with MicroK8s. Alternatively, e.g. if you want to control your cluster from another machine you can extract the cluster config file and use it with a native install of `kubectl`.
+In order to control the cluster using the Kubernetes CLI (`kubectl`) you can either use integrated option which ships
+with MicroK8s. Alternatively, e.g. if you want to control your cluster from another machine you can extract the cluster
+config file and use it with a native install of `kubectl`.
 
 #### Integrated option
+
 Use `microk8s kubectl <command>`
 
 #### Native option
+
 Execute `microk8s kubectl config view --raw > $HOME/.kube/config`
 
 Now, use `kubectl <command>`
@@ -84,32 +91,49 @@ Now, use `kubectl <command>`
 In case you are not running the cluster on a your local machine you can also enable remote access by following these steps:
 - stop your cluster by running `microk8s stop`
 - edit the file `/var/snap/microk8s/current/certs/csr.conf.template` and add your domain/ip address:
+
 ```
 DNS.6 = <domain_of_microk8s_host>
 IP.7 = <public_ip_of_microk8s_host>
 ```
-Restart your cluster by running `microk8s start` and extract the new Kubernetes configuration by executing `microk8s kubectl config view --raw`.
+Restart your cluster by running `microk8s start` and extract the new Kubernetes configuration by executing
+`microk8s kubectl config view --raw`.
 Now copy the configuration description to your local machine under `~/.kube/config`.
 
 #### Loadbalancing and Ingress
-Once you have a Kubernetes cluster available and installed the Kubernetes and Helm CLI (see below), you are now ready to setup an Eclipse IoT Packages deployment such as Cloud2Edge.
-By default the containers can communicate within the cluster.
-But to access a container and its respective services from outside the cluster (e.g. from another machine) you need to perform some extra steps.
+
+Once you have a Kubernetes cluster available and installed the Kubernetes and Helm CLI (see below), you are now ready
+to setup an Eclipse IoT Packages deployment such as Cloud2Edge. By default the containers can communicate within the
+cluster. But to access a container and its respective services from outside the cluster (e.g. from another machine)
+you need to perform some extra steps.
 Depending on your setup, you have 3 options available how to make your services externally available.
 
 ##### NodePort
-The simplest way to expose your services is by using a Kubernetes Service with type [NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport). The Cloud2Edge Helm chart uses this option by default.
-Using this in production mode has some drawbacks and is not recommended as it is very static, enables just one Service per port and only allows you to use ports in the range 30000–32767.
+
+The simplest way to expose your services is by using a Kubernetes Service with type
+[NodePort](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport). The Cloud2Edge Helm chart uses
+this option by default.
+Using this in production mode has some drawbacks and is not recommended as it is very static, enables just one Service
+per port and only allows you to use ports in the range 30000–32767.
 
 ##### LoadBalancer
-Another option is the [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) Service type, which requires your Kubernetes provider to supply an external load balancing module. The provider is also responsible for provisioning external IP addresses.
-The Cloud2Edge enables this option by setting the flags `hono.useLoadBalancer` to `true` and `ditto.nginx.service.type` to `LoadBalancer`.
-The downside of this approach is that each of your Services requires its own publicly available IP address, which might either not be desirable (due to higher costs) or possible at all e.g. in case you are running your deployment on a custom Kubernetes setup (such as MicroK8s).
+
+Another option is the [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer)
+Service type, which requires your Kubernetes provider to supply an external load balancing module. The provider is
+also responsible for provisioning external IP addresses.
+The Cloud2Edge enables this option by setting the flags `hono.useLoadBalancer` to `true` and `ditto.nginx.service.type`
+to `LoadBalancer`.
+The downside of this approach is that each of your Services requires its own publicly available IP address, which
+might either not be desirable (due to higher costs) or possible at all e.g. in case you are running your deployment
+on a custom Kubernetes setup (such as MicroK8s).
 
 ##### Ingress Loadbalancing
-Ingress controllers employ a single LoadBalancer service, which then routes all incoming traffic to the actual controller in charge of distributing it to the right endpoints.
+
+Ingress controllers employ a single LoadBalancer service, which then routes all incoming traffic to the actual
+controller in charge of distributing it to the right endpoints.
 This allows not only differentiating by port, but also routing by path (HTTP) or subdomain.
-We are using the [Ambassador](https://www.getambassador.io/) controller, as it is capable of routing not only HTTP ingress but also on the TCP level.
+We are using the [Ambassador](https://www.getambassador.io/) controller, as it is capable of routing not only HTTP
+ingress but also on the TCP level.
 
 1. Deploy the Cloud2Edge Helm chart setting the aforementioned flags to **not** use the LoadBalancer type
 2. Create a namespace for Ambassador: `kubectl create namespace ambassador`
@@ -139,7 +163,10 @@ We are using the [Ambassador](https://www.getambassador.io/) controller, as it i
          targetPort: 38080
    ```
 5. Start Ambassador by running `helm install ambassador -n ambassador -f override.yaml datawire/ambassador`
-6. Then we create the necessary mappings, such that the controller knows where to route incoming traffic. These mappings are specifically adjusted to the Cloud2Edge deployment, so you will have to create your own mappings for other packages. Create a new file named `ambassador-mappings.yaml` and replace the release name and the namespace of your deployment:
+6. Then we create the necessary mappings, such that the controller knows where to route incoming traffic.
+   These mappings are specifically adjusted to the Cloud2Edge deployment, so you will have to create your own
+   mappings for other packages. Create a new file named `ambassador-mappings.yaml` and replace the release name and
+   the namespace of your deployment:
    ```yaml
    apiVersion: getambassador.io/v2
    kind:  TCPMapping
@@ -188,7 +215,8 @@ We are using the [Ambassador](https://www.getambassador.io/) controller, as it i
    ```
 7. Now add the mappings to your cluster: `kubectl apply -f ambassador-mappings.yaml`
 
-You are now able to access the deployed Cloud2Edge services externally. Check what IP address you are using by running `kubectl get service -n ambassador`.
+You are now able to access the deployed Cloud2Edge services externally. Check what IP address you are using by
+running `kubectl get service -n ambassador`.
 
 Navigate to http://<your_ip>:38080 and check whether Ditto is running.
 
@@ -225,8 +253,10 @@ kubectl version
 
 Which should show a proper version for the client **and** the server:
 
-    Client Version: version.Info{Major:"1", Minor:"11+", GitVersion:"v1.11.0+d4cacc0", GitCommit:"d4cacc0", GitTreeState:"clean", BuildDate:"2018-10-10T16:38:01Z", GoVersion:"go1.10.3", Compiler:"gc", Platform:"linux/amd64"}
-    Server Version: version.Info{Major:"1", Minor:"13+", GitVersion:"v1.13.4+c2a5caf", GitCommit:"c2a5caf", GitTreeState:"clean", BuildDate:"2019-09-21T02:12:52Z", GoVersion:"go1.11.13", Compiler:"gc", Platform:"linux/amd64"}
+```sh
+Client Version: version.Info{Major:"1", Minor:"11+", GitVersion:"v1.11.0+d4cacc0", GitCommit:"d4cacc0", GitTreeState:"clean", BuildDate:"2018-10-10T16:38:01Z", GoVersion:"go1.10.3", Compiler:"gc", Platform:"linux/amd64"}
+Server Version: version.Info{Major:"1", Minor:"13+", GitVersion:"v1.13.4+c2a5caf", GitCommit:"c2a5caf", GitTreeState:"clean", BuildDate:"2019-09-21T02:12:52Z", GoVersion:"go1.11.13", Compiler:"gc", Platform:"linux/amd64"}
+```
 
 #### Starting and stopping
 
@@ -253,7 +283,9 @@ minikube delete
 
 You can translate the package resources requirements into arguments for the `start` command like this:
 
-    minikube start --cpus <cpus> --disk-size <size> --memory <memory> --kubernetes-version <version>
+```sh
+minikube start --cpus <cpus> --disk-size <size> --memory <memory> --kubernetes-version <version>
+```
 
 Using the following arguments:
 
@@ -286,7 +318,9 @@ Some packages may require additional addons, like the ingress addon for providin
 
 Such addons can be enabled when starting the Minikube instance, using the following flag:
 
-    minikube start ... --addons ingress
+```sh
+minikube start ... --addons ingress
+```
 
 ## Helm
 
@@ -297,8 +331,7 @@ The required Helm version is 3.4 or later.
 
 ### Repository
 
-The Eclipse IoT Packages projects publishes a Helm chart repository for Eclipse IoT projects.
-
+The Eclipse IoT Packages projects hosts a Helm chart repository for Eclipse IoT projects.
 Adding the repository can be done on your local machine be executing:
 
 {% clipboard %}
