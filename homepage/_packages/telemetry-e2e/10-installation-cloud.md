@@ -8,7 +8,8 @@ description: Installations instructions for the Telemetry end-to-end package.
 {% capture main %}
 
 You will need a Kubernetes instance, the `kubectl` and the `helm` tool in order to deploy this package.
-Please refer to our [pre-requisites]({{ "/prereqs" | relative_url }}) page for details.
+You will also need to add the Helm chart repository `eclipse-iot` to your local setup. Please refer to
+our [pre-requisites]({{ "/prereqs" | relative_url }}) page for details.
 
 You might also want to [install the Drogue IoT command line tool](https://github.com/drogue-iot/drg#installation) named `drg`. 
 
