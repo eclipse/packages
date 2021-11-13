@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -14,14 +14,21 @@
 # profile for installing Hono
 # - without monitoring infrastructure
 # - with example Infinispan data grid
+# - with MQTT adapter only
 
 useLoadBalancer: false
 
-prometheus:
-  createInstance: false
-
-grafana:
-  enabled: false
-
 dataGridExample:
   enabled: true
+
+adapters:
+  amqp:
+    enabled: false
+  coap:
+    enabled: false
+  http:
+    enabled: false
+  mqtt:
+    enabled: true
+  lora:
+    enabled: false

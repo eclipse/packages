@@ -1752,10 +1752,11 @@ commandRouterService:
 prometheus:
   # createInstance indicates whether a Prometheus server should be created
   # using the Prometheus chart.
-  # Set this property to false if you want to use an already existing server
-  # instead. In that case, set the "name" and "port" properties to the
-  # existing server's host name and port.
-  createInstance: true
+  # Set this property to true if you want the chart to install an example Prometheus server that
+  # is configured to scrape Hono's components.
+  # If you want to use an already existing Prometheus server, set this property to false
+  # and set the "host" and "port" properties to the existing server's host name and port.
+  createInstance: false
   # host contains the host name of an existing Prometheus server.
   # This property is used to configure a corresponding datasource in Grafana
   # if createInstance is set to false.
@@ -1804,7 +1805,7 @@ prometheus:
     enabled: false
 
 grafana:
-  enabled: true
+  enabled: false
   adminPassword: admin
 
   # labels to be added to the Grafana Deployment
@@ -1815,6 +1816,9 @@ grafana:
   podLabels:
     app.kubernetes.io/component: dashboard
 
+  # do not run tests after deployment
+  testFramework:
+    enabled: false
 
   ## Expose the grafana service to be accessed from outside the cluster (LoadBalancer service).
   ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.

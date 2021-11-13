@@ -15,16 +15,23 @@
 # - without monitoring infrastructure
 # - with example Infinispan data grid
 # - using Quarkus based native images
+# - with CoAP adapter only
 
 useLoadBalancer: false
-
-prometheus:
-  createInstance: false
-
-grafana:
-  enabled: false
 
 dataGridExample:
   enabled: true
 
 honoImagesType: quarkus-native
+
+adapters:
+  amqp:
+    enabled: false
+  coap:
+    enabled: true
+  http:
+    enabled: false
+  mqtt:
+    enabled: false
+  lora:
+    enabled: false

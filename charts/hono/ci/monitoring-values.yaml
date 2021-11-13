@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -12,12 +12,25 @@
 #
 
 # profile for installing Hono
-# - without monitoring infrastructure
+# - with monitoring infrastructure
+# - with HTTP adapter only
 
 useLoadBalancer: false
 
 prometheus:
-  createInstance: false
+  createInstance: true
 
 grafana:
-  enabled: false
+  enabled: true
+
+adapters:
+  amqp:
+    enabled: false
+  coap:
+    enabled: false
+  http:
+    enabled: true
+  mqtt:
+    enabled: false
+  lora:
+    enabled: false

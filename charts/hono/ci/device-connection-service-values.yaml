@@ -16,14 +16,9 @@
 # - with example Infinispan data grid
 # - with Device Connection service
 # - using Spring Boot based images
+# - with Lora adapter only
 
 useLoadBalancer: false
-
-prometheus:
-  createInstance: false
-
-grafana:
-  enabled: false
 
 dataGridExample:
   enabled: true
@@ -32,3 +27,15 @@ deviceConnectionService:
   enabled: true
 
 honoImagesType: "spring"
+
+adapters:
+  amqp:
+    enabled: false
+  coap:
+    enabled: false
+  http:
+    enabled: false
+  mqtt:
+    enabled: false
+  lora:
+    enabled: true
