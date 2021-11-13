@@ -64,8 +64,6 @@ eclipse-hono-adapter-mqtt-vertx                 LoadBalancer   10.102.204.69    
 eclipse-hono-artemis                            ClusterIP      10.97.31.154     <none>           5671/TCP
 eclipse-hono-dispatch-router                    ClusterIP      10.98.111.236    <none>           5673/TCP
 eclipse-hono-dispatch-router-ext                LoadBalancer   10.109.220.100   10.109.220.100   15671:30671/TCP,15672:30672/TCP
-eclipse-hono-grafana                            ClusterIP      10.110.61.181    <none>           3000/TCP
-eclipse-hono-prometheus-server                  ClusterIP      10.96.70.135     <none>           9090/TCP
 eclipse-hono-service-auth                       ClusterIP      10.109.97.44     <none>           5671/TCP
 eclipse-hono-service-auth-headless              ClusterIP      None             <none>           <none>
 eclipse-hono-service-device-registry            ClusterIP      10.105.190.233   <none>           5671/TCP
@@ -97,18 +95,6 @@ content-type: application/json; charset=utf-8
 content-length: 260
 ```
 
-## Accessing the Grafana dashboard
-
-Hono comes with an example Grafana dashboard which provides some insight into the messages flowing through the protocol adapters.
-The following command needs to be run first in order to forward the Grafana service's endpoint to the local host:
-
-```bash
-kubectl port-forward service/eclipse-hono-grafana 3000 -n hono
-```
-
-Then the dashboard can be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.
-
-
 ## Uninstalling the chart
 
 To uninstall/delete the `eclipse-hono` release from the target name space:
@@ -136,17 +122,30 @@ helm install --dependency-update -n hono -f /path/to/config.yaml eclipse-hono ec
 ```
 
 
-## Prevent installation of Prometheus and Grafana
+## Installing Prometheus and Grafana
 
-The chart by default installs a Prometheus instance for collecting metrics from Hono's
+The chart supports installation and configuration of an example Prometheus instance for collecting metrics from Hono's
 components and a Grafana instance for visualizing the metrics on dashboards in a web browser.
 
-Both Prometheus and Grafana are not required to run Hono. The following configuration properties
-can be used to prevent installation of the Prometheus and Grafana servers.
+Both Prometheus and Grafana are completely optional and are not required to run Hono. The following configuration
+properties can be used to install the Prometheus and Grafana servers along with Hono:
 
 ```bash
-helm install --dependency-update -n hono --set prometheus.createInstance=false --set grafana.enabled=false eclipse-hono eclipse-iot/hono
+helm install --dependency-update -n hono --set prometheus.createInstance=true --set grafana.enabled=true eclipse-hono eclipse-iot/hono
 ```
+
+### Accessing the Example Grafana Dashboard
+
+Hono comes with an example Grafana dashboard which provides some insight into the messages flowing through the protocol
+adapters. The following command needs to be run first in order to forward the Grafana service's endpoint to the local host:
+
+```bash
+kubectl port-forward service/eclipse-hono-grafana 3000 -n hono
+```
+
+Then the dashboard can be opened by pointing your browser to `http://localhost:3000` using credentials `admin:admin`.
+
+
 
 ## Using specific Container Images
 

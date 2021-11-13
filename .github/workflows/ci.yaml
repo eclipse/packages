@@ -128,6 +128,10 @@ jobs:
           config: .github/kind-config.yaml
           node_image: kindest/node:${{ matrix.k8s }}
         if: ${{ steps.list-changed.outputs.changed == 'true' }}
+      - name: Describe nodes
+        if: ${{ steps.list-changed.outputs.changed == 'true' }}
+        run: |
+          kubectl describe nodes
       - name: Deploy ingress controller
         if: ${{ steps.list-changed.outputs.changed == 'true' }}
         run: |
