@@ -303,10 +303,6 @@ jaegerAgentConf:
 #  REPORTER_GRPC_HOST_PORT: my-jaeger-collector:14250
 #  REPORTER_GRPC_DISCOVERY_MIN_PEERS: 1
 
-# defaultJavaOptions contains options to pass to the JVM when starting
-# up Hono's containers
-defaultJavaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-
 # the port that the Hono components' Prometheus scraping endpoint is exposed on
 monitoring:
   prometheus:
