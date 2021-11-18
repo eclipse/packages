@@ -181,7 +181,7 @@ deviceRegistryExample:
   containerRegistry: my-private-registry
 
 authServer:
-  # pull milestone release from Docker Hub
+  # pull "older" release from Docker Hub
   imageName: eclipse/hono-service-auth
   imageTag: 1.9.0
 
@@ -479,7 +479,8 @@ components to use the Jaeger back end.
 
 Note that this can only be used with the standard Hono images published on Docker Hub with version 1.5.0 or later.
 Custom built images need to include the Jaeger client in order to be able to report data to the Jaeger back end.
-For the standard Hono components this can be achieved by means of activating the `jaeger` Maven during the build process.
+For the standard Hono components this can be achieved by means of activating the `jaeger` Maven profile during
+the build process.
 
 The following command can then be used to return the IP address at which the Jaeger UI can be accessed in a
 browser (ensure `minikube tunnel` is running when using minikube):
@@ -553,9 +554,8 @@ This is enabled by setting `kafkaMessagingClusterExample.enabled` to `true`. Wit
 deploys a Kafka cluster consisting of a single broker and a single Zookeeper instance and configures the 
 protocol adapters to connect to the example cluster.
 
-However, usage of the example Kafka cluster in a production environment is
-strongly discouraged as it is a single node cluster only which does not
-provide any redundancy.
+However, usage of the example Kafka cluster in a production environment is strongly discouraged as it is a single
+node cluster which does not provide any redundancy.
 
 The Helm chart can be configured to use an existing Kafka cluster instead of the example deployment.
 In order to do so, the protocol adapters need to be configured with information about the bootstrap server addresses
