@@ -505,7 +505,7 @@ adapters:
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
     springConfigLocation: "file:///etc/hono/"
-    # loggingConfig contains the location of the logback configuration file that is used
+    # springLoggingConfig contains the location of the logback configuration file that is used
     # by the adapter.
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
     # for details.
@@ -602,7 +602,7 @@ adapters:
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
     springConfigLocation: "file:///etc/hono/"
-    # loggingConfig contains the location of the logback configuration file that is used
+    # springLoggingConfig contains the location of the logback configuration file that is used
     # by the adapter.
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
     # for details.
@@ -690,7 +690,7 @@ adapters:
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
     springConfigLocation: "file:///etc/hono/"
-    # loggingConfig contains the location of the logback configuration file that is used
+    # springLoggingConfig contains the location of the logback configuration file that is used
     # by the adapter.
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
     # for details.
@@ -787,7 +787,7 @@ adapters:
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
     springConfigLocation: "file:///etc/hono/"
-    # loggingConfig contains the location of the logback configuration file that is used
+    # springLoggingConfig contains the location of the logback configuration file that is used
     # by the adapter.
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
     # for details.
@@ -884,7 +884,7 @@ adapters:
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
     springConfigLocation: "file:///etc/hono/"
-    # loggingConfig contains the location of the logback configuration file that is used
+    # springLoggingConfig contains the location of the logback configuration file that is used
     # by the adapter.
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
     # for details.
@@ -980,7 +980,7 @@ adapters:
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
     springConfigLocation: "file:///etc/hono/"
-    # loggingConfig contains the location of the logback configuration file that is used
+    # springLoggingConfig contains the location of the logback configuration file that is used
     # by the adapter.
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
     # for details.
@@ -1077,7 +1077,7 @@ authServer:
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
   # for details.
   springConfigLocation: "file:///etc/hono/"
-  # loggingConfig contains the location of the logback configuration file that is used by the service.
+  # springLoggingConfig contains the location of the logback configuration file that is used by the service.
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
   # for details.
   springLoggingConfig: "classpath:logback-spring.xml"
@@ -1541,7 +1541,7 @@ deviceConnectionService:
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
   # for details.
   springConfigLocation: "file:///etc/hono/"
-  # loggingConfig contains the location of the logback configuration file that is used by the service.
+  # springLoggingConfig contains the location of the logback configuration file that is used by the service.
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
   # for details.
   springLoggingConfig: "classpath:logback-spring.xml"
@@ -1658,7 +1658,7 @@ commandRouterService:
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
   # for details.
   springConfigLocation: "file:///etc/hono/"
-  # loggingConfig contains the location of the logback configuration file that is used by the service.
+  # springLoggingConfig contains the location of the logback configuration file that is used by the service.
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
   # for details.
   springLoggingConfig: "classpath:logback-spring.xml"
