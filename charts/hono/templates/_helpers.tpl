@@ -417,7 +417,7 @@ The scope passed in is expected to be a dict with keys
 - name: SPRING_CONFIG_LOCATION
   value: {{ default "file:///etc/hono/" .componentConfig.springConfigLocation | quote }}
 - name: LOGGING_CONFIG
-  value: {{ default "classpath:logback-spring.xml" .componentConfig.loggingConfig | quote }}
+  value: {{ default "classpath:logback-spring.xml" .componentConfig.springLoggingConfig | quote }}
 - name: SPRING_PROFILES_ACTIVE
   value: {{ print $applicationProfiles ( ( empty .additionalProfile ) | ternary "" "," ) ( default "" .additionalProfile ) | quote }}
 {{- end }}
