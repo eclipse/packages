@@ -10,29 +10,51 @@ This chart uses `eclipse/ditto-XXX` containers to run Ditto inside Kubernetes.
 
 ## Prerequisites
 
-* Has been tested on Kubernetes 1.11+
+Installing Ditto using the chart requires the Helm tool to be installed as described on the 
+[IoT Packages chart repository prerequisites](https://www.eclipse.org/packages/prereqs/) page.
+
+TL;DR:
+
+* have a correctly configured [`kubectl`](https://kubernetes.io/docs/tasks/tools/#kubectl) (either against a local or remote k8s cluster)
+* have [Helm installed](https://helm.sh/docs/intro/)
+* add the Eclipse IoT Packages Helm repo:
+    ```bash
+    helm repo add eclipse-iot https://eclipse.org/packages/charts
+    helm repo update
+    ```
+
+The Helm chart is being tested to successfully install on the five most recent Kubernetes versions.
 
 ## Installing the Chart
 
-To install the chart with the release name `eclipse-ditto`, run the following command (tested with Helm v3):
+The instructions below illustrate how Ditto can be installed to the `ditto` name space in a Kubernetes cluster using 
+release name `eclipse-ditto`.  
+The commands can easily be adapted to use a different name space or release name.
+
+The target name space in Kubernetes only needs to be created if it doesn't exist yet:
 
 ```bash
-helm repo add eclipse-iot https://eclipse.org/packages/charts
-helm repo update
-helm install eclipse-ditto eclipse-iot/ditto
+kubectl create namespace ditto
 ```
+
+The chart can then be installed to name space `ditto` using release name `eclipse-ditto`:
+
+```bash
+helm install --dependency-update -n ditto eclipse-ditto eclipse-iot/ditto
+```
+
 
 ## Uninstalling the Chart
 
 To uninstall/delete the `eclipse-ditto` release:
 
 ```bash
-helm delete eclipse-ditto
+helm delete -n ditto eclipse-ditto
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
-> **Tip**: To completely remove the release, run `helm delete --purge eclipse-ditto`
+> **Tip**: To completely remove the release, run `helm delete -n ditto --purge eclipse-ditto`
 
 ## Configuration
 
@@ -41,7 +63,7 @@ Please view the `values.yaml` for the list of possible configuration values with
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example:
 
 ```bash
-helm install eclipse-ditto eclipse-iot/ditto --set swaggerui.enabled=false
+helm install -n ditto eclipse-ditto eclipse-iot/ditto --set swaggerui.enabled=false
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart.
@@ -74,67 +96,7 @@ gateway:
   statusPassword: bar
 ```
 
-## Local Setup
-
-In order to install the Helm chart locally (e.g. in order to enhance the chart), follow the instructions in this section.
-
-### Requirements
-
-* [Kubernetes IN Docker](https://github.com/kubernetes-sigs/kind)
-* [kubectl](https://kubernetes.io/docs/tasks/kubectl/install/)
-* [Helm v3](https://docs.helm.sh/using_helm/#installing-helm)
-
-### Run Eclipse Ditto
-
-#### Start KIND Cluster
-
-Prepare a kind configuration file named `kind-config.yaml`, with following content:
-
-```yaml
-kind: Cluster
-apiVersion: kind.sigs.k8s.io/v1alpha3
-nodes:
-# the control plane node config
-- role: control-plane
-# Worker reachable from local machine
-- role: worker
-  extraPortMappings:
-  # HTTP
-  - containerPort: 32080
-    hostPort: 80
-```
-
-Start kind cluster
-
-```bash
-kind create cluster --image "kindest/node:v1.14.9" --config kind-config.yaml
-```
-
-#### Install Eclipse Ditto
-
-**Note:** Following commands requires Helm v3
-
-Install ditto chart with default configuration
-
-```bash
-helm upgrade eclipse-ditto . --install
-```
-
-Follow the instructions from `NOTES.txt` (printed when install is finished).
-
-#### Delete Eclipse Ditto Release
-
-```bash
-helm delete eclipse-ditto
-```
-
-#### Destroy KIND Cluster
-
-```bash
-kind delete cluster
-```
-
-### Troubleshooting
+## Troubleshooting
 
 If you experience high resource consumption (either CPU or RAM or both), you can limit the resource usage by
 specifying resource limits.
@@ -142,5 +104,5 @@ This can be done individually for each single component.
 Here is an example how to limit CPU to 0.25 Cores and RAM to 512 MiB for the `connectivity` service:
 
 ```bash
-helm upgrade eclipse-ditto . --install --set connectivity.resources.limits.cpu=0.25 --set connectivity.resources.limits.memory=512Mi
+helm upgrade -n ditto eclipse-ditto . --install --set connectivity.resources.limits.cpu=0.25 --set connectivity.resources.limits.memory=512Mi
 ```
