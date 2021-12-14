@@ -44,8 +44,21 @@ spec:
           containerPort: 11222
           protocol: TCP
         volumeMounts:
-        - mountPath: /opt/infinispan/server/conf
+        - mountPath: /opt/infinispan/server/conf/hono-data-grid.xml
           name: conf
+          subPath: hono-data-grid.xml
+          readOnly: true
+        - mountPath: /opt/infinispan/server/conf/users.properties
+          name: conf
+          subPath: users.properties
+          readOnly: true
+        - mountPath: /opt/infinispan/server/conf/public-groups.properties
+          name: conf
+          subPath: public-groups.properties
+          readOnly: true
+        - mountPath: /opt/infinispan/server/conf/mgmt-groups.properties
+          name: conf
+          subPath: mgmt-groups.properties
           readOnly: true
         livenessProbe:
           httpGet:
