@@ -188,7 +188,7 @@ dataGridExample:
   enabled: false
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
-  imageName: infinispan/server-native:11.0.7.Final-2
+  imageName: infinispan/server:11.0.13.Final
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   livenessProbeInitialDelaySeconds: 300
