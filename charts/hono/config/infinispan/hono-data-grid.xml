@@ -1,17 +1,19 @@
 <infinispan
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:infinispan:config:11.0 https://infinispan.org/schemas/infinispan-config-11.0.xsd
-                            urn:infinispan:server:11.0 https://infinispan.org/schemas/infinispan-server-11.0.xsd"
-        xmlns="urn:infinispan:config:11.0"
-        xmlns:server="urn:infinispan:server:11.0">
+        xsi:schemaLocation="urn:infinispan:config:13.0 https://infinispan.org/schemas/infinispan-config-13.0.xsd
+                            urn:infinispan:server:13.0 https://infinispan.org/schemas/infinispan-server-13.0.xsd"
+        xmlns="urn:infinispan:config:13.0"
+        xmlns:server="urn:infinispan:server:13.0">
 
   <cache-container name="routing-info">
     <transport stack="kubernetes" cluster="hono-grid" initial-cluster-size="1" />
     <security>
       <authorization>
-        <identity-role-mapper /> 
-        <role name="admin" permissions="ALL" /> 
-        <role name="adapter" permissions="READ WRITE BULK_READ" />
+        <identity-role-mapper />
+        <roles>
+          <role name="admin" permissions="ALL" />
+          <role name="adapter" permissions="READ WRITE BULK_READ" />
+        </roles>
       </authorization>
     </security>
     <distributed-cache name="{{ if .Values.useCommandRouter }}command-router{{ else }}device-connection{{ end }}">
@@ -26,7 +28,7 @@
     </distributed-cache>
   </cache-container>
 
-  <server xmlns="urn:infinispan:server:11.0">
+  <server xmlns="urn:infinispan:server:13.0">
     <interfaces>
       <interface name="public">
         <inet-address value="${infinispan.bind.address:0.0.0.0}" />
@@ -64,17 +66,19 @@
       </security-realms>
     </security>
 
-    <endpoints socket-binding="default">
-      <hotrod-connector name="hotrod">
-        <authentication security-realm="ApplicationRealm">
-          <sasl mechanisms="SCRAM-SHA-512 SCRAM-SHA-384 DIGEST-SHA-512 DIGEST-SHA-384 DIGEST-MD5"
-                server-name='{{ printf "%s-data-grid" .Release.Name }}'
-                qop="auth" />
-        </authentication>
-      </hotrod-connector>
-      <rest-connector name="rest">
-        <authentication security-realm="ApplicationRealm" mechanisms="DIGEST BASIC" />
-      </rest-connector>
+    <endpoints>
+      <endpoint socket-binding="default">
+        <hotrod-connector name="hotrod">
+          <authentication security-realm="ApplicationRealm">
+            <sasl mechanisms="SCRAM-SHA-512 SCRAM-SHA-384 DIGEST-SHA-512 DIGEST-SHA-384 DIGEST-MD5"
+                  server-name='{{ printf "%s-data-grid" .Release.Name }}'
+                  qop="auth" />
+          </authentication>
+        </hotrod-connector>
+        <rest-connector name="rest">
+          <authentication security-realm="ApplicationRealm" mechanisms="DIGEST BASIC" />
+        </rest-connector>
+      </endpoint>
     </endpoints>
 
   </server>
