@@ -48,15 +48,15 @@ amqpMessagingNetworkExample:
   # As alternative an external Broker can be configured as well.
   enabled: true
 
-  # dispatchRouter contains properties for configuring the QPid Dispatch Router
+  # dispatchRouter contains properties for configuring the Qpid Dispatch Router
   dispatchRouter:
     # configPath contains the path to the configuration file of the
     # Qpid Dispatch Router configuration file
-    # See http://qpid.apache.org/releases/qpid-dispatch-1.10.0/man/qdrouterd.conf.html
+    # See http://qpid.apache.org/releases/qpid-dispatch-1.17.1/man/qdrouterd.conf.html
     configPath: /etc/hono/qdrouterd.json
     # imageName contains the name (including tag) of the container image
     # to use for the example AMQP Messaging Network's Dispatch Router.
-    imageName: quay.io/interconnectedcloud/qdrouterd:1.14.0
+    imageName: quay.io/interconnectedcloud/qdrouterd:1.17.1
     # certFile contains the absolute path to a PEM file containing
     # the X.509 certificate that the router should use for authenticating
     # to clients
@@ -77,7 +77,7 @@ amqpMessagingNetworkExample:
     # uidFormat contains the format string to use for extracting the user ID from
     # the subject DN of certificates that clients use for authenticating to the router's
     # "internal" listener.
-    # See http://qpid.apache.org/releases/qpid-dispatch-1.10.0/man/qdrouterd.conf.html
+    # See http://qpid.apache.org/releases/qpid-dispatch-1.17.1/man/qdrouterd.conf.html
     # for details regarding the syntax.
     # The default value ("ou") extracts the Organization ("O") and the Org Unit ("OU")
     # and concatenates them using a semicolon, e.g. "Eclipse IoT;Hono"
