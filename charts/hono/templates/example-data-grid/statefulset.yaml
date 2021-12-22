@@ -34,6 +34,7 @@ spec:
         - /opt/infinispan/bin/server.sh
         - -c
         - hono-data-grid.xml
+        - -Dquarkus.log.category."org.infinispan.AUDIT".level=WARN
         env:
         - name: JDK_JAVA_OPTIONS
           value: "-XX:MinRAMPercentage=85 -XX:MaxRAMPercentage=85"
