@@ -21,7 +21,7 @@ dependencies:
     condition: grafana.enabled
   - name: mongodb
     repository: "https://charts.bitnami.com/bitnami"
-    version: ~7.14.7
+    version: ^10.x
     condition: mongodb.createInstance
   - name: kafka
     repository: "https://charts.bitnami.com/bitnami"
