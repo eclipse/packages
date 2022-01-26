@@ -1,6 +1,6 @@
 #!/bin/bash
 #*******************************************************************************
-# Copyright (c) 2016, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2016, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -118,6 +118,8 @@ keytool -import -trustcacerts -noprompt -alias root -file $DIR/root-cert.pem -ke
 keytool -import -trustcacerts -noprompt -alias ca -file $DIR/ca-cert.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
 keytool -import -trustcacerts -noprompt -alias le-root -file $DIR/isrgrootx1.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
 keytool -import -trustcacerts -noprompt -alias le-ca -file $DIR/lets-encrypt-r3.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
+
+rm $DIR/lets-encrypt-r3.pem $DIR/isrgrootx1.pem
 
 echo ""
 echo "creating CA key and certificate for DEFAULT_TENANT"
