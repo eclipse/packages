@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -14,6 +14,7 @@
 # profile for installing Hono
 # - with MongoDB based device registry
 # - with MongoDB instance
+# - with Kafka as messaging infrastructure
 # - without monitoring infrastructure
 # - with AMQP adapter only
 
@@ -24,6 +25,24 @@ mongodb:
   createInstance: true
   persistence:
     enabled: false
+
+messagingNetworkTypes:
+  - kafka
+
+kafkaMessagingClusterExample:
+  enabled: true
+
+kafka:
+  persistence:
+    enabled: false
+  externalAccess:
+    autoDiscovery:
+      enabled: false
+    service:
+      type: NodePort
+      # length of the array must match replicaCount
+      nodePorts:
+        - "32094"
 
 useLoadBalancer: false
 
