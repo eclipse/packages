@@ -1369,6 +1369,12 @@ deviceRegistryExample:
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
     resources:
+      requests:
+        cpu: "150m"
+        memory: "400Mi"
+      limits:
+        cpu: "1"
+        memory: "400Mi"
     # mongodb contains the configuration properties to connect to the MongoDB database instance.
     # If you would like to use an already existing MongoDB database instance, then configure
     # the below section accordingly.
@@ -1468,27 +1474,33 @@ deviceRegistryExample:
           # The password to use for authenticating to the database
           password:
 
+# mongodb contains configuration properties for the example MongoDB instance to be used with the
+# MongoDB device registry.
+# By default, a standalone instance using a k8s Deployment instead of a StatefulSet will be created.
+# The configuration properties below are intended to set up a MongoDB instance that is sufficient
+# for demonstration and/or testing purposes. In order to use a production level MongoDB instance, users
+# should not adapt these properties, but instead set the "createInstance" property to false, set up a
+# separate MongoDB instance according to
+# https://github.com/bitnami/charts/tree/master/bitnami/mongodb#production-configuration-and-horizontal-scaling
+# and configure the registry's connection details under "deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb".
 mongodb:
-  # createInstance indicates whether a MongoDB database instance should be created,
-  # which is to be used by the example MongoDB based device registry.
-  # Instead, if you want to use an already existing MongoDB instance, set this property to false.
-  # By default, it is configured to use a StatefulSet and to deploy as a standalone instance.
-  # In order to use it for production purposes and to horizontally scale,
-  # refer https://github.com/bitnami/charts/tree/master/bitnami/mongodb#production-configuration-and-horizontal-scaling
+  # createInstance indicates whether a MongoDB database instance should be created.
   createInstance: false
   # If authentication to be enabled or not.
   # ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
-  usePassword: true
-  # Configure a custom MongoDB database with a user name and password.
-  # And also set a root password for the MongoDB instance.
-  # ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
-  mongodbRootPassword: root-secret
-  mongodbUsername: device-registry@HONO
-  mongodbPassword: hono-secret
-  mongodbDatabase: honodb
-  # Expose the MongoDB service to be accessed from outside the cluster (LoadBalancer service).
-  # or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
-  # ref: http://kubernetes.io/docs/user-guide/services/
+  auth:
+    enabled: true
+    # Configure a custom MongoDB database with a user name and password.
+    # And also set a root password for the MongoDB instance.
+    # ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
+    rootPassword: root-secret
+    usernames:
+    - "device-registry@HONO"
+    passwords:
+    - "hono-secret"
+    databases:
+    - "honodb"
+  # Configure the MongoDB service to be accessed from inside the cluster only.
   service:
     type: ClusterIP
     port: 27017
