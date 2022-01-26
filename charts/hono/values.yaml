@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -1876,14 +1876,12 @@ kafka:
   # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
   externalAccess:
     enabled: true
-    service:
-      type: LoadBalancer
-      port: 9092
-      # length of the array must match replicaCount
-      nodePorts:
-        - 32092
     autoDiscovery:
       enabled: true
+    service:
+      # length of the array must match replicaCount
+      nodePorts:
+        - 32094
   serviceAccount:
     create: true
   rbac:
@@ -1892,8 +1890,6 @@ kafka:
     create: true
   # the name of the template (maintains the release name)
   nameOverride: kafka
-  service:
-    port: 9094
   auth:
     clientProtocol: sasl_tls
     sasl:

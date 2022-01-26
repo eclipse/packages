@@ -36,7 +36,7 @@ https://eclipse.org/hono/getting-started-kafka/
 Clients can connect to the Kafka cluster with the configuration properties below
 (see the above guide on how to set $KAFKA_IP and $KAFKA_TRUSTSTORE_PATH).
 
-  bootstrap.servers=$KAFKA_IP:9092
+  bootstrap.servers=$KAFKA_IP:{{ .Values.kafka.service.externalPort }}
   ssl.truststore.location=$KAFKA_TRUSTSTORE_PATH
   security.protocol=SASL_SSL
   sasl.mechanism=SCRAM-SHA-512
