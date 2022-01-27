@@ -12,8 +12,8 @@
 #
 dependencies:
   - name: hono
-    version: ~1.8.0
+    version: ~1.10.19
     repository: "https://eclipse.org/packages/charts/"
   - name: ditto
-    version: ~2.0.1
+    version: ~2.3.0
     repository: "https://eclipse.org/packages/charts/"
