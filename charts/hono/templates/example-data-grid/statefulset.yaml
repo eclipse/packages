@@ -26,6 +26,10 @@ spec:
     metadata:
       {{- include "hono.metadata" $args | nindent 6 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - image: {{ .Values.dataGridExample.imageName | quote }}
         imagePullPolicy: IfNotPresent

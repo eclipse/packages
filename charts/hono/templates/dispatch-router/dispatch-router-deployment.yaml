@@ -25,6 +25,10 @@ spec:
     metadata:
       {{- include "hono.metadata" $args | nindent 6 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: apache-qpid-dispatch-router
         image: {{ .Values.amqpMessagingNetworkExample.dispatchRouter.imageName | quote }}
