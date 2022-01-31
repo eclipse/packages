@@ -2027,14 +2027,6 @@ grafana:
   enabled: false
   adminPassword: admin
 
-  # labels to be added to the Grafana Deployment
-  labels:
-    app.kubernetes.io/component: dashboard
-
-  # labels to be added to the Grafana Pod(s)
-  podLabels:
-    app.kubernetes.io/component: dashboard
-
   # do not run tests after deployment
   testFramework:
     enabled: false
@@ -2048,8 +2040,6 @@ grafana:
     port: 3000
     targetPort: 3000
     annotations: {}
-    labels:
-      app.kubernetes.io/component: dashboard
 
   ## Sidecars that collect the configmaps with specified label and stores the included files them into the respective folders
   ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
