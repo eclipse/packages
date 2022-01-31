@@ -12,11 +12,11 @@
 #
 dependencies:
   - name: prometheus
-    version: ~14.6.0
+    version: ^14.x
     repository: "https://prometheus-community.github.io/helm-charts"
     condition: prometheus.createInstance
   - name: grafana
-    version: ~6.16.0
+    version: ^6.x
     repository: "https://grafana.github.io/helm-charts"
     condition: grafana.enabled
   - name: mongodb
