@@ -26,6 +26,10 @@ spec:
       annotations:
         {{- include "hono.monitoringAnnotations" . | nindent 8 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       {{- include "hono.container" $args | indent 6 }}
         ports:

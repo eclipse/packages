@@ -25,6 +25,10 @@ spec:
     metadata:
       {{- include "hono.metadata" $args | nindent 6 }}
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       {{- include "hono.jaeger.agent" . | indent 6 }}
       {{- include "hono.container" $args | indent 6 }}

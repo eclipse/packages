@@ -29,6 +29,10 @@ spec:
         prometheus.io/port: {{ .Values.healthCheckPort | quote }}
         prometheus.io/scheme: "http"
     spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - env:
         - name: ADMIN_HTTP_HOST_PORT

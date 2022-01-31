@@ -26,6 +26,10 @@
 # the value specified here.
 honoContainerRegistry: index.docker.io
 
+# imagePullSecrets for pulling docker images from private registry. It will
+# be added to every deployment and statefulset.
+imagePullSecrets: []
+
 # livenessProbeInitialDelaySeconds contains the default value to use
 # for the "initialDelaySeconds" configuration property of a Hono
 # component's liveness probe.
