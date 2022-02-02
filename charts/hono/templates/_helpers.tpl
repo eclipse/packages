@@ -231,26 +231,31 @@ kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
     bootstrap.servers: {{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-0.{{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-headless.{{ .dot.Release.Namespace }}:{{ .dot.Values.kafka.service.port }}
-{{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
+  {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
     security.protocol: "SASL_SSL"
     sasl.mechanism: "SCRAM-SHA-512"
     sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
     ssl.truststore.location: "/etc/hono/truststore.jks"
     ssl.truststore.password: {{ .dot.Values.kafka.auth.tls.password | quote }}
     ssl.endpoint.identification.algorithm: "" # Disables hostname verification. Don't do this in productive setups!
-{{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
+  {{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
     security.protocol: "SASL_PLAINTEXT"
     sasl.mechanism: "SCRAM-SHA-512"
     sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
+  {{- else }}
+    {{- required ".Values.kafka.auth.clientProtocol has unsupported value" nil }}
+  {{- end }}
 {{- else }}
-  {{- required ".Values.kafka.auth.clientProtocol has unsupported value" nil }}
-{{- end }}
-{{- else if not .kafkaMessagingSpec }}
-  {{- required "Kafka messaging spec MUST be provided if example Kafka cluster is disabled" nil }}
-{{- else if not (index .kafkaMessagingSpec.commonClientConfig "bootstrap.servers") }}
-  {{- required "Kafka messaging spec MUST contain 'bootstrap.servers' if example Kafka cluster is disabled" nil }}
-{{- else }}
-  {{- .kafkaMessagingSpec | toYaml | nindent 2 }}
+  {{- $bootstrapServers := dig "kafkaMessagingSpec" "commonClientConfig" "bootstrap.servers" "" . }}
+  {{- $fallbackBootstrapServers := dig "commonClientConfig" "bootstrap.servers" "" .dot.Values.adapters.kafkaMessagingSpec }}
+  {{- if not ( any $bootstrapServers $fallbackBootstrapServers ) }}
+    {{- required "At least 'bootstrap.servers' MUST be provided if example Kafka cluster is disabled" nil }}
+  {{- else if $bootstrapServers }}
+    {{- .kafkaMessagingSpec | toYaml | nindent 2 }}
+  {{- else }}
+  commonClientConfig:
+    {{- .dot.Values.adapters.kafkaMessagingSpec.commonClientConfig | toYaml | nindent 4 }}
+  {{- end }}
 {{- end }}
 {{- end }}
 

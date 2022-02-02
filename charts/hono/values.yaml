@@ -424,27 +424,27 @@ adapters:
   # "kafkaMessagingClusterExample.enabled" is set to false.
   # Please refer to https://www.eclipse.org/hono/docs/admin-guide/common-config/#kafka-based-messaging-configuration
   # for a description of supported properties.
-  kafkaMessagingSpec:
-#    commonClientConfig:
-#      "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
-#    command:
-#      consumerConfig:
-#        "compression.type": none
-#    commandInternal:
-#      adminClientConfig:
-#        "compression.type": none
-#    commandResponse:
-#      producerConfig:
-#        "compression.type": none
-#    event:
-#      producerConfig:
-#        "compression.type": none
-#    notification:
-#      consumerConfig:
-#        "compression.type": none
-#    telemetry:
-#      producerConfig:
-#        "compression.type": none
+  kafkaMessagingSpec: {}
+  #  commonClientConfig:
+  #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
+  #  command:
+  #    consumerConfig:
+  #      "compression.type": none
+  #  commandInternal:
+  #    adminClientConfig:
+  #      "compression.type": none
+  #  commandResponse:
+  #    producerConfig:
+  #      "compression.type": none
+  #  event:
+  #    producerConfig:
+  #      "compression.type": none
+  #  notification:
+  #    consumerConfig:
+  #      "compression.type": none
+  #  telemetry:
+  #    producerConfig:
+  #      "compression.type": none
 
   # tenantSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Tenant service.
@@ -1278,22 +1278,26 @@ deviceRegistryExample:
     #  certPath: "/etc/config/cert.pem"
 
     # kafka contains the configuration used by the device registry
-    # for connecting to the Kafka cluster to be used for messaging.
-    # This property MUST be set if "messagingNetworkTypes" contains "kafka" and
+    # for connecting to a Kafka cluster to be used for messaging.
+    # This property will be used if "messagingNetworkTypes" contains "kafka" and
     # "kafkaMessagingClusterExample.enabled" is set to false. Please refer to
     # https://www.eclipse.org/hono/docs/admin-guide/jdbc-device-registry-config/#kafka-based-messaging-configuration
     # or
     # https://www.eclipse.org/hono/docs/admin-guide/mongodb-device-registry-config/#kafka-based-messaging-configuration
     # for a description of supported properties.
-    kafka:
-#    commonClientConfig:
-#      "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
-#    event:
-#      producerConfig:
-#        "compression.type": none
-#    notification:
-#      producerConfig:
-#        "compression.type": none
+    kafka: {}
+      # commonClientConfig contains Kafka client configuration to be used by all Kafka consumers and producers
+      # created by the device registry.
+      # If this property is not set or if it does not contain a "bootstrap.servers" property, the
+      # "adapters.kafkaMessagingSpec.commonClientConfig" property is used as a fall back.
+    #  commonClientConfig:
+    #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
+    #  event:
+    #    producerConfig:
+    #      "compression.type": none
+    #  notification:
+    #    producerConfig:
+    #      "compression.type": none
 
   # fileBasedDeviceRegistry contains configuration properties specific to the
   # file based device registry.
@@ -1790,29 +1794,33 @@ commandRouterService:
     #  certPath: "/etc/config/cert.pem"
 
     # kafka contains the configuration used by the command router
-    # for connecting to the Kafka cluster to be used for messaging.
-    # This property MUST be set if "messagingNetworkTypes" contains "kafka" and
+    # for connecting to a Kafka cluster to be used for messaging.
+    # This property will be used if "messagingNetworkTypes" contains "kafka" and
     # "kafkaMessagingClusterExample.enabled" is set to false. Please refer to
     # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/#kafka-based-messaging-configuration
     # for a description of supported properties.
-    kafka:
-#    commonClientConfig:
-#      "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
-#    cleanup:
-#      adminClientConfig:
-#        "compression.type": none
-#    command:
-#      consumerConfig:
-#        "compression.type": none
-#    commandInternal:
-#      producerConfig:
-#        "compression.type": none
-#    commandResponse:
-#      producerConfig:
-#        "compression.type": none
-#    notification:
-#      consumerConfig:
-#        "compression.type": none
+    kafka: {}
+      # commonClientConfig contains Kafka client configuration to be used by all Kafka consumers and producers
+      # created by the Command Router service.
+      # If this property is not set or if it does not contain a "bootstrap.servers" property, the
+      # "adapters.kafkaMessagingSpec.commonClientConfig" property is used as a fall back.
+    #  commonClientConfig:
+    #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
+    #  cleanup:
+    #    adminClientConfig:
+    #      "compression.type": none
+    #  command:
+    #    consumerConfig:
+    #      "compression.type": none
+    #  commandInternal:
+    #    producerConfig:
+    #      "compression.type": none
+    #  commandResponse:
+    #    producerConfig:
+    #      "compression.type": none
+    #  notification:
+    #    consumerConfig:
+    #      "compression.type": none
 
 prometheus:
   # createInstance indicates whether a Prometheus server should be created
