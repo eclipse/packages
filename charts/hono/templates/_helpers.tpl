@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -177,14 +177,15 @@ It configures for either AMQP based or Kafka based messaging.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".") and
 - (mandatory) "component": the name of the component
+- (optional) "kafkaMessagingSpec": the configuration properties to use for the component's
+                                   Kafka producers/consumers/admin clients
 */}}
 {{- define "hono.messagingNetworkClientConfig" -}}
-{{- $args := dict "dot" .dot "component" .component -}}
 {{- if has "amqp" .dot.Values.messagingNetworkTypes -}}
-  {{- include "hono.amqpMessagingNetworkClientConfig" $args }}
+  {{- include "hono.amqpMessagingNetworkClientConfig" . }}
 {{- end }}
 {{- if has "kafka" .dot.Values.messagingNetworkTypes -}}
-  {{ include "hono.kafkaMessagingConfig" $args }}
+  {{ include "hono.kafkaMessagingConfig" . }}
 {{- end -}}
 {{- if and (not (has "amqp" .dot.Values.messagingNetworkTypes)) (not (has "kafka" .dot.Values.messagingNetworkTypes)) -}}
   {{- required "Property messagingNetworkTypes MUST contain 'amqp' and/or 'kafka'" nil }}
@@ -221,35 +222,40 @@ Add configuration properties for Kafka based messaging to YAML file.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".") and
 - (mandatory) "component": the name of the component
+- (optional) "kafkaMessagingSpec": the configuration properties to use for the component's
+                                   Kafka producers/consumers/admin clients
 */}}
 {{- define "hono.kafkaMessagingConfig" -}}
-{{- include "hono.kafkaConfigCheck" (dict "dot" .dot) }}
+{{- include "hono.kafkaConfigCheck" . }}
 kafka:
-  defaultClientIdPrefix: {{ .component }}
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
     bootstrap.servers: {{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-0.{{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-headless.{{ .dot.Release.Namespace }}:{{ .dot.Values.kafka.service.port }}
-{{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
-    security.protocol: SASL_SSL
-    sasl.mechanism: SCRAM-SHA-512
+  {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
+    security.protocol: "SASL_SSL"
+    sasl.mechanism: "SCRAM-SHA-512"
     sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
-    ssl.truststore.location: /etc/hono/truststore.jks
-    ssl.truststore.password: {{ .dot.Values.kafka.auth.tls.password }}
+    ssl.truststore.location: "/etc/hono/truststore.jks"
+    ssl.truststore.password: {{ .dot.Values.kafka.auth.tls.password | quote }}
     ssl.endpoint.identification.algorithm: "" # Disables hostname verification. Don't do this in productive setups!
-{{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
-    security.protocol: SASL_PLAINTEXT
-    sasl.mechanism: SCRAM-SHA-512
+  {{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
+    security.protocol: "SASL_PLAINTEXT"
+    sasl.mechanism: "SCRAM-SHA-512"
     sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
+  {{- else }}
+    {{- required ".Values.kafka.auth.clientProtocol has unsupported value" nil }}
+  {{- end }}
 {{- else }}
-  {{- required ".Values.kafka.auth.clientProtocol has unsuppported value" nil }}
-{{- end }}
-{{- else if not .dot.Values.adapters.kafkaMessagingSpec }}
-  {{- required ".Values.adapters.kafkaMessagingSpec MUST be provided if example Kafka cluster is disabled" nil }}
-{{- else if not (index .dot.Values.adapters.kafkaMessagingSpec.commonClientConfig "bootstrap.servers") }}
-  {{- required ".Values.adapters.kafkaMessagingSpec.commonClientConfig MUST contain 'bootstrap.servers' if example Kafka cluster is disabled" nil }}
-{{- end }}
-{{- if .dot.Values.adapters.kafkaMessagingSpec }}
-  {{- .dot.Values.adapters.kafkaMessagingSpec | toYaml | nindent 2 }}
+  {{- $bootstrapServers := dig "kafkaMessagingSpec" "commonClientConfig" "bootstrap.servers" "" . }}
+  {{- $fallbackBootstrapServers := dig "commonClientConfig" "bootstrap.servers" "" .dot.Values.adapters.kafkaMessagingSpec }}
+  {{- if not ( any $bootstrapServers $fallbackBootstrapServers ) }}
+    {{- required "At least 'bootstrap.servers' MUST be provided if example Kafka cluster is disabled" nil }}
+  {{- else if $bootstrapServers }}
+    {{- .kafkaMessagingSpec | toYaml | nindent 2 }}
+  {{- else }}
+  commonClientConfig:
+    {{- .dot.Values.adapters.kafkaMessagingSpec.commonClientConfig | toYaml | nindent 4 }}
+  {{- end }}
 {{- end }}
 {{- end }}
 
@@ -297,7 +303,7 @@ The scope passed in is expected to be a dict with keys
 */}}
 {{- define "hono.serviceClientConfig" -}}
 {{- $adapter := default "adapter" .component -}}
-{{- include "hono.messagingNetworkClientConfig" ( dict "dot" .dot "component" $adapter ) }}
+{{- include "hono.messagingNetworkClientConfig" ( dict "dot" .dot "component" $adapter "kafkaMessagingSpec" .dot.Values.adapters.kafkaMessagingSpec ) }}
 {{- if has "amqp" .dot.Values.messagingNetworkTypes }}
 command:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
