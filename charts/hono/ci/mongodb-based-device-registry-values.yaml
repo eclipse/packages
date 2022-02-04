@@ -18,6 +18,8 @@
 # - without monitoring infrastructure
 # - with AMQP adapter only
 
+useLoadBalancer: false
+
 deviceRegistryExample:
   type: mongodb
 
@@ -27,12 +29,16 @@ mongodb:
     enabled: false
 
 messagingNetworkTypes:
-  - kafka
+- kafka
 
 kafkaMessagingClusterExample:
   enabled: true
 
 kafka:
+  auth:
+    clientProtocol: "sasl"
+    tls:
+      existingSecrets: []
   persistence:
     enabled: false
   externalAccess:
@@ -42,9 +48,11 @@ kafka:
       type: NodePort
       # length of the array must match replicaCount
       nodePorts:
-        - "32094"
-
-useLoadBalancer: false
+      - "32094"
+  serviceAccount:
+    create: false
+  rbac:
+    create: false
 
 adapters:
   amqp:

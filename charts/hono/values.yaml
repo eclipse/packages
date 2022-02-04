@@ -1781,6 +1781,15 @@ commandRouterService:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
+      # cache contains properties configuring the embedded or remote cache that
+      # the Command Router uses for storing routing information.
+      # If not set explicitly here, the remote cache configuration from property "dataGridSpec" will be used.
+      # If that property is empty and "dataGridExample.enabled" is "true", the example data grid is used.
+      # If "dataGridExample.enabled" is "false", an embedded cache with a default configuration will be used.
+      # Note that when using the embedded cache, the Command Router pod does NOT support scaling up to a replica
+      # count > 1
+      cache:
+
     # healthCheck contains configuration properties for the service's
     # health check server as defined by
     # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
@@ -1979,5 +1988,6 @@ kafka:
         zookeeperPassword: zookeeperPassword
     tls:
       type: jks
-      existingSecret: "{{ .Release.Name }}-kafka-jks"
+      existingSecrets:
+      - "{{ .Release.Name }}-kafka-jks"
       password: honotrust
