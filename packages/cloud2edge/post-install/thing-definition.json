@@ -25,7 +25,7 @@
             "HONO": {
                 "subjects": {
                     "pre-authenticated:hono-connection": {
-                        "type": "Connetion to Eclipse Hono"
+                        "type": "Connection to Eclipse Hono"
                     }
                 },
                 "resources": {
