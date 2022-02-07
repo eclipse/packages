@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-    Copyright (c) 2021 Contributors to the Eclipse Foundation
+    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
    
     See the NOTICE file(s) distributed with this work for additional
     information regarding copyright ownership.
@@ -11,22 +11,15 @@
    
     SPDX-License-Identifier: EPL-2.0
  -->
-<infinispan>
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:13.0 https://infinispan.org/schemas/infinispan-config-13.0.xsd"
+        xmlns="urn:infinispan:config:13.0">
+
   <cache-container default-cache="command-router">
-    <global-state>
-      <persistent-location path="/var/lib/hono"/>
-    </global-state>
-    <local-cache name="command-router">
-      <persistence passivation="false">
-        <file-store
-            shared="false"
-            preload="true"
-            fetch-state="false"
-            read-only="false"
-            purge="false"
-            path="command-router">
-        </file-store>
-      </persistence>
+    <local-cache name="command-router" simple-cache="true">
+      <encoding media-type="application/x-protostream" />
+      <memory max-count="200" storage="OFF_HEAP" when-full="REMOVE"></memory>
     </local-cache>
   </cache-container>
 </infinispan>

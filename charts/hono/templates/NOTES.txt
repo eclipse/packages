@@ -23,26 +23,31 @@ NAME                                       {{ "READY   STATUS    RESTARTS   AGE"
 {{ .Release.Name }}-service-device-registry-0                 1/1     Running   0          5m51s
 
 Once all pods have status 'Running', Hono is ready to be used.
-{{- if (has "amqp" .Values.messagingNetworkTypes) }}
+{{- if ( has "amqp" .Values.messagingNetworkTypes ) }}
 
 To learn more about Hono's functionality, you should follow the Getting started guide at
 https://eclipse.org/hono/getting-started/
 {{- end }}
-{{- if (has "kafka" .Values.messagingNetworkTypes) }}
+{{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
 {{ if .Values.kafkaMessagingClusterExample.enabled }}
+{{- $isKafkaTlsEnabled := ( eq .Values.kafka.auth.clientProtocol "sasl_tls" ) }}
 Hono is configured with an example Kafka cluster for messaging. To learn more about it, you
 should follow the Kafka messaging guide at https://eclipse.org/hono/getting-started-kafka/
 Clients can connect to the example Kafka cluster using the configuration properties below.
 Please refer to the guide mentioned above for details on how to determine the values for
-$KAFKA_IP and $KAFKA_TRUSTSTORE_PATH.
+$KAFKA_IP{{ if $isKafkaTlsEnabled }}and $KAFKA_TRUSTSTORE_PATH{{ end }}.
 
-  bootstrap.servers=$KAFKA_IP:{{ .Values.kafka.service.externalPort }}
-  security.protocol=SASL_SSL
+  bootstrap.servers=$KAFKA_IP:{{ .Values.kafka.externalAccess.service.port }}
   sasl.mechanism=SCRAM-SHA-512
   sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="{{ first .Values.kafka.auth.sasl.jaas.clientUsers }}" password="{{ first .Values.kafka.auth.sasl.jaas.clientPasswords }}";
+{{- if $isKafkaTlsEnabled }}
+  security.protocol=SASL_SSL
   ssl.endpoint.identification.algorithm=""
   ssl.truststore.location=$KAFKA_TRUSTSTORE_PATH
   ssl.truststore.password={{ .Values.kafka.auth.tls.password | quote }}
+{{- else }}
+  security.protocol=SASL_PLAINTEXT
+{{- end }}
 {{- end }}
 {{- end }}
 

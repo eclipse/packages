@@ -222,8 +222,11 @@ dataGridExample:
 # the device connection data used for routing of command messages.
 # This property should be set in order to use a storage configuration suitable for production
 # if "dataGridExample.enabled" is set to false (the default).
-# Please refer to https://docs.jboss.org/infinispan/11.0/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
+# Please refer to https://docs.jboss.org/infinispan/13.0/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
 # for a list of configuration properties.
+# DEPRECATED This property will be removed together with the "deviceConnectionService" when this chart gets updated
+# to support Hono 2.0.0. Please configure the command router's data grid connection in the
+# "commandRouterService.hono.commandRouter.cache" property instead.
 dataGridSpec:
   # serverList contains the hostname:port of the data grid node(s)
   # This property only needs to be set when using an existing data grid other than the
@@ -1558,6 +1561,8 @@ mongodb:
 # deviceConnectionService contains configuration properties for the
 # Device Connection service.
 # Note that the Device Connection service will only be used if "useCommandRouter" is false.
+# DEPRECATED This property will be removed when this chart gets updated to support Hono 2.0.0.
+# Please use the Command Router service instead.
 deviceConnectionService:
 
   # enabled indicates if the data grid based Device Connection service implementation
@@ -1660,7 +1665,7 @@ deviceConnectionService:
       # to the data grid that should be used for storing the device connection data.
       # This property MUST be set if "deviceConnectionService.enabled" is set to true
       # and "dataGridExample.enabled" is set to false (the default).
-      # Please refer to https://docs.jboss.org/infinispan/11.0/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
+      # Please refer to https://docs.jboss.org/infinispan/13.0/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
       # for a list of configuration properties.
       remote:
       #  serverList: hono-data-grid:11222
@@ -1780,6 +1785,17 @@ commandRouterService:
       amqp:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
+
+      # cache contains properties configuring the embedded or remote cache that
+      # the Command Router uses for storing routing information. Please refer to Hono's Command Router admin guide at
+      # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/#data-grid-connection-configuration for
+      # details regarding cache configuration.
+      # If not set explicitly here, the remote cache configuration from property "dataGridSpec" will be used.
+      # If that property is empty and "dataGridExample.enabled" is "true", the example data grid is used.
+      # If "dataGridExample.enabled" is "false", an embedded cache with a default configuration will be used.
+      # Note that when using the embedded cache, the Command Router pod does NOT support scaling up to a replica
+      # count > 1
+      cache:
 
     # healthCheck contains configuration properties for the service's
     # health check server as defined by
@@ -1979,5 +1995,6 @@ kafka:
         zookeeperPassword: zookeeperPassword
     tls:
       type: jks
-      existingSecret: "{{ .Release.Name }}-kafka-jks"
+      existingSecrets:
+      - "{{ .Release.Name }}-kafka-jks"
       password: honotrust
