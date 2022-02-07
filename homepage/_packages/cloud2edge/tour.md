@@ -459,7 +459,7 @@ Furthermore, we add a reference to the in the previous step created *policy id* 
 information of the twin: 
 
 {% clipboard %}
-curl -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data '{
+curl -i -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data '{
   "policyId": "org.acme:my-policy",
   "attributes": {
     "location": "Germany"

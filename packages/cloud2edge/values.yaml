@@ -68,10 +68,10 @@ hono:
 
   deviceRegistryExample:
     type: mongodb
-    resources:
-      requests:
-        cpu: 200m
     mongoDBBasedDeviceRegistry:
+      resources:
+        requests:
+          cpu: 200m
       mongodb:
         host: ditto-mongodb
         port: 27017

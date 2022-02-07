@@ -92,10 +92,6 @@
         "activities": [ "READ" ]
       },
       {
-        "resource": "control/*",
-        "activities": [ "READ", "WRITE" ]
-      },
-      {
         "resource": "command/*",
         "activities": [ "WRITE" ]
       },
