@@ -247,7 +247,7 @@ jaegerBackendExample:
   enabled: false
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
-  allInOneImage: jaegertracing/all-in-one:1.26
+  allInOneImage: jaegertracing/all-in-one:1.31
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   livenessProbeInitialDelaySeconds: 300
@@ -297,7 +297,7 @@ jaegerBackendExample:
 # jaegerAgentImage contains the name (including tag)
 # of the container image to use for the Jaeger Agent sidecar deployed
 # with Hono's components.
-jaegerAgentImage: jaegertracing/jaeger-agent:1.26
+jaegerAgentImage: jaegertracing/jaeger-agent:1.31
 # jaegerAgentConf contains environment variables for configuring the Jaeger Agent sidecar container
 # that is deployed with each of Hono's components.
 # The Jaeger Agent sidecar container is deployed with standard properties if
