@@ -35,10 +35,6 @@ kafkaMessagingClusterExample:
   enabled: true
 
 kafka:
-  auth:
-    clientProtocol: "sasl"
-    tls:
-      existingSecrets: []
   persistence:
     enabled: false
   externalAccess:

@@ -1974,7 +1974,7 @@ kafka:
     service:
       # length of the array must match replicaCount
       nodePorts:
-        - 32094
+      - 32094
   serviceAccount:
     create: true
   rbac:
@@ -1988,13 +1988,12 @@ kafka:
     sasl:
       jaas:
         clientUsers:
-          - "hono"
+        - "hono"
         clientPasswords:
-          - "hono-secret"
+        - "hono-secret"
         zookeeperUser: zookeeperUser
         zookeeperPassword: zookeeperPassword
     tls:
       type: jks
-      existingSecrets:
-      - "{{ .Release.Name }}-kafka-jks"
-      password: honotrust
+      existingSecret: "{{ .Release.Name }}-kafka-jks"
+      password: "honotrust"
