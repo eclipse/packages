@@ -10,19 +10,27 @@ You can check the current status by issuing the following command:
   $ kubectl get -n {{ .Release.Namespace }} pods
 {{- end }}
 
-Once all services are up and running, the output should look similar to this:
+The output should look similar to this:
 
 NAME                                       {{ "READY   STATUS    RESTARTS   AGE" | indent ( len .Release.Name ) }}
 {{ .Release.Name }}-adapter-amqp-vertx-65cfb4d675-g5wn4       1/1     Running   0          5m50s
 {{ .Release.Name }}-adapter-http-vertx-66bd6bb89c-mng5t       1/1     Running   0          5m51s
 {{ .Release.Name }}-adapter-mqtt-vertx-765fcd578b-5rl7n       1/1     Running   0          5m51s
+{{- if ( has "amqp" .Values.messagingNetworkTypes ) }}
 {{ .Release.Name }}-artemis-f8f7dc7f4-864cj                   1/1     Running   0          5m51s
 {{ .Release.Name }}-dispatch-router-6c77dc78bd-hjn4l          1/1     Running   0          5m51s
+{{- end }}
+{{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
+{{ .Release.Name }}-kafka-0                                   1/1     Running   0          5m51s
+{{- end }}
 {{ .Release.Name }}-service-auth-84d9695cfc-5wlfh             1/1     Running   0          5m51s
 {{ .Release.Name }}-service-command-router-687fd4fbcf-7527b   1/1     Running   0          5m51s
 {{ .Release.Name }}-service-device-registry-0                 1/1     Running   0          5m51s
+{{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
+{{ .Release.Name }}-zookeeper-0                               1/1     Running   0          5m51s
+{{- end }}
 
-Once all pods have status 'Running', Hono is ready to be used.
+Once all pods have reached the READY state, you can start using Hono.
 {{- if ( has "amqp" .Values.messagingNetworkTypes ) }}
 
 To learn more about Hono's functionality, you should follow the Getting started guide at
@@ -35,7 +43,7 @@ Hono is configured with an example Kafka cluster for messaging. To learn more ab
 should follow the Kafka messaging guide at https://eclipse.org/hono/getting-started-kafka/
 Clients can connect to the example Kafka cluster using the configuration properties below.
 Please refer to the guide mentioned above for details on how to determine the values for
-$KAFKA_IP{{ if $isKafkaTlsEnabled }}and $KAFKA_TRUSTSTORE_PATH{{ end }}.
+$KAFKA_IP{{ if $isKafkaTlsEnabled }} and $KAFKA_TRUSTSTORE_PATH{{ end }}.
 
   bootstrap.servers=$KAFKA_IP:{{ .Values.kafka.externalAccess.service.port }}
   sasl.mechanism=SCRAM-SHA-512

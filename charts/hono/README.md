@@ -529,19 +529,20 @@ helm install --dependency-update -n hono --set honoImagesType=quarkus-native ecl
 
 The chart can be configured to use Kafka as the messaging network instead of an AMQP 1.0 messaging network.
 The configuration `messagingNetworkTypes[0]=kafka` deploys Hono configured to use Kafka for messaging.
-It is possible to enable AMQP _and_ Kafka based messaging at the same time (command line parameters of the deployment 
-would be `--set messagingNetworkTypes[0]=amqp --set messagingNetworkTypes[1]=kafka`). Each tenant in Hono can then be 
+It is possible to enable both AMQP _and_ Kafka based messaging at the same time using command line parameters
+`--set messagingNetworkTypes[0]=amqp --set messagingNetworkTypes[1]=kafka`. Each tenant in Hono can then be
 [configured](https://www.eclipse.org/hono/docs/admin-guide/hono-kafka-client-configuration/#configure-for-kafka-based-messaging)
 separately to use either Kafka _or_ AMQP for messaging.
 
-The following command provides a quick start for Kafka based messaging (ensure `minikube tunnel` is running when using Minikube):
+The following command provides a quick start for Kafka based messaging (ensure `minikube tunnel` is running when using
+Minikube):
 
 ```bash
 helm install --dependency-update -n hono --set messagingNetworkTypes[0]=kafka --set kafkaMessagingClusterExample.enabled=true --set amqpMessagingNetworkExample.enabled=false eclipse-hono eclipse-iot/hono
 ```
 
-The parameters enable the deployment of an example Kafka cluster, disable the deployment of the AMQP 1.0 messaging network 
-and configure adapters and services to use Kafka based messaging.
+The parameters enable the deployment of an example Kafka cluster, disable the deployment of the AMQP 1.0 messaging
+network and configure adapters and services to use Kafka based messaging.
 
 To use the service type `NodePort` instead of `LoadBalancer`, the following parameters must be added:
 `--set useLoadBalancer=false --set kafka.externalAccess.service.type=NodePort`.
