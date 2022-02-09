@@ -384,7 +384,7 @@ adapters:
   externalAdaptersEnabled: false
 
   # applicationProfiles contains the Spring application profiles that should be activated
-  # in all protocol adapters.
+  # in the Spring Boot based variant of all protocol adapters.
   # The application profiles can be overridden per adapter using the corresponding
   # "applicationProfiles" property at the adapter level.
   applicationProfiles: "dev"
@@ -530,7 +530,7 @@ adapters:
     # for details.
     springLoggingConfig: "classpath:logback-spring.xml"
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the adapter.
+    # in the Spring Boot based adapter variant.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
@@ -627,7 +627,7 @@ adapters:
     # for details.
     springLoggingConfig: "classpath:logback-spring.xml"
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the adapter.
+    # in the Spring Boot based adapter variant.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
@@ -715,7 +715,7 @@ adapters:
     # for details.
     springLoggingConfig: "classpath:logback-spring.xml"
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the adapter.
+    # in the Spring Boot based adapter variant.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
@@ -812,7 +812,7 @@ adapters:
     # for details.
     springLoggingConfig: "classpath:logback-spring.xml"
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the adapter.
+    # in the Spring Boot based adapter variant.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
@@ -909,7 +909,7 @@ adapters:
     # for details.
     springLoggingConfig: "classpath:logback-spring.xml"
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the adapter.
+    # in the Spring Boot based adapter variant.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
@@ -1005,7 +1005,7 @@ adapters:
     # for details.
     springLoggingConfig: "classpath:logback-spring.xml"
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the adapter.
+    # in the Spring Boot based adapter variant.
     # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
     applicationProfiles:
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
@@ -1101,7 +1101,7 @@ authServer:
   # for details.
   springLoggingConfig: "classpath:logback-spring.xml"
   # applicationProfiles contains the Spring application profiles that should be activated
-  # in the service.
+  # in the Spring Boot based service variant.
   applicationProfiles: "authentication-impl,dev"
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
@@ -1320,7 +1320,7 @@ deviceRegistryExample:
     # If not set, the cluster's default storage class is used.
     storageClass:
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the service.
+    # in the Spring Boot based service variant.
     applicationProfiles: "dev"
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
@@ -1356,7 +1356,7 @@ deviceRegistryExample:
     # If not set, the cluster's default storage class is used.
     storageClass:
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the service.
+    # in the Spring Boot based service variant.
     applicationProfiles: "registry-adapter,registry-management,tenant-service,create-schema,dev"
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
@@ -1396,7 +1396,7 @@ deviceRegistryExample:
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the service.
+    # in the Spring Boot based service variant.
     applicationProfiles: "dev"
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
@@ -1448,7 +1448,7 @@ deviceRegistryExample:
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
     # applicationProfiles contains the Spring application profiles that should be activated
-    # in the service.
+    # in the Spring Boot based service variant.
     applicationProfiles: "registry-adapter,registry-management,tenant-service,dev"
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
@@ -1601,7 +1601,7 @@ deviceConnectionService:
   # for details.
   springLoggingConfig: "classpath:logback-spring.xml"
   # applicationProfiles contains the Spring application profiles that should be activated
-  # in the service.
+  # in the Spring Boot based service variant.
   applicationProfiles: "dev"
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
@@ -1716,14 +1716,16 @@ commandRouterService:
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
   # for details.
   springLoggingConfig: "classpath:logback-spring.xml"
-  # applicationProfiles contains the Spring application profiles that should be activated
-  # in the service.
   # storageClass indicates the name of the kubernetes StorageClass that
   # should be used for the persistent volume claim used for the storage
   # of embedded cache data in case the Command Router service doesn't use
   # a data grid.
   # If not set, the cluster's default storage class is used.
+  # DEPRECATED This property has no meaning anymore because the Command Router uses an in-memory cache
+  # if no data grid is configured.
   storageClass:
+  # applicationProfiles contains the Spring application profiles that should be activated
+  # in the Spring Boot based service variant.
   applicationProfiles: "dev"
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
