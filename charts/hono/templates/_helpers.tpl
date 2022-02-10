@@ -408,17 +408,21 @@ resourceLimits:
 
 
 {{/*
-Adds environment variables for Spring Boot
-to a component's container.
+Adds environment variables for configuring the application development framework
+used by a component.
 
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".")
 - (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
-- (optional) "useImageType": indicates if image type (Quarkus, Spring) should be considered (defaults to false)
+- (optional) "useImageType": indicates if image type (Quarkus, Spring Boot) should be considered (defaults to false)
 - (optional) "additionalProfile": any additional application profile to add
 */}}
-{{- define "hono.component.springEnv" }}
-{{- if not ( and ( default false .useImageType ) ( contains "quarkus" .dot.Values.honoImagesType ) ) }}
+{{- define "hono.component.frameworkEnv" }}
+{{- if all ( contains "quarkus" .dot.Values.honoImagesType ) ( default false .useImageType ) }}
+{{- $loggingProfile := default "dev" .componentConfig.quarkusLoggingProfile }}
+- name: SMALLRYE_CONFIG_LOCATIONS
+  value: {{ default ( printf "/opt/hono/config/logging-quarkus-%s.yml" $loggingProfile ) .componentConfig.quarkusConfigLocations | quote }}
+{{- else }}
 {{- $applicationProfiles := default "dev" ( default .dot.Values.adapters.applicationProfiles .componentConfig.applicationProfiles ) }}
 - name: SPRING_CONFIG_LOCATION
   value: {{ default "file:///etc/hono/" .componentConfig.springConfigLocation | quote }}
@@ -462,12 +466,10 @@ quarkus:
     min-level: TRACE
     level: INFO
     category:
-      "org.eclipse.hono":
-        level: INFO
-      "org.eclipse.hono.adapter":
-        level: INFO
-      "org.eclipse.hono.service":
-        level: INFO
+      "io.quarkus.jaeger":
+        level: DEBUG
+      "io.quarkus.vertx.core.runtime":
+        level: DEBUG
   vertx:
     prefer-native-transport: true
     resolver:

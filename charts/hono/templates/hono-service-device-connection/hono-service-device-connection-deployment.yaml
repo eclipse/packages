@@ -53,7 +53,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        {{- include "hono.component.springEnv" ( merge $args ( dict "additionalProfile" ( ( or .Values.dataGridSpec ( or .Values.deviceConnectionService.hono.deviceConnection.remote .Values.dataGridExample.enabled ) ) | ternary "" "embedded-cache" ) ) ) | indent 8 }}
+        {{- include "hono.component.frameworkEnv" ( merge $args ( dict "additionalProfile" ( ( or .Values.dataGridSpec ( or .Values.deviceConnectionService.hono.deviceConnection.remote .Values.dataGridExample.enabled ) ) | ternary "" "embedded-cache" ) ) ) | indent 8 }}
         {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         {{- include "hono.component.envConfigMap" $args | indent 8 }}
         volumeMounts:
