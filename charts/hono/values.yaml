@@ -520,6 +520,22 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
     # springConfigLocation contains the location of the Spring application configuration file(s).
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
@@ -617,6 +633,22 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
     # springConfigLocation contains the location of the Spring application configuration file(s).
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
@@ -705,6 +737,22 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
     # springConfigLocation contains the location of the Spring application configuration file(s).
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
@@ -899,6 +947,22 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
     # springConfigLocation contains the location of the Spring application configuration file(s).
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
@@ -995,6 +1059,22 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
     # springConfigLocation contains the location of the Spring application configuration file(s).
     # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
     # for details.
@@ -1092,6 +1172,22 @@ authServer:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
+  # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+  # additional configuration from.
+  # Properties are read in the following sequence with properties further down in the list overwriting property
+  # values read from resources further up in the list.
+  # 1. Properties defined in file "/opt/hono/application.yml".
+  # 2. Properties read from the resources defined here.
+  # 3. Properties defined in operating system environment variables.
+  # 4. Properties defined in Java system properties.
+  # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+  # types.
+  # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+  # being read.
+  quarkusConfigLocations:
+  # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+  # Supported values are "prod", "dev" or "trace"
+  quarkusLoggingProfile: "dev"
   # springConfigLocation contains the location of the Spring application configuration file(s).
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
   # for details.
@@ -1395,6 +1491,22 @@ deviceRegistryExample:
     # the image from.
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
     # applicationProfiles contains the Spring application profiles that should be activated
     # in the Spring Boot based service variant.
     applicationProfiles: "dev"
@@ -1708,6 +1820,22 @@ commandRouterService:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80 -Djava.security.properties=/etc/hono/dns-cache-config.properties
+  # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+  # additional configuration from.
+  # Properties are read in the following sequence with properties further down in the list overwriting property
+  # values read from resources further up in the list.
+  # 1. Properties defined in file "/opt/hono/application.yml".
+  # 2. Properties read from the resources defined here.
+  # 3. Properties defined in operating system environment variables.
+  # 4. Properties defined in Java system properties.
+  # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+  # types.
+  # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+  # being read.
+  quarkusConfigLocations:
+  # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+  # Supported values are "prod", "dev" or "trace"
+  quarkusLoggingProfile: "dev"
   # springConfigLocation contains the location of the Spring application configuration file(s).
   # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
   # for details.
