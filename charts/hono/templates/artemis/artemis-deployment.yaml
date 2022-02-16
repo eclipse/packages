@@ -15,7 +15,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  {{- $args := dict "dot" . "component" "amqp-messaging-network-broker" "name" "artemis" "componentConfig" .Values.amqpMessagingNetworkExample.broker.artemis }}
+  {{- $args := dict "dot" . "component" "amqp-messaging-network-broker" "name" "artemis" "componentConfig" .Values.amqpMessagingNetworkExample.broker.artemis "configMountPath" "/opt/apache-artemis/conf" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   replicas: 1
@@ -60,20 +60,24 @@ spec:
         {{- end }}
         livenessProbe:
           initialDelaySeconds: {{ $args.componentConfig.livenessProbeInitialDelaySeconds }}
-          periodSeconds: 9
-          tcpSocket:
-            port: 5671
-          timeoutSeconds: 1
+          periodSeconds: 17
+          exec:
+            command:
+            - "/bin/bash"
+            - {{ printf "%s/liveness-probe.sh" $args.configMountPath | quote }}
+          timeoutSeconds: 3
         readinessProbe:
           initialDelaySeconds: {{ $args.componentConfig.readinessProbeInitialDelaySeconds }}
-          periodSeconds: 5
-          tcpSocket:
-            port: 5671
-          timeoutSeconds: 1
+          periodSeconds: 10
+          exec:
+            command:
+            - "/bin/bash"
+            - {{ printf "%s/readiness-probe.sh" $args.configMountPath | quote }}
+          timeoutSeconds: 3
         securityContext:
           privileged: false
         volumeMounts:
-        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "componentConfig" $args.componentConfig "configMountPath" "/opt/apache-artemis/conf" ) | indent 8 }}
+        {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
       volumes:
       {{- include "hono.pod.secretVolumes" $args | indent 6 }}
 {{- end }}
