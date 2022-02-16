@@ -26,7 +26,7 @@
 
       <!-- this could be ASYNCIO or NIO
        -->
-      <journal-type>NIO</journal-type>
+      <journal-type>ASYNCIO</journal-type>
 
       <paging-directory>./data/paging</paging-directory>
 
@@ -40,7 +40,7 @@
 
       <journal-min-files>2</journal-min-files>
 
-      <journal-pool-files>-1</journal-pool-files>
+      <journal-pool-files>10</journal-pool-files>
 
       <!--
         You can specify the NIC you want to use to verify if the network
