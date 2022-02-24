@@ -90,7 +90,6 @@ To secure /devops and /status resource adjust configuration to (username will be
 
 ```yaml
 gateway:
-  enablePreAuthentication: false
   devopsSecureStatus: true
   devopsPassword: foo
   statusPassword: bar
