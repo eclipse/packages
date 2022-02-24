@@ -286,8 +286,8 @@ gateway:
   ## devopsSecureStatus is used as value for DEVOPS_SECURE_STATUS environment var
   ## this controls whether /status resource is secured or not
   devopsSecureStatus: false
-  ## enableDummyAuth is used as value for ENABLE_DUMMY_AUTH environment var
-  enableDummyAuth: true
+  ## enablePreAuthentication is used as value for ENABLE_PRE_AUTHENTICATION environment var
+  enablePreAuthentication: true
   ## devopsPassword will be used for accessing /devops resource (username: devops)
   ## if not set a random password will be set
   devopsPassword:

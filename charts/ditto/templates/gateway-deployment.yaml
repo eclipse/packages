@@ -95,8 +95,8 @@ spec:
               value: "app.kubernetes.io/name=%s"
             - name: POD_NAMESPACE
               value: {{ .Release.Namespace }}
-            - name: ENABLE_DUMMY_AUTH
-              value: {{ .Values.gateway.enableDummyAuth | quote }}
+            - name: ENABLE_PRE_AUTHENTICATION
+              value: {{ .Values.gateway.enablePreAuthentication | quote }}
             - name: INSTANCE_INDEX
               valueFrom:
                 fieldRef:
