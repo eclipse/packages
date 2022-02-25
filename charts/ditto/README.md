@@ -79,7 +79,7 @@ global:
   jwtOnly: true
 
 gateway:
-  enableDummyAuth: false
+  enablePreAuthentication: false
   systemProps:
     - "-Dditto.gateway.authentication.oauth.openid-connect-issuers.myprovider.issuer=openid-connect.onelogin.com/oidc"
 ```
@@ -90,11 +90,11 @@ To secure /devops and /status resource adjust configuration to (username will be
 
 ```yaml
 gateway:
-  enableDummyAuth: false
   devopsSecureStatus: true
   devopsPassword: foo
   statusPassword: bar
 ```
+
 
 ## Troubleshooting
 
