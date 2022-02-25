@@ -62,7 +62,7 @@ data:
           {{ else }}
           auth_basic                    "Authentication required";
           auth_basic_user_file          nginx.htpasswd;
-          proxy_set_header              X-Forwared-User           $remote_user;
+          proxy_set_header              X-Forwarded-User           $remote_user;
           proxy_set_header              x-ditto-pre-authenticated "nginx:${remote_user}";
           {{- end }}
         
@@ -87,7 +87,7 @@ data:
           {{ else }}
           auth_basic                    "Authentication required";
           auth_basic_user_file          nginx.htpasswd;
-          proxy_set_header              X-Forwared-User           $remote_user;
+          proxy_set_header              X-Forwarded-User           $remote_user;
           proxy_set_header              x-ditto-pre-authenticated "nginx:${remote_user}";
           {{- end }}
           
