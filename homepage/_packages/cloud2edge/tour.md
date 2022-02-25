@@ -131,7 +131,7 @@ command) is:
     content-type: application/json
     content-length: 516
     
-    {"topic":"org.eclipse.packages.c2e/demo-device/things/live/messages/start-watering","headers":{"correlation-id":"d84b1ceb-797b-45f5-bc87-78e9b5396645","x-forwarded-for":"10.244.0.1","version":2,"timeout":"0","x-forwared-user":"ditto","accept":"*/*","x-real-ip":"10.244.0.1","x-ditto-dummy-auth":"nginx:ditto","host":"172.17.0.2:30385","content-type":"application/json","timestamp":"2020-02-28T08:04:43.518+01:00","user-agent":"curl/7.58.0"},"path":"/inbox/messages/start-watering","value":{"water-amount":"3liters"}}
+    {"topic":"org.eclipse.packages.c2e/demo-device/things/live/messages/start-watering","headers":{"correlation-id":"d84b1ceb-797b-45f5-bc87-78e9b5396645","x-forwarded-for":"10.244.0.1","version":2,"timeout":"0","x-forwarded-user":"ditto","accept":"*/*","x-real-ip":"10.244.0.1","x-ditto-dummy-auth":"nginx:ditto","host":"172.17.0.2:30385","content-type":"application/json","timestamp":"2020-02-28T08:04:43.518+01:00","user-agent":"curl/7.58.0"},"path":"/inbox/messages/start-watering","value":{"water-amount":"3liters"}}
 {% enddetails %}
 
 ### Responding to a command at the device
