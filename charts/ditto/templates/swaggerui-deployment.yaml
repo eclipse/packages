@@ -68,9 +68,11 @@ spec:
           image: "{{ .Values.swaggerui.image.repository }}:{{ .Values.swaggerui.image.tag }}"
           imagePullPolicy: {{ .Values.swaggerui.image.pullPolicy }}
           env:
-          {{- if .Values.swaggerui.extraEnv }}
-            {{- toYaml .Values.swaggerui.extraEnv | nindent 12 }}
-          {{- end }}
+            - name: QUERY_CONFIG_ENABLED
+              value: "true"
+            {{- if .Values.swaggerui.extraEnv }}
+              {{- toYaml .Values.swaggerui.extraEnv | nindent 12 }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8080
