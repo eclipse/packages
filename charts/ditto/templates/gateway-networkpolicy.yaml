@@ -8,8 +8,8 @@
 # http://www.eclipse.org/legal/epl-2.0
 #
 # SPDX-License-Identifier: EPL-2.0
----
 {{- if .Values.gateway.networkPolicy.enabled }}
+---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
