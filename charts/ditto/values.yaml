@@ -69,10 +69,18 @@ ingress:
   #    hosts:
   #      - ditto.example.com
 
-## OpenShift Routes
-routes:
+## OpenShift deployment
+openshift:
   enabled: false
-  annotations: {}
+  ## OpenShift Routes
+  routes:
+    enabled: false
+    annotations: {}
+    # host: ""
+    targetPort: http
+    # tlsTermination: "edge"
+    # tlsInsecurePolicy: "Redirect"
+  securityContext: {}
 
 ## ----------------------------------------------------------------------------
 ## global configuration shared by all components

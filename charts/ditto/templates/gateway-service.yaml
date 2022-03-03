@@ -8,8 +8,8 @@
 # http://www.eclipse.org/legal/epl-2.0
 #
 # SPDX-License-Identifier: EPL-2.0
----
 {{- if .Values.gateway.enabled -}}
+---
 apiVersion: v1
 kind: Service
 metadata:
