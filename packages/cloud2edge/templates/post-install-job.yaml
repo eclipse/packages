@@ -49,8 +49,17 @@ spec:
           {{ printf "http://%s-service-device-registry-ext:28080/v1/devices/%s/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.tenant .Values.demoDevice.deviceId }} &&
           curl -X PUT -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/demo-device-credentials.json
           {{ printf "http://%s-service-device-registry-ext:28080/v1/credentials/%s/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.tenant .Values.demoDevice.deviceId }} &&
-          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-connection.json
+
+          {{- if ( has "amqp" .Values.messagingNetworkTypes ) }}
+          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-amqp-connection.json
           {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
+          {{- end }}
+
+          {{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
+          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-kafka-connection.json
+          {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
+          {{- end }}
+
           curl -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/demo-device-thing.json
           {{ printf "http://%s-ditto-nginx:8080/api/2/things/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.deviceId }};"
         volumeMounts:

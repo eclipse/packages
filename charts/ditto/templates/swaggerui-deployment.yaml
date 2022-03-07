@@ -52,6 +52,8 @@ spec:
             - sh
             - -ec
             - |
+               mkdir -p /usr/share/nginx/html/openapi 
+               curl -sL https://raw.githubusercontent.com/eclipse/ditto/master/documentation/src/main/resources/openapi/ditto-api-2.yml -o /usr/share/nginx/html/openapi/ditto-openapi-2.yaml               
                cp -rv /etc/nginx/. /init-config/
                cp -rv /usr/share/nginx/html/. /init-content/
                mkdir /var/lib/nginx/logs
@@ -83,7 +85,8 @@ spec:
           {{- end }}
           volumeMounts:
             - name: swagger-ui-api
-              mountPath: /usr/share/nginx/html/openapi
+              mountPath: /usr/share/nginx/html/
+              subPath: openapi
             - name: swagger-ui-cache
               mountPath: /var/cache/nginx
             - name: swagger-ui-work

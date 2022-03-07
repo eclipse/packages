@@ -95,6 +95,13 @@ hono:
 # Configuration properties for Eclipse Ditto.
 ditto:
 
+  ## OpenShift deployment
+  openshift:
+    enabled: false
+    ## OpenShift Routes
+    routes:
+      enabled: false
+
   concierge:
     resources:
       requests:
