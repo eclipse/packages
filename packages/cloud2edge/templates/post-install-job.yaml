@@ -50,12 +50,12 @@ spec:
           curl -X PUT -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/demo-device-credentials.json
           {{ printf "http://%s-service-device-registry-ext:28080/v1/credentials/%s/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.tenant .Values.demoDevice.deviceId }} &&
 
-          {{- if ( has "amqp" .Values.messagingNetworkTypes ) }}
+          {{- if ( has "amqp" .Values.hono.messagingNetworkTypes ) }}
           curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-amqp-connection.json
           {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
           {{- end }}
 
-          {{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
+          {{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
           curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-kafka-connection.json
           {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
           {{- end }}
