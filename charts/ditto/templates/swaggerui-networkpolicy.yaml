@@ -24,7 +24,6 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
   - Ingress
-  - Egress
   ingress:
   - from:
     - podSelector:

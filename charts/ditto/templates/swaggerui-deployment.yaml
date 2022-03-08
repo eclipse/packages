@@ -72,6 +72,8 @@ spec:
           env:
             - name: QUERY_CONFIG_ENABLED
               value: "true"
+            - name: SWAGGER_JSON
+              value: "/usr/share/nginx/html/openapi/ditto-openapi-2.yaml"
             {{- if .Values.swaggerui.extraEnv }}
               {{- toYaml .Values.swaggerui.extraEnv | nindent 12 }}
             {{- end }}
