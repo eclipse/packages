@@ -53,7 +53,7 @@ spec:
             - -ec
             - |
                mkdir -p /usr/share/nginx/html/openapi 
-               curl -sL https://raw.githubusercontent.com/eclipse/ditto/master/documentation/src/main/resources/openapi/ditto-api-2.yml -o /usr/share/nginx/html/openapi/ditto-openapi-2.yaml               
+               curl -sL https://raw.githubusercontent.com/eclipse/ditto/{{ .Chart.AppVersion }}/documentation/src/main/resources/openapi/ditto-api-2.yml -o /usr/share/nginx/html/openapi/ditto-openapi-2.yaml               
                cp -rv /etc/nginx/. /init-config/
                cp -rv /usr/share/nginx/html/. /init-content/
                mkdir /var/lib/nginx/logs
