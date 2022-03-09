@@ -9,12 +9,12 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 {{- if .Values.nginx.enabled -}}
----
 {{- $releaseName := .Release.Name -}}
 {{- $name := include "ditto.name" . -}}
 {{- $labels := include "ditto.labels" . -}}
 {{ $root := . }}
 {{ range $path, $bytes := .Files.Glob "nginx-config/**" }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
