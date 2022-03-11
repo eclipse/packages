@@ -8,8 +8,8 @@
 # http://www.eclipse.org/legal/epl-2.0
 #
 # SPDX-License-Identifier: EPL-2.0
----
 {{- if .Values.things.enabled -}}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -55,10 +55,18 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.openshift.enabled }}
+      {{- with .Values.openshift.securityContext }}
       securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- else }}
+      securityContext:
+        runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
+      {{- end }}
       {{- if .Values.global.logging.logFiles.enabled }}
       initContainers:
         - name: change-volume-owner
@@ -154,6 +162,8 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.things.resources | nindent 12 }}
+          securityContext:
+            allowPrivilegeEscalation: false
       {{- with .Values.things.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

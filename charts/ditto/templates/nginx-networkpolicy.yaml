@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -8,19 +8,26 @@
 # http://www.eclipse.org/legal/epl-2.0
 #
 # SPDX-License-Identifier: EPL-2.0
-{{- if and .Values.gateway.podDisruptionBudget.enabled (gt .Values.gateway.replicaCount 1.0) -}}
+
+{{- if .Values.nginx.networkPolicy.enabled }}
 ---
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
 metadata:
-  name: {{ include "ditto.fullname" . }}-gateway
+  name: {{ include "ditto.fullname" . }}-nginx
   labels:
-    app.kubernetes.io/name: {{ include "ditto.name" . }}-gateway
+    app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
 {{ include "ditto.labels" . | indent 4 }}
 spec:
-  selector:
+  podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "ditto.name" . }}-gateway
+      app.kubernetes.io/name: {{ include "ditto.name" . }}-nginx
       app.kubernetes.io/instance: {{ .Release.Name }}
-  minAvailable: {{ .Values.gateway.podDisruptionBudget.minAvailable }}
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow access from OpenShift Router
+  - ports:
+    - protocol: TCP
+      port: 8080
 {{- end }}

@@ -8,8 +8,8 @@
 # http://www.eclipse.org/legal/epl-2.0
 #
 # SPDX-License-Identifier: EPL-2.0
----
 {{- if and .Values.policies.podDisruptionBudget.enabled (gt .Values.policies.replicaCount 1.0) -}}
+---
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
