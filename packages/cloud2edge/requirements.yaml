@@ -15,5 +15,5 @@ dependencies:
     version: ^1.10.18
     repository: "https://eclipse.org/packages/charts/"
   - name: ditto
-    version: ~2.3.0
+    version: ~2.3.3
     repository: "https://eclipse.org/packages/charts/"
