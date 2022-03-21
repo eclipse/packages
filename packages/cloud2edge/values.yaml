@@ -94,13 +94,13 @@ hono:
 
 # Configuration properties for Eclipse Ditto.
 ditto:
-
+  # do not set cpu limits for Ditto to avoid CFS scheduler limits
+  # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
   concierge:
     resources:
       requests:
         cpu: 200m
       limits:
-        cpu: 1
         memory: "512Mi"
 
   connectivity:
@@ -108,15 +108,13 @@ ditto:
       requests:
         cpu: 200m
       limits:
-        cpu: 1
-        memory: "512Mi"
+        memory: "2Gi"
 
   gateway:
     resources:
       requests:
         cpu: 200m
       limits:
-        cpu: 1
         memory: "512Mi"
 
   nginx:
@@ -134,7 +132,6 @@ ditto:
       requests:
         cpu: 200m
       limits:
-        cpu: 1
         memory: "512Mi"
 
   swaggerui:
@@ -150,7 +147,6 @@ ditto:
       requests:
         cpu: 200m
       limits:
-        cpu: 1
         memory: "512Mi"
 
   thingsSearch:
@@ -158,7 +154,6 @@ ditto:
       requests:
         cpu: 200m
       limits:
-        cpu: 1
         memory: "512Mi"
 
   mongodb:
