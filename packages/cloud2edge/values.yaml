@@ -108,7 +108,7 @@ ditto:
       requests:
         cpu: 200m
       limits:
-        memory: "512Mi"
+        memory: "2Gi"
 
   gateway:
     resources:

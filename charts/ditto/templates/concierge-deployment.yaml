@@ -92,8 +92,10 @@ spec:
             - "-jar"
             - "/opt/ditto/starter.jar"
           env:
+            {{- if .Values.global.logging.logstash.enabled }}
             - name: DITTO_LOGGING_FILE_APPENDER
-              value: "{{ if .Values.global.logging.logFiles.enabled }}true{{ else }}false{{ end }}"
+              value: "true"
+            {{- end }}
             {{- if .Values.global.logging.logstash.enabled }}
             - name: DITTO_LOGGING_LOGSTASH_SERVER
               value: "{{ .Values.global.logging.logstash.endpoint }}"
