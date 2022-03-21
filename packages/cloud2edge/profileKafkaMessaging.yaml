@@ -19,3 +19,8 @@ hono:
 
   amqpMessagingNetworkExample:
     enabled: false
+
+  kafka:
+    externalAccess:
+      service:
+        type: NodePort
