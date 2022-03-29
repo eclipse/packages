@@ -372,10 +372,10 @@ deploying Hono using the Helm chart:
 helm install --dependency-update -n hono eclipse-hono eclipse-iot/hono 
 ```
 
-#### Using File based Storage
+#### Using an Embedded Cache
 
-This will let the Command Router service component use an embedded cache with file-based persistence for the command
-routing data. A persistent volume is required in the Kubernetes cluster for this purpose.
+This will let the Command Router service component use an embedded cache for the command routing data. All data is kept
+in-memory only and will therefore be lost after restarting the Command Router service.
 
 **NB** With this configuration, only one Command Router service component instance can be used. For a storage
 configuration suitable for production, with the possibility to use multiple instances, use the data grid configuration
