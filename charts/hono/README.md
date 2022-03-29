@@ -38,7 +38,7 @@ kubectl create namespace hono
 The chart can then be installed to name space `hono` using release name `eclipse-hono`:
 
 ```bash
-helm install --dependency-update -n hono eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono eclipse-hono eclipse-iot/hono
 ```
 
 ## Verifying the Installation
@@ -109,13 +109,13 @@ In order to set a property to a non-default value, the `--set key=value[,key=val
 `helm install`. For example:
 
 ```bash
-helm install --dependency-update -n hono --set useLoadBalancer=false eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono --set useLoadBalancer=false eclipse-hono eclipse-iot/hono
 ```
 
 Alternatively, one or more YAML files that contain the properties can be provided when installing the chart:
 
 ```bash
-helm install --dependency-update -n hono -f /path/to/config.yaml -f /path/to/other-config.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono -f /path/to/config.yaml -f /path/to/other-config.yaml eclipse-hono eclipse-iot/hono
 ```
 
 
@@ -128,7 +128,7 @@ Both Prometheus and Grafana are completely optional and are not required to run 
 properties can be used to install the Prometheus and Grafana servers along with Hono:
 
 ```bash
-helm install --dependency-update -n hono --set prometheus.createInstance=true --set grafana.enabled=true eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono --set prometheus.createInstance=true --set grafana.enabled=true eclipse-hono eclipse-iot/hono
 ```
 
 ### Accessing the Example Grafana Dashboard
@@ -160,14 +160,14 @@ The following command installs Hono using the standard images published on Docke
 *1.9.0* instead of the ones indicated by the chart's *appVersion* property:
 
 ```bash
-helm install --dependency-update -n hono --set honoImagesTag=1.9.0 eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono --set honoImagesTag=1.9.0 eclipse-hono eclipse-iot/hono
 ```
 
 The following command installs Hono using custom built images published on a private registry with tag
 *1.9.0-custom* instead of the ones indicated by the chart's *appVersion* property:
 
 ```bash
-helm install --dependency-update -n hono --set honoImagesTag=1.9.0-custom --set honoContainerRegistry=my-registry:9090 eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono --set honoImagesTag=1.9.0-custom --set honoContainerRegistry=my-registry:9090 eclipse-hono eclipse-iot/hono
 ```
 
 It is also possible to define the image and tag names and container registry for each component separately.
@@ -211,7 +211,7 @@ Assuming that the file is named `customImages.yaml`, the values can then be pass
 Helm `install` command as follows:
 
 ```bash
-helm install --dependency-update -n hono -f /path/to/customImages.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono -f /path/to/customImages.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ## Using a production grade AMQP Messaging Network and Device Registry
@@ -291,7 +291,7 @@ Assuming that the file is named `customAmqpNetwork.yaml`, the values can then be
 command as follows:
 
 ```bash
-helm install --dependency-update -n hono -f /path/to/customAmqpNetwork.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono -f /path/to/customAmqpNetwork.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ### Integrating with a custom Device Registry
@@ -350,7 +350,7 @@ Assuming that the file is named `customRegistry.yaml`, the values can then be pa
 as follows:
 
 ```bash
-helm install --dependency-update -n hono -f /path/to/customRegistry.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono -f /path/to/customRegistry.yaml eclipse-hono eclipse-iot/hono
 ```
 
 ## Configuring Storage for Command Routing Data
@@ -369,7 +369,7 @@ Hono comes with a ready to use implementation of the Command Router API which is
 deploying Hono using the Helm chart:
 
 ```bash
-helm install --dependency-update -n hono eclipse-hono eclipse-iot/hono 
+helm install --dependency-update --wait -n hono eclipse-hono eclipse-iot/hono 
 ```
 
 #### Using an Embedded Cache
@@ -388,7 +388,7 @@ The Helm chart supports deployment of an example data grid which can be used for
 *dataGridExample.enabled* property to `true`:
 
 ```bash
-helm install --dependency-update -n hono --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
+helm install --dependency-update --wait -n hono --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
 ```
 
 This will deploy the data grid based Command Router service component.
@@ -410,7 +410,7 @@ Hono's file based example Device Registry component contains a simple in-memory 
 Connection API. To use this implementation, deploy the example registry as follows:
 
 ```bash
-helm install --dependency-update -n hono --set useCommandRouter=false --set deviceRegistryExample.type=file eclipse-hono eclipse-iot/hono 
+helm install --dependency-update --wait -n hono --set useCommandRouter=false --set deviceRegistryExample.type=file eclipse-hono eclipse-iot/hono 
 ```
 
 #### Data Grid based Implementation
@@ -424,7 +424,7 @@ The Helm chart supports deployment of an example data grid which can be used for
 *dataGridExample.enabled* property to `true`:
 
 ```bash
-helm install --dependency-update -n hono --set useCommandRouter=false --set deviceConnectionService.enabled=true --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
+helm install --dependency-update --wait -n hono --set useCommandRouter=false --set deviceConnectionService.enabled=true --set dataGridExample.enabled=true eclipse-hono eclipse-iot/hono 
 ```
 
 This will deploy the data grid based Device Connection service and configure all protocol adapters to use it instead of
@@ -457,7 +457,7 @@ The following table provides an overview of the corresponding configuration prop
 The following command will deploy the LoRa adapter along with Hono's standard adapters (AMQP, HTTP and MQTT):
 
 ```bash
-helm install --dependency-update -n hono --set adapters.lora.enabled=true eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono --set adapters.lora.enabled=true eclipse-hono eclipse-iot/hono
 ```
 
 ## Jaeger Tracing
@@ -471,7 +471,7 @@ The chart can be configured to deploy and use an example Jaeger back end by mean
 *jaegerBackendExample.enabled* property to `true` when running Helm:
 
 ~~~sh
-helm install --dependency-update -n hono --set jaegerBackendExample.enabled=true eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono --set jaegerBackendExample.enabled=true eclipse-hono eclipse-iot/hono
 ~~~
 
 This will create a Jaeger back end instance suitable for testing purposes and will configure all deployed Hono
@@ -522,7 +522,7 @@ The Helm chart can be configured to use these *native* images by means of settin
 to `quarkus-native` during installation:
 
 ```bash
-helm install --dependency-update -n hono --set honoImagesType=quarkus-native eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono --set honoImagesType=quarkus-native eclipse-hono eclipse-iot/hono
 ```
 
 ## Using Kafka based Messaging
@@ -538,7 +538,7 @@ The following command provides a quick start for Kafka based messaging (ensure `
 Minikube):
 
 ```bash
-helm install --dependency-update -n hono --set messagingNetworkTypes[0]=kafka --set kafkaMessagingClusterExample.enabled=true --set amqpMessagingNetworkExample.enabled=false eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono --set messagingNetworkTypes[0]=kafka --set kafkaMessagingClusterExample.enabled=true --set amqpMessagingNetworkExample.enabled=false eclipse-hono eclipse-iot/hono
 ```
 
 The parameters enable the deployment of an example Kafka cluster, disable the deployment of the AMQP 1.0 messaging
@@ -592,5 +592,5 @@ Assuming that the file is named `customKafkaCluster.yaml`, the values can then b
 command as follows:
 
 ```bash
-helm install --dependency-update -n hono -f /path/to/customKafkaCluster.yaml eclipse-hono eclipse-iot/hono
+helm install --dependency-update --wait -n hono -f /path/to/customKafkaCluster.yaml eclipse-hono eclipse-iot/hono
 ```
