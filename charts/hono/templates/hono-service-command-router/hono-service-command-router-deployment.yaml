@@ -1,6 +1,6 @@
 {{- if and .Values.useCommandRouter .Values.commandRouterService.enabled }}
 #
-# Copyright (c) 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -58,10 +58,6 @@ spec:
         {{- include "hono.component.envConfigMap" $args | indent 8 }}
         volumeMounts:
         {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
-        {{- if not ( or .Values.dataGridSpec .Values.dataGridExample.enabled ) }}
-        - name: "embedded-cache-data"
-          mountPath: "/var/lib/hono/command-router"
-        {{- end }}
         {{- with .Values.commandRouterService.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
@@ -69,10 +65,5 @@ spec:
         {{- include "hono.component.healthChecks" $args | indent 8 }}
       volumes:
       {{- include "hono.pod.secretVolumes" $args | indent 6 }}
-      {{- if not ( or .Values.dataGridSpec .Values.dataGridExample.enabled ) }}
-      - name: "embedded-cache-data"
-        persistentVolumeClaim:
-          claimName: {{ printf "%s-%s" .Release.Name $args.name | quote }}
-      {{- end }}
       serviceAccountName: {{ printf "%s-%s" .Release.Name $args.name | quote }}
 {{- end }}
