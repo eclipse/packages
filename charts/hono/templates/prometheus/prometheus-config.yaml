@@ -39,18 +39,15 @@ data:
         # * `prometheus.io/port`: Scrape the pod on the indicated port instead of the default of `9102`.
         # * `prometheus.io/scheme`: Scrape the pod using the indicated scheme instead of the default of `https`.
       - job_name: 'hono-pods'
-        scheme: https
-        tls_config:
-          insecure_skip_verify: true
         kubernetes_sd_configs:
+        - role: pod
+          # make sure to only scrape pods of this release
+          namespaces:
+            names:
+            - {{ .Release.Namespace }}
+          selectors:
           - role: pod
-            # make sure to only scrape pods of this release
-            namespaces:
-              names:
-              - {{ .Release.Namespace }}
-            selectors:
-            - role: pod
-              label: {{ printf "app.kubernetes.io/instance=%s,helm.sh/chart=%s" .Release.Name ( include "hono.chart" . ) }}
+            label: {{ printf "app.kubernetes.io/instance=%s,helm.sh/chart=%s" .Release.Name ( include "hono.chart" . ) }}
 
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
