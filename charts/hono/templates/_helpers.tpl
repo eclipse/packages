@@ -127,6 +127,7 @@ Add annotations for marking an object to be scraped by Prometheus.
 prometheus.io/scrape: "true"
 prometheus.io/path: "/prometheus"
 prometheus.io/port: {{ default .Values.healthCheckPort .Values.monitoring.prometheus.port | quote }}
+prometheus.io/scheme: "http"
 {{- end }}
 
 
@@ -156,17 +157,15 @@ Configuration for the health check server of service components.
 If the scope passed in is not 'nil', then its value is
 used as the configuration for the health check server.
 Otherwise, a secure health check server will be configured to bind to all
-interfaces on the default port using the component's key and cert.
+interfaces on the default port.
 */}}
 {{- define "hono.healthServerConfig" -}}
 healthCheck:
 {{- if . }}
   {{- toYaml . | nindent 2 }}
 {{- else }}
-  port: 8088
-  bindAddress: "0.0.0.0"
-  keyPath: "/etc/hono/key.pem"
-  certPath: "/etc/hono/cert.pem"
+  insecurePort: 8088
+  insecurePortBindAddress: "0.0.0.0"
 {{- end }}
 {{- end }}
 
@@ -567,15 +566,15 @@ The scope passed in is expected to be a dict with keys
 {{- define "hono.component.healthChecks" }}
 livenessProbe:
   httpGet:
-    path: /liveness
-    port: health
-    scheme: HTTPS
+    path: "/liveness"
+    port: "health"
+    scheme: "HTTP"
   initialDelaySeconds: {{ default .dot.Values.livenessProbeInitialDelaySeconds .componentConfig.livenessProbeInitialDelaySeconds }}
 readinessProbe:
   httpGet:
-    path: /readiness
-    port: health
-    scheme: HTTPS
+    path: "/readiness"
+    port: "health"
+    scheme: "HTTP"
   initialDelaySeconds: {{ default .dot.Values.readinessProbeInitialDelaySeconds .componentConfig.readinessProbeInitialDelaySeconds }}
 {{- end }}
 
