@@ -92,10 +92,10 @@ spec:
             - "-jar"
             - "/opt/ditto/starter.jar"
           env:
-            {{- if .Values.global.logging.logstash.enabled }}
+            - name: DITTO_LOGGING_DISABLE_SYSOUT_LOG
+              value: "{{ if .Values.global.logging.sysout.enabled }}true{{ else }}false{{ end }}"
             - name: DITTO_LOGGING_FILE_APPENDER
-              value: "true"
-            {{- end }}
+              value: "{{ if .Values.global.logging.logFiles.enabled }}true{{ else }}false{{ end }}"
             {{- if .Values.global.logging.logstash.enabled }}
             - name: DITTO_LOGGING_LOGSTASH_SERVER
               value: "{{ .Values.global.logging.logstash.endpoint }}"
@@ -118,8 +118,8 @@ spec:
               value: "kubernetes-api"
             - name: TZ
               value: "{{ .Values.global.timezone }}"
-            - name: OPENJ9_JAVA_OPTIONS
-              value: "-XX:+ExitOnOutOfMemoryError -Xtune:virtualized -Xss512k -XX:MaxRAMPercentage=80 -XX:InitialRAMPercentage=40 -Dakka.coordinated-shutdown.exit-jvm=on"
+            - name: JAVA_TOOL_OPTIONS
+              value: "{{ .Values.global.jvmOptions }} {{ .Values.things.additionalJvmOptions }}"
             - name: MONGO_DB_SSL_ENABLED
               value: "{{ if .Values.dbconfig.things.ssl }}true{{ else }}false{{ end }}"
             - name: MONGO_DB_URI
