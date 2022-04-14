@@ -89,6 +89,8 @@ global:
   ## if false, basicAuth is used
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#openid-connect
   jwtOnly: false
+  ## JVM options applied to all Ditto services running in the JVM, is put in JAVA_TOOL_OPTIONS
+  jvmOptions: "-XX:ActiveProcessorCount=2 -XX:+ExitOnOutOfMemoryError -XX:+UseContainerSupport -XX:+UseStringDeduplication -Xss512k -XX:MaxRAMPercentage=50 -XX:+UseG1GC -XX:MaxGCPauseMillis=150 -Dakka.coordinated-shutdown.exit-jvm=on"
   ## timezone
   timezone: Europe/Berlin
   ## imagePullSecrets will be added to every deployment
@@ -100,6 +102,9 @@ global:
     port: 9095
   ## logging configuration for ditto
   logging:
+    # by default, log everything to SYSOUT:
+    sysout:
+      enabled: true
     ## configure if logs should be pushed to a logstash endpoint
     logstash:
       enabled: false
@@ -108,6 +113,7 @@ global:
     ## log files can be found on the host under /var/log/ditto
     logFiles:
       enabled: false
+
 ## ----------------------------------------------------------------------------
 ## akka actor configuration
 ## ref: https://doc.akka.io/docs/akka/current/typed/index.html
@@ -123,7 +129,7 @@ akka:
 
 # Set "dittoTag" in order to specify another Ditto version to use for all Ditto services:
 # you may also use "1" (for latest Ditto 1.x.x) or "1.5" (for latest Ditto 1.5.x)
-# dittoTag: 2.3.0
+# dittoTag: 2.4.0
 
 ## ----------------------------------------------------------------------------
 ## concierge configuration
@@ -149,9 +155,11 @@ concierge:
     ## repository for the concierge docker image
     repository: docker.io/eclipse/ditto-concierge
     ## tag for the concierge docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.3.0
+    # tag: 2.4.0
     ## pullPolicy for the concierge docker image
     pullPolicy: IfNotPresent
+  ## additional JVM options to put into JAVA_TOOL_OPTIONS
+  additionalJvmOptions: ""
   ## systemProps used to define arbitrary system properties for concierge service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps:
@@ -165,12 +173,12 @@ concierge:
   resources:
     requests:
       cpu: 150m
-      memory: 384Mi
-    # limits:
-    #   ## no cpu limit to avoid CFS scheduler limits
-    #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
-    #   ## cpu: ""
-    #   memory: 1Gi
+      memory: 512Mi
+    limits:
+      # ## no cpu limit to avoid CFS scheduler limits
+      # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
+      # cpu: ""
+      memory: 512Mi
   ## readinessProbe configuration for concierge
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -228,9 +236,11 @@ connectivity:
     ## repository for the connectivity docker image
     repository: docker.io/eclipse/ditto-connectivity
     ## tag for the connectivity docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.3.0
+    # tag: 2.4.0
     ## pullPolicy for the connectivity docker image
     pullPolicy: IfNotPresent
+  ## additional JVM options to put into JAVA_TOOL_OPTIONS
+  additionalJvmOptions: ""
   ## systemProps used to define arbitrary system properties for connectivity service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps:
@@ -247,12 +257,12 @@ connectivity:
   resources:
     requests:
       cpu: 150m
-      memory: 512Mi
-    # limits:
-    #   ## no cpu limit to avoid CFS scheduler limits
-    #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
-    #   ## cpu: ""
-    #   memory: 1Gi
+      memory: 768Mi
+    limits:
+      # ## no cpu limit to avoid CFS scheduler limits
+      # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
+      # cpu: ""
+      memory: 768Mi
   ## readinessProbe configuration for connectivity
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -316,11 +326,13 @@ gateway:
   additionalLabels: {}
   ## additionalAnnotations on gateway pods
   additionalAnnotations: {}
+  ## additional JVM options to put into JAVA_TOOL_OPTIONS
+  additionalJvmOptions: ""
   image:
     ## repository for the gateway docker image
     repository: docker.io/eclipse/ditto-gateway
     ## tag for the gateway docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.3.0
+    # tag: 2.4.0
     ## pullPolicy for the gateway docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for gateway service
@@ -338,12 +350,12 @@ gateway:
   resources:
     requests:
       cpu: 150m
-      memory: 384Mi
-    # limits:
-    #   ## no cpu limit to avoid CFS scheduler limits
-    #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
-    #   ## cpu: ""
-    #   memory: 1Gi
+      memory: 512Mi
+    limits:
+      # ## no cpu limit to avoid CFS scheduler limits
+      # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
+      # cpu: ""
+      memory: 512Mi
   ## readinessProbe configuration for gateway
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -410,7 +422,9 @@ nginx:
   ## extraEnv to add arbitrary environment variables to nginx container
   extraEnv: []
   ## resources for the nginx container
-  resources: {}
+  resources:
+    requests:
+      memory: 16Mi
   ## readinessProbe configuration for nginx
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe: {}
@@ -470,9 +484,11 @@ policies:
     ## repository for the policies docker image
     repository: docker.io/eclipse/ditto-policies
     ## tag for the policies docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.3.0
+    # tag: 2.4.0
     ## pullPolicy for the policies docker image
     pullPolicy: IfNotPresent
+  ## additional JVM options to put into JAVA_TOOL_OPTIONS
+  additionalJvmOptions: ""
   ## systemProps used to define arbitrary system properties for policies service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps:
@@ -486,12 +502,12 @@ policies:
   resources:
     requests:
       cpu: 150m
-      memory: 384Mi
-    # limits:
-    #   ## no cpu limit to avoid CFS scheduler limits
-    #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
-    #   ## cpu: ""
-    #   memory: 1Gi
+      memory: 512Mi
+    limits:
+      # ## no cpu limit to avoid CFS scheduler limits
+      # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
+      # cpu: ""
+      memory: 512Mi
   ## readinessProbe configuration for policies
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -553,7 +569,9 @@ swaggerui:
   ## extraEnv to add arbitrary environment variable to swagger ui container
   extraEnv: []
   ## resources for the swagger ui container
-  resources: {}
+  resources:
+    requests:
+      memory: 16Mi
   networkPolicy:
     ## enabled controls whether swagger ui related NetworkPolicy should be created
     enabled: true
@@ -593,9 +611,11 @@ things:
     ## repository for the things docker image
     repository: docker.io/eclipse/ditto-things
     ## tag for the things docker image- overwrite to specify something else than Chart.AppVersion
-    # tag: 2.3.0
+    # tag: 2.4.0
     ## pullPolicy for the things docker image
     pullPolicy: IfNotPresent
+  ## additional JVM options to put into JAVA_TOOL_OPTIONS
+  additionalJvmOptions: ""
   ## systemProps used to define arbitrary system properties for things service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps:
@@ -609,12 +629,12 @@ things:
   resources:
     requests:
       cpu: 150m
-      memory: 384Mi
-    # limits:
-    #   ## no cpu limit to avoid CFS scheduler limits
-    #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
-    #   ## cpu: ""
-    #   memory: 1Gi
+      memory: 512Mi
+    limits:
+      # ## no cpu limit to avoid CFS scheduler limits
+      # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
+      # cpu: ""
+      memory: 512Mi
   ## readinessProbe configuration for things
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
@@ -672,9 +692,11 @@ thingsSearch:
     ## repository for the things-search docker image
     repository: docker.io/eclipse/ditto-things-search
     ## tag for the things-search docker image- overwrite to specify something else than Chart.AppVersion
-    # tag: 2.3.0
+    # tag: 2.4.0
     ## pullPolicy for the things-search docker image
     pullPolicy: IfNotPresent
+  ## additional JVM options to put into JAVA_TOOL_OPTIONS
+  additionalJvmOptions: ""
   ## systemProps used to define arbitrary system properties for things-search service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps:
@@ -689,11 +711,11 @@ thingsSearch:
     requests:
       cpu: 150m
       memory: 512Mi
-    # limits:
-    #   ## no cpu limit to avoid CFS scheduler limits
-    #   ## ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
-    #   ## cpu: ""
-    #   memory: 1Gi
+    limits:
+      # ## no cpu limit to avoid CFS scheduler limits
+      # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
+      # cpu: ""
+      memory: 512Mi
   ## readinessProbe configuration for things-search
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
   readinessProbe:
