@@ -101,66 +101,66 @@ ditto:
       requests:
         cpu: 200m
       limits:
-        memory: "512Mi"
+        memory: "768Mi"
 
   connectivity:
     resources:
       requests:
         cpu: 200m
       limits:
-        memory: "2Gi"
+        memory: "1Gi"
 
   gateway:
     resources:
       requests:
         cpu: 200m
       limits:
-        memory: "512Mi"
+        memory: "768Mi"
 
   nginx:
     service:
       type: NodePort
     resources:
       requests:
-        cpu: 100m
+        cpu: 50m
       limits:
-        cpu: 250m
-        memory: "64Mi"
+        cpu: 150m
+        memory: "32Mi"
 
   policies:
     resources:
       requests:
         cpu: 200m
       limits:
-        memory: "512Mi"
+        memory: "768Mi"
 
   swaggerui:
     resources:
       requests:
-        cpu: 100m
+        cpu: 50m
       limits:
-        cpu: 250m
-        memory: "128Mi"
+        cpu: 100m
+        memory: "32Mi"
 
   things:
     resources:
       requests:
         cpu: 200m
       limits:
-        memory: "512Mi"
+        memory: "768Mi"
 
   thingsSearch:
     resources:
       requests:
         cpu: 200m
       limits:
-        memory: "512Mi"
+        memory: "768Mi"
 
   mongodb:
     resources:
       requests:
-        cpu: 250m
+        cpu: 150m
         memory: "256Mi"
       limits:
-        cpu: 1
+        cpu: 250m
         memory: "512Mi"
