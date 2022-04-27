@@ -2067,23 +2067,38 @@ kafkaMessagingClusterExample:
 
 # configuration of the example Kafka cluster to be deployed if "kafkaMessagingClusterExample.enabled" is "true"
 kafka:
-  replicaCount: 1
+  # the name of the template (maintains the release name)
+  nameOverride: "kafka"
   # Set to false for productive setups. Topic management then needs to be provided externally.
   autoCreateTopicsEnable: true
   deleteTopicEnable: true
+  auth:
+    clientProtocol: "sasl_tls"
+    sasl:
+      jaas:
+        clientUsers:
+        - "hono"
+        clientPasswords:
+        - "hono-secret"
+        zookeeperUser: "zookeeperUser"
+        zookeeperPassword: "zookeeperPassword"
+    tls:
+      type: "pem"
+      pemChainIncluded: true
+      existingSecrets:
+      - "{{ .Release.Name }}-kafka-certs"
+
+  service:
+    ports:
+      client: 9092
+      internal: 9093
+      external: 9094
+
+  replicaCount: 1
   # The data is stored in Persistent Volumes. For more information regarding persistence and
   # potential problems with permissions refer to: https://github.com/bitnami/charts/tree/master/bitnami/kafka#persistence
   persistence:
     size: 1Gi
-  zookeeper:
-    persistence:
-      size: 1Gi
-    auth:
-      enabled: true
-      clientUser: zookeeperUser
-      clientPassword: zookeeperPassword
-      serverUsers: zookeeperUser
-      serverPasswords: zookeeperPassword
   # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
   # To use service type NodePort instead of LoadBalancer, refer to
   # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
@@ -2092,28 +2107,24 @@ kafka:
     autoDiscovery:
       enabled: true
     service:
+      type: "LoadBalancer"
+      ports:
+        external: 9094
       # length of the array must match replicaCount
       nodePorts:
       - 32094
   serviceAccount:
     create: true
   rbac:
-#    # Note that this could require creating RBAC rules, for more information refer to
-#    # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
+    # Note that this could require creating RBAC rules, for more information refer to
+    # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
     create: true
-  # the name of the template (maintains the release name)
-  nameOverride: kafka
-  auth:
-    clientProtocol: sasl_tls
-    sasl:
-      jaas:
-        clientUsers:
-        - "hono"
-        clientPasswords:
-        - "hono-secret"
-        zookeeperUser: zookeeperUser
-        zookeeperPassword: zookeeperPassword
-    tls:
-      type: jks
-      existingSecret: "{{ .Release.Name }}-kafka-jks"
-      password: "honotrust"
+  zookeeper:
+    persistence:
+      size: 1Gi
+    auth:
+      enabled: true
+      clientUser: "zookeeperUser"
+      clientPassword: "zookeeperPassword"
+      serverUsers: "zookeeperUser"
+      serverPasswords: "zookeeperPassword"

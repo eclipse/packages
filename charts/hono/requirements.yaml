@@ -25,5 +25,5 @@ dependencies:
     condition: mongodb.createInstance
   - name: kafka
     repository: "https://charts.bitnami.com/bitnami"
-    version: ^14.x
+    version: ^16.x
     condition: kafkaMessagingClusterExample.enabled

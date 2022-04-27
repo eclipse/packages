@@ -15,8 +15,6 @@
 # A simple shell script for generating example certificates to be used with Hono.
 
 DIR=certs
-HONO_TRUST_STORE=trustStore.jks
-HONO_TRUST_STORE_PWD=honotrust
 AUTH_SERVER_KEY_STORE=authServerKeyStore.p12
 AUTH_SERVER_KEY_STORE_PWD=authkeys
 DEVCON_SERVER_KEY_STORE=deviceConnectionKeyStore.p12
@@ -41,9 +39,6 @@ AMQP_ADAPTER_KEY_STORE=amqpKeyStore.p12
 AMQP_ADAPTER_KEY_STORE_PWD=amqpkeys
 EXAMPLE_GATEWAY_KEY_STORE=exampleGatewayKeyStore.p12
 EXAMPLE_GATEWAY_KEY_STORE_PWD=examplegatewaykeys
-KAFKA_KEY_STORE=kafkaKeyStore.jks
-# the bitnami Kafka chart expects truststore and keystore to have the same password
-KAFKA_KEY_STORE_PWD=honotrust
 # set to either EC or RSA
 KEY_ALG=EC
 
@@ -111,14 +106,6 @@ curl https://letsencrypt.org/certs/isrgrootx1.pem > $DIR/isrgrootx1.pem
 echo ""
 echo "creating PEM trust store ($DIR/trusted-certs.pem) containing CA certificates"
 cat $DIR/ca-cert.pem $DIR/root-cert.pem $DIR/lets-encrypt-r3.pem $DIR/isrgrootx1.pem > $DIR/trusted-certs.pem
-
-echo ""
-echo "creating JKS trust store ($DIR/$HONO_TRUST_STORE) containing CA certificates"
-keytool -import -trustcacerts -noprompt -alias root -file $DIR/root-cert.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
-keytool -import -trustcacerts -noprompt -alias ca -file $DIR/ca-cert.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
-keytool -import -trustcacerts -noprompt -alias le-root -file $DIR/isrgrootx1.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
-keytool -import -trustcacerts -noprompt -alias le-ca -file $DIR/lets-encrypt-r3.pem -keystore $DIR/$HONO_TRUST_STORE -storepass $HONO_TRUST_STORE_PWD
-
 rm $DIR/lets-encrypt-r3.pem $DIR/isrgrootx1.pem
 
 echo ""
@@ -153,6 +140,6 @@ create_cert artemis $ARTEMIS_KEY_STORE $ARTEMIS_KEY_STORE_PWD
 create_cert coap-adapter $COAP_ADAPTER_KEY_STORE $COAP_ADAPTER_KEY_STORE_PWD
 create_cert amqp-adapter $AMQP_ADAPTER_KEY_STORE $AMQP_ADAPTER_KEY_STORE_PWD
 create_cert example-gateway $EXAMPLE_GATEWAY_KEY_STORE $EXAMPLE_GATEWAY_KEY_STORE_PWD
-create_cert kafka $KAFKA_KEY_STORE $KAFKA_KEY_STORE_PWD
+create_cert kafka
 
 create_client_cert 4711

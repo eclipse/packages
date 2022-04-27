@@ -45,14 +45,14 @@ Clients can connect to the example Kafka cluster using the configuration propert
 Please refer to the guide mentioned above for details on how to determine the values for
 $KAFKA_IP{{ if $isKafkaTlsEnabled }} and $KAFKA_TRUSTSTORE_PATH{{ end }}.
 
-  bootstrap.servers=$KAFKA_IP:{{ .Values.kafka.externalAccess.service.port }}
+  bootstrap.servers=$KAFKA_IP:{{ .Values.kafka.externalAccess.service.ports.external }}
   sasl.mechanism=SCRAM-SHA-512
   sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="{{ first .Values.kafka.auth.sasl.jaas.clientUsers }}" password="{{ first .Values.kafka.auth.sasl.jaas.clientPasswords }}";
 {{- if $isKafkaTlsEnabled }}
   security.protocol=SASL_SSL
   ssl.endpoint.identification.algorithm=""
   ssl.truststore.location=$KAFKA_TRUSTSTORE_PATH
-  ssl.truststore.password={{ .Values.kafka.auth.tls.password | quote }}
+  ssl.truststore.type=PEM
 {{- else }}
   security.protocol=SASL_PLAINTEXT
 {{- end }}
