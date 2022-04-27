@@ -210,7 +210,12 @@ concierge:
   ## affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
-
+  ## podMonitor configuration for concierge
+  ## when enabled podMonitor resource to scrape concierge will be created
+  podMonitor:
+    enabled: false
+  #  interval: 30s
+  #  scrapeTimeout: 15s
 
 ## ----------------------------------------------------------------------------
 ## connectivity configuration
@@ -294,6 +299,12 @@ connectivity:
   ## affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
+  ## podMonitor configuration for connectivity
+  ## when enabled podMonitor resource to scrape connectivity will be created
+  podMonitor:
+    enabled: false
+  #  interval: 30s
+  #  scrapeTimeout: 15s
 
 ## ----------------------------------------------------------------------------
 ## gateway configuration
@@ -392,7 +403,12 @@ gateway:
   ## affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
-
+  ## podMonitor configuration for gateway
+  ## when enabled podMonitor resource to scrape concierge will be created
+  podMonitor:
+    enabled: false
+  #  interval: 30s
+  #  scrapeTimeout: 15s
 
 ## ----------------------------------------------------------------------------
 ## nginx configuration
@@ -539,7 +555,12 @@ policies:
   ## affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
-
+  ## podMonitor configuration for policies
+  ## when enabled podMonitor resource to scrape policies will be created
+  podMonitor:
+    enabled: false
+  #  interval: 30s
+  #  scrapeTimeout: 15s
 
 ## ----------------------------------------------------------------------------
 ## swaggerui configuration
@@ -585,7 +606,6 @@ swaggerui:
     port: 8080
     ## annotations to add arbitrary annotations to swaggerui service
     annotations: {}
-
 
 ## ----------------------------------------------------------------------------
 ## things configuration
@@ -666,7 +686,12 @@ things:
   ## affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
-
+  ## podMonitor configuration for things
+  ## when enabled podMonitor resource to scrape things will be created
+  podMonitor:
+    enabled: false
+  #  interval: 30s
+  #  scrapeTimeout: 15s
 
 ## ----------------------------------------------------------------------------
 ## things-search configuration
@@ -747,7 +772,12 @@ thingsSearch:
   ## affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
-
+  ## podMonitor configuration for things-search
+  ## when enabled podMonitor resource to scrape things-search will be created
+  podMonitor:
+    enabled: false
+  #  interval: 30s
+  #  scrapeTimeout: 15s
 
 ## ----------------------------------------------------------------------------
 ## mongodb dependency chart configuration
