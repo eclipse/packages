@@ -229,13 +229,13 @@ The scope passed in is expected to be a dict with keys
 kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
-    bootstrap.servers: {{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-0.{{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-headless.{{ .dot.Release.Namespace }}:{{ .dot.Values.kafka.service.port }}
+    bootstrap.servers: {{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-0.{{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-headless.{{ .dot.Release.Namespace }}:{{ .dot.Values.kafka.service.ports.client }}
   {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
     security.protocol: "SASL_SSL"
     sasl.mechanism: "SCRAM-SHA-512"
     sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
-    ssl.truststore.location: "/etc/hono/truststore.jks"
-    ssl.truststore.password: {{ .dot.Values.kafka.auth.tls.password | quote }}
+    ssl.truststore.type: "PEM"
+    ssl.truststore.location: "/etc/hono/trusted-certs.pem"
     ssl.endpoint.identification.algorithm: "" # Disables hostname verification. Don't do this in productive setups!
   {{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
     security.protocol: "SASL_PLAINTEXT"
