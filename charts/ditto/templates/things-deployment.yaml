@@ -93,7 +93,7 @@ spec:
             - "/opt/ditto/starter.jar"
           env:
             - name: DITTO_LOGGING_DISABLE_SYSOUT_LOG
-              value: "{{ if .Values.global.logging.sysout.enabled }}true{{ else }}false{{ end }}"
+              value: "{{ if .Values.global.logging.sysout.enabled }}false{{ else }}true{{ end }}"
             - name: DITTO_LOGGING_FILE_APPENDER
               value: "{{ if .Values.global.logging.logFiles.enabled }}true{{ else }}false{{ end }}"
             {{- if .Values.global.logging.logstash.enabled }}
