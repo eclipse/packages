@@ -14,34 +14,26 @@
 # profile for installing Hono
 # - with MongoDB based device registry
 # - with MongoDB instance
-# - with Kafka as messaging infrastructure
+# - with Kafka messaging only
 # - without monitoring infrastructure
 # - with AMQP adapter only
 
 useLoadBalancer: false
 
 deviceRegistryExample:
-  type: mongodb
+  type: "mongodb"
 
 mongodb:
   createInstance: true
   persistence:
     enabled: false
 
-messagingNetworkTypes:
-- kafka
-
-kafkaMessagingClusterExample:
-  enabled: true
-
 kafka:
-  persistence:
-    enabled: false
   externalAccess:
     autoDiscovery:
       enabled: false
     service:
-      type: NodePort
+      type: "NodePort"
       # length of the array must match replicaCount
       nodePorts:
       - "32094"

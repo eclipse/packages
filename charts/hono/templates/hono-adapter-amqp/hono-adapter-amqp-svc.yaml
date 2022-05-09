@@ -1,0 +1,43 @@
+{{- if .Values.adapters.amqp.enabled }}
+#
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Service
+metadata:
+  {{- $args := dict "dot" . "component" "adapter-amqp" "name" "adapter-amqp" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+  {{- with .Values.adapters.amqp.svc.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ports:
+  - name: amqp
+    port: 5672
+    protocol: TCP
+    targetPort: amqp
+    {{- $amqpArgs := dict "dot" . "port" 32672 }}
+    {{- include "hono.nodePort" $amqpArgs | nindent 4 }}
+  - name: amqps
+    port: 5671
+    protocol: TCP
+    targetPort: amqps
+    {{- $amqpsArgs := dict "dot" . "port" 32671 }}
+    {{- include "hono.nodePort" $amqpsArgs | nindent 4 }}
+  selector:
+    {{- include "hono.matchLabels" $args | nindent 4 }}
+  {{- include "hono.serviceType" . }}
+{{- with .Values.adapters.amqp.svc.loadBalancerIP }}
+  loadBalancerIP: {{ . | quote }}
+{{- end }}
+{{- end }}

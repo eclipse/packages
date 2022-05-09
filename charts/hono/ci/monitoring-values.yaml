@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -13,6 +13,7 @@
 
 # profile for installing Hono
 # - with monitoring infrastructure
+# - with AMQP 1.0 messaging only
 # - with HTTP adapter only
 
 useLoadBalancer: false
@@ -21,6 +22,15 @@ prometheus:
   createInstance: true
 
 grafana:
+  enabled: true
+
+messagingNetworkTypes:
+- "amqp"
+
+kafkaMessagingClusterExample:
+  enabled: false
+
+amqpMessagingNetworkExample:
   enabled: true
 
 adapters:

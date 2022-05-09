@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -14,12 +14,27 @@
 # profile for installing Hono
 # - without monitoring infrastructure
 # - with example Infinispan data grid
+# - with Kafka messaging only
 # - with MQTT adapter only
 
 useLoadBalancer: false
 
 dataGridExample:
   enabled: true
+
+kafka:
+  externalAccess:
+    autoDiscovery:
+      enabled: false
+    service:
+      type: "NodePort"
+      # length of the array must match replicaCount
+      nodePorts:
+      - "32094"
+  serviceAccount:
+    create: false
+  rbac:
+    create: false
 
 adapters:
   amqp:

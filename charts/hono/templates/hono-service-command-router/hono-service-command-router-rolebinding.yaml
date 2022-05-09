@@ -1,4 +1,3 @@
-{{- if and .Values.useCommandRouter .Values.commandRouterService.enabled }}
 {{- $args := dict "dot" . "name" "service-command-router" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -12,4 +11,3 @@ subjects:
   - kind: ServiceAccount
     name: {{ printf "%s-%s" .Release.Name $args.name | quote }}
     namespace: {{ .Release.Namespace }}
-{{- end }}
