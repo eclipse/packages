@@ -17,8 +17,6 @@
 DIR=certs
 AUTH_SERVER_KEY_STORE=authServerKeyStore.p12
 AUTH_SERVER_KEY_STORE_PWD=authkeys
-DEVCON_SERVER_KEY_STORE=deviceConnectionKeyStore.p12
-DEVCON_SERVER_KEY_STORE_PWD=deviceconnectionkeys
 CMD_ROUTER_KEY_STORE=commandRouterKeyStore.p12
 CMD_ROUTER_KEY_STORE_PWD=commandrouterkeys
 DEVREG_SERVER_KEY_STORE=deviceRegistryKeyStore.p12
@@ -29,8 +27,6 @@ HTTP_ADAPTER_KEY_STORE=httpKeyStore.p12
 HTTP_ADAPTER_KEY_STORE_PWD=httpkeys
 LORA_ADAPTER_KEY_STORE=loraKeyStore.p12
 LORA_ADAPTER_KEY_STORE_PWD=lorakeys
-KURA_ADAPTER_KEY_STORE=kuraKeyStore.p12
-KURA_ADAPTER_KEY_STORE_PWD=kurakeys
 ARTEMIS_KEY_STORE=artemisKeyStore.p12
 ARTEMIS_KEY_STORE_PWD=artemiskeys
 COAP_ADAPTER_KEY_STORE=coapKeyStore.p12
@@ -130,12 +126,10 @@ echo "}" >> default_tenant-trusted-ca.json
 create_cert qdrouter
 create_cert auth-server $AUTH_SERVER_KEY_STORE $AUTH_SERVER_KEY_STORE_PWD
 create_cert device-registry $DEVREG_SERVER_KEY_STORE $DEVREG_SERVER_KEY_STORE_PWD
-create_cert device-connection $DEVCON_SERVER_KEY_STORE $DEVCON_SERVER_KEY_STORE_PWD
 create_cert command-router $CMD_ROUTER_KEY_STORE $CMD_ROUTER_KEY_STORE_PWD
 create_cert http-adapter $HTTP_ADAPTER_KEY_STORE $HTTP_ADAPTER_KEY_STORE_PWD
 create_cert lora-adapter $LORA_ADAPTER_KEY_STORE $LORA_ADAPTER_KEY_STORE_PWD
 create_cert mqtt-adapter $MQTT_ADAPTER_KEY_STORE $MQTT_ADAPTER_KEY_STORE_PWD
-create_cert kura-adapter $KURA_ADAPTER_KEY_STORE $KURA_ADAPTER_KEY_STORE_PWD
 create_cert artemis $ARTEMIS_KEY_STORE $ARTEMIS_KEY_STORE_PWD
 create_cert coap-adapter $COAP_ADAPTER_KEY_STORE $COAP_ADAPTER_KEY_STORE_PWD
 create_cert amqp-adapter $AMQP_ADAPTER_KEY_STORE $AMQP_ADAPTER_KEY_STORE_PWD

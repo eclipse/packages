@@ -24,11 +24,16 @@
 # the container images for Hono's components should be pulled from.
 # The registry can also be set separately for each component, overriding
 # the value specified here.
-honoContainerRegistry: index.docker.io
+honoContainerRegistry: "index.docker.io"
 
 # imagePullSecrets for pulling docker images from private registry. It will
 # be added to every deployment and statefulset.
 imagePullSecrets: []
+
+# color indicates if the information printed to the console by components should be
+# formatted in multi-color using ANSI escape sequences.
+console:
+  color: false
 
 # livenessProbeInitialDelaySeconds contains the default value to use
 # for the "initialDelaySeconds" configuration property of a Hono
@@ -43,6 +48,1427 @@ livenessProbeInitialDelaySeconds: 300
 # component level.
 readinessProbeInitialDelaySeconds: 20
 
+# the port that the Hono components' Prometheus scraping endpoint is exposed on
+monitoring:
+  prometheus:
+    port: 8088
+
+# healthCheckPort is the port that the Hono components bind their health check
+# server to.
+healthCheckPort: 8088
+
+# platform indicates the type of container orchestration platform we are deploying to.
+# Supported values are:
+# - openshift
+# - kubernetes
+#
+# When setting to "openshift", Route resources will also be deployed.
+platform: "kubernetes"
+
+# useLoadBalancer indicates whether services should be deployed using the
+# "LoadBalancer" type (true) or the "NodePort" type (false).
+# This property will be ignored when deploying to platform "openshift" or when serviceType
+# (see below) is configured.
+useLoadBalancer: true
+
+# serviceType indicates which service type services should have.
+# Possible serviceTypes are described on
+# https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+serviceType:
+
+# messagingNetworkTypes indicates the type(s) of messaging to be used.
+# The following types are defined:
+# - kafka: Apache Kafka based messaging. Also refer to the
+#     sections "kafkaMessagingClusterExample" and "adapters.kafkaMessagingSpec"
+# - amqp: AMQP 1.0 based messaging. Also refer to the
+#     sections "amqpMessagingNetworkExample" and "adapters.amqpMessagingNetworkSpec".
+messagingNetworkTypes:
+- "kafka"
+
+# Configuration properties for protocol adapters.
+adapters:
+
+  # externalAdaptersEnabled indicates whether protocol adapters that
+  # run outside of the kubernetes cluster should be allowed to connect to
+  # the Dispatch Router and the example device registry's service endpoints.
+  # The default setting is 'false' which prevents access from outside of the
+  # cluster.
+  # Setting this property to 'true' allows external adapters to connect to
+  # the Dispatch Router's 'internal' endpoint and the Device Registry's
+  # service endpoints via AMQPS, i.e. AMQP over TLS.
+  # The Dispatch Router's 'internal' endpoint listens on port 15673 and requires
+  # adapters to authenticate using SASL EXTERNAL, i.e. an adapter needs to provide
+  # a client certificate that has been signed by one of the CA certs contained in
+  # the router's trust store.
+  # When opening the AMQP connection to the router, the adapter needs to indicate
+  # the 'hono-internal' virtual host name in its AMQP 1.0 'open' frame.
+  # The example Device Registry's AMQPS endpoint requires adapters to authenticate
+  # using SASL PLAIN, i.e. an adapter needs to provide a username and password which
+  # can be verified by the Auth Server component.
+  externalAdaptersEnabled: false
+
+  # amqpMessagingNetworkSpec contains Hono client properties used by all protocol
+  # adapters for connecting to the AMQP Messaging Network to forward downstream messages to.
+  # This property MUST be set if "messagingNetworkTypes" contains "amqp" and
+  # "amqpMessagingNetworkExample.enabled" is set to false.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # for a description of supported properties.
+  # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
+  # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
+  amqpMessagingNetworkSpec:
+    keyPath: "/opt/hono/config/key.pem"
+    certPath: "/opt/hono/config/cert.pem"
+    trustStorePath: "/opt/hono/config/trusted-certs.pem"
+    hostnameVerificationRequired: false
+  #  host: "my-amqp-host"
+  #  port: 5671
+  #  credentialsPath: "/etc/conf/amqp-credentials.properties"
+
+  # commandAndControlSpec contains Hono client properties used by all protocol
+  # adapters for connecting to the AMQP Messaging Network which is used by applications
+  # to send commands to devices.
+  # This property MUST be set if "messagingNetworkTypes" contains "amqp" and
+  # "amqpMessagingNetworkExample.enabled" is set to false.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # for a description of supported properties.
+  # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
+  # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
+  commandAndControlSpec:
+    keyPath: "/opt/hono/config/key.pem"
+    certPath: "/opt/hono/config/cert.pem"
+    trustStorePath: "/opt/hono/config/trusted-certs.pem"
+    hostnameVerificationRequired: false
+
+  # kafkaMessagingSpec contains the configuration used by all protocol
+  # adapters for connecting to the Kafka cluster to be used for messaging.
+  # This property MUST be set if "messagingNetworkTypes" contains "kafka" and
+  # "kafkaMessagingClusterExample.enabled" is set to false.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/common-config/#kafka-based-messaging-configuration
+  # for a description of supported properties.
+  kafkaMessagingSpec: {}
+  #  commonClientConfig:
+  #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
+  #  command:
+  #    consumerConfig:
+  #      "compression.type": none
+  #  commandInternal:
+  #    adminClientConfig:
+  #      "compression.type": none
+  #  commandResponse:
+  #    producerConfig:
+  #      "compression.type": none
+  #  event:
+  #    producerConfig:
+  #      "compression.type": none
+  #  notification:
+  #    consumerConfig:
+  #      "compression.type": none
+  #  telemetry:
+  #    producerConfig:
+  #      "compression.type": none
+
+  # tenantSpec contains Hono client properties used by all protocol adapters for
+  # connecting to the Tenant service.
+  # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # for a description of supported properties.
+  tenantSpec:
+
+  # deviceRegistrationSpec contains Hono client properties used by all protocol adapters for
+  # connecting to the Device Registration service.
+  # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # for a description of supported properties.
+  deviceRegistrationSpec:
+
+  # credentialsSpec contains Hono client properties used by all protocol adapters for
+  # connecting to the Credentials service.
+  # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # for a description of supported properties.
+  credentialsSpec:
+
+  # commandRouterSpec contains Hono client properties used by all protocol adapters for
+  # connecting to the Command Router service.
+  # If not set, default properties will be used for establishing a TLS based connection
+  # to the command router server.
+  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # for a description of supported properties.
+  commandRouterSpec:
+
+  # tenantIdleTimeout contains the amount of time of inactivity after which protocol adapters
+  # close tenant specific links to services they interact with.
+  # Please refer to the Java documentation for the supported syntax:
+  # https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html#parse(java.lang.CharSequence)
+  defaultTenantIdleTimeout: "1h"
+
+  # mapperEndpoints contains configuration properties for the adapter's
+  # used mapper endpoints.
+  # If not set, the adapter by default has no mappers configured
+  mapperEndpoints:
+  #  mapperName:
+  #    host: "eclipse.org"
+  #    uri: "/hono/map"
+  #    ssl: true
+  #    port: 443
+
+  amqp:
+    # enabled indicates if Hono's AMQP 1.0 adapter should be deployed.
+    enabled: true
+    # imageName contains the name (excluding registry)
+    # of the container image to use for the AMQP adapter
+    imageName: "eclipse/hono-adapter-amqp"
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # resources contains the container's requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "150m"
+        memory: "300Mi"
+      limits:
+        cpu: "1"
+        memory: "512Mi"
+
+    svc:
+      annotations: {}
+      loadBalancerIP:
+
+    # extraSecretMounts describes additional secrets that should be mounted into the
+    # adapter's container filesystem. The files from the secret(s) can
+    # then be used in e.g. the service client specs.
+    # The secrets are expected to exist in the same Kubernetes namespace
+    # as the one that the adapter has been deployed to.
+    extraSecretMounts: {}
+    #  passwords:
+    #    secretName: "my-passwords"
+    #    mountPath: "/etc/pwd"
+    #  other:
+    #    secretName: "other-stuff"
+    #    mountPath: "/etc/other"
+
+    # The configMap to get additional environment variables from for this adapter.
+    envConfigMap:
+
+    # hono contains the adapter's configuration properties as defined in
+    # https://www.eclipse.org/hono/docs/admin-guide/amqp-adapter-config/
+    hono:
+      app:
+        # maxInstances defines the number of adapter Verticle instances to deploy
+        # to the vert.x runtime during start-up.
+        maxInstances: 1
+
+      # amqp contains configuration properties for the adapter's
+      # exposed AMQP endpoints.
+      # If not set, the adapter by default exposes the secure and insecure ports
+      # using an example key and certificate.
+      amqp:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+      # healthCheck contains configuration properties for the adapter's
+      # health check server as defined by
+      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+      # If not set, a TLS secured health check server is configured listening on
+      # all network interfaces on port 8088 using the adapter's
+      # example key and cert.'
+      healthCheck:
+      #  bindAddress: 0.0.0.0
+      #  port: 12000
+      #  keyPath: "/etc/config/key.pem"
+      #  certPath: "/etc/config/cert.pem"
+
+  coap:
+    # enabled indicates if Hono's CoAP adapter should be deployed.
+    enabled: false
+    # imageName contains the name (excluding registry)
+    # of the container image to use for the CoAP adapter
+    imageName: "eclipse/hono-adapter-coap"
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # resources contains the container's requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "150m"
+        memory: "256Mi"
+      limits:
+        cpu: "1"
+        memory: "512Mi"
+
+    svc:
+      annotations: {}
+      loadBalancerIP:
+
+    # extraSecretMounts describes additional secrets that should be mounted into the
+    # adapter's container filesystem. The files from the secret(s) can
+    # then be used in e.g. the service client specs.
+    # The secrets are expected to exist in the same Kubernetes namespace
+    # as the one that the adapter has been deployed to.
+    extraSecretMounts: {}
+    #  passwords:
+    #    secretName: "my-passwords"
+    #    mountPath: "/etc/pwd"
+    #  other:
+    #    secretName: "other-stuff"
+    #    mountPath: "/etc/other"
+
+    # The configMap to get additional environment variables from for this adapter.
+    envConfigMap:
+
+    # hono contains the adapter's configuration properties
+    hono:
+      app:
+        # maxInstances defines the number of adapter Verticle instances to deploy
+        # to the vert.x runtime during start-up.
+        maxInstances: 1
+
+      # healthCheck contains configuration properties for the adapter's
+      # health check server as defined by
+      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+      # If not set, a TLS secured health check server is configured listening on
+      # all network interfaces on port 8088 using the adapter's
+      # example key and cert.'
+      healthCheck:
+      #  bindAddress: 0.0.0.0
+      #  port: 12000
+      #  keyPath: "/etc/config/key.pem"
+      #  certPath: "/etc/config/cert.pem"
+
+  http:
+    # enabled indicates if Hono's HTTP adapter should be deployed.
+    enabled: true
+    # imageName contains the name (excluding registry)
+    # of the container image to use for the HTTP adapter
+    imageName: "eclipse/hono-adapter-http"
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # resources contains the container's requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "150m"
+        memory: "300Mi"
+      limits:
+        cpu: "1"
+        memory: "512Mi"
+
+    svc:
+      annotations: {}
+      loadBalancerIP:
+
+    # extraSecretMounts describes additional secrets that should be mounted into the
+    # adapter's container filesystem. The files from the secret(s) can
+    # then be used in e.g. the service client specs.
+    # The secrets are expected to exist in the same Kubernetes namespace
+    # as the one that the adapter has been deployed to.
+    extraSecretMounts: {}
+    #  passwords:
+    #    secretName: "my-passwords"
+    #    mountPath: "/etc/pwd"
+    #  other:
+    #    secretName: "other-stuff"
+    #    mountPath: "/etc/other"
+
+    # The configMap to get additional environment variables from for this adapter.
+    envConfigMap:
+
+    # hono contains the adapter's configuration properties as defined in
+    # https://www.eclipse.org/hono/docs/admin-guide/http-adapter-config/
+    hono:
+      app:
+        # maxInstances defines the number of adapter Verticle instances to deploy
+        # to the vert.x runtime during start-up.
+        maxInstances: 1
+
+      # http contains configuration properties for the adapter's
+      # exposed HTTP endpoints.
+      # If not set, the adapter by default exposes the secure and insecure ports
+      # using an example key and certificate.
+      http:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+      # healthCheck contains configuration properties for the adapter's
+      # health check server as defined by
+      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+      # If not set, a TLS secured health check server is configured listening on
+      # all network interfaces on port 8088 using the adapter's
+      # example key and cert.'
+      healthCheck:
+      #  bindAddress: 0.0.0.0
+      #  port: 12000
+      #  keyPath: "/etc/config/key.pem"
+      #  certPath: "/etc/config/cert.pem"
+
+  lora:
+    # enabled indicates if Hono's Lora adapter should be deployed.
+    enabled: false
+    # imageName contains the name (excluding registry)
+    # of the container image to use for the LoRa adapter
+    imageName: "eclipse/hono-adapter-lora"
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # resources contains the container's requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "150m"
+        memory: "300Mi"
+      limits:
+        cpu: "1"
+        memory: "512Mi"
+
+    svc:
+      annotations: {}
+      loadBalancerIP:
+
+    # extraSecretMounts describes additional secrets that should be mounted into the
+    # adapter's container filesystem. The files from the secret(s) can
+    # then be used in e.g. the service client specs.
+    # The secrets are expected to exist in the same Kubernetes namespace
+    # as the one that the adapter has been deployed to.
+    extraSecretMounts: {}
+    #  passwords:
+    #    secretName: "my-passwords"
+    #    mountPath: "/etc/pwd"
+    #  other:
+    #    secretName: "other-stuff"
+    #    mountPath: "/etc/other"
+
+    # The configMap to get additional environment variables from for this adapter.
+    envConfigMap:
+
+    # hono contains the adapter's configuration properties
+    hono:
+      app:
+        # maxInstances defines the number of adapter Verticle instances to deploy
+        # to the vert.x runtime during start-up.
+        maxInstances: 1
+
+      # lora contains configuration properties for the adapter's
+      # exposed HTTP endpoints.
+      # If not set, the adapter by default exposes the secure and insecure ports
+      # using an example key and certificate.
+      lora:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+      # healthCheck contains configuration properties for the adapter's
+      # health check server as defined by
+      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+      # If not set, a TLS secured health check server is configured listening on
+      # all network interfaces on port 8088 using the adapter's
+      # example key and cert.'
+      healthCheck:
+      #  bindAddress: 0.0.0.0
+      #  port: 12000
+      #  keyPath: "/etc/config/key.pem"
+      #  certPath: "/etc/config/cert.pem"
+
+  mqtt:
+    # enabled indicates if Hono's MQTT 3.1.1 adapter should be deployed.
+    enabled: true
+    # imageName contains the name (excluding registry)
+    # of the container image to use for the MQTT adapter
+    imageName: "eclipse/hono-adapter-mqtt"
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # javaOptions contains options to pass to the JVM when starting
+    # up the service
+    javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # resources contains the container's requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "150m"
+        memory: "300Mi"
+      limits:
+        cpu: "1"
+        memory: "512Mi"
+
+    svc:
+      annotations: {}
+      loadBalancerIP:
+
+    # extraSecretMounts describes additional secrets that should be mounted into the
+    # adapter's container filesystem. The files from the secret(s) can
+    # then be used in e.g. the service client specs.
+    # The secrets are expected to exist in the same Kubernetes namespace
+    # as the one that the adapter has been deployed to.
+    extraSecretMounts: {}
+    #  passwords:
+    #    secretName: "my-passwords"
+    #    mountPath: "/etc/pwd"
+    #  other:
+    #    secretName: "other-stuff"
+    #    mountPath: "/etc/other"
+
+    # The configMap to get additional environment variables from for this adapter.
+    envConfigMap:
+
+    # hono contains the adapter's configuration properties as defined in
+    # https://www.eclipse.org/hono/docs/admin-guide/mqtt-adapter-config/
+    hono:
+      app:
+        # maxInstances defines the number of adapter Verticle instances to deploy
+        # to the vert.x runtime during start-up.
+        maxInstances: 1
+
+      # mqtt contains configuration properties for the adapter's
+      # exposed MQTT endpoints.
+      # If not set, the adapter by default exposes the secure and insecure ports
+      # using an example key and certificate.
+      mqtt:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+      # healthCheck contains configuration properties for the adapter's
+      # health check server as defined by
+      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+      # If not set, a TLS secured health check server is configured listening on
+      # all network interfaces on port 8088 using the adapter's
+      # example key and cert.'
+      healthCheck:
+      #  bindAddress: 0.0.0.0
+      #  port: 12000
+      #  keyPath: "/etc/config/key.pem"
+      #  certPath: "/etc/config/cert.pem"
+
+# authServer contains configuration properties for the Auth Server component.
+authServer:
+
+  # imageName contains the name (excluding registry)
+  # of the container image to use for the Auth Server
+  imageName: "eclipse/hono-service-auth"
+  # imageTag contains the tag of the container image to deploy.
+  # If not specified, the value of the honoImagesTag property is used.
+  # imageTag:
+  # containerRegistry contains the name of the container registry to pull
+  # the image from.
+  # If not specified, the value of the "honoContainerRegistry" property is used.
+  # containerRegistry:
+  # javaOptions contains options to pass to the JVM when starting
+  # up the service
+  javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+  # quarkusConfigLocations contains resources that the component should read
+  # additional configuration from.
+  # Properties are read in the following sequence with properties further down in the list overwriting property
+  # values read from resources further up in the list.
+  # 1. Properties defined in file "/opt/hono/config/application.yml".
+  # 2. Properties read from the resources defined here.
+  # 3. Properties defined in operating system environment variables.
+  # 4. Properties defined in Java system properties.
+  # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+  # types.
+  # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+  # being read.
+  quarkusConfigLocations:
+  # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+  # Supported values are "prod", "dev" or "trace"
+  quarkusLoggingProfile: "dev"
+  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's liveness probe.
+  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+  livenessProbeInitialDelaySeconds:
+  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's readiness probe.
+  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+  readinessProbeInitialDelaySeconds:
+  # resources contains the container's requests and limits for CPU and memory
+  # as defined by the Kubernetes API.
+  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  # for a description of the properties' semantics.
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "196Mi"
+    limits:
+      cpu: "1"
+      memory: "256Mi"
+
+  # extraSecretMounts describes additional secrets that should be mounted into the
+  # Auth Server's' container filesystem. The files from the secret(s) can
+  # then be used in e.g. the configuration of the server's exposed ports.
+  # The secrets are expected to exist in the same Kubernetes namespace
+  # as the one that the server has been deployed to.
+  extraSecretMounts: {}
+  #  passwords:
+  #    secretName: "my-passwords"
+  #    mountPath: "/etc/pwd"
+  #  other:
+  #    secretName: "other-stuff"
+  #    mountPath: "/etc/other"
+
+  # envConfigMap may be used to set the name of a config map that contains additional environment variables
+  # that should be set on the component's container.
+  envConfigMap:
+
+  # hono contains the Auth Server's configuration properties as defined in
+  # https://www.eclipse.org/hono/docs/admin-guide/auth-server-config/
+  hono:
+    app:
+      # maxInstances defines the number of adapter Verticle instances to deploy
+      # to the vert.x runtime during start-up.
+      maxInstances: 1
+    auth:
+      # svc contains configuration properties for the server
+      svc:
+        permissionsPath: "file:///opt/hono/config/permissions.json"
+        supportedSaslMechanisms: "PLAIN"
+        signing:
+          # tokenExpiration contains the number of seconds after which tokens issued
+          # by the Auth server will expire.
+          tokenExpiration: 3600
+      # amqp contains configuration properties for the server's
+      # exposed AMQP endpoints.
+      # If not set, the sever by default exposes the secure and insecure ports
+      # using an example key and certificate.
+      amqp:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+    # healthCheck contains configuration properties for the service's
+    # health check server as defined by
+    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+    # If not set, a TLS secured health check server is configured listening on
+    # all network interfaces on port 8088 using the service's
+    # example key and cert.'
+    healthCheck:
+    #  bindAddress: 0.0.0.0
+    #  port: 12000
+    #  keyPath: "/etc/config/key.pem"
+    #  certPath: "/etc/config/cert.pem"
+
+# deviceRegistryExample contains configuration properties for the
+# example Device Registry.
+deviceRegistryExample:
+
+  # enabled indicates whether the example Device Registry
+  # should be deployed and used.
+  # If this property is set to false, then the protocol adapters need to be
+  # explicitly configured for connecting to the Tenant, Device Registration,
+  # and Credentials services using properties
+  # - "adapters.tenantSpec"
+  # - "adapters.deviceRegistrationSpec"
+  # - "adapters.credentialsSpec"
+  enabled: true
+
+  # Sets the type of the device registry to be deployed. The following types are defined:
+  # - embedded: Embedded JDBC based device registry. Also refer to the section "embeddedJdbcDeviceRegistry"
+  # for additional configuration.
+  # - mongodb: MongoDB based device registry. Also refer to the section "mongoDBBasedDeviceRegistry"
+  # for additional configuration.
+  # - jdbc: JDBC based device registry. Also refer to the section "jdbcBasedDeviceRegistry"
+  # for additional configuration.
+  type: "embedded"
+
+  # addExampleData indicates whether example data is inserted after the device registry is deployed
+  addExampleData: true
+
+  # javaOptions contains options to pass to the JVM when starting
+  # up the service
+  javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+  # resources contains the container's requests and limits for CPU and memory
+  # as defined by the Kubernetes API.
+  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  # for a description of the properties' semantics.
+  resources:
+    requests:
+      cpu: "150m"
+      memory: "300Mi"
+    limits:
+      cpu: "1"
+      memory: "300Mi"
+
+  svc:
+    annotations: {}
+    loadBalancerIP:
+
+  # extraSecretMounts describes additional secrets that should be mounted into the
+  # Device Registry's' container filesystem. The files from the secret(s) can
+  # then be used in e.g. the configuration of the server's exposed ports.
+  # The secrets are expected to exist in the same Kubernetes namespace
+  # as the one that the server has been deployed to.
+  extraSecretMounts: {}
+    #  tls:
+    #    secretName: "key-material"
+    #    mountPath: "/etc/tls"
+    #  data:
+    #    secretName: "example-data"
+    #    mountPath: "/etc/data"
+
+  # clientTrustStorePath points to the trustStore the client of this example Device Registry should use to verify the certificates.
+  # This can be used when using your own certificates in combination with the example Device Registry
+  clientTrustStorePath:
+
+  # hono contains the Device Registry's configuration properties as defined in
+  # https://www.eclipse.org/hono/docs/admin-guide/device-registry-config/
+  hono:
+    # auth contains Hono client properties used by the example registry for
+    # connecting to the Authentication service.
+    # If not set, the registry by default uses the Auth Server component to
+    # authenticate clients.
+    auth:
+    registry:
+      # amqp contains configuration properties for the server's
+      # exposed AMQP endpoints.
+      # If not set, the registry by default exposes the secure port
+      # using an example key and certificate.
+      amqp:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+      # http contains configuration properties for the server's
+      # exposed HTTP endpoints.
+      # If not set, the registry by default exposes the insecure and secure ports
+      # using an example key and certificate.
+      # NOTE: For the file based device registry use "rest" instead of "http".
+      http:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+      # svc contains configuration properties for the registry's service implementation.
+      svc:
+      #  maxDevicesPerTenant: 100
+
+    # healthCheck contains configuration properties for the service's
+    # health check server as defined by
+    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+    # If not set, a TLS secured health check server is configured listening on
+    # all network interfaces on port 8088 using the service's
+    # example key and cert.'
+    healthCheck:
+    #  bindAddress: 0.0.0.0
+    #  port: 12000
+    #  keyPath: "/etc/config/key.pem"
+    #  certPath: "/etc/config/cert.pem"
+
+    # kafka contains the configuration used by the device registry
+    # for connecting to a Kafka cluster to be used for messaging.
+    # This property will be used if "messagingNetworkTypes" contains "kafka" and
+    # "kafkaMessagingClusterExample.enabled" is set to false. Please refer to
+    # https://www.eclipse.org/hono/docs/admin-guide/jdbc-device-registry-config/#kafka-based-messaging-configuration
+    # or
+    # https://www.eclipse.org/hono/docs/admin-guide/mongodb-device-registry-config/#kafka-based-messaging-configuration
+    # for a description of supported properties.
+    kafka: {}
+      # commonClientConfig contains Kafka client configuration to be used by all Kafka consumers and producers
+      # created by the device registry.
+      # If this property is not set or if it does not contain a "bootstrap.servers" property, the
+      # "adapters.kafkaMessagingSpec.commonClientConfig" property is used as a fall back.
+    #  commonClientConfig:
+    #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
+    #  event:
+    #    producerConfig:
+    #      "compression.type": none
+    #  notification:
+    #    producerConfig:
+    #      "compression.type": none
+
+  # embeddedJdbcDeviceRegistry contains configuration properties specific to the
+  # embedded JDBC device registry.
+  embeddedJdbcDeviceRegistry:
+    # imageName contains the name (excluding registry)
+    # of the container image for the example embedded jdbc device registry.
+    imageName: "eclipse/hono-service-device-registry-jdbc"
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # storageClass indicates the name of the kubernetes StorageClass that
+    # should be used for the example registry's persistent volume claim.
+    # If not set, the cluster's default storage class is used.
+    storageClass:
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # resources contains the container's requests and limits for CPU and memory
+    # as defined by the Kubernetes API.
+    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "400Mi"
+      limits:
+        cpu: "1"
+        memory: "500Mi"
+
+    # The configMap to get additional environment variables from for this device registry.
+    envConfigMap:
+
+  # mongoDBBasedDeviceRegistry contains configuration properties specific to the
+  # MongoDB based device registry.
+  mongoDBBasedDeviceRegistry:
+    # imageName contains the name (excluding registry)
+    # of the container image for the example MongoDB based device registry.
+    imageName: "eclipse/hono-service-device-registry-mongodb"
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+      requests:
+        cpu: "150m"
+        memory: "400Mi"
+      limits:
+        cpu: "1"
+        memory: "400Mi"
+    # mongodb contains the configuration properties to connect to the MongoDB database instance.
+    # If you would like to use an already existing MongoDB database instance, then configure
+    # the below section accordingly.
+    mongodb:
+    # The host name or IP address of the MongoDB instance.
+    # host:
+    # The port that the MongoDB instance is listening on.
+    # port:
+    # The name of the MongoDB database to be used by the device registry application.
+    # dbName:
+    # The user name to use for authenticating to the MongoDB instance.
+    # username:
+    # The password to use for authenticating to the MongoDB instance.
+    # password:
+
+    # The configMap to get additional environment variables from for this device registry.
+    envConfigMap:
+
+  # jdbcBasedDeviceRegistry contains configuration properties specific to the
+  # jdbc based device registry.
+  jdbcBasedDeviceRegistry:
+    # imageName contains the name (excluding registry)
+    # of the container image for the example jdbc based device registry.
+    imageName: "eclipse/hono-service-device-registry-jdbc"
+    # imageTag contains the tag of the container image to deploy.
+    # If not specified, the value of the honoImagesTag property is used.
+    # imageTag:
+    # containerRegistry contains the name of the container registry to pull
+    # the image from.
+    # If not specified, the value of the "honoContainerRegistry" property is used.
+    # containerRegistry:
+    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's liveness probe.
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # configuration property of the component's readiness probe.
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
+    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    # for a description of the properties' semantics.
+    resources:
+    # registry.jdbc contains the configuration properties for device registry
+    # to connect to the database.
+
+    # The configMap to get additional environment variables from for this device registry.
+    envConfigMap:
+
+    registry:
+      jdbc:
+        # the jdbc properties for read-only operations
+        adapter:
+          # The jdbc URL for the database
+          url:
+          # The jdbc driver class name
+          driverClass:
+          # The user name to use for authenticating to the database
+          username:
+          # The password to use for authenticating to the database
+          password:
+        # the jdbc properties for write operations
+        management:
+          # The jdbc URL for the database. For SQLServer, ";SelectMethod=Cursor" is required in the management url.
+          url:
+          # The jdbc driver class name
+          driverClass:
+          # The user name to use for authenticating to the database
+          username:
+          # The password to use for authenticating to the database
+          password:
+    # tenant.jdbc contains the configuration properties for tenant registry
+    # to connect to the database.
+    tenant:
+      jdbc:
+        # the jdbc properties for read-only operations
+        adapter:
+          # The jdbc URL for the database
+          url:
+          # The jdbc driver class name
+          driverClass:
+          # The user name to use for authenticating to the database
+          username:
+          # The password to use for authenticating to the database
+          password:
+        # the jdbc properties for write operations
+        management:
+          # The jdbc URL for the database. For SQLServer, ";SelectMethod=Cursor" is required in the management url.
+          url:
+          # The jdbc driver class name
+          driverClass:
+          # The user name to use for authenticating to the database
+          username:
+          # The password to use for authenticating to the database
+          password:
+
+# mongodb contains configuration properties for the example MongoDB instance to be used with the
+# MongoDB device registry.
+# By default, a standalone instance using a k8s Deployment instead of a StatefulSet will be created.
+# The configuration properties below are intended to set up a MongoDB instance that is sufficient
+# for demonstration and/or testing purposes. In order to use a production level MongoDB instance, users
+# should not adapt these properties, but instead set the "createInstance" property to false, set up a
+# separate MongoDB instance according to
+# https://github.com/bitnami/charts/tree/master/bitnami/mongodb#production-configuration-and-horizontal-scaling
+# and configure the registry's connection details under "deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb".
+mongodb:
+  # createInstance indicates whether a MongoDB database instance should be created.
+  createInstance: false
+  # If authentication to be enabled or not.
+  # ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
+  auth:
+    enabled: true
+    # Configure a custom MongoDB database with a user name and password.
+    # And also set a root password for the MongoDB instance.
+    # ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
+    rootPassword: "root-secret"
+    usernames:
+    - "device-registry@HONO"
+    passwords:
+    - "hono-secret"
+    databases:
+    - "honodb"
+  # Configure the MongoDB service to be accessed from inside the cluster only.
+  service:
+    type: ClusterIP
+    port: 27017
+    targetPort: 27017
+    annotations: {}
+  # Use StatefulSet instead of Deployment when deploying standalone
+  useStatefulSet: false
+  # Setting up replication
+  # ref: https://github.com/bitnami/bitnami-docker-mongodb#setting-up-a-replication
+  # Whether to create a MongoDB replica set for high availability or not
+  replicaSet:
+    enabled: false
+  # do not use the default name ("mongodb") because it will lead to a config
+  # property name clash in the device registry pod when using "hono" as the release name
+  nameOverride: "monogodb-server"
+
+# commandRouterService contains configuration properties for the
+# Command Router service.
+commandRouterService:
+
+  # imageName contains the name (excluding registry)
+  # of the container image to use for the Command Router service
+  imageName: "eclipse/hono-service-command-router"
+  # imageTag contains the tag of the container image to deploy.
+  # If not specified, the value of the honoImagesTag property is used.
+  # imageTag:
+  # containerRegistry contains the name of the container registry to pull
+  # the image from.
+  # If not specified, the value of the "honoContainerRegistry" property is used.
+  # containerRegistry:
+  # javaOptions contains options to pass to the JVM when starting
+  # up the service
+  javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80 -Djava.security.properties=/opt/hono/config/dns-cache-config.properties"
+  # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+  # additional configuration from.
+  # Properties are read in the following sequence with properties further down in the list overwriting property
+  # values read from resources further up in the list.
+  # 1. Properties defined in file "/opt/hono/application.yml".
+  # 2. Properties read from the resources defined here.
+  # 3. Properties defined in operating system environment variables.
+  # 4. Properties defined in Java system properties.
+  # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+  # types.
+  # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+  # being read.
+  quarkusConfigLocations:
+  # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+  # Supported values are "prod", "dev" or "trace"
+  quarkusLoggingProfile: "dev"
+  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's liveness probe.
+  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+  livenessProbeInitialDelaySeconds:
+  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # configuration property of the component's readiness probe.
+  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+  readinessProbeInitialDelaySeconds:
+  # resources contains the container's requests and limits for CPU and memory
+  # as defined by the Kubernetes API.
+  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  # for a description of the properties' semantics.
+  resources:
+    requests:
+      cpu: "150m"
+      memory: "256Mi"
+    limits:
+      cpu: "1"
+      memory: "512Mi"
+
+  svc:
+    annotations: {}
+
+  # extraSecretMounts describes additional secrets that should be mounted into the
+  # service's container filesystem. The files from the secret(s) can
+  # then be used in e.g. the configuration of the service's exposed ports.
+  # The secrets are expected to exist in the same Kubernetes namespace
+  # as the one that the service has been deployed to.
+  extraSecretMounts: {}
+  #  tls:
+  #    secretName: "key-material"
+  #    mountPath: "/etc/tls"
+
+  # The configMap to get additional environment variables from for this command router service.
+  envConfigMap:
+
+  # clientTrustStorePath points to the trustStore the client of this command router service should use to verify the certificates.
+  # This can be used when using your own certificates in combination with this command router service.
+  clientTrustStorePath:
+
+  # hono contains the service's configuration properties as defined in
+  # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/
+  hono:
+    app:
+      # maxInstances defines the number of adapter Verticle instances to deploy
+      # to the vert.x runtime during start-up.
+      maxInstances: 1
+    # auth contains Hono client properties used by the service for
+    # connecting to the Authentication service.
+    # If not set, the service by default uses the Auth Server component to
+    # authenticate clients.
+    auth:
+    commandRouter:
+      # amqp contains configuration properties for the server's
+      # exposed AMQP endpoints.
+      # If not set, the registry by default exposes the secure port
+      # using an example key and certificate.
+      amqp:
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
+
+      # cache contains properties configuring the embedded or remote cache that
+      # the Command Router uses for storing routing information. Please refer to Hono's Command Router admin guide at
+      # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/#data-grid-connection-configuration for
+      # details regarding cache configuration.
+      # If not set explicitly here and "dataGridExample.enabled" is "true", the example data grid is used.
+      # If "dataGridExample.enabled" is "false", an embedded cache with a default configuration will be used.
+      # Note that when using the embedded cache, the Command Router pod does NOT support scaling up to a replica
+      # count > 1
+      cache:
+
+    # healthCheck contains configuration properties for the service's
+    # health check server as defined by
+    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
+    # If not set, a TLS secured health check server is configured listening on
+    # all network interfaces on port 8088 using the service's
+    # example key and cert.'
+    healthCheck:
+    #  bindAddress: 0.0.0.0
+    #  port: 12000
+    #  keyPath: "/etc/config/key.pem"
+    #  certPath: "/etc/config/cert.pem"
+
+    # kafka contains the configuration used by the command router
+    # for connecting to a Kafka cluster to be used for messaging.
+    # This property will be used if "messagingNetworkTypes" contains "kafka" and
+    # "kafkaMessagingClusterExample.enabled" is set to false. Please refer to
+    # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/#kafka-based-messaging-configuration
+    # for a description of supported properties.
+    kafka: {}
+      # commonClientConfig contains Kafka client configuration to be used by all Kafka consumers and producers
+      # created by the Command Router service.
+      # If this property is not set or if it does not contain a "bootstrap.servers" property, the
+      # "adapters.kafkaMessagingSpec.commonClientConfig" property is used as a fall back.
+    #  commonClientConfig:
+    #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
+    #  cleanup:
+    #    adminClientConfig:
+    #      "compression.type": none
+    #  command:
+    #    consumerConfig:
+    #      "compression.type": none
+    #  commandInternal:
+    #    producerConfig:
+    #      "compression.type": none
+    #  commandResponse:
+    #    producerConfig:
+    #      "compression.type": none
+    #  notification:
+    #    consumerConfig:
+    #      "compression.type": none
+
+prometheus:
+  # createInstance indicates whether a Prometheus server should be created
+  # using the Prometheus chart.
+  # Set this property to true if you want the chart to install an example Prometheus server that
+  # is configured to scrape Hono's components.
+  # If you want to use an already existing Prometheus server, set this property to false
+  # and set the "host" and "port" properties to the existing server's host name and port.
+  createInstance: false
+  # host contains the host name of an existing Prometheus server.
+  # This property is used to configure a corresponding datasource in Grafana
+  # if createInstance is set to false.
+  host:
+  # post contains the port number of an existing Prometheus server.
+  # This property is used to configure a corresponding datasource in Grafana
+  # if createInstance is set to false.
+  port:
+
+  ## Define serviceAccount names for components. Defaults to component's fully qualified name.
+  ##
+  serviceAccounts:
+    alertmanager:
+      create: false
+      name:
+    kubeStateMetrics:
+      create: false
+      name:
+    nodeExporter:
+      create: false
+      name:
+    pushgateway:
+      create: false
+      name:
+    server:
+      create: true
+      name:
+
+  server:
+    configMapOverrideName: "prometheus-config"
+    global:
+      scrape_interval: 10s
+    service:
+      servicePort: 9090
+
+  alertmanager:
+    enabled: false
+
+  kubeStateMetrics:
+    enabled: false
+
+  nodeExporter:
+    enabled: false
+
+  pushgateway:
+    enabled: false
+
+grafana:
+  enabled: false
+  adminPassword: "admin"
+
+  # do not run tests after deployment
+  testFramework:
+    enabled: false
+
+  ## Expose the grafana service to be accessed from outside the cluster (LoadBalancer service).
+  ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
+  ## ref: http://kubernetes.io/docs/user-guide/services/
+  ##
+  service:
+    type: "ClusterIP"
+    port: 3000
+    targetPort: 3000
+    annotations: {}
+
+  ## Sidecars that collect the configmaps with specified label and stores the included files them into the respective folders
+  ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
+  sidecar:
+    dashboards:
+      enabled: true
+      # label that the configmaps with dashboards are marked with
+      label: "grafana_dashboard"
+    datasources:
+      enabled: true
+      # label that the configmaps with datasources are marked with
+      label: "grafana_datasource"
+
+  rbac:
+    namespaced: true
+
+# kafkaMessagingClusterExample contains properties for configuring an example Kafka cluster
+# to be used for messaging if "messagingNetworkTypes" contains "kafka"
+kafkaMessagingClusterExample:
+  # enabled indicates whether the example Kafka cluster consisting of a single broker
+  # and one Zookeeper instance should be deployed. This minimal deployment is not suitable
+  # for production purposes. To use an already existing Kafka cluster instead,
+  # set this property to false and configure "adapters.kafkaMessagingSpec".
+  enabled: true
+
+# configuration of the example Kafka cluster to be deployed if "kafkaMessagingClusterExample.enabled" is "true"
+kafka:
+  # the name of the template (maintains the release name)
+  nameOverride: "kafka"
+  # Set to false for productive setups. Topic management then needs to be provided externally.
+  autoCreateTopicsEnable: true
+  deleteTopicEnable: true
+  auth:
+    clientProtocol: "sasl_tls"
+    sasl:
+      jaas:
+        clientUsers:
+        - "hono"
+        clientPasswords:
+        - "hono-secret"
+        zookeeperUser: "zookeeperUser"
+        zookeeperPassword: "zookeeperPassword"
+    tls:
+      type: "pem"
+      pemChainIncluded: true
+      existingSecrets:
+      - "{{ .Release.Name }}-kafka-certs"
+
+  service:
+    ports:
+      client: 9092
+      internal: 9093
+      external: 9094
+
+  replicaCount: 1
+  # Do not write data to a PersistentVolume by default.
+  # When setting this to true, make sure to also set "kafka.zookeeper.persistence.enabled" to true and
+  # make sure that Kafka is stopped cleanly using SIGTERM _before_ Zookeeper is stopped.
+  # Otherwise you will most likely run into issues like
+  # https://stackoverflow.com/questions/39759071/error-while-starting-kafka-broker
+  persistence:
+    enabled: false
+  # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
+  # To use service type NodePort instead of LoadBalancer, refer to
+  # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
+  externalAccess:
+    enabled: true
+    autoDiscovery:
+      enabled: true
+    service:
+      type: "LoadBalancer"
+      ports:
+        external: 9094
+      # length of the array must match replicaCount
+      nodePorts:
+      - 32094
+  serviceAccount:
+    create: true
+  rbac:
+    # Note that this could require creating RBAC rules, for more information refer to
+    # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
+    create: true
+  zookeeper:
+    persistence:
+      enabled: false
+    auth:
+      enabled: true
+      clientUser: "zookeeperUser"
+      clientPassword: "zookeeperPassword"
+      serverUsers: "zookeeperUser"
+      serverPasswords: "zookeeperPassword"
+
 # amqpMessagingNetworkExample contains properties for configuring an example AMQP network
 # to be used for messaging if "messagingNetworkTypes" contains "amqp"
 amqpMessagingNetworkExample:
@@ -50,34 +1476,34 @@ amqpMessagingNetworkExample:
   # consisting of a single Dispatch Router and Broker should be
   # deployed and used. By default an internal Broker is deployed.
   # As alternative an external Broker can be configured as well.
-  enabled: true
+  enabled: false
 
   # dispatchRouter contains properties for configuring the Qpid Dispatch Router
   dispatchRouter:
     # configPath contains the path to the configuration file of the
     # Qpid Dispatch Router configuration file
     # See http://qpid.apache.org/releases/qpid-dispatch-1.17.1/man/qdrouterd.conf.html
-    configPath: /etc/hono/qdrouterd.json
+    configPath: "/opt/hono/config/qdrouterd.json"
     # imageName contains the name (including tag) of the container image
     # to use for the example AMQP Messaging Network's Dispatch Router.
-    imageName: quay.io/interconnectedcloud/qdrouterd:1.17.1
+    imageName: "quay.io/interconnectedcloud/qdrouterd:1.17.1"
     # certFile contains the absolute path to a PEM file containing
     # the X.509 certificate that the router should use for authenticating
     # to clients
-    certFile: "/etc/hono/qdrouter-cert.pem"
+    certFile: "/opt/hono/config/qdrouter-cert.pem"
     # keyFile contains the absolute path to a PEM file containing
     # the private key that the router should use for authenticating
     # to clients
-    keyFile: "/etc/hono/qdrouter-key.pem"
+    keyFile: "/opt/hono/config/qdrouter-key.pem"
     # trustStore contains the absolute path to a PEM file containing
     # the X.509 certificates that the router should use as trust anchors
     # when authenticating clients connecting to the router in a TLS
     # handshake
-    trustStore: "/etc/hono/trusted-certs.pem"
+    trustStore: "/opt/hono/config/trusted-certs.pem"
     # serverTrustStore contains the absolute path to a PEM file containing
     # the X.509 certificates that the router should use as trust anchors
     # when authenticating to servers as part of a TLS handshake
-    serverTrustStore: "/etc/hono/trusted-certs.pem"
+    serverTrustStore: "/opt/hono/config/trusted-certs.pem"
     # uidFormat contains the format string to use for extracting the user ID from
     # the subject DN of certificates that clients use for authenticating to the router's
     # "internal" listener.
@@ -182,17 +1608,15 @@ amqpMessagingNetworkExample:
       host:
 
 # dataGridExample contains properties for configuring an example data grid
-# to be used by either Device Connection service implementation or the Command
-# Router component.
+# to be used by the Command Router component.
 dataGridExample:
   # enabled indicates whether the example data grid should be deployed and used.
-  # The default value of this property is false, meaning that if no "dataGridSpec" configuration is set,
-  # both the Device Connection service implementation and alternatively the Command Router service component
-  # will use in-memory storage instead of a data-grid.
+  # The default value of this property is false, meaning that the Command Router service component
+  # will use in-memory storage instead of a data-grid, if not configured otherwise.
   enabled: false
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
-  imageName: infinispan/server-native:13.0
+  imageName: "infinispan/server-native:13.0"
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   livenessProbeInitialDelaySeconds: 300
@@ -217,29 +1641,6 @@ dataGridExample:
   # dataMaxSize contains the maximum size of off-heap memory used for storing data per Infinispan node
   dataMaxSize: "30 MB"
 
-# dataGridSpec contains properties for configuring the Infinispan Hotrod connection
-# to the existing data grid (i.e. not the example grid) that should be used for storing
-# the device connection data used for routing of command messages.
-# This property should be set in order to use a storage configuration suitable for production
-# if "dataGridExample.enabled" is set to false (the default).
-# Please refer to https://docs.jboss.org/infinispan/13.0/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
-# for a list of configuration properties.
-# DEPRECATED This property will be removed together with the "deviceConnectionService" when this chart gets updated
-# to support Hono 2.0.0. Please configure the command router's data grid connection in the
-# "commandRouterService.hono.commandRouter.cache" property instead.
-dataGridSpec:
-  # serverList contains the hostname:port of the data grid node(s)
-  # This property only needs to be set when using an existing data grid other than the
-  # example grid.
-#  serverList: my-grid.example.com:11222
-  # authServerName contains the name that Hotrod clients need to use for establishing a
-  # connection to the data grid.
-#  authServerName:
-  # authUsername contains the name of the user that is authorized to connect to the data grid.
-#  authUsername:
-  # authPassword contains the secret of the user that is authorized to connect to the data grid
-#  authPassword:
-
 jaegerBackendExample:
 
   # enabled indicates whether the example Jaeger all-in-one
@@ -247,7 +1648,7 @@ jaegerBackendExample:
   enabled: false
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
-  allInOneImage: jaegertracing/all-in-one:1.31
+  allInOneImage: "jaegertracing/all-in-one:1.31"
   # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   livenessProbeInitialDelaySeconds: 300
@@ -270,13 +1671,10 @@ jaegerBackendExample:
     loadBalancerIP:
 
   # env contains environment variables to set for the Jaeger all-in-one container.
-  # The default variables configure the container to keep up to 100000 traces in memory
-  # and load the default sampling strategies file that comes with the chart.
+  # The default variables configure the container to keep up to 100000 traces in memory.
   env:
-  - name: MEMORY_MAX_TRACES
+  - name: "MEMORY_MAX_TRACES"
     value: "100000"
-  - name: SAMPLING_STRATEGIES_FILE
-    value: "/etc/hono/default-sampling-strategies.json"
 
   # extraSecretMounts describes additional secrets that should be mounted into the
   # container's filesystem. The files from the secret(s) can
@@ -291,1844 +1689,17 @@ jaegerBackendExample:
   #    secretName: "other-stuff"
   #    mountPath: "/etc/other"
 
-  # The configMap to get additional environment variables from for this deploy.
+  # envConfigMap contains the name of an (existing) ConfigMap to get additional environment variables from.
   envConfigMap:
 
-# jaegerAgentImage contains the name (including tag)
-# of the container image to use for the Jaeger Agent sidecar deployed
+# otelCollectorAgentImage contains the name (including tag)
+# of the container image to use for the OpenTelemetry collector agent sidecar deployed
 # with Hono's components.
-jaegerAgentImage: jaegertracing/jaeger-agent:1.31
-# jaegerAgentConf contains environment variables for configuring the Jaeger Agent sidecar container
-# that is deployed with each of Hono's components.
-# The Jaeger Agent sidecar container is deployed with standard properties if
-# "jaegerBackendExample.enabled" is set to true.
-# Otherwise the sidecar container is deployed using the environment variables contained
-# in this property (if not nil).
-# Please refer to https://www.jaegertracing.io/docs/1.26/cli/ for syntax and semantics
-# of environment variables.
-jaegerAgentConf:
-#  REPORTER_GRPC_HOST_PORT: my-jaeger-collector:14250
-#  REPORTER_GRPC_DISCOVERY_MIN_PEERS: 1
-
-# the port that the Hono components' Prometheus scraping endpoint is exposed on
-monitoring:
-  prometheus:
-    port: 8088
-
-# healthCheckPort is the port that the Hono components bind their health check
-# server to.
-healthCheckPort: 8088
-
-# platform indicates the type of container orchestration platform we are deploying to.
-# Supported values are:
-# - openshift
-# - kubernetes
-#
-# When setting to "openshift", Route resources will also be deployed.
-platform: kubernetes
-
-# honoImagesType indicates which kind of container image will be used for components
-# that are available in different variants. Supported values are:
-# - spring
-# - quarkus
-# - quarkus-native
-honoImagesType: "quarkus"
-
-# useLoadBalancer indicates whether services should be deployed using the
-# "LoadBalancer" type (true) or the "NodePort" type (false).
-# This property will be ignored when deploying to platform "openshift" or when serviceType
-# (see below) is configured.
-useLoadBalancer: true
-
-# serviceType indicates which service type services should have.
-# Possible serviceTypes are described on
-# https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-serviceType:
-
-# useCommandRouter indicates whether the Command Router service instead of
-# the Device Connection service shall be used for routing Command & Control
-# messages from the AMQP messaging network to the target protocol adapters.
-# This property is provided for the transition period from the deprecated
-# Device Connection service towards the new Command Router service.
-useCommandRouter: true
-
-# messagingNetworkTypes indicates the type(s) of messaging to be used.
-# The following types are defined:
-# - amqp: AMQP 1.0 based messaging. Also refer to the
-#     sections "amqpMessagingNetworkExample" and "adapters.amqpMessagingNetworkSpec".
-# - kafka: Apache Kafka based messaging. Also refer to the
-#     sections "kafkaMessagingClusterExample" and "adapters.kafkaMessagingSpec"
-messagingNetworkTypes:
-  - amqp
-
-# Configuration properties for protocol adapters.
-adapters:
-
-  # externalAdaptersEnabled indicates whether protocol adapters that
-  # run outside of the kubernetes cluster should be allowed to connect to
-  # the Dispatch Router and the example device registry's service endpoints.
-  # The default setting is 'false' which prevents access from outside of the
-  # cluster.
-  # Setting this property to 'true' allows external adapters to connect to
-  # the Dispatch Router's 'internal' endpoint and the Device Registry's
-  # service endpoints via AMQPS, i.e. AMQP over TLS.
-  # The Dispatch Router's 'internal' endpoint listens on port 15673 and requires
-  # adapters to authenticate using SASL EXTERNAL, i.e. an adapter needs to provide
-  # a client certificate that has been signed by one of the CA certs contained in
-  # the router's trust store.
-  # When opening the AMQP connection to the router, the adapter needs to indicate
-  # the 'hono-internal' virtual host name in its AMQP 1.0 'open' frame.
-  # The example Device Registry's AMQPS endpoint requires adapters to authenticate
-  # using SASL PLAIN, i.e. an adapter needs to provide a username and password which
-  # can be verified by the Auth Server component.
-  externalAdaptersEnabled: false
-
-  # applicationProfiles contains the Spring application profiles that should be activated
-  # in the Spring Boot based variant of all protocol adapters.
-  # The application profiles can be overridden per adapter using the corresponding
-  # "applicationProfiles" property at the adapter level.
-  applicationProfiles: "dev"
-
-  # amqpMessagingNetworkSpec contains Hono client properties used by all protocol
-  # adapters for connecting to the AMQP Messaging Network to forward downstream messages to.
-  # This property MUST be set if "messagingNetworkTypes" contains "amqp" and
-  # "amqpMessagingNetworkExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
-  # for a description of supported properties.
-  # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
-  # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
-  amqpMessagingNetworkSpec:
-    keyPath: /etc/hono/key.pem
-    certPath: /etc/hono/cert.pem
-    trustStorePath: /etc/hono/trusted-certs.pem
-    hostnameVerificationRequired: false
-  #  host: my-amqp-host
-  #  port: 5671
-  #  credentialsPath: /etc/conf/amqp-credentials.properties
-
-  # commandAndControlSpec contains Hono client properties used by all protocol
-  # adapters for connecting to the AMQP Messaging Network which is used by applications
-  # to send commands to devices.
-  # This property MUST be set if "messagingNetworkTypes" contains "amqp" and
-  # "amqpMessagingNetworkExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
-  # for a description of supported properties.
-  # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
-  # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
-  commandAndControlSpec:
-    keyPath: /etc/hono/key.pem
-    certPath: /etc/hono/cert.pem
-    trustStorePath: /etc/hono/trusted-certs.pem
-    hostnameVerificationRequired: false
-
-  # kafkaMessagingSpec contains the configuration used by all protocol
-  # adapters for connecting to the Kafka cluster to be used for messaging.
-  # This property MUST be set if "messagingNetworkTypes" contains "kafka" and
-  # "kafkaMessagingClusterExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/common-config/#kafka-based-messaging-configuration
-  # for a description of supported properties.
-  kafkaMessagingSpec: {}
-  #  commonClientConfig:
-  #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
-  #  command:
-  #    consumerConfig:
-  #      "compression.type": none
-  #  commandInternal:
-  #    adminClientConfig:
-  #      "compression.type": none
-  #  commandResponse:
-  #    producerConfig:
-  #      "compression.type": none
-  #  event:
-  #    producerConfig:
-  #      "compression.type": none
-  #  notification:
-  #    consumerConfig:
-  #      "compression.type": none
-  #  telemetry:
-  #    producerConfig:
-  #      "compression.type": none
-
-  # tenantSpec contains Hono client properties used by all protocol adapters for
-  # connecting to the Tenant service.
-  # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
-  # for a description of supported properties.
-  tenantSpec:
-
-  # deviceRegistrationSpec contains Hono client properties used by all protocol adapters for
-  # connecting to the Device Registration service.
-  # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
-  # for a description of supported properties.
-  deviceRegistrationSpec:
-
-  # credentialsSpec contains Hono client properties used by all protocol adapters for
-  # connecting to the Credentials service.
-  # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
-  # for a description of supported properties.
-  credentialsSpec:
-
-  # deviceConnectionSpec contains Hono client properties used by all protocol adapters for
-  # connecting to the Device Connection service.
-  # This property MUST be set if "useCommandRouter", "deviceRegistryExample.enabled",
-  # "deviceConnectionService.enabled" and "dataGridExample.enabled" are all set to false
-  # and no "dataGridSpec" is set.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
-  # for a description of supported properties.
-  deviceConnectionSpec:
-
-  # commandRouterSpec contains Hono client properties used by all protocol adapters for
-  # connecting to the Command Router service.
-  # This property MUST be set if "useCommandRouter" is set to true and "commandRouterService.enabled" is set to false,
-  # meaning it has to be set for a custom Command Router service component to be used.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
-  # for a description of supported properties.
-  commandRouterSpec:
-
-  # tenantIdleTimeout contains the amount of time of inactivity after
-  # which protocol adapters close tenant specific links to services they
-  # interact with.
-  # Please refer to the Spring Boot documentation for the supported syntax:
-  # https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-conversion-duration
-  defaultTenantIdleTimeout: "1h"
-
-  # mapperEndpoints contains configuration properties for the adapter's
-  # used mapper endpoints.
-  # If not set, the adapter by default has no mappers configured
-  mapperEndpoints:
-  #  mapperName:
-  #    host: eclipse.org
-  #    uri: /hono/map
-  #    ssl: true
-  #    port: 443
-
-  amqp:
-    # enabled indicates if Hono's AMQP 1.0 adapter should be deployed.
-    enabled: true
-    # imageName contains the name (excluding registry)
-    # of the container image to use for the AMQP adapter
-    imageName: eclipse/hono-adapter-amqp-vertx
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # javaOptions contains options to pass to the JVM when starting
-    # up the service
-    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
-    # additional configuration from.
-    # Properties are read in the following sequence with properties further down in the list overwriting property
-    # values read from resources further up in the list.
-    # 1. Properties defined in file "/opt/hono/application.yml".
-    # 2. Properties read from the resources defined here.
-    # 3. Properties defined in operating system environment variables.
-    # 4. Properties defined in Java system properties.
-    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
-    # types.
-    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
-    # being read.
-    quarkusConfigLocations:
-    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
-    # Supported values are "prod", "dev" or "trace"
-    quarkusLoggingProfile: "dev"
-    # springConfigLocation contains the location of the Spring application configuration file(s).
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-    # for details.
-    springConfigLocation: "file:///etc/hono/"
-    # springLoggingConfig contains the location of the logback configuration file that is used
-    # by the adapter.
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-    # for details.
-    springLoggingConfig: "classpath:logback-spring.xml"
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based adapter variant.
-    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
-    applicationProfiles:
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # resources contains the container's requests and limits for CPU and memory
-    # as defined by the Kubernetes API.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-      requests:
-        cpu: "150m"
-        memory: "300Mi"
-      limits:
-        cpu: "1"
-        memory: "512Mi"
-
-    svc:
-      annotations: {}
-      loadBalancerIP:
-
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
-
-    # The configMap to get additional environment variables from for this adapter.
-    envConfigMap:
-
-    # hono contains the adapter's configuration properties as defined in
-    # https://www.eclipse.org/hono/docs/admin-guide/amqp-adapter-config/
-    hono:
-      app:
-        # maxInstances defines the number of adapter Verticle instances to deploy
-        # to the vert.x runtime during start-up.
-        maxInstances: 1
-
-      # amqp contains configuration properties for the adapter's
-      # exposed AMQP endpoints.
-      # If not set, the adapter by default exposes the secure and insecure ports
-      # using an example key and certificate.
-      amqp:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
-  coap:
-    # enabled indicates if Hono's CoAP adapter should be deployed.
-    enabled: false
-    # imageName contains the name (excluding registry)
-    # of the container image to use for the CoAP adapter
-    imageName: eclipse/hono-adapter-coap-vertx
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # javaOptions contains options to pass to the JVM when starting
-    # up the service
-    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
-    # additional configuration from.
-    # Properties are read in the following sequence with properties further down in the list overwriting property
-    # values read from resources further up in the list.
-    # 1. Properties defined in file "/opt/hono/application.yml".
-    # 2. Properties read from the resources defined here.
-    # 3. Properties defined in operating system environment variables.
-    # 4. Properties defined in Java system properties.
-    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
-    # types.
-    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
-    # being read.
-    quarkusConfigLocations:
-    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
-    # Supported values are "prod", "dev" or "trace"
-    quarkusLoggingProfile: "dev"
-    # springConfigLocation contains the location of the Spring application configuration file(s).
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-    # for details.
-    springConfigLocation: "file:///etc/hono/"
-    # springLoggingConfig contains the location of the logback configuration file that is used
-    # by the adapter.
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-    # for details.
-    springLoggingConfig: "classpath:logback-spring.xml"
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based adapter variant.
-    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
-    applicationProfiles:
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # resources contains the container's requests and limits for CPU and memory
-    # as defined by the Kubernetes API.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-      requests:
-        cpu: "150m"
-        memory: "256Mi"
-      limits:
-        cpu: "1"
-        memory: "512Mi"
-
-    svc:
-      annotations: {}
-      loadBalancerIP:
-
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
-
-    # The configMap to get additional environment variables from for this adapter.
-    envConfigMap:
-
-    # hono contains the adapter's configuration properties
-    hono:
-      app:
-        # maxInstances defines the number of adapter Verticle instances to deploy
-        # to the vert.x runtime during start-up.
-        maxInstances: 1
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
-  http:
-    # enabled indicates if Hono's HTTP adapter should be deployed.
-    enabled: true
-    # imageName contains the name (excluding registry)
-    # of the container image to use for the HTTP adapter
-    imageName: eclipse/hono-adapter-http-vertx
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # javaOptions contains options to pass to the JVM when starting
-    # up the service
-    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
-    # additional configuration from.
-    # Properties are read in the following sequence with properties further down in the list overwriting property
-    # values read from resources further up in the list.
-    # 1. Properties defined in file "/opt/hono/application.yml".
-    # 2. Properties read from the resources defined here.
-    # 3. Properties defined in operating system environment variables.
-    # 4. Properties defined in Java system properties.
-    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
-    # types.
-    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
-    # being read.
-    quarkusConfigLocations:
-    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
-    # Supported values are "prod", "dev" or "trace"
-    quarkusLoggingProfile: "dev"
-    # springConfigLocation contains the location of the Spring application configuration file(s).
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-    # for details.
-    springConfigLocation: "file:///etc/hono/"
-    # springLoggingConfig contains the location of the logback configuration file that is used
-    # by the adapter.
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-    # for details.
-    springLoggingConfig: "classpath:logback-spring.xml"
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based adapter variant.
-    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
-    applicationProfiles:
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # resources contains the container's requests and limits for CPU and memory
-    # as defined by the Kubernetes API.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-      requests:
-        cpu: "150m"
-        memory: "300Mi"
-      limits:
-        cpu: "1"
-        memory: "512Mi"
-
-    svc:
-      annotations: {}
-      loadBalancerIP:
-
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
-
-    # The configMap to get additional environment variables from for this adapter.
-    envConfigMap:
-
-    # hono contains the adapter's configuration properties as defined in
-    # https://www.eclipse.org/hono/docs/admin-guide/http-adapter-config/
-    hono:
-      app:
-        # maxInstances defines the number of adapter Verticle instances to deploy
-        # to the vert.x runtime during start-up.
-        maxInstances: 1
-
-      # http contains configuration properties for the adapter's
-      # exposed HTTP endpoints.
-      # If not set, the adapter by default exposes the secure and insecure ports
-      # using an example key and certificate.
-      http:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
-  kura:
-    # enabled indicates if Hono's (deprecated) Kura adapter should be deployed.
-    enabled: false
-    # imageName contains the name (excluding registry)
-    # of the container image to use for the Kura adapter
-    imageName: eclipse/hono-adapter-kura
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # javaOptions contains options to pass to the JVM when starting
-    # up the service
-    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # springConfigLocation contains the location of the Spring application configuration file(s).
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-    # for details.
-    springConfigLocation: "file:///etc/hono/"
-    # springLoggingConfig contains the location of the logback configuration file that is used
-    # by the adapter.
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-    # for details.
-    springLoggingConfig: "classpath:logback-spring.xml"
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based adapter variant.
-    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
-    applicationProfiles:
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # resources contains the container's requests and limits for CPU and memory
-    # as defined by the Kubernetes API.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-      requests:
-        cpu: "150m"
-        memory: "300Mi"
-      limits:
-        cpu: "1"
-        memory: "512Mi"
-
-    svc:
-      annotations: {}
-      loadBalancerIP:
-
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
-
-    # The configMap to get additional environment variables from for this adapter.
-    envConfigMap:
-
-    # hono contains the adapter's configuration properties as defined in
-    # https://www.eclipse.org/hono/docs/admin-guide/kura-adapter-config/
-    hono:
-      app:
-        # maxInstances defines the number of adapter Verticle instances to deploy
-        # to the vert.x runtime during start-up.
-        maxInstances: 1
-
-      # http contains configuration properties for the adapter's
-      # exposed MQTT endpoints.
-      # If not set, the adapter by default exposes the secure and insecure ports
-      # using an example key and certificate.
-      kura:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
-  lora:
-    # enabled indicates if Hono's Lora adapter should be deployed.
-    enabled: false
-    # imageName contains the name (excluding registry)
-    # of the container image to use for the LoRa adapter
-    imageName: eclipse/hono-adapter-lora-vertx
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # javaOptions contains options to pass to the JVM when starting
-    # up the service
-    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
-    # additional configuration from.
-    # Properties are read in the following sequence with properties further down in the list overwriting property
-    # values read from resources further up in the list.
-    # 1. Properties defined in file "/opt/hono/application.yml".
-    # 2. Properties read from the resources defined here.
-    # 3. Properties defined in operating system environment variables.
-    # 4. Properties defined in Java system properties.
-    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
-    # types.
-    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
-    # being read.
-    quarkusConfigLocations:
-    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
-    # Supported values are "prod", "dev" or "trace"
-    quarkusLoggingProfile: "dev"
-    # springConfigLocation contains the location of the Spring application configuration file(s).
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-    # for details.
-    springConfigLocation: "file:///etc/hono/"
-    # springLoggingConfig contains the location of the logback configuration file that is used
-    # by the adapter.
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-    # for details.
-    springLoggingConfig: "classpath:logback-spring.xml"
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based adapter variant.
-    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
-    applicationProfiles:
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # resources contains the container's requests and limits for CPU and memory
-    # as defined by the Kubernetes API.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-      requests:
-        cpu: "150m"
-        memory: "300Mi"
-      limits:
-        cpu: "1"
-        memory: "512Mi"
-
-    svc:
-      annotations: {}
-      loadBalancerIP:
-
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
-
-    # The configMap to get additional environment variables from for this adapter.
-    envConfigMap:
-
-    # hono contains the adapter's configuration properties
-    hono:
-      app:
-        # maxInstances defines the number of adapter Verticle instances to deploy
-        # to the vert.x runtime during start-up.
-        maxInstances: 1
-
-      # lora contains configuration properties for the adapter's
-      # exposed HTTP endpoints.
-      # If not set, the adapter by default exposes the secure and insecure ports
-      # using an example key and certificate.
-      lora:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
-  mqtt:
-    # enabled indicates if Hono's MQTT 3.1.1 adapter should be deployed.
-    enabled: true
-    # imageName contains the name (excluding registry)
-    # of the container image to use for the MQTT adapter
-    imageName: eclipse/hono-adapter-mqtt-vertx
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # javaOptions contains options to pass to the JVM when starting
-    # up the service
-    javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
-    # additional configuration from.
-    # Properties are read in the following sequence with properties further down in the list overwriting property
-    # values read from resources further up in the list.
-    # 1. Properties defined in file "/opt/hono/application.yml".
-    # 2. Properties read from the resources defined here.
-    # 3. Properties defined in operating system environment variables.
-    # 4. Properties defined in Java system properties.
-    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
-    # types.
-    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
-    # being read.
-    quarkusConfigLocations:
-    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
-    # Supported values are "prod", "dev" or "trace"
-    quarkusLoggingProfile: "dev"
-    # springConfigLocation contains the location of the Spring application configuration file(s).
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-    # for details.
-    springConfigLocation: "file:///etc/hono/"
-    # springLoggingConfig contains the location of the logback configuration file that is used
-    # by the adapter.
-    # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-    # for details.
-    springLoggingConfig: "classpath:logback-spring.xml"
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based adapter variant.
-    # If not specified explicitly, the profile set in "adapters.applicationProfiles" is used.
-    applicationProfiles:
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # resources contains the container's requests and limits for CPU and memory
-    # as defined by the Kubernetes API.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-      requests:
-        cpu: "150m"
-        memory: "300Mi"
-      limits:
-        cpu: "1"
-        memory: "512Mi"
-
-    svc:
-      annotations: {}
-      loadBalancerIP:
-
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
-
-    # The configMap to get additional environment variables from for this adapter.
-    envConfigMap:
-
-    # hono contains the adapter's configuration properties as defined in
-    # https://www.eclipse.org/hono/docs/admin-guide/mqtt-adapter-config/
-    hono:
-      app:
-        # maxInstances defines the number of adapter Verticle instances to deploy
-        # to the vert.x runtime during start-up.
-        maxInstances: 1
-
-      # mqtt contains configuration properties for the adapter's
-      # exposed MQTT endpoints.
-      # If not set, the adapter by default exposes the secure and insecure ports
-      # using an example key and certificate.
-      mqtt:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
-# authServer contains configuration properties for the Auth Server component.
-authServer:
-
-  # imageName contains the name (excluding registry)
-  # of the container image to use for the Auth Server
-  imageName: eclipse/hono-service-auth
-  # imageTag contains the tag of the container image to deploy.
-  # If not specified, the value of the honoImagesTag property is used.
-  # imageTag:
-  # containerRegistry contains the name of the container registry to pull
-  # the image from.
-  # If not specified, the value of the "honoContainerRegistry" property is used.
-  # containerRegistry:
-  # javaOptions contains options to pass to the JVM when starting
-  # up the service
-  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-  # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
-  # additional configuration from.
-  # Properties are read in the following sequence with properties further down in the list overwriting property
-  # values read from resources further up in the list.
-  # 1. Properties defined in file "/opt/hono/application.yml".
-  # 2. Properties read from the resources defined here.
-  # 3. Properties defined in operating system environment variables.
-  # 4. Properties defined in Java system properties.
-  # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
-  # types.
-  # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
-  # being read.
-  quarkusConfigLocations:
-  # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
-  # Supported values are "prod", "dev" or "trace"
-  quarkusLoggingProfile: "dev"
-  # springConfigLocation contains the location of the Spring application configuration file(s).
-  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-  # for details.
-  springConfigLocation: "file:///etc/hono/"
-  # springLoggingConfig contains the location of the logback configuration file that is used by the service.
-  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-  # for details.
-  springLoggingConfig: "classpath:logback-spring.xml"
-  # applicationProfiles contains the Spring application profiles that should be activated
-  # in the Spring Boot based service variant.
-  applicationProfiles: "authentication-impl,dev"
-  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-  # configuration property of the component's liveness probe.
-  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-  livenessProbeInitialDelaySeconds:
-  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-  # configuration property of the component's readiness probe.
-  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-  readinessProbeInitialDelaySeconds:
-  # resources contains the container's requests and limits for CPU and memory
-  # as defined by the Kubernetes API.
-  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-  # for a description of the properties' semantics.
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "196Mi"
-    limits:
-      cpu: "1"
-      memory: "256Mi"
-
-  # extraSecretMounts describes additional secrets that should be mounted into the
-  # Auth Server's' container filesystem. The files from the secret(s) can
-  # then be used in e.g. the configuration of the server's exposed ports.
-  # The secrets are expected to exist in the same Kubernetes namespace
-  # as the one that the server has been deployed to.
-  extraSecretMounts: {}
-  #  passwords:
-  #    secretName: "my-passwords"
-  #    mountPath: "/etc/pwd"
-  #  other:
-  #    secretName: "other-stuff"
-  #    mountPath: "/etc/other"
-
-  # The configMap to get additional environment variables from for this auth server.
-  envConfigMap:
-
-  # hono contains the Auth Server's configuration properties as defined in
-  # https://www.eclipse.org/hono/docs/admin-guide/auth-server-config/
-  hono:
-    app:
-      # maxInstances defines the number of adapter Verticle instances to deploy
-      # to the vert.x runtime during start-up.
-      maxInstances: 1
-    auth:
-      # svc contains configuration properties for the server
-      svc:
-        permissionsPath: "file:///etc/hono/permissions.json"
-        supportedSaslMechanisms: "PLAIN"
-        signing:
-          # tokenExpiration contains the number of seconds after which tokens issued
-          # by the Auth server will expire.
-          tokenExpiration: 3600
-      # amqp contains configuration properties for the server's
-      # exposed AMQP endpoints.
-      # If not set, the sever by default exposes the secure and insecure ports
-      # using an example key and certificate.
-      amqp:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-    # healthCheck contains configuration properties for the service's
-    # health check server as defined by
-    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-    # If not set, a TLS secured health check server is configured listening on
-    # all network interfaces on port 8088 using the service's
-    # example key and cert.'
-    healthCheck:
-    #  bindAddress: 0.0.0.0
-    #  port: 12000
-    #  keyPath: "/etc/config/key.pem"
-    #  certPath: "/etc/config/cert.pem"
-
-
-# deviceRegistryExample contains configuration properties for the
-# example Device Registry.
-deviceRegistryExample:
-
-  # enabled indicates whether the example Device Registry
-  # should be deployed and used.
-  # If this property is set to false, then the protocol adapters need to be
-  # explicitly configured for connecting to the Tenant, Device Registration,
-  # Credentials and Device Connection services using properties
-  # - "adapters.tenantSpec"
-  # - "adapters.deviceRegistrationSpec"
-  # - "adapters.credentialsSpec"
-  # - "adapters.deviceConnectionSpec" (only needed if "deviceConnectionService.enabled" and "dataGridExample.enabled"
-  #                                   are also set to false and no "dataGridSpec" is set)
-  enabled: true
-
-  # Sets the type of the device registry to be deployed. The following types are defined:
-  # - file: File based device registry. Also refer to the section "fileBasedDeviceRegistry"
-  # for additional configuration.
-  # - embedded: Embedded JDBC based device registry. Also refer to the section "embeddedJdbcDeviceRegistry"
-  # for additional configuration.
-  # - mongodb: MongoDB based device registry. Also refer to the section "mongoDBBasedDeviceRegistry"
-  # for additional configuration.
-  # - jdbc: JDBC based device registry. Also refer to the section "jdbcBasedDeviceRegistry"
-  # for additional configuration.
-  type: embedded
-
-  # addExampleData indicates whether example data is inserted after the device registry is deployed
-  addExampleData: true
-
-  # javaOptions contains options to pass to the JVM when starting
-  # up the service
-  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-  # resources contains the container's requests and limits for CPU and memory
-  # as defined by the Kubernetes API.
-  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-  # for a description of the properties' semantics.
-  resources:
-    requests:
-      cpu: "150m"
-      memory: "300Mi"
-    limits:
-      cpu: "1"
-      memory: "300Mi"
-
-  svc:
-    annotations: {}
-    loadBalancerIP:
-
-  # extraSecretMounts describes additional secrets that should be mounted into the
-  # Device Registry's' container filesystem. The files from the secret(s) can
-  # then be used in e.g. the configuration of the server's exposed ports.
-  # The secrets are expected to exist in the same Kubernetes namespace
-  # as the one that the server has been deployed to.
-  extraSecretMounts: {}
-    #  tls:
-    #    secretName: "key-material"
-    #    mountPath: "/etc/tls"
-    #  data:
-    #    secretName: "example-data"
-    #    mountPath: "/etc/data"
-
-  # clientTrustStorePath points to the trustStore the client of this example Device Registry should use to verify the certificates.
-  # This can be used when using your own certificates in combination with the example Device Registry
-  clientTrustStorePath:
-
-  # hono contains the Device Registry's configuration properties as defined in
-  # https://www.eclipse.org/hono/docs/admin-guide/device-registry-config/
-  hono:
-    # auth contains Hono client properties used by the example registry for
-    # connecting to the Authentication service.
-    # If not set, the registry by default uses the Auth Server component to
-    # authenticate clients.
-    auth:
-    registry:
-      # amqp contains configuration properties for the server's
-      # exposed AMQP endpoints.
-      # If not set, the registry by default exposes the secure port
-      # using an example key and certificate.
-      amqp:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # http contains configuration properties for the server's
-      # exposed HTTP endpoints.
-      # If not set, the registry by default exposes the insecure and secure ports
-      # using an example key and certificate.
-      # NOTE: For the file based device registry use "rest" instead of "http".
-      http:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # svc contains configuration properties for the registry's service implementation.
-      svc:
-      #  maxDevicesPerTenant: 100
-
-    # healthCheck contains configuration properties for the service's
-    # health check server as defined by
-    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-    # If not set, a TLS secured health check server is configured listening on
-    # all network interfaces on port 8088 using the service's
-    # example key and cert.'
-    healthCheck:
-    #  bindAddress: 0.0.0.0
-    #  port: 12000
-    #  keyPath: "/etc/config/key.pem"
-    #  certPath: "/etc/config/cert.pem"
-
-    # kafka contains the configuration used by the device registry
-    # for connecting to a Kafka cluster to be used for messaging.
-    # This property will be used if "messagingNetworkTypes" contains "kafka" and
-    # "kafkaMessagingClusterExample.enabled" is set to false. Please refer to
-    # https://www.eclipse.org/hono/docs/admin-guide/jdbc-device-registry-config/#kafka-based-messaging-configuration
-    # or
-    # https://www.eclipse.org/hono/docs/admin-guide/mongodb-device-registry-config/#kafka-based-messaging-configuration
-    # for a description of supported properties.
-    kafka: {}
-      # commonClientConfig contains Kafka client configuration to be used by all Kafka consumers and producers
-      # created by the device registry.
-      # If this property is not set or if it does not contain a "bootstrap.servers" property, the
-      # "adapters.kafkaMessagingSpec.commonClientConfig" property is used as a fall back.
-    #  commonClientConfig:
-    #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
-    #  event:
-    #    producerConfig:
-    #      "compression.type": none
-    #  notification:
-    #    producerConfig:
-    #      "compression.type": none
-
-  # fileBasedDeviceRegistry contains configuration properties specific to the
-  # file based device registry.
-  fileBasedDeviceRegistry:
-    # imageName contains the name (excluding registry)
-    # of the container image for the example file based device registry.
-    imageName: eclipse/hono-service-device-registry-file
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # storageClass indicates the name of the kubernetes StorageClass that
-    # should be used for the example registry's persistent volume claim.
-    # If not set, the cluster's default storage class is used.
-    storageClass:
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based service variant.
-    applicationProfiles: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-
-    # The configMap to get additional environment variables from for this device registry.
-    envConfigMap:
-
-  # embeddedJdbcDeviceRegistry contains configuration properties specific to the
-  # embedded JDBC device registry.
-  embeddedJdbcDeviceRegistry:
-    # imageName contains the name (excluding registry)
-    # of the container image for the example embedded jdbc device registry.
-    imageName: eclipse/hono-service-device-registry-jdbc
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # storageClass indicates the name of the kubernetes StorageClass that
-    # should be used for the example registry's persistent volume claim.
-    # If not set, the cluster's default storage class is used.
-    storageClass:
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based service variant.
-    applicationProfiles: "registry-adapter,registry-management,tenant-service,create-schema,dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # resources contains the container's requests and limits for CPU and memory
-    # as defined by the Kubernetes API.
-    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-      requests:
-        cpu: "200m"
-        memory: "400Mi"
-      limits:
-        cpu: "1"
-        memory: "500Mi"
-
-    # The configMap to get additional environment variables from for this device registry.
-    envConfigMap:
-
-  # mongoDBBasedDeviceRegistry contains configuration properties specific to the
-  # MongoDB based device registry.
-  mongoDBBasedDeviceRegistry:
-    # imageName contains the name (excluding registry)
-    # of the container image for the example MongoDB based device registry.
-    imageName: eclipse/hono-service-device-registry-mongodb
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
-    # additional configuration from.
-    # Properties are read in the following sequence with properties further down in the list overwriting property
-    # values read from resources further up in the list.
-    # 1. Properties defined in file "/opt/hono/application.yml".
-    # 2. Properties read from the resources defined here.
-    # 3. Properties defined in operating system environment variables.
-    # 4. Properties defined in Java system properties.
-    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
-    # types.
-    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
-    # being read.
-    quarkusConfigLocations:
-    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
-    # Supported values are "prod", "dev" or "trace"
-    quarkusLoggingProfile: "dev"
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based service variant.
-    applicationProfiles: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-      requests:
-        cpu: "150m"
-        memory: "400Mi"
-      limits:
-        cpu: "1"
-        memory: "400Mi"
-    # mongodb contains the configuration properties to connect to the MongoDB database instance.
-    # If you would like to use an already existing MongoDB database instance, then configure
-    # the below section accordingly.
-    mongodb:
-    # The host name or IP address of the MongoDB instance.
-    # host:
-    # The port that the MongoDB instance is listening on.
-    # port:
-    # The name of the MongoDB database to be used by the device registry application.
-    # dbName:
-    # The user name to use for authenticating to the MongoDB instance.
-    # username:
-    # The password to use for authenticating to the MongoDB instance.
-    # password:
-
-    # The configMap to get additional environment variables from for this device registry.
-    envConfigMap:
-
-  # jdbcBasedDeviceRegistry contains configuration properties specific to the
-  # jdbc based device registry.
-  jdbcBasedDeviceRegistry:
-    # imageName contains the name (excluding registry)
-    # of the container image for the example jdbc based device registry.
-    imageName: eclipse/hono-service-device-registry-jdbc
-    # imageTag contains the tag of the container image to deploy.
-    # If not specified, the value of the honoImagesTag property is used.
-    # imageTag:
-    # containerRegistry contains the name of the container registry to pull
-    # the image from.
-    # If not specified, the value of the "honoContainerRegistry" property is used.
-    # containerRegistry:
-    # applicationProfiles contains the Spring application profiles that should be activated
-    # in the Spring Boot based service variant.
-    applicationProfiles: "registry-adapter,registry-management,tenant-service,dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's liveness probe.
-    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-    livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-    # configuration property of the component's readiness probe.
-    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-    readinessProbeInitialDelaySeconds:
-    # If not specified here, then the values from "deviceRegistryExample.resources" are used.
-    # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-    # for a description of the properties' semantics.
-    resources:
-    # registry.jdbc contains the configuration properties for device registry
-    # to connect to the database.
-
-    # The configMap to get additional environment variables from for this device registry.
-    envConfigMap:
-
-    registry:
-      jdbc:
-        # the jdbc properties for read-only operations
-        adapter:
-          # The jdbc URL for the database
-          url:
-          # The jdbc driver class name
-          driverClass:
-          # The user name to use for authenticating to the database
-          username:
-          # The password to use for authenticating to the database
-          password:
-        # the jdbc properties for write operations
-        management:
-          # The jdbc URL for the database. For SQLServer, ";SelectMethod=Cursor" is required in the management url.
-          url:
-          # The jdbc driver class name
-          driverClass:
-          # The user name to use for authenticating to the database
-          username:
-          # The password to use for authenticating to the database
-          password:
-    # tenant.jdbc contains the configuration properties for tenant registry
-    # to connect to the database.
-    tenant:
-      jdbc:
-        # the jdbc properties for read-only operations
-        adapter:
-          # The jdbc URL for the database
-          url:
-          # The jdbc driver class name
-          driverClass:
-          # The user name to use for authenticating to the database
-          username:
-          # The password to use for authenticating to the database
-          password:
-        # the jdbc properties for write operations
-        management:
-          # The jdbc URL for the database. For SQLServer, ";SelectMethod=Cursor" is required in the management url.
-          url:
-          # The jdbc driver class name
-          driverClass:
-          # The user name to use for authenticating to the database
-          username:
-          # The password to use for authenticating to the database
-          password:
-
-# mongodb contains configuration properties for the example MongoDB instance to be used with the
-# MongoDB device registry.
-# By default, a standalone instance using a k8s Deployment instead of a StatefulSet will be created.
-# The configuration properties below are intended to set up a MongoDB instance that is sufficient
-# for demonstration and/or testing purposes. In order to use a production level MongoDB instance, users
-# should not adapt these properties, but instead set the "createInstance" property to false, set up a
-# separate MongoDB instance according to
-# https://github.com/bitnami/charts/tree/master/bitnami/mongodb#production-configuration-and-horizontal-scaling
-# and configure the registry's connection details under "deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb".
-mongodb:
-  # createInstance indicates whether a MongoDB database instance should be created.
-  createInstance: false
-  # If authentication to be enabled or not.
-  # ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
-  auth:
-    enabled: true
-    # Configure a custom MongoDB database with a user name and password.
-    # And also set a root password for the MongoDB instance.
-    # ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
-    rootPassword: root-secret
-    usernames:
-    - "device-registry@HONO"
-    passwords:
-    - "hono-secret"
-    databases:
-    - "honodb"
-  # Configure the MongoDB service to be accessed from inside the cluster only.
-  service:
-    type: ClusterIP
-    port: 27017
-    targetPort: 27017
-    annotations: {}
-  # Use StatefulSet instead of Deployment when deploying standalone
-  useStatefulSet: false
-  # Setting up replication
-  # ref: https://github.com/bitnami/bitnami-docker-mongodb#setting-up-a-replication
-  # Whether to create a MongoDB replica set for high availability or not
-  replicaSet:
-    enabled: false
-  # do not use the default name ("mongodb") because it will lead to a config
-  # property name clash in the device registry pod when using "hono" as the release name
-  nameOverride: monogodb-server
-
-# deviceConnectionService contains configuration properties for the
-# Device Connection service.
-# Note that the Device Connection service will only be used if "useCommandRouter" is false.
-# DEPRECATED This property will be removed when this chart gets updated to support Hono 2.0.0.
-# Please use the Command Router service instead.
-deviceConnectionService:
-
-  # enabled indicates if the data grid based Device Connection service implementation
-  # should be deployed and used.
-  # If set to false (the default) and "deviceRegistryExample.enabled" is set to true and
-  # "deviceRegistryExample.type" is set to "file", the in-memory Device Connection service
-  # implementation that is part of the example file based Device Registry is used.
-  # If set to false (the default) and "deviceRegistryExample.enabled" is also set to false or
-  # "deviceRegistryExample.type" is not set to "file", then the "adapters.deviceConnectionSpec"
-  # is expected to contain the required Hono client config properties to connect to an already
-  # existing Device Connection service.
-  # If set to true and "dataGridExample.enabled" is set to false (the default) and neither
-  # "dataGridSpec" nor "deviceConnectionService.hono.deviceConnection.remote" is set, the
-  # Device Connection service implementation will use an embedded cache.
-  enabled: false
-
-  # imageName contains the name (excluding registry)
-  # of the container image to use for the Device Connection service
-  imageName: eclipse/hono-service-device-connection
-  # imageTag contains the tag of the container image to deploy.
-  # If not specified, the value of the honoImagesTag property is used.
-  # imageTag:
-  # containerRegistry contains the name of the container registry to pull
-  # the image from.
-  # If not specified, the value of the "honoContainerRegistry" property is used.
-  # containerRegistry:
-  # javaOptions contains options to pass to the JVM when starting
-  # up the service
-  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80
-  # springConfigLocation contains the location of the Spring application configuration file(s).
-  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-  # for details.
-  springConfigLocation: "file:///etc/hono/"
-  # springLoggingConfig contains the location of the logback configuration file that is used by the service.
-  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-  # for details.
-  springLoggingConfig: "classpath:logback-spring.xml"
-  # applicationProfiles contains the Spring application profiles that should be activated
-  # in the Spring Boot based service variant.
-  applicationProfiles: "dev"
-  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-  # configuration property of the component's liveness probe.
-  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-  livenessProbeInitialDelaySeconds:
-  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-  # configuration property of the component's readiness probe.
-  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-  readinessProbeInitialDelaySeconds:
-  # resources contains the container's requests and limits for CPU and memory
-  # as defined by the Kubernetes API.
-  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-  # for a description of the properties' semantics.
-  resources:
-    requests:
-      cpu: "150m"
-      memory: "256Mi"
-    limits:
-      cpu: "1"
-      memory: "256Mi"
-
-  svc:
-    annotations: {}
-
-  # extraSecretMounts describes additional secrets that should be mounted into the
-  # service's container filesystem. The files from the secret(s) can
-  # then be used in e.g. the configuration of the service's exposed ports.
-  # The secrets are expected to exist in the same Kubernetes namespace
-  # as the one that the service has been deployed to.
-  extraSecretMounts: {}
-  #  tls:
-  #    secretName: "key-material"
-  #    mountPath: "/etc/tls"
-
-  # The configMap to get additional environment variables from for this device connection service.
-  envConfigMap:
-
-  # hono contains the service's configuration properties as defined in
-  # https://www.eclipse.org/hono/docs/admin-guide/device-connection-config/
-  hono:
-    app:
-      # maxInstances defines the number of adapter Verticle instances to deploy
-      # to the vert.x runtime during start-up.
-      maxInstances: 1
-    # auth contains Hono client properties used by the service for
-    # connecting to the Authentication service.
-    # If not set, the service by default uses the Auth Server component to
-    # authenticate clients.
-    auth:
-    deviceConnection:
-      # amqp contains configuration properties for the server's
-      # exposed AMQP endpoints.
-      # If not set, the registry by default exposes the secure port
-      # using an example key and certificate.
-      amqp:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # DEPRECATED use the dataGridSpec property instead
-      # remote contains properties for configuring the Infinispan Hotrod connection
-      # to the data grid that should be used for storing the device connection data.
-      # This property MUST be set if "deviceConnectionService.enabled" is set to true
-      # and "dataGridExample.enabled" is set to false (the default).
-      # Please refer to https://docs.jboss.org/infinispan/13.0/apidocs/org/infinispan/client/hotrod/configuration/package-summary.html#package.description
-      # for a list of configuration properties.
-      remote:
-      #  serverList: hono-data-grid:11222
-      #  authServerName: hono-data-grid
-      #  authUsername: hono
-      #  authPassword: hono-secret
-
-    # healthCheck contains configuration properties for the service's
-    # health check server as defined by
-    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-    # If not set, a TLS secured health check server is configured listening on
-    # all network interfaces on port 8088 using the service's
-    # example key and cert.'
-    healthCheck:
-    #  bindAddress: 0.0.0.0
-    #  port: 12000
-    #  keyPath: "/etc/config/key.pem"
-    #  certPath: "/etc/config/cert.pem"
-
-# commandRouterService contains configuration properties for the
-# Command Router service.
-# Note that "useCommandRouter" has to be set to "true" for the Command Router service
-# to be used instead of the Device Connection service.
-commandRouterService:
-
-  # enabled indicates if the in-memory or data grid based Command Router service implementation
-  # should be deployed and used.
-  enabled: true
-
-  # imageName contains the name (excluding registry)
-  # of the container image to use for the Command Router service
-  imageName: eclipse/hono-service-command-router
-  # imageTag contains the tag of the container image to deploy.
-  # If not specified, the value of the honoImagesTag property is used.
-  # imageTag:
-  # containerRegistry contains the name of the container registry to pull
-  # the image from.
-  # If not specified, the value of the "honoContainerRegistry" property is used.
-  # containerRegistry:
-  # javaOptions contains options to pass to the JVM when starting
-  # up the service
-  javaOptions: -XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80 -Djava.security.properties=/etc/hono/dns-cache-config.properties
-  # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
-  # additional configuration from.
-  # Properties are read in the following sequence with properties further down in the list overwriting property
-  # values read from resources further up in the list.
-  # 1. Properties defined in file "/opt/hono/application.yml".
-  # 2. Properties read from the resources defined here.
-  # 3. Properties defined in operating system environment variables.
-  # 4. Properties defined in Java system properties.
-  # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
-  # types.
-  # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
-  # being read.
-  quarkusConfigLocations:
-  # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
-  # Supported values are "prod", "dev" or "trace"
-  quarkusLoggingProfile: "dev"
-  # springConfigLocation contains the location of the Spring application configuration file(s).
-  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config-files
-  # for details.
-  springConfigLocation: "file:///etc/hono/"
-  # springLoggingConfig contains the location of the logback configuration file that is used by the service.
-  # See https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging
-  # for details.
-  springLoggingConfig: "classpath:logback-spring.xml"
-  # storageClass indicates the name of the kubernetes StorageClass that
-  # should be used for the persistent volume claim used for the storage
-  # of embedded cache data in case the Command Router service doesn't use
-  # a data grid.
-  # If not set, the cluster's default storage class is used.
-  # DEPRECATED This property has no meaning anymore because the Command Router uses an in-memory cache
-  # if no data grid is configured.
-  storageClass:
-  # applicationProfiles contains the Spring application profiles that should be activated
-  # in the Spring Boot based service variant.
-  applicationProfiles: "dev"
-  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-  # configuration property of the component's liveness probe.
-  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
-  livenessProbeInitialDelaySeconds:
-  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
-  # configuration property of the component's readiness probe.
-  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
-  readinessProbeInitialDelaySeconds:
-  # resources contains the container's requests and limits for CPU and memory
-  # as defined by the Kubernetes API.
-  # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-  # for a description of the properties' semantics.
-  resources:
-    requests:
-      cpu: "150m"
-      memory: "256Mi"
-    limits:
-      cpu: "1"
-      memory: "512Mi"
-
-  svc:
-    annotations: {}
-
-  # extraSecretMounts describes additional secrets that should be mounted into the
-  # service's container filesystem. The files from the secret(s) can
-  # then be used in e.g. the configuration of the service's exposed ports.
-  # The secrets are expected to exist in the same Kubernetes namespace
-  # as the one that the service has been deployed to.
-  extraSecretMounts: {}
-  #  tls:
-  #    secretName: "key-material"
-  #    mountPath: "/etc/tls"
-
-  # The configMap to get additional environment variables from for this command router service.
-  envConfigMap:
-
-  # clientTrustStorePath points to the trustStore the client of this command router service should use to verify the certificates.
-  # This can be used when using your own certificates in combination with this command router service.
-  clientTrustStorePath:
-
-  # hono contains the service's configuration properties as defined in
-  # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/
-  hono:
-    app:
-      # maxInstances defines the number of adapter Verticle instances to deploy
-      # to the vert.x runtime during start-up.
-      maxInstances: 1
-    # auth contains Hono client properties used by the service for
-    # connecting to the Authentication service.
-    # If not set, the service by default uses the Auth Server component to
-    # authenticate clients.
-    auth:
-    commandRouter:
-      # amqp contains configuration properties for the server's
-      # exposed AMQP endpoints.
-      # If not set, the registry by default exposes the secure port
-      # using an example key and certificate.
-      amqp:
-      #  insecurePortEnabled: true
-      #  insecurePortBindAddress: "0.0.0.0"
-
-      # cache contains properties configuring the embedded or remote cache that
-      # the Command Router uses for storing routing information. Please refer to Hono's Command Router admin guide at
-      # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/#data-grid-connection-configuration for
-      # details regarding cache configuration.
-      # If not set explicitly here, the remote cache configuration from property "dataGridSpec" will be used.
-      # If that property is empty and "dataGridExample.enabled" is "true", the example data grid is used.
-      # If "dataGridExample.enabled" is "false", an embedded cache with a default configuration will be used.
-      # Note that when using the embedded cache, the Command Router pod does NOT support scaling up to a replica
-      # count > 1
-      cache:
-
-    # healthCheck contains configuration properties for the service's
-    # health check server as defined by
-    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-    # If not set, a TLS secured health check server is configured listening on
-    # all network interfaces on port 8088 using the service's
-    # example key and cert.'
-    healthCheck:
-    #  bindAddress: 0.0.0.0
-    #  port: 12000
-    #  keyPath: "/etc/config/key.pem"
-    #  certPath: "/etc/config/cert.pem"
-
-    # kafka contains the configuration used by the command router
-    # for connecting to a Kafka cluster to be used for messaging.
-    # This property will be used if "messagingNetworkTypes" contains "kafka" and
-    # "kafkaMessagingClusterExample.enabled" is set to false. Please refer to
-    # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/#kafka-based-messaging-configuration
-    # for a description of supported properties.
-    kafka: {}
-      # commonClientConfig contains Kafka client configuration to be used by all Kafka consumers and producers
-      # created by the Command Router service.
-      # If this property is not set or if it does not contain a "bootstrap.servers" property, the
-      # "adapters.kafkaMessagingSpec.commonClientConfig" property is used as a fall back.
-    #  commonClientConfig:
-    #    "bootstrap.servers": "broker0.my-custom-kafka.org:9092,broker1.my-custom-kafka.org:9092"
-    #  cleanup:
-    #    adminClientConfig:
-    #      "compression.type": none
-    #  command:
-    #    consumerConfig:
-    #      "compression.type": none
-    #  commandInternal:
-    #    producerConfig:
-    #      "compression.type": none
-    #  commandResponse:
-    #    producerConfig:
-    #      "compression.type": none
-    #  notification:
-    #    consumerConfig:
-    #      "compression.type": none
-
-prometheus:
-  # createInstance indicates whether a Prometheus server should be created
-  # using the Prometheus chart.
-  # Set this property to true if you want the chart to install an example Prometheus server that
-  # is configured to scrape Hono's components.
-  # If you want to use an already existing Prometheus server, set this property to false
-  # and set the "host" and "port" properties to the existing server's host name and port.
-  createInstance: false
-  # host contains the host name of an existing Prometheus server.
-  # This property is used to configure a corresponding datasource in Grafana
-  # if createInstance is set to false.
-  host:
-  # post contains the port number of an existing Prometheus server.
-  # This property is used to configure a corresponding datasource in Grafana
-  # if createInstance is set to false.
-  port:
-
-  ## Define serviceAccount names for components. Defaults to component's fully qualified name.
-  ##
-  serviceAccounts:
-    alertmanager:
-      create: false
-      name:
-    kubeStateMetrics:
-      create: false
-      name:
-    nodeExporter:
-      create: false
-      name:
-    pushgateway:
-      create: false
-      name:
-    server:
-      create: true
-      name:
-
-  server:
-    configMapOverrideName: prometheus-config
-    global:
-      scrape_interval: 10s
-    service:
-      servicePort: 9090
-
-  alertmanager:
-    enabled: false
-
-  kubeStateMetrics:
-    enabled: false
-
-  nodeExporter:
-    enabled: false
-
-  pushgateway:
-    enabled: false
-
-grafana:
-  enabled: false
-  adminPassword: admin
-
-  # do not run tests after deployment
-  testFramework:
-    enabled: false
-
-  ## Expose the grafana service to be accessed from outside the cluster (LoadBalancer service).
-  ## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
-  ## ref: http://kubernetes.io/docs/user-guide/services/
-  ##
-  service:
-    type: ClusterIP
-    port: 3000
-    targetPort: 3000
-    annotations: {}
-
-  ## Sidecars that collect the configmaps with specified label and stores the included files them into the respective folders
-  ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
-  sidecar:
-    dashboards:
-      enabled: true
-      # label that the configmaps with dashboards are marked with
-      label: grafana_dashboard
-    datasources:
-      enabled: true
-      # label that the configmaps with datasources are marked with
-      label: grafana_datasource
-
-  rbac:
-    namespaced: true
-
-# kafkaMessagingClusterExample contains properties for configuring an example Kafka cluster
-# to be used for messaging if "messagingNetworkTypes" contains "kafka"
-kafkaMessagingClusterExample:
-  # enabled indicates whether the example Kafka cluster consisting of a single broker
-  # and one Zookeeper instance should be deployed. This minimal deployment is not suitable
-  # for production purposes. To use an already existing Kafka cluster instead,
-  # set this property to false and configure "adapters.kafkaMessagingSpec".
-  enabled: false
-
-# configuration of the example Kafka cluster to be deployed if "kafkaMessagingClusterExample.enabled" is "true"
-kafka:
-  # the name of the template (maintains the release name)
-  nameOverride: "kafka"
-  # Set to false for productive setups. Topic management then needs to be provided externally.
-  autoCreateTopicsEnable: true
-  deleteTopicEnable: true
-  auth:
-    clientProtocol: "sasl_tls"
-    sasl:
-      jaas:
-        clientUsers:
-        - "hono"
-        clientPasswords:
-        - "hono-secret"
-        zookeeperUser: "zookeeperUser"
-        zookeeperPassword: "zookeeperPassword"
-    tls:
-      type: "pem"
-      pemChainIncluded: true
-      existingSecrets:
-      - "{{ .Release.Name }}-kafka-certs"
-
-  service:
-    ports:
-      client: 9092
-      internal: 9093
-      external: 9094
-
-  replicaCount: 1
-  # The data is stored in Persistent Volumes. For more information regarding persistence and
-  # potential problems with permissions refer to: https://github.com/bitnami/charts/tree/master/bitnami/kafka#persistence
-  persistence:
-    size: 1Gi
-  # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
-  # To use service type NodePort instead of LoadBalancer, refer to
-  # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
-  externalAccess:
-    enabled: true
-    autoDiscovery:
-      enabled: true
-    service:
-      type: "LoadBalancer"
-      ports:
-        external: 9094
-      # length of the array must match replicaCount
-      nodePorts:
-      - 32094
-  serviceAccount:
-    create: true
-  rbac:
-    # Note that this could require creating RBAC rules, for more information refer to
-    # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
-    create: true
-  zookeeper:
-    persistence:
-      size: 1Gi
-    auth:
-      enabled: true
-      clientUser: "zookeeperUser"
-      clientPassword: "zookeeperPassword"
-      serverUsers: "zookeeperUser"
-      serverPasswords: "zookeeperPassword"
+# A sidecar container will be deployed if either "jaegerBackendExample.enabled" is set to "true"
+# or else if "otelCollectorAgentConfigMap" is not null.
+otelCollectorAgentImage: "otel/opentelemetry-collector:0.53.0"
+# otelCollectorAgentConfigMap can be used to specify the name of an existing ConfigMap
+# from which the collector's configuration should be read.
+# The map is expected to contain the configuration under key "otel-collector-config.yaml".
+# This property will only be used if "jaegerBackendExample.enabled" is set to "false".
+otelCollectorAgentConfigMap:

@@ -131,11 +131,6 @@
       "password": "amqp-secret",
       "authorities": [ "hono-component", "protocol-adapter" ]
     },
-    "kura-adapter@HONO": {
-      "mechanism": "PLAIN",
-      "password": "kura-secret",
-      "authorities": [ "hono-component", "protocol-adapter" ]
-    },
     "command-router@HONO": {
       "mechanism": "PLAIN",
       "password": "cmd-router-secret",

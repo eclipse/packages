@@ -79,7 +79,7 @@
     "port": {{ .Values.amqpMessagingNetworkExample.broker.port }},
     "saslMechanisms": "PLAIN",
     "saslUsername": "{{ .Values.amqpMessagingNetworkExample.broker.saslUsername }}",
-    "saslPassword": "file:/etc/hono/broker-password",
+    "saslPassword": "file:/opt/hono/config/broker-password",
     {{- if .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
     "host": "{{ .Values.amqpMessagingNetworkExample.broker.serviceBus.host }}",
     "idleTimeoutSeconds": 120

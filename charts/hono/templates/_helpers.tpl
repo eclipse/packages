@@ -58,15 +58,11 @@ The scope passed in is expected to be a dict with keys
   - (mandatory) "imageName"
   - (optional) "imageTag"
   - (optional) "containerRegistry"
-  - (optional) "useImageType": should image type configuration be used
 */}}
 {{- define "hono.container" }}
 {{- $tag := default .dot.Chart.AppVersion ( default .dot.Values.honoImagesTag .componentConfig.imageTag ) }}
 {{- $registry := default .dot.Values.honoContainerRegistry .componentConfig.containerRegistry }}
-{{- $image := printf "%s/%s:%s" $registry .componentConfig.imageName $tag -}}
-{{- if and .useImageType ( contains "quarkus" .dot.Values.honoImagesType ) }}
-{{- $image = printf "%s/%s-%s:%s" $registry .componentConfig.imageName .dot.Values.honoImagesType $tag -}}
-{{- end }}
+{{- $image := printf "%s/%s:%s" $registry .componentConfig.imageName $tag }}
 - name: {{ .name | quote }}
   image: {{ $image | quote }}
 {{- if and ( contains "SNAPSHOT" $tag ) ( not ( hasPrefix "index.docker.io/eclipse/" $image ) ) }}
@@ -79,11 +75,11 @@ The scope passed in is expected to be a dict with keys
 Add standard labels for resources as recommended by Helm best practices.
 */}}
 {{- define "hono.std.labels" -}}
-app.kubernetes.io/name: {{ template "hono.name" . }}
-helm.sh/chart: {{ template "hono.chart" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/version: {{ .Chart.AppVersion }}
+app.kubernetes.io/name: {{ include "hono.name" . | quote }}
+helm.sh/chart: {{ include "hono.chart" . | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 
 
@@ -95,16 +91,16 @@ The scope passed in is expected to be a dict with keys
 - "component": the value to use for the "app.kubernetes.io/component" label
 */}}
 {{- define "hono.metadata" -}}
-name: {{ .dot.Release.Name }}-{{ .name }}
-namespace: {{ .dot.Release.Namespace }}
+name: {{ printf "%s-%s" .dot.Release.Name .name | quote }}
+namespace: {{ .dot.Release.Namespace | quote }}
 labels:
-  app.kubernetes.io/name: {{ template "hono.name" .dot }}
-  helm.sh/chart: {{ template "hono.chart" .dot }}
-  app.kubernetes.io/managed-by: {{ .dot.Release.Service }}
-  app.kubernetes.io/instance: {{ .dot.Release.Name }}
-  app.kubernetes.io/version: {{ .dot.Chart.AppVersion }}
+  app.kubernetes.io/name: {{ include "hono.name" .dot | quote }}
+  helm.sh/chart: {{ include "hono.chart" .dot | quote }}
+  app.kubernetes.io/managed-by: {{ .dot.Release.Service | quote }}
+  app.kubernetes.io/instance: {{ .dot.Release.Name | quote }}
+  app.kubernetes.io/version: {{ .dot.Chart.AppVersion | quote }}
   {{- if .component }}
-  app.kubernetes.io/component: {{ .component }}
+  app.kubernetes.io/component: {{ .component | quote }}
   {{- end }}
 {{- end }}
 
@@ -115,9 +111,9 @@ The scope passed in is expected to be a dict with keys
 - "component": the value of the "app.kubernetes.io/component" label to match
 */}}
 {{- define "hono.matchLabels" -}}
-app.kubernetes.io/name: {{ template "hono.name" .dot }}
-app.kubernetes.io/instance: {{ .dot.Release.Name }}
-app.kubernetes.io/component: {{ .component }}
+app.kubernetes.io/name: {{ include "hono.name" .dot | quote }}
+app.kubernetes.io/instance: {{ .dot.Release.Name | quote }}
+app.kubernetes.io/component: {{ .component | quote }}
 {{- end }}
 
 {{/*
@@ -146,7 +142,7 @@ kind: Service
 metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
-  clusterIP: None
+  clusterIP: "None"
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
 {{- end }}
@@ -186,7 +182,7 @@ The scope passed in is expected to be a dict with keys
 {{- if has "kafka" .dot.Values.messagingNetworkTypes -}}
   {{ include "hono.kafkaMessagingConfig" . }}
 {{- end -}}
-{{- if and (not (has "amqp" .dot.Values.messagingNetworkTypes)) (not (has "kafka" .dot.Values.messagingNetworkTypes)) -}}
+{{- if not ( or ( has "amqp" .dot.Values.messagingNetworkTypes ) ( has "kafka" .dot.Values.messagingNetworkTypes ) ) -}}
   {{- required "Property messagingNetworkTypes MUST contain 'amqp' and/or 'kafka'" nil }}
 {{- end -}}
 {{- end }}
@@ -201,13 +197,13 @@ The scope passed in is expected to be a dict with keys
 {{- define "hono.amqpMessagingNetworkClientConfig" -}}
 messaging:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
-  name: Hono {{ .component }}
-  amqpHostname: hono-internal
-  host: {{ .dot.Release.Name }}-dispatch-router
+  name: {{ printf "Hono %s" .component | quote }}
+  amqpHostname: "hono-internal"
+  host: {{ printf "%s-dispatch-router" .dot.Release.Name | quote }}
   port: 5673
-  keyPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.keyPath }}
-  certPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.certPath }}
-  trustStorePath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.trustStorePath }}
+  keyPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.keyPath | quote }}
+  certPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.certPath | quote }}
+  trustStorePath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.trustStorePath | quote }}
   hostnameVerificationRequired: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.hostnameVerificationRequired }}
 {{- else }}
   {{- required ".Values.adapters.amqpMessagingNetworkSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.amqpMessagingNetworkSpec | toYaml | nindent 2 }}
@@ -229,13 +225,14 @@ The scope passed in is expected to be a dict with keys
 kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
-    bootstrap.servers: {{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-0.{{ .dot.Release.Name }}-{{ .dot.Values.kafka.nameOverride }}-headless.{{ .dot.Release.Namespace }}:{{ .dot.Values.kafka.service.ports.client }}
+    {{- $bootstrapServers := printf "%[1]s-%[2]s-0.%[1]s-%[2]s-headless:%d" .dot.Release.Name .dot.Values.kafka.nameOverride ( .dot.Values.kafka.service.ports.client | int ) }}
+    bootstrap.servers: {{ $bootstrapServers | quote }}
   {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
     security.protocol: "SASL_SSL"
     sasl.mechanism: "SCRAM-SHA-512"
     sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
     ssl.truststore.type: "PEM"
-    ssl.truststore.location: "/etc/hono/trusted-certs.pem"
+    ssl.truststore.location: "/opt/hono/config/trusted-certs.pem"
     ssl.endpoint.identification.algorithm: "" # Disables hostname verification. Don't do this in productive setups!
   {{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
     security.protocol: "SASL_PLAINTEXT"
@@ -285,11 +282,11 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "component": the name of the component
 */}}
 {{- define "hono.deviceRegistryExampleClientConfig" -}}
-name: Hono {{ .component }}
-host: {{ .dot.Release.Name }}-service-device-registry
+name: {{ printf "Hono %s" .component | quote }}
+host: {{ printf "%s-service-device-registry" .dot.Release.Name | quote }}
 port: 5671
-credentialsPath: /etc/hono/adapter.credentials
-trustStorePath: {{ .dot.Values.deviceRegistryExample.clientTrustStorePath | default "/etc/hono/trusted-certs.pem" | quote }}
+credentialsPath: "/opt/hono/config/adapter.credentials"
+trustStorePath: {{ .dot.Values.deviceRegistryExample.clientTrustStorePath | default "/opt/hono/config/trusted-certs.pem" | quote }}
 hostnameVerificationRequired: false
 {{- end }}
 
@@ -306,13 +303,13 @@ The scope passed in is expected to be a dict with keys
 {{- if has "amqp" .dot.Values.messagingNetworkTypes }}
 command:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
-  name: Hono {{ $adapter }}
-  amqpHostname: hono-internal
-  host: {{ .dot.Release.Name }}-dispatch-router
+  name: {{ printf "Hono %s" $adapter | quote }}
+  amqpHostname: "hono-internal"
+  host: {{ printf "%s-dispatch-router" .dot.Release.Name | quote }}
   port: 5673
-  keyPath: {{ .dot.Values.adapters.commandAndControlSpec.keyPath }}
-  certPath: {{ .dot.Values.adapters.commandAndControlSpec.certPath }}
-  trustStorePath: {{ .dot.Values.adapters.commandAndControlSpec.trustStorePath }}
+  keyPath: {{ .dot.Values.adapters.commandAndControlSpec.keyPath | quote }}
+  certPath: {{ .dot.Values.adapters.commandAndControlSpec.certPath | quote }}
+  trustStorePath: {{ .dot.Values.adapters.commandAndControlSpec.trustStorePath | quote }}
   hostnameVerificationRequired: {{ .dot.Values.adapters.commandAndControlSpec.hostnameVerificationRequired }}
 {{- else }}
   {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
@@ -343,64 +340,26 @@ credentials:
 {{- else }}
   {{- required ".Values.adapters.credentialsSpec MUST be set if example Device Registry is disabled" .dot.Values.adapters.credentialsSpec | toYaml | nindent 2 }}
 {{- end }}
-{{- if .dot.Values.useCommandRouter }}
 commandRouter:
 {{- if .dot.Values.adapters.commandRouterSpec }}
   {{/* user has provided connection params for third party Command Router service */}}
   {{- .dot.Values.adapters.commandRouterSpec | toYaml | nindent 2 }}
-{{- else if .dot.Values.commandRouterService.enabled }}
-  name: Hono {{ $adapter }}
-  host: {{ .dot.Release.Name }}-service-command-router
+{{- else }}
+  name: {{ printf "Hono %s" $adapter | quote }}
+  host: {{ printf "%s-service-command-router" .dot.Release.Name | quote }}
   port: 5671
-  credentialsPath: /etc/hono/adapter.credentials
-  trustStorePath: {{ .dot.Values.commandRouterService.clientTrustStorePath | default "/etc/hono/trusted-certs.pem" | quote }}
+  credentialsPath: "/opt/hono/config/adapter.credentials"
+  trustStorePath: {{ .dot.Values.commandRouterService.clientTrustStorePath | default "/opt/hono/config/trusted-certs.pem" | quote }}
   hostnameVerificationRequired: false
-{{- else }}
-  {{- required "Either .Values.adapters.commandRouterSpec MUST be set or .Values.commandRouterService.enabled MUST be 'true' if useCommandRouter is 'true'" nil }}
-{{- end }}
-{{- else }}
-  {{/* useCommandRouter is false - device connection service will be used */}}
-deviceConnection:
-{{- if .dot.Values.dataGridSpec }}
-  {{/* user has specified connection parameters for existing data grid */}}
-  {{- .dot.Values.dataGridSpec | toYaml | nindent 2 }}
-{{- else if .dot.Values.dataGridExample.enabled }}
-  {{/* connect directly to example data grid */}}
-  {{- $serverName := printf "%s-data-grid" .dot.Release.Name }}
-  serverList: {{ printf "%s:11222" $serverName | quote }}
-  authServerName: {{ $serverName | quote }}
-  authUsername: {{ .dot.Values.dataGridExample.authUsername | quote }}
-  authPassword: {{ .dot.Values.dataGridExample.authPassword | quote }}
-  authRealm: "ApplicationRealm"
-  saslMechanism: "DIGEST-MD5"
-  socketTimeout: 5000
-  connectTimeout: 5000
-{{- else if .dot.Values.adapters.deviceConnectionSpec }}
-  {{/* user has provided connection params for third party Device Connection service */}}
-  {{- .dot.Values.adapters.deviceConnectionSpec | toYaml | nindent 2 }}
-{{- else }}
-  name: Hono {{ $adapter }}
-  {{- if .dot.Values.deviceConnectionService.enabled }}
-  host: {{ .dot.Release.Name }}-service-device-connection
-  {{- else if and .dot.Values.deviceRegistryExample.enabled ( eq .dot.Values.deviceRegistryExample.type "file" ) }}
-  host: {{ .dot.Release.Name }}-service-device-registry
-  {{- else }}
-  {{- required ".Values.deviceRegistryExample.type MUST be 'file' and .Values.deviceConnectionService.enabled set to true if example Device Registry is disabled and no other Device Connection service is configured" nil }}
-  {{- end }}
-  port: 5671
-  credentialsPath: /etc/hono/adapter.credentials
-  trustStorePath: /etc/hono/trusted-certs.pem
-  hostnameVerificationRequired: false
-{{- end }}
 {{- end }}
 {{- if .dot.Values.prometheus.createInstance }}
 resourceLimits:
   prometheusBased:
-    host: {{ template "hono.prometheus.server.fullname" .dot }}
+    host: {{ include "hono.prometheus.server.fullname" .dot | quote }}
 {{- else if .dot.Values.prometheus.host }}
 resourceLimits:
   prometheusBased:
-    host: {{ .dot.Values.prometheus.host }}
+    host: {{ .dot.Values.prometheus.host | quote }}
     port: {{ default "9090" .dot.Values.prometheus.port }}
 {{- end }}
 {{- end }}
@@ -413,23 +372,11 @@ used by a component.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".")
 - (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
-- (optional) "useImageType": indicates if image type (Quarkus, Spring Boot) should be considered (defaults to false)
-- (optional) "additionalProfile": any additional application profile to add
 */}}
 {{- define "hono.component.frameworkEnv" }}
-{{- if all ( contains "quarkus" .dot.Values.honoImagesType ) ( default false .useImageType ) }}
 {{- $loggingProfile := default "dev" .componentConfig.quarkusLoggingProfile }}
-- name: SMALLRYE_CONFIG_LOCATIONS
+- name: "QUARKUS_CONFIG_LOCATIONS"
   value: {{ default ( printf "/opt/hono/config/logging-quarkus-%s.yml" $loggingProfile ) .componentConfig.quarkusConfigLocations | quote }}
-{{- else }}
-{{- $applicationProfiles := default "dev" ( default .dot.Values.adapters.applicationProfiles .componentConfig.applicationProfiles ) }}
-- name: SPRING_CONFIG_LOCATION
-  value: {{ default "file:///etc/hono/" .componentConfig.springConfigLocation | quote }}
-- name: LOGGING_CONFIG
-  value: {{ default "classpath:logback-spring.xml" .componentConfig.springLoggingConfig | quote }}
-- name: SPRING_PROFILES_ACTIVE
-  value: {{ print $applicationProfiles ( ( empty .additionalProfile ) | ternary "" "," ) ( default "" .additionalProfile ) | quote }}
-{{- end }}
 {{- end }}
 
 {{/*
@@ -444,7 +391,7 @@ The scope passed in is expected to be a dict with keys
 {{- if .componentConfig.envConfigMap }}
 envFrom:
 - configMapRef:
-    name: {{ .componentConfig.envConfigMap }}
+    name: {{ .componentConfig.envConfigMap | quote }}
 {{- end }}
 {{- end }}
 
@@ -454,26 +401,27 @@ Add Quarkus related configuration properties to YAML file.
 The scope passed in is expected to be a dict with keys
 - (mandatory ) "dot": the root scope (".")
 */}}
-{{- define "hono.quarkusConfig" -}}
-{{- if ( contains "quarkus" .dot.Values.honoImagesType ) }}
+{{- define "hono.quarkusConfig" }}
 quarkus:
-  jaeger:
-    service-name: {{ printf "%s-%s" .dot.Release.Name .component | quote }}
+  console:
+    color: {{ .dot.Values.console.color }}
   log:
-    console:
-      color: true
     min-level: TRACE
     level: INFO
     category:
-      "io.quarkus.jaeger":
-        level: DEBUG
       "io.quarkus.vertx.core.runtime":
         level: DEBUG
+  {{- if or .dot.Values.jaegerBackendExample.enabled .dot.Values.otelCollectorAgentConfigMap }}
+  opentelemetry:
+    tracer:
+      exporter:
+        otlp:
+          endpoint: "http://127.0.0.1:4317"
+  {{- end }}
   vertx:
     prefer-native-transport: true
     resolver:
       cache-max-time-to-live: 0
-{{- end }}
 {{- end }}
 
 
@@ -496,65 +444,33 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 
 {{/*
-Adds a Jaeger Agent container to a template spec.
+Adds an OpenTelemetry Collector Agent container to a template spec.
 */}}
-{{- define "hono.jaeger.agent" }}
-{{- $jaegerEnabled := or .Values.jaegerBackendExample.enabled .Values.jaegerAgentConf }}
-{{- if $jaegerEnabled }}
-- name: jaeger-agent-sidecar
-  image: {{ .Values.jaegerAgentImage }}
+{{- define "hono.otel.agent" }}
+{{- $deploySidecar := or .Values.jaegerBackendExample.enabled .Values.otelCollectorAgentConfigMap }}
+{{- if $deploySidecar }}
+- name: "otel-collector-agent-sidecar"
+  image: {{ .Values.otelCollectorAgentImage | quote }}
+  args:
+  - "--config=/opt/hono/config/otel-collector-config.yaml"
   ports:
-  - name: agent-compact
-    containerPort: 6831
-    protocol: UDP
-  - name: agent-binary
-    containerPort: 6832
-    protocol: UDP
-  - name: agent-configs
-    containerPort: 5778
-    protocol: TCP
-  - name: admin-http
-    containerPort: 14271
-    protocol: TCP
+  - name: "grpc"
+    containerPort: 4317
+    protocol: "TCP"
+  - name: "health"
+    containerPort: 13133
+    protocol: "TCP"
   readinessProbe:
     httpGet:
       path: "/"
-      port: admin-http
+      port: health
     initialDelaySeconds: 5
-  env:
-  {{- if .Values.jaegerBackendExample.enabled }}
-  - name: REPORTER_GRPC_HOST_PORT
-    value: {{ printf "%s-jaeger-collector:14250" .Release.Name | quote }}
-  - name: REPORTER_GRPC_DISCOVERY_MIN_PEERS
-    value: "1"
-  {{- else }}
-  {{- range $key, $value := .Values.jaegerAgentConf }}
-  - name: {{ $key }}
-    value: {{ $value | quote }}
-  {{- end }}
-  {{- end }}
+  volumeMounts:
+  - name: "otel-collector-config"
+    mountPath: "/opt/hono/config"
+    readOnly: true
 {{- end }}
 {{- end }}
-
-{{/*
-Adds Jaeger client configuration to a container's "env" properties.
-The scope passed in is expected to be a dict with keys
-- "dot": the root scope (".") and
-- "name": the value to use for the JAEGER_SERVICE_NAME (prefixed with the release name).
-*/}}
-{{- define "hono.jaeger.clientConf" }}
-{{- $agentHost := printf "%s-jaeger-agent" .dot.Release.Name }}
-{{/* Note that for quarkus containers, the "quarkus.jaeger.service-name" property needs to be set instead, see https://github.com/quarkusio/quarkus/issues/17400 */}}
-- name: JAEGER_SERVICE_NAME
-  value: {{ printf "%s-%s" .dot.Release.Name .name | quote }}
-{{- if and ( not .dot.Values.jaegerBackendExample.enabled ) ( empty .dot.Values.jaegerAgentConf ) }}
-- name: JAEGER_SAMPLER_TYPE
-  value: "const"
-- name: JAEGER_SAMPLER_PARAM
-  value: "0"
-{{- end }}
-{{- end }}
-
 
 {{/*
 Adds liveness/readiness checks to a Hono component's container.
@@ -586,12 +502,12 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "componentConfig": the component's configuration properties as defined in .Values
 - (optional) "dot": the root scope (".")
 - (optional) "configMountPath": the mount path to use for the component's config secret
-                                instead of the default "/etc/hono"
+                                instead of the default "/opt/hono/config"
 */}}
 {{- define "hono.container.secretVolumeMounts" }}
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
-  mountPath: {{ default "/etc/hono" .configMountPath | quote }}
+  mountPath: {{ default "/opt/hono/config" .configMountPath | quote }}
   readOnly: true
 {{- with .componentConfig.extraSecretMounts }}
 {{- range $name,$spec := . }}
@@ -600,13 +516,6 @@ The scope passed in is expected to be a dict with keys
 {{- if $spec.subPath }}
   subPath: {{ $spec.subPath | quote }}
 {{- end }}
-  readOnly: true
-{{- end }}
-{{- end }}
-{{-  with .dot }}
-{{- if ( contains "quarkus" .Values.honoImagesType ) }}
-- name: {{ $volumeName | quote }}
-  mountPath: "/opt/hono/config"
   readOnly: true
 {{- end }}
 {{- end }}
@@ -626,6 +535,12 @@ The scope passed in is expected to be a dict with keys
 - name: {{ $volumeName | quote }}
   secret:
     secretName: {{ printf "%s-%s" .dot.Release.Name $volumeName | quote }}
+{{- $otelCollectorConfigMap := ternary ( printf "%s-%s" .dot.Release.Name "otel-collector-agent-config" ) ( default "none" .dot.Values.otelCollectorAgentConfigMap ) .dot.Values.jaegerBackendExample.enabled }}
+{{- if ne $otelCollectorConfigMap "none" }}
+- name: "otel-collector-config"
+  configMap:
+    name: {{ $otelCollectorConfigMap | quote }}
+{{- end }}
 {{- with .componentConfig.extraSecretMounts }}
 {{- range $name,$spec := . }}
 - name: {{ $name | quote }}
@@ -640,13 +555,13 @@ Adds port type declarations to a component's service spec.
 */}}
 {{- define "hono.serviceType" }}
 {{- if .Values.serviceType }}
-  type: {{ .Values.serviceType }}
+  type: {{ .Values.serviceType | quote }}
 {{- else if eq .Values.platform "openshift" }}
-  type: ClusterIP
+  type: "ClusterIP"
 {{- else if eq .Values.useLoadBalancer true }}
-  type: LoadBalancer
+  type: "LoadBalancer"
 {{- else }}
-  type: NodePort
+  type: "NodePort"
 {{- end }}
 {{- end }}
 

@@ -1,6 +1,5 @@
-{{- if and .Values.useCommandRouter .Values.commandRouterService.enabled }}
 #
-# Copyright (c) 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -28,4 +27,3 @@ spec:
     targetPort: amqps
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- end }}

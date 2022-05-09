@@ -29,7 +29,7 @@
         </roles>
       </authorization>
     </security>
-    <distributed-cache name='{{ ternary "command-router" "device-connection" .Values.useCommandRouter }}'>
+    <distributed-cache name="command-router">
       <encoding>
         <key media-type="text/plain" />
         <value media-type="text/plain" />

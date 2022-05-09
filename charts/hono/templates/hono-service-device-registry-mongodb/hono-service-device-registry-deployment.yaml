@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry" "componentConfig" .Values.deviceRegistryExample.mongoDBBasedDeviceRegistry "useImageType" true }}
+{{- $args := dict "dot" . "component" "service-device-registry" "name" "service-device-registry" "componentConfig" .Values.deviceRegistryExample.mongoDBBasedDeviceRegistry }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,7 +32,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-      {{- include "hono.jaeger.agent" . | indent 6 }}
+      {{- include "hono.otel.agent" . | indent 6 }}
       {{- include "hono.container" $args | indent 6 }}
         ports:
           - name: health
@@ -58,7 +58,6 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         {{- include "hono.component.frameworkEnv" $args | indent 8 }}
-        {{- include "hono.jaeger.clientConf" $args | indent 8 }}
         {{- include "hono.component.envConfigMap" $args | indent 8 }}
         securityContext:
           privileged: false

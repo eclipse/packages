@@ -1,4 +1,3 @@
-{{- if and .Values.useCommandRouter .Values.commandRouterService.enabled }}
 {{- $args := dict "dot" . "name" "service-command-router" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -8,4 +7,3 @@ rules:
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["list", "watch"]
-{{- end }}

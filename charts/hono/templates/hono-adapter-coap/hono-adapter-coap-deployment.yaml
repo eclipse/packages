@@ -1,0 +1,67 @@
+{{- if .Values.adapters.coap.enabled }}
+#
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+{{- $args := dict "dot" . "component" "adapter-coap" "name" "adapter-coap" "componentConfig" .Values.adapters.coap }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  {{- include "hono.metadata" $args | nindent 2 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "hono.matchLabels" $args | nindent 6 }}
+  template:
+    metadata:
+      {{- include "hono.metadata" $args | nindent 6 }}
+      annotations:
+        {{- include "hono.monitoringAnnotations" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      {{- include "hono.otel.agent" . | indent 6 }}
+      {{- include "hono.container" $args | indent 6 }}
+        ports:
+        - name: health
+          containerPort: {{ .Values.healthCheckPort }}
+          protocol: TCP
+        - name: coap
+          containerPort: 5683
+          protocol: UDP
+        - name: coaps
+          containerPort: 5684
+          protocol: UDP
+        securityContext:
+          privileged: false
+        env:
+        - name: JDK_JAVA_OPTIONS
+          value: {{ .Values.adapters.coap.javaOptions | quote }}
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        {{- include "hono.component.frameworkEnv" $args | indent 8 }}
+        {{- include "hono.component.envConfigMap" $args | indent 8 }}
+        volumeMounts:
+        {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
+        {{- with .Values.adapters.coap.resources }}
+        resources:
+          {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        {{- include "hono.component.healthChecks" $args | indent 8 }}
+      volumes:
+      {{- include "hono.pod.secretVolumes" $args | indent 6 }}
+{{- end }}

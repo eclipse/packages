@@ -10,17 +10,18 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-apiVersion: v1
+apiVersion: v2
 name: hono
 description: |
   Eclipse Hono™ provides remote service interfaces for connecting large numbers of IoT devices to a back end and
   interacting with them in a uniform way regardless of the device communication protocol.
-version: 1.12.10
+version: 2.0.0
 # Version of Hono being deployed by the chart
-appVersion: 1.12.2
+appVersion: 2.0.0
 keywords:
 - iot-chart
 - IoT
+- connectivity
 - messaging
 home: https://www.eclipse.org/hono/
 sources:
@@ -33,3 +34,20 @@ maintainers:
   email: jreimann@redhat.com
 - name: sophokles73
   email: kai.hudalla@bosch.io
+dependencies:
+- name: prometheus
+  version: ^14.x
+  repository: "https://prometheus-community.github.io/helm-charts"
+  condition: prometheus.createInstance
+- name: grafana
+  version: ^6.x
+  repository: "https://grafana.github.io/helm-charts"
+  condition: grafana.enabled
+- name: mongodb
+  repository: "https://charts.bitnami.com/bitnami"
+  version: ^10.x
+  condition: mongodb.createInstance
+- name: kafka
+  repository: "https://charts.bitnami.com/bitnami"
+  version: ^16.x
+  condition: kafkaMessagingClusterExample.enabled

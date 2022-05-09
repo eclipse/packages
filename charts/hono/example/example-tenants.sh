@@ -1,6 +1,6 @@
 #!/bin/sh
 #*******************************************************************************
-# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -27,22 +27,27 @@ add_tenant 'HTTP_TENANT' \
               "enabled": true,
               "adapters": [
                 {
-                  "type": "hono-http",
-                  "enabled": true,
-                  "device-authentication-required": true
-                },
-                {
-                  "type": "hono-mqtt",
-                  "enabled": false,
-                  "device-authentication-required": true
-                },
-                {
-                  "type": "hono-kura",
+                  "type": "hono-amqp",
                   "enabled": false,
                   "device-authentication-required": true
                 },
                 {
                   "type": "hono-coap",
+                  "enabled": false,
+                  "device-authentication-required": true
+                },
+                {
+                  "type": "hono-http",
+                  "enabled": true,
+                  "device-authentication-required": true
+                },
+                {
+                  "type": "hono-lora",
+                  "enabled": false,
+                  "device-authentication-required": true
+                },
+                {
+                  "type": "hono-mqtt",
                   "enabled": false,
                   "device-authentication-required": true
                 }

@@ -34,7 +34,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-      - env:
+      - name: jaeger
+        image: {{ .Values.jaegerBackendExample.allInOneImage }}
+        env:
         - name: ADMIN_HTTP_HOST_PORT
           value: ":{{ .Values.healthCheckPort }}"
         {{- with .Values.jaegerBackendExample.env }}
@@ -43,8 +45,6 @@ spec:
           value: {{ .value | quote }}
         {{- end }}
         {{- end }}
-        image: {{ .Values.jaegerBackendExample.allInOneImage }}
-        name: jaeger
         ports:
         - name: collector-grpc
           containerPort: 14250
