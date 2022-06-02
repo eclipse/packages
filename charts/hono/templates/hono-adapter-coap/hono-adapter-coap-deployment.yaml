@@ -36,7 +36,7 @@ spec:
       {{- include "hono.container" $args | indent 6 }}
         ports:
         - name: health
-          containerPort: {{ .Values.healthCheckPort }}
+          containerPort: {{ include "hono.healthCheckPort" . }}
           protocol: TCP
         - name: coap
           containerPort: 5683

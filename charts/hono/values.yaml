@@ -48,15 +48,6 @@ livenessProbeInitialDelaySeconds: 300
 # component level.
 readinessProbeInitialDelaySeconds: 20
 
-# the port that the Hono components' Prometheus scraping endpoint is exposed on
-monitoring:
-  prometheus:
-    port: 8088
-
-# healthCheckPort is the port that the Hono components bind their health check
-# server to.
-healthCheckPort: 8088
-
 # platform indicates the type of container orchestration platform we are deploying to.
 # Supported values are:
 # - openshift
@@ -300,18 +291,6 @@ adapters:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
   coap:
     # enabled indicates if Hono's CoAP adapter should be deployed.
     enabled: false
@@ -390,18 +369,6 @@ adapters:
         # maxInstances defines the number of adapter Verticle instances to deploy
         # to the vert.x runtime during start-up.
         maxInstances: 1
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
 
   http:
     # enabled indicates if Hono's HTTP adapter should be deployed.
@@ -491,18 +458,6 @@ adapters:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
-
   lora:
     # enabled indicates if Hono's Lora adapter should be deployed.
     enabled: false
@@ -589,18 +544,6 @@ adapters:
       lora:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
 
   mqtt:
     # enabled indicates if Hono's MQTT 3.1.1 adapter should be deployed.
@@ -689,18 +632,6 @@ adapters:
       mqtt:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
-
-      # healthCheck contains configuration properties for the adapter's
-      # health check server as defined by
-      # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-      # If not set, a TLS secured health check server is configured listening on
-      # all network interfaces on port 8088 using the adapter's
-      # example key and cert.'
-      healthCheck:
-      #  bindAddress: 0.0.0.0
-      #  port: 12000
-      #  keyPath: "/etc/config/key.pem"
-      #  certPath: "/etc/config/cert.pem"
 
 # authServer contains configuration properties for the Auth Server component.
 authServer:
@@ -795,18 +726,6 @@ authServer:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
-    # healthCheck contains configuration properties for the service's
-    # health check server as defined by
-    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-    # If not set, a TLS secured health check server is configured listening on
-    # all network interfaces on port 8088 using the service's
-    # example key and cert.'
-    healthCheck:
-    #  bindAddress: 0.0.0.0
-    #  port: 12000
-    #  keyPath: "/etc/config/key.pem"
-    #  certPath: "/etc/config/cert.pem"
-
 # deviceRegistryExample contains configuration properties for the
 # example Device Registry.
 deviceRegistryExample:
@@ -898,18 +817,6 @@ deviceRegistryExample:
       # svc contains configuration properties for the registry's service implementation.
       svc:
       #  maxDevicesPerTenant: 100
-
-    # healthCheck contains configuration properties for the service's
-    # health check server as defined by
-    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-    # If not set, a TLS secured health check server is configured listening on
-    # all network interfaces on port 8088 using the service's
-    # example key and cert.'
-    healthCheck:
-    #  bindAddress: 0.0.0.0
-    #  port: 12000
-    #  keyPath: "/etc/config/key.pem"
-    #  certPath: "/etc/config/cert.pem"
 
     # kafka contains the configuration used by the device registry
     # for connecting to a Kafka cluster to be used for messaging.
@@ -1263,18 +1170,6 @@ commandRouterService:
       # Note that when using the embedded cache, the Command Router pod does NOT support scaling up to a replica
       # count > 1
       cache:
-
-    # healthCheck contains configuration properties for the service's
-    # health check server as defined by
-    # https://www.eclipse.org/hono/docs/admin-guide/monitoring-tracing-config/#health-check-server-configuration
-    # If not set, a TLS secured health check server is configured listening on
-    # all network interfaces on port 8088 using the service's
-    # example key and cert.'
-    healthCheck:
-    #  bindAddress: 0.0.0.0
-    #  port: 12000
-    #  keyPath: "/etc/config/key.pem"
-    #  certPath: "/etc/config/cert.pem"
 
     # kafka contains the configuration used by the command router
     # for connecting to a Kafka cluster to be used for messaging.

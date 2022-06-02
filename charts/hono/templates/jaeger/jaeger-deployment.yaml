@@ -11,10 +11,11 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
+{{- $args := dict "dot" . "component" "tracing" "name" "jaeger-all-in-one" "componentConfig" .Values.jaegerBackendExample }}
+{{- $healthCheckPort := include "hono.healthCheckPort" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  {{- $args := dict "dot" . "component" "tracing" "name" "jaeger-all-in-one" "componentConfig" .Values.jaegerBackendExample }}
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   replicas: 1
@@ -26,7 +27,7 @@ spec:
       {{- include "hono.metadata" $args | nindent 6 }}
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: {{ .Values.healthCheckPort | quote }}
+        prometheus.io/port: {{ $healthCheckPort | quote }}
         prometheus.io/scheme: "http"
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -38,7 +39,7 @@ spec:
         image: {{ .Values.jaegerBackendExample.allInOneImage }}
         env:
         - name: ADMIN_HTTP_HOST_PORT
-          value: ":{{ .Values.healthCheckPort }}"
+          value: {{ printf ":%s" $healthCheckPort | quote }}
         {{- with .Values.jaegerBackendExample.env }}
         {{- range $name,$value := . }}
         - name: {{ .name }}
@@ -56,7 +57,7 @@ spec:
           containerPort: 16686
           protocol: TCP
         - name: health
-          containerPort: {{ .Values.healthCheckPort }}
+          containerPort: {{ $healthCheckPort }}
           protocol: TCP
         {{- include "hono.component.envConfigMap" $args | indent 8 }}
         volumeMounts:
