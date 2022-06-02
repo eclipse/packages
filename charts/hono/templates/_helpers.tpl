@@ -44,6 +44,17 @@ Create chart name and version as used by the chart label.
   {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+{{/*
+Gets the port that the Hono components expose their readiness and liveness checks on.
+
+NOTE: In order to change the actual port being used by Hono components,
+the "quarkus.http.port" configuration property needs to be set to the desired
+value when building Hono from source.
+*/}}
+{{- define "hono.healthCheckPort" -}}
+{{- default "8088" .Values.healthCheckPort -}}
+{{- end }}
+
 
 {{/*
 Adds an element to a Container array.
@@ -122,7 +133,7 @@ Add annotations for marking an object to be scraped by Prometheus.
 {{- define "hono.monitoringAnnotations" -}}
 prometheus.io/scrape: "true"
 prometheus.io/path: "/prometheus"
-prometheus.io/port: {{ default .Values.healthCheckPort .Values.monitoring.prometheus.port | quote }}
+prometheus.io/port: {{ include "hono.healthCheckPort" . | quote }}
 prometheus.io/scheme: "http"
 {{- end }}
 
@@ -145,24 +156,6 @@ spec:
   clusterIP: "None"
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
-{{- end }}
-
-
-{{/*
-Configuration for the health check server of service components.
-If the scope passed in is not 'nil', then its value is
-used as the configuration for the health check server.
-Otherwise, a secure health check server will be configured to bind to all
-interfaces on the default port.
-*/}}
-{{- define "hono.healthServerConfig" -}}
-healthCheck:
-{{- if . }}
-  {{- toYaml . | nindent 2 }}
-{{- else }}
-  insecurePort: 8088
-  insecurePortBindAddress: "0.0.0.0"
-{{- end }}
 {{- end }}
 
 
