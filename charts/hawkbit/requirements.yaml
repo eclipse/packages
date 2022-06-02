@@ -1,9 +1,22 @@
+# Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+---
 dependencies:
   - name: mysql
     version: 6.14.10
-    repository: https://charts.bitnami.com/bitnami
+    # use older bitnami repo index, as referenced version is not in the current index any more (see https://github.com/bitnami/charts/issues/10539)
+    repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
     condition: mysql.enabled
   - name: rabbitmq
     version: 7.8.0
-    repository: https://charts.bitnami.com/bitnami
+    # use older bitnami repo index, as referenced version is not in the current index any more (see https://github.com/bitnami/charts/issues/10539)
+    repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
     condition: rabbitmq.enabled
