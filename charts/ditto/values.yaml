@@ -785,7 +785,8 @@ mongodb:
   ## enabled controls usage of dependency chart
   enabled: true
   fullnameOverride: ditto-mongodb
-  usePassword: false
+  auth:
+    enabled: false
   securityContext:
     enabled: false
   persistence:
