@@ -141,7 +141,7 @@ amqpMessagingNetworkExample:
     artemis:
       # imageName contains the name (including tag) of the container
       # image to use for the example AMQP Messaging Network Broker
-      imageName: quay.io/enmasse/artemis-base:2.13.0
+      imageName: "quay.io/enmasse/artemis-base:2.16.0"
       # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
       # configuration property of the component's liveness probe.
       livenessProbeInitialDelaySeconds: 300
@@ -155,10 +155,10 @@ amqpMessagingNetworkExample:
       resources:
         requests:
           cpu: "150m"
-          memory: "256Mi"
+          memory: "600Mi"
         limits:
           cpu: "1"
-          memory: "512Mi"
+          memory: "600Mi"
 
       # extraSecretMounts describes additional secrets that should be mounted into the
       # Artemis container's filesystem. The files from the secret(s) can
@@ -1363,6 +1363,10 @@ deviceRegistryExample:
       http:
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
+
+      # svc contains configuration properties for the registry's service implementation.
+      svc:
+      #  maxDevicesPerTenant: 100
 
     # healthCheck contains configuration properties for the service's
     # health check server as defined by
