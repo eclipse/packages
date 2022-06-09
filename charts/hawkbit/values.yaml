@@ -173,17 +173,16 @@ config:
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/values.yaml
 mysql:
   enabled: true
-  master:
+  primary:
     persistence:
       enabled: true
   volumePermissions:
     enabled: true
-  db:
-    user: hawkbit
+  architecture: standalone
+  auth:
+    username: hawkbit
     password: hawkbit
-    name: hawkbit
-  replication:
-    enabled: false
+    database: hawkbit
   metrics:
     enabled: true
 
