@@ -1,4 +1,4 @@
-# Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -9,8 +9,8 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 ---
-apiVersion: v1
-version: 1.4.2
+apiVersion: v2
+version: 1.5.0
 appVersion: "0.3.0M6-mysql"
 description: |
    Eclipse hawkBit™ is a domain independent back-end framework for rolling out software updates
@@ -31,3 +31,12 @@ maintainers:
   email: axel.koehler@kiwigrid.com
 - name: ctron
   email: ctron@dentrassi.de
+dependencies:
+- name: mysql
+  version: ^9.x
+  repository: "oci://registry-1.docker.io/bitnamicharts"
+  condition: mysql.enabled
+- name: rabbitmq
+  version: ^10.x
+  repository: "oci://registry-1.docker.io/bitnamicharts"
+  condition: rabbitmq.enabled

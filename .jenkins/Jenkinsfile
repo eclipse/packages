@@ -93,9 +93,7 @@ podTemplate(
 
                 stage('Helm Build') {
                     dir("build") {
-                        // adding the bitnami repo below serves as a workaround for sporadic "no cached repository" errors when packaging the hawkbit chart
                         sh '''
-                            ${WORKSPACE}/helm repo add bitnami-full https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
                             mkdir -p helm-repository
                             for i in $(ls charts/*/Chart.yaml packages/*/Chart.yaml); do
                                 echo "Building $(dirname $i) ..."
