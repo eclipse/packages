@@ -369,7 +369,7 @@ The scope passed in is expected to be a dict with keys
 {{- define "hono.component.frameworkEnv" }}
 {{- $loggingProfile := default "dev" .componentConfig.quarkusLoggingProfile }}
 - name: "QUARKUS_CONFIG_LOCATIONS"
-  value: {{ default ( printf "/opt/hono/config/logging-quarkus-%s.yml" $loggingProfile ) .componentConfig.quarkusConfigLocations | quote }}
+  value: {{ default ( printf "/opt/hono/default-logging-config/logging-quarkus-%s.yml" $loggingProfile ) .componentConfig.quarkusConfigLocations | quote }}
 {{- end }}
 
 {{/*
@@ -498,6 +498,9 @@ The scope passed in is expected to be a dict with keys
                                 instead of the default "/opt/hono/config"
 */}}
 {{- define "hono.container.secretVolumeMounts" }}
+- name: "default-logging-config"
+  mountPath: "/opt/hono/default-logging-config"
+  readOnly: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
   mountPath: {{ default "/opt/hono/config" .configMountPath | quote }}
@@ -524,6 +527,10 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".")
 */}}
 {{- define "hono.pod.secretVolumes" }}
+- name: "default-logging-config"
+  configMap:
+    name: {{ printf "%s-default-logging-config" .dot.Release.Name | quote }}
+    optional: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
   secret:
