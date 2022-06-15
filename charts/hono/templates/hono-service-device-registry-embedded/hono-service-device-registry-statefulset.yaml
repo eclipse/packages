@@ -63,7 +63,7 @@ spec:
         securityContext:
           privileged: false
         volumeMounts:
-        {{- include "hono.container.secretVolumeMounts" ( dict "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 8 }}
+        {{- include "hono.container.volumeMounts" ( dict "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 8 }}
         - name: "registry"
           mountPath: "/var/lib/hono/device-registry"
         {{- with ( default .Values.deviceRegistryExample.resources $args.componentConfig.resources ) }}
@@ -72,7 +72,7 @@ spec:
         {{- end }}
         {{- include "hono.component.healthChecks" $args | indent 8 }}
       volumes:
-      {{- include "hono.pod.secretVolumes" ( dict "dot" $args.dot "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 6 }}
+      {{- include "hono.pod.volumes" ( dict "dot" $args.dot "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 6 }}
       - name: "registry"
         persistentVolumeClaim:
           claimName: {{ printf "%s-%s" .Release.Name $args.name | quote }}
