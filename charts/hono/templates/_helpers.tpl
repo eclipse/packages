@@ -225,7 +225,7 @@ kafka:
     sasl.mechanism: "SCRAM-SHA-512"
     sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
     ssl.truststore.type: "PEM"
-    ssl.truststore.location: "/opt/hono/config/trusted-certs.pem"
+    ssl.truststore.location: "/opt/hono/tls/ca.crt"
     ssl.endpoint.identification.algorithm: "" # Disables hostname verification. Don't do this in productive setups!
   {{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
     security.protocol: "SASL_PLAINTEXT"
@@ -279,7 +279,7 @@ name: {{ printf "Hono %s" .component | quote }}
 host: {{ printf "%s-service-device-registry" .dot.Release.Name | quote }}
 port: 5671
 credentialsPath: "/opt/hono/config/adapter.credentials"
-trustStorePath: {{ .dot.Values.deviceRegistryExample.clientTrustStorePath | default "/opt/hono/config/trusted-certs.pem" | quote }}
+trustStorePath: {{ .dot.Values.deviceRegistryExample.clientTrustStorePath | default "/opt/hono/tls/ca.crt" | quote }}
 hostnameVerificationRequired: false
 {{- end }}
 
@@ -342,7 +342,7 @@ commandRouter:
   host: {{ printf "%s-service-command-router" .dot.Release.Name | quote }}
   port: 5671
   credentialsPath: "/opt/hono/config/adapter.credentials"
-  trustStorePath: {{ .dot.Values.commandRouterService.clientTrustStorePath | default "/opt/hono/config/trusted-certs.pem" | quote }}
+  trustStorePath: {{ .dot.Values.commandRouterService.clientTrustStorePath | default "/opt/hono/tls/ca.crt" | quote }}
   hostnameVerificationRequired: false
 {{- end }}
 {{- if .dot.Values.prometheus.createInstance }}
@@ -501,6 +501,10 @@ The scope passed in is expected to be a dict with keys
 - name: "default-logging-config"
   mountPath: "/opt/hono/default-logging-config"
   readOnly: true
+- name: "tls-trust-store"
+  mountPath: "/opt/hono/tls/ca.crt"
+  subPath: "ca.crt"
+  readOnly: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
   mountPath: {{ default "/opt/hono/config" .configMountPath | quote }}
@@ -530,6 +534,10 @@ The scope passed in is expected to be a dict with keys
 - name: "default-logging-config"
   configMap:
     name: {{ printf "%s-default-logging-config" .dot.Release.Name | quote }}
+    optional: true
+- name: "tls-trust-store"
+  configMap:
+    name: {{ printf "%s-example-trust-store" .dot.Release.Name | quote }}
     optional: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}

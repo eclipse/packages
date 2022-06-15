@@ -1,0 +1,20 @@
+#
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+{{- $args := dict "dot" . "component" "security" "name" "example-trust-store" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  {{- include "hono.metadata" $args | nindent 2 }}
+data:
+  ca.crt: |
+    {{- .Files.Get "example/certs/trusted-certs.pem" | nindent 4 }}

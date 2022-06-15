@@ -5,11 +5,17 @@
     "workerThreads": 3
   }],
 
+  ["sslProfile", {
+    "name": "auth-server-profile",
+    "protocols": "TLSv1.2",
+    "caCertFile": "{{ .Values.amqpMessagingNetworkExample.dispatchRouter.serverTrustStore }}"
+  }],
+
   ["authServicePlugin", {
     "name": "Hono Auth",
     "host": "{{ .Release.Name }}-service-auth",
     "port": 5671,
-    "sslProfile": "internal"
+    "sslProfile": "auth-server-profile"
   }],
 
   ["sslProfile", {
