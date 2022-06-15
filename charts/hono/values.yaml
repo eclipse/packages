@@ -109,7 +109,7 @@ adapters:
   amqpMessagingNetworkSpec:
     keyPath: "/opt/hono/config/key.pem"
     certPath: "/opt/hono/config/cert.pem"
-    trustStorePath: "/opt/hono/config/trusted-certs.pem"
+    trustStorePath: "/opt/hono/tls/ca.crt"
     hostnameVerificationRequired: false
   #  host: "my-amqp-host"
   #  port: 5671
@@ -127,7 +127,7 @@ adapters:
   commandAndControlSpec:
     keyPath: "/opt/hono/config/key.pem"
     certPath: "/opt/hono/config/cert.pem"
-    trustStorePath: "/opt/hono/config/trusted-certs.pem"
+    trustStorePath: "/opt/hono/tls/ca.crt"
     hostnameVerificationRequired: false
 
   # kafkaMessagingSpec contains the configuration used by all protocol
@@ -1394,11 +1394,11 @@ amqpMessagingNetworkExample:
     # the X.509 certificates that the router should use as trust anchors
     # when authenticating clients connecting to the router in a TLS
     # handshake
-    trustStore: "/opt/hono/config/trusted-certs.pem"
+    trustStore: "/opt/hono/tls/ca.crt"
     # serverTrustStore contains the absolute path to a PEM file containing
     # the X.509 certificates that the router should use as trust anchors
     # when authenticating to servers as part of a TLS handshake
-    serverTrustStore: "/opt/hono/config/trusted-certs.pem"
+    serverTrustStore: "/opt/hono/tls/ca.crt"
     # uidFormat contains the format string to use for extracting the user ID from
     # the subject DN of certificates that clients use for authenticating to the router's
     # "internal" listener.
