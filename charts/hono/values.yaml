@@ -259,18 +259,20 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
+    # extraVolumes contains additional kubernetes Volume definitions representing volumes
+    # that can mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+    # This can be used to provide the container access to files contained in kubernetes
+    # Secrets and/or ConfigMaps.
+    extraVolumes: []
+
+    # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+    # should be mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+    # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+    # file system and then refer to the contained files in the component's configuration,
+    # e.g. public and private keys or an application.yaml file.
+    extraVolumeMounts: []
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
@@ -347,18 +349,20 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
+    # extraVolumes contains additional kubernetes Volume definitions representing volumes
+    # that can mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+    # This can be used to provide the container access to files contained in kubernetes
+    # Secrets and/or ConfigMaps.
+    extraVolumes: []
+
+    # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+    # should be mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+    # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+    # file system and then refer to the contained files in the component's configuration,
+    # e.g. public and private keys or an application.yaml file.
+    extraVolumeMounts: []
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
@@ -426,18 +430,20 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
+    # extraVolumes contains additional kubernetes Volume definitions representing volumes
+    # that can mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+    # This can be used to provide the container access to files contained in kubernetes
+    # Secrets and/or ConfigMaps.
+    extraVolumes: []
+
+    # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+    # should be mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+    # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+    # file system and then refer to the contained files in the component's configuration,
+    # e.g. public and private keys or an application.yaml file.
+    extraVolumeMounts: []
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
@@ -514,18 +520,20 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
+    # extraVolumes contains additional kubernetes Volume definitions representing volumes
+    # that can mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+    # This can be used to provide the container access to files contained in kubernetes
+    # Secrets and/or ConfigMaps.
+    extraVolumes: []
+
+    # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+    # should be mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+    # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+    # file system and then refer to the contained files in the component's configuration,
+    # e.g. public and private keys or an application.yaml file.
+    extraVolumeMounts: []
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
@@ -601,18 +609,20 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # adapter's container filesystem. The files from the secret(s) can
-    # then be used in e.g. the service client specs.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the adapter has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
+    # extraVolumes contains additional kubernetes Volume definitions representing volumes
+    # that can mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+    # This can be used to provide the container access to files contained in kubernetes
+    # Secrets and/or ConfigMaps.
+    extraVolumes: []
+
+    # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+    # should be mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+    # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+    # file system and then refer to the contained files in the component's configuration,
+    # e.g. public and private keys or an application.yaml file.
+    extraVolumeMounts: []
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
@@ -685,21 +695,24 @@ authServer:
       cpu: "1"
       memory: "256Mi"
 
-  # extraSecretMounts describes additional secrets that should be mounted into the
-  # Auth Server's' container filesystem. The files from the secret(s) can
-  # then be used in e.g. the configuration of the server's exposed ports.
-  # The secrets are expected to exist in the same Kubernetes namespace
-  # as the one that the server has been deployed to.
-  extraSecretMounts: {}
-  #  passwords:
-  #    secretName: "my-passwords"
-  #    mountPath: "/etc/pwd"
-  #  other:
-  #    secretName: "other-stuff"
-  #    mountPath: "/etc/other"
+  # extraVolumes contains additional kubernetes Volume definitions representing volumes
+  # that can mounted into the container's file system.
+  # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+  # This can be used to provide the container access to files contained in kubernetes
+  # Secrets and/or ConfigMaps.
+  extraVolumes: []
 
-  # envConfigMap may be used to set the name of a config map that contains additional environment variables
-  # that should be set on the component's container.
+  # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+  # should be mounted into the container's file system.
+  # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+  # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+  # file system and then refer to the contained files in the component's configuration,
+  # e.g. public and private keys or an application.yaml file.
+  extraVolumeMounts: []
+
+  # envConfigMap may be used to set the name of a (already existing) ConfigMap
+  # that contains additional environment variables that should be set on the
+  # component's container.
   envConfigMap:
 
   # hono contains the Auth Server's configuration properties as defined in
@@ -771,18 +784,20 @@ deviceRegistryExample:
     annotations: {}
     loadBalancerIP:
 
-  # extraSecretMounts describes additional secrets that should be mounted into the
-  # Device Registry's' container filesystem. The files from the secret(s) can
-  # then be used in e.g. the configuration of the server's exposed ports.
-  # The secrets are expected to exist in the same Kubernetes namespace
-  # as the one that the server has been deployed to.
-  extraSecretMounts: {}
-    #  tls:
-    #    secretName: "key-material"
-    #    mountPath: "/etc/tls"
-    #  data:
-    #    secretName: "example-data"
-    #    mountPath: "/etc/data"
+  # extraVolumes contains additional kubernetes Volume definitions representing volumes
+  # that can mounted into the container's file system.
+  # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+  # This can be used to provide the container access to files contained in kubernetes
+  # Secrets and/or ConfigMaps.
+  extraVolumes: []
+
+  # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+  # should be mounted into the container's file system.
+  # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+  # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+  # file system and then refer to the contained files in the component's configuration,
+  # e.g. public and private keys or an application.yaml file.
+  extraVolumeMounts: []
 
   # clientTrustStorePath points to the trustStore the client of this example Device Registry should use to verify the certificates.
   # This can be used when using your own certificates in combination with the example Device Registry
@@ -1123,15 +1138,20 @@ commandRouterService:
   svc:
     annotations: {}
 
-  # extraSecretMounts describes additional secrets that should be mounted into the
-  # service's container filesystem. The files from the secret(s) can
-  # then be used in e.g. the configuration of the service's exposed ports.
-  # The secrets are expected to exist in the same Kubernetes namespace
-  # as the one that the service has been deployed to.
-  extraSecretMounts: {}
-  #  tls:
-  #    secretName: "key-material"
-  #    mountPath: "/etc/tls"
+  # extraVolumes contains additional kubernetes Volume definitions representing volumes
+  # that can mounted into the container's file system.
+  # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+  # This can be used to provide the container access to files contained in kubernetes
+  # Secrets and/or ConfigMaps.
+  extraVolumes: []
+
+  # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+  # should be mounted into the container's file system.
+  # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+  # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+  # file system and then refer to the contained files in the component's configuration,
+  # e.g. public and private keys or an application.yaml file.
+  extraVolumeMounts: []
 
   # The configMap to get additional environment variables from for this command router service.
   envConfigMap:
@@ -1434,18 +1454,20 @@ amqpMessagingNetworkExample:
         cpu: "1"
         memory: "256Mi"
 
-    # extraSecretMounts describes additional secrets that should be mounted into the
-    # router's container filesystem. The files from the secret(s) can
-    # then be used in the router configuration, e.g. for using custom key material and certificates.
-    # The secrets are expected to exist in the same Kubernetes namespace
-    # as the one that the router has been deployed to.
-    extraSecretMounts: {}
-    #  passwords:
-    #    secretName: "my-passwords"
-    #    mountPath: "/etc/pwd"
-    #  other:
-    #    secretName: "other-stuff"
-    #    mountPath: "/etc/other"
+    # extraVolumes contains additional kubernetes Volume definitions representing volumes
+    # that can mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+    # This can be used to provide the container access to files contained in kubernetes
+    # Secrets and/or ConfigMaps.
+    extraVolumes: []
+
+    # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+    # should be mounted into the container's file system.
+    # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+    # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+    # file system and then refer to the contained files in the component's configuration,
+    # e.g. public and private keys or an application.yaml file.
+    extraVolumeMounts: []
 
   # AMQP Messaging Network Broker configuration.
   broker:
@@ -1481,18 +1503,20 @@ amqpMessagingNetworkExample:
           cpu: "1"
           memory: "600Mi"
 
-      # extraSecretMounts describes additional secrets that should be mounted into the
-      # Artemis container's filesystem. The files from the secret(s) can
-      # then be used in the Artemis configuration, e.g. for using custom key material and certificates.
-      # The secrets are expected to exist in the same Kubernetes namespace
-      # as the one that the router has been deployed to.
-      extraSecretMounts: {}
-      #  passwords:
-      #    secretName: "my-passwords"
-      #    mountPath: "/etc/pwd"
-      #  other:
-      #    secretName: "other-stuff"
-      #    mountPath: "/etc/other"
+      # extraVolumes contains additional kubernetes Volume definitions representing volumes
+      # that can mounted into the container's file system.
+      # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+      # This can be used to provide the container access to files contained in kubernetes
+      # Secrets and/or ConfigMaps.
+      extraVolumes: []
+
+      # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+      # should be mounted into the container's file system.
+      # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+      # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+      # file system and then refer to the contained files in the component's configuration,
+      # e.g. public and private keys or an application.yaml file.
+      extraVolumeMounts: []
 
     # servicebus contains configuration properties for the Azure ServiceBus instance that
     # should be used instead of the example Artemis broker.
@@ -1571,18 +1595,20 @@ jaegerBackendExample:
   - name: "MEMORY_MAX_TRACES"
     value: "100000"
 
-  # extraSecretMounts describes additional secrets that should be mounted into the
-  # container's filesystem. The files from the secret(s) can
-  # then be used in environment variables referring to configuration files etc.
-  # The secrets are expected to exist in the same Kubernetes namespace
-  # as the one that the Jaeger back end has been deployed to.
-  extraSecretMounts: {}
-  #  passwords:
-  #    secretName: "my-passwords"
-  #    mountPath: "/etc/pwd"
-  #  other:
-  #    secretName: "other-stuff"
-  #    mountPath: "/etc/other"
+  # extraVolumes contains additional kubernetes Volume definitions representing volumes
+  # that can mounted into the container's file system.
+  # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
+  # This can be used to provide the container access to files contained in kubernetes
+  # Secrets and/or ConfigMaps.
+  extraVolumes: []
+
+  # extraVolumeMounts describes how the additional volumes defined in "extraVolumes"
+  # should be mounted into the container's file system.
+  # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volumemount-v1-core
+  # A common use case for this is to mount a kubernetes Secret or ConfigMap into the
+  # file system and then refer to the contained files in the component's configuration,
+  # e.g. public and private keys or an application.yaml file.
+  extraVolumeMounts: []
 
   # envConfigMap contains the name of an (existing) ConfigMap to get additional environment variables from.
   envConfigMap:

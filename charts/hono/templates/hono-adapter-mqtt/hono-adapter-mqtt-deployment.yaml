@@ -56,12 +56,12 @@ spec:
         {{- include "hono.component.frameworkEnv" $args | indent 8 }}
         {{- include "hono.component.envConfigMap" $args | indent 8 }}
         volumeMounts:
-        {{- include "hono.container.secretVolumeMounts" $args | indent 8 }}
+        {{- include "hono.container.volumeMounts" $args | indent 8 }}
         {{- with .Values.adapters.mqtt.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
         {{- include "hono.component.healthChecks" $args | indent 8 }}
       volumes:
-      {{- include "hono.pod.secretVolumes" $args | indent 6 }}
+      {{- include "hono.pod.volumes" $args | indent 6 }}
 {{- end }}

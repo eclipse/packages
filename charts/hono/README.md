@@ -112,6 +112,9 @@ The command removes all the Kubernetes components associated with the chart and 
   device registry implementation.
 * The *dataGridSpec* configuration property has been removed. The *commandRouterService.hono.commandRouter.cache*
   property now is the only place to use for configuring the connection to a remote cache.
+* The *extraSecretMounts* property that was available for most components has been replaced with the *extraVolumes* and
+  *extraVolumeMounts* properties which allow mounting any kind of volume supported by kubernetes into the container file
+  system.
 
 ## Configuration
 
@@ -224,37 +227,53 @@ deviceRegistryExample:
 adapters:
 
   # mount (existing) Kubernetes secret which contains
-  # credentials for connecting to services
-  extraSecretMounts:
-  - customRegistry:
-      secretName: "my-secret"
+  # credentials for connecting to services to all enabled adapters
+  http:
+    extraVolumes:
+    - name: "custom-registry"
+      secret:
+        secretName: "custom-http-secret"
+    extraVolumeMounts:
+    - name: "custom-registry"
+      mountPath: "/etc/custom"
+
+  mqtt:
+    extraVolumes:
+    - name: "custom-registry"
+      secret:
+        secretName: "custom-mqtt-secret"
+    extraVolumeMounts:
+    - name: "custom-registry"
       mountPath: "/etc/custom"
 
   # provide connection params
-  # assuming that "my-secret" contains credentials files
+  # assuming that "custom-*-secret" contains an "adapter.credentials" file
   tenantSpec:
     host: my-custom.registry.org
     port: 5672
-    credentialsPath: "/etc/custom/tenant-service-credentials.properties"
+    trustStorePath: "/etc/custom/registry-trust-store.pem"
+    credentialsPath: "/etc/custom/adapter.credentials"
   deviceRegistrationSpec:
     host: my-custom.registry.org
     port: 5672
-    credentialsPath: "/etc/custom/registration-service-credentials.properties"
+    trustStorePath: "/etc/custom/registry-trust-store.pem"
+    credentialsPath: "/etc/custom/adapter.credentials"
   credentialsSpec:
     host: my-custom.registry.org
     port: 5672
-    credentialsPath: "/etc/custom/credentials-service-credentials.properties"
+    trustStorePath: "/etc/custom/registry-trust-store.pem"
+    credentialsPath: "/etc/custom/adapter.credentials"
 ```
 
 All of the *specs* need to contain Hono client configuration properties as described in the
 [client admin guide](https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/).
 Make sure to adapt/add properties as required by the custom service implementations.
 The information contained in the *specs* will then be used by all protocol adapters that get deployed.
-As a consequence, it is not possible to use credentials for the services which are specific to the
-individual protocol adapters.
 
-Note that *my-secret* is expected to already exist in the name space that Hono gets installed to, i.e. the Helm chart
-will **not** create this secret.
+Note that *custom-http-secret* and *custom-http-secret* are expected to already exist in the name space
+that Hono gets installed to, i.e. the Helm chart will **not** create these secrets. Also note that even
+if the two secrets both contain a file *adapter.properties*, the content of these files can be specific
+to each adapter, i.e. the adapters can still use credentials that are specific to the type of adapter.
 
 Assuming that the file is named `customRegistry.yaml`, the values can then be passed to the Helm 3 `install` command
 as follows:
@@ -307,26 +326,39 @@ amqpMessagingNetworkExample:
 # credentials for connecting to AMQP network
 # into Command Router and protocol adapter containers 
 commandRouterService:
-  extraSecretMounts:
-    amqpNetwork:
+  extraVolumes:
+  - name: "amqp-network"
+    secret:
       secretName: "my-secret"
-      mountPath: "/etc/custom"
+  extraVolumeMounts:
+  - name: "amqp-network"
+    mountPath: "/etc/custom"
+
 adapters:
   http:
-    extraSecretMounts:
-      amqpNetwork:
+    extraVolumes:
+    - name: "amqp-network"
+      secret:
         secretName: "my-secret"
-        mountPath: "/etc/custom"
+    extraVolumeMounts:
+    - name: "amqp-network"
+      mountPath: "/etc/custom"
   mqtt:
-    extraSecretMounts:
-      amqpNetwork:
+    extraVolumes:
+    - name: "amqp-network"
+      secret:
         secretName: "my-secret"
-        mountPath: "/etc/custom"
+    extraVolumeMounts:
+    - name: "amqp-network"
+      mountPath: "/etc/custom"
   amqp:
-    extraSecretMounts:
-      amqpNetwork:
+    extraVolumes:
+    - name: "amqp-network"
+      secret:
         secretName: "my-secret"
-        mountPath: "/etc/custom"
+    extraVolumeMounts:
+    - name: "amqp-network"
+      mountPath: "/etc/custom"
 
   # provide connection params
   # assuming that "my-secret" contains an "amqp-credentials.properties" file

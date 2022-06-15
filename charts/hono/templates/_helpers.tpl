@@ -497,7 +497,7 @@ The scope passed in is expected to be a dict with keys
 - (optional) "configMountPath": the mount path to use for the component's config secret
                                 instead of the default "/opt/hono/config"
 */}}
-{{- define "hono.container.secretVolumeMounts" }}
+{{- define "hono.container.volumeMounts" }}
 - name: "default-logging-config"
   mountPath: "/opt/hono/default-logging-config"
   readOnly: true
@@ -509,15 +509,8 @@ The scope passed in is expected to be a dict with keys
 - name: {{ $volumeName | quote }}
   mountPath: {{ default "/opt/hono/config" .configMountPath | quote }}
   readOnly: true
-{{- with .componentConfig.extraSecretMounts }}
-{{- range $name,$spec := . }}
-- name: {{ $name | quote }}
-  mountPath: {{ $spec.mountPath | quote }}
-{{- if $spec.subPath }}
-  subPath: {{ $spec.subPath | quote }}
-{{- end }}
-  readOnly: true
-{{- end }}
+{{- with .componentConfig.extraVolumeMounts }}
+{{ . | toYaml }}
 {{- end }}
 {{- end }}
 
@@ -530,7 +523,7 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "componentConfig": the component's configuration properties as defined in .Values
 - (mandatory) "dot": the root scope (".")
 */}}
-{{- define "hono.pod.secretVolumes" }}
+{{- define "hono.pod.volumes" }}
 - name: "default-logging-config"
   configMap:
     name: {{ printf "%s-default-logging-config" .dot.Release.Name | quote }}
@@ -549,12 +542,8 @@ The scope passed in is expected to be a dict with keys
   configMap:
     name: {{ $otelCollectorConfigMap | quote }}
 {{- end }}
-{{- with .componentConfig.extraSecretMounts }}
-{{- range $name,$spec := . }}
-- name: {{ $name | quote }}
-  secret:
-    secretName: {{ $spec.secretName | quote }}
-{{- end }}
+{{- with .componentConfig.extraVolumes }}
+{{ . | toYaml }}
 {{- end }}
 {{- end }}
 
