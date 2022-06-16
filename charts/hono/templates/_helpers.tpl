@@ -498,12 +498,26 @@ The scope passed in is expected to be a dict with keys
                                 instead of the default "/opt/hono/config"
 */}}
 {{- define "hono.container.volumeMounts" }}
-- name: "default-logging-config"
-  mountPath: "/opt/hono/default-logging-config"
+{{- $keySecretName := ( default "none" .componentConfig.tlsKeysSecret | toString ) }}
+{{- if ( ne $keySecretName "none" ) }}
+- name: "tls-keys"
+  mountPath: "/opt/hono/tls/tls.key"
+  subPath: "tls.key"
   readOnly: true
+- name: "tls-keys"
+  mountPath: "/opt/hono/tls/tls.crt"
+  subPath: "tls.crt"
+  readOnly: true
+{{- end }}
+{{- $trustStoreConfigMapName := ( default "none" .componentConfig.tlsTrustStoreConfigMap | toString ) }}
+{{- if ( ne $trustStoreConfigMapName "none" ) }}
 - name: "tls-trust-store"
   mountPath: "/opt/hono/tls/ca.crt"
   subPath: "ca.crt"
+  readOnly: true
+{{- end }}
+- name: "default-logging-config"
+  mountPath: "/opt/hono/default-logging-config"
   readOnly: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
@@ -524,13 +538,21 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".")
 */}}
 {{- define "hono.pod.volumes" }}
+{{- $keySecretName := ( default "none" .componentConfig.tlsKeysSecret | toString ) }}
+{{- if ( ne $keySecretName "none" ) }}
+- name: "tls-keys"
+  secret:
+    secretName: {{ ternary ( printf "%s-%s-example-keys" .dot.Release.Name .name ) $keySecretName ( eq $keySecretName "example" ) | quote }}
+{{- end }}
+{{- $trustStoreConfigMapName := ( default "none" .componentConfig.tlsTrustStoreConfigMap | toString ) }}
+{{- if ( ne $trustStoreConfigMapName "none" ) }}
+- name: "tls-trust-store"
+  configMap:
+    name: {{ ternary ( printf "%s-example-trust-store" .dot.Release.Name ) $trustStoreConfigMapName ( eq $trustStoreConfigMapName "example" ) | quote }}
+{{- end }}
 - name: "default-logging-config"
   configMap:
     name: {{ printf "%s-default-logging-config" .dot.Release.Name | quote }}
-    optional: true
-- name: "tls-trust-store"
-  configMap:
-    name: {{ printf "%s-example-trust-store" .dot.Release.Name | quote }}
     optional: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}

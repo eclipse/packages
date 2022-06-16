@@ -1,0 +1,24 @@
+{{- if .Values.kafkaMessagingClusterExample.enabled }}
+#
+# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+apiVersion: v1
+kind: Secret
+metadata:
+  {{- $args := dict "dot" . "component" "kafka" "name" "kafka-example-keys" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+type: Opaque
+data:
+  "ca.crt": {{ .Files.Get "example/certs/ca-cert.pem" | b64enc }}
+  "tls.crt": {{ .Files.Get "example/certs/kafka-cert.pem" | b64enc }}
+  "tls.key": {{ .Files.Get "example/certs/kafka-key.pem" | b64enc }}
+{{- end }}
