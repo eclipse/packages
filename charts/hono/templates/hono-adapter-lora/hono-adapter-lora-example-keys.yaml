@@ -1,6 +1,6 @@
-{{- if .Values.kafkaMessagingClusterExample.enabled }}
+{{- if all .Values.adapters.lora.enabled ( eq .Values.adapters.lora.tlsKeysSecret "example" ) }}
 #
-# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,14 +11,13 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
+{{- $args := dict "dot" . "component" "adapter-lora" "name" "adapter-lora-example-keys" }}
 apiVersion: v1
 kind: Secret
 metadata:
-  {{- $args := dict "dot" . "component" "kafka" "name" "kafka-certs" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 type: Opaque
 data:
-  "ca.crt": {{ .Files.Get "example/certs/ca-cert.pem" | b64enc }}
-  "tls.crt": {{ .Files.Get "example/certs/kafka-cert.pem" | b64enc }}
-  "tls.key": {{ .Files.Get "example/certs/kafka-key.pem" | b64enc }}
+  tls.key: {{ .Files.Get "example/certs/lora-adapter-key.pem" | b64enc }}
+  tls.crt: {{ .Files.Get "example/certs/lora-adapter-cert.pem" | b64enc }}
 {{- end }}

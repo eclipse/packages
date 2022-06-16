@@ -1,0 +1,23 @@
+{{- if all .Values.adapters.mqtt.enabled ( eq .Values.adapters.mqtt.tlsKeysSecret "example" ) }}
+#
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+{{- $args := dict "dot" . "component" "adapter-mqtt" "name" "adapter-mqtt-example-keys" }}
+apiVersion: v1
+kind: Secret
+metadata:
+  {{- include "hono.metadata" $args | nindent 2 }}
+type: Opaque
+data:
+  tls.key: {{ .Files.Get "example/certs/mqtt-adapter-key.pem" | b64enc }}
+  tls.crt: {{ .Files.Get "example/certs/mqtt-adapter-cert.pem" | b64enc }}
+{{- end }}

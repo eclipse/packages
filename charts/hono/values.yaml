@@ -107,8 +107,8 @@ adapters:
   # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
   # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
   amqpMessagingNetworkSpec:
-    keyPath: "/opt/hono/config/key.pem"
-    certPath: "/opt/hono/config/cert.pem"
+    keyPath: "/opt/hono/tls/tls.key"
+    certPath: "/opt/hono/tls/tls.crt"
     trustStorePath: "/opt/hono/tls/ca.crt"
     hostnameVerificationRequired: false
   #  host: "my-amqp-host"
@@ -125,8 +125,8 @@ adapters:
   # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
   # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
   commandAndControlSpec:
-    keyPath: "/opt/hono/config/key.pem"
-    certPath: "/opt/hono/config/cert.pem"
+    keyPath: "/opt/hono/tls/tls.key"
+    certPath: "/opt/hono/tls/tls.crt"
     trustStorePath: "/opt/hono/tls/ca.crt"
     hostnameVerificationRequired: false
 
@@ -277,6 +277,30 @@ adapters:
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
+    # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+    # securing the component's exposed API endpoint(s).
+    #
+    # Possible values are:
+    # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a private key file
+    #              named "tls.key" and an X.509 certificate file named "tls.crt".
+    #              The file names have been chosen deliberately to match those produced by the
+    #              cert-manager operator (https://cert-manager.io/).
+    # "none" - do not create keys nor mount an existing secret containing keys
+    tlsKeysSecret: "example"
+
+    # tlsTrustStoreConfigMap identifies the ConfigMap that contains the certificates which should
+    # be used as the trust anchor by this component when it needs to authenticate server identities
+    # during a TLS handshake.
+    #
+    # Possible values are:
+    # "example" - create and use example CA certificates, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a PEM file
+    #              named "ca.crt" which contains X.509 certificates to be used as the trust anchor.
+    # "none" - do not mount an existing secret containing certificates. This might be useful if the
+    #          component does not open any TLS connections to other hosts.
+    tlsTrustStoreConfigMap: "example"
+
     # hono contains the adapter's configuration properties as defined in
     # https://www.eclipse.org/hono/docs/admin-guide/amqp-adapter-config/
     hono:
@@ -367,6 +391,30 @@ adapters:
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
+    # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+    # securing the component's exposed API endpoint(s).
+    #
+    # Possible values are:
+    # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a private key file
+    #              named "tls.key" and an X.509 certificate file named "tls.crt".
+    #              The file names have been chosen deliberately to match those produced by the
+    #              cert-manager operator (https://cert-manager.io/).
+    # "none" - do not create keys nor mount an existing secret containing keys
+    tlsKeysSecret: "example"
+
+    # tlsTrustStoreConfigMap identifies the ConfigMap that contains the certificates which should
+    # be used as the trust anchor by this component when it needs to authenticate server identities
+    # during a TLS handshake.
+    #
+    # Possible values are:
+    # "example" - create and use example CA certificates, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a PEM file
+    #              named "ca.crt" which contains X.509 certificates to be used as the trust anchor.
+    # "none" - do not mount an existing secret containing certificates. This might be useful if the
+    #          component does not open any TLS connections to other hosts.
+    tlsTrustStoreConfigMap: "example"
+
     # hono contains the adapter's configuration properties
     hono:
       app:
@@ -447,6 +495,30 @@ adapters:
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
+
+    # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+    # securing the component's exposed API endpoint(s).
+    #
+    # Possible values are:
+    # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a private key file
+    #              named "tls.key" and an X.509 certificate file named "tls.crt".
+    #              The file names have been chosen deliberately to match those produced by the
+    #              cert-manager operator (https://cert-manager.io/).
+    # "none" - do not create keys nor mount an existing secret containing keys
+    tlsKeysSecret: "example"
+
+    # tlsTrustStoreConfigMap identifies the ConfigMap that contains the certificates which should
+    # be used as the trust anchor by this component when it needs to authenticate server identities
+    # during a TLS handshake.
+    #
+    # Possible values are:
+    # "example" - create and use example CA certificates, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a PEM file
+    #              named "ca.crt" which contains X.509 certificates to be used as the trust anchor.
+    # "none" - do not mount an existing secret containing certificates. This might be useful if the
+    #          component does not open any TLS connections to other hosts.
+    tlsTrustStoreConfigMap: "example"
 
     # hono contains the adapter's configuration properties as defined in
     # https://www.eclipse.org/hono/docs/admin-guide/http-adapter-config/
@@ -538,6 +610,30 @@ adapters:
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
+    # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+    # securing the component's exposed API endpoint(s).
+    #
+    # Possible values are:
+    # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a private key file
+    #              named "tls.key" and an X.509 certificate file named "tls.crt".
+    #              The file names have been chosen deliberately to match those produced by the
+    #              cert-manager operator (https://cert-manager.io/).
+    # "none" - do not create keys nor mount an existing secret containing keys
+    tlsKeysSecret: "example"
+
+    # tlsTrustStoreConfigMap identifies the ConfigMap that contains the certificates which should
+    # be used as the trust anchor by this component when it needs to authenticate server identities
+    # during a TLS handshake.
+    #
+    # Possible values are:
+    # "example" - create and use example CA certificates, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a PEM file
+    #              named "ca.crt" which contains X.509 certificates to be used as the trust anchor.
+    # "none" - do not mount an existing secret containing certificates. This might be useful if the
+    #          component does not open any TLS connections to other hosts.
+    tlsTrustStoreConfigMap: "example"
+
     # hono contains the adapter's configuration properties
     hono:
       app:
@@ -627,6 +723,30 @@ adapters:
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
 
+    # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+    # securing the component's exposed API endpoint(s).
+    #
+    # Possible values are:
+    # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a private key file
+    #              named "tls.key" and an X.509 certificate file named "tls.crt".
+    #              The file names have been chosen deliberately to match those produced by the
+    #              cert-manager operator (https://cert-manager.io/).
+    # "none" - do not create keys nor mount an existing secret containing keys
+    tlsKeysSecret: "example"
+
+    # tlsTrustStoreConfigMap identifies the ConfigMap that contains the certificates which should
+    # be used as the trust anchor by this component when it needs to authenticate server identities
+    # during a TLS handshake.
+    #
+    # Possible values are:
+    # "example" - create and use example CA certificates, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a PEM file
+    #              named "ca.crt" which contains X.509 certificates to be used as the trust anchor.
+    # "none" - do not mount an existing secret containing certificates. This might be useful if the
+    #          component does not open any TLS connections to other hosts.
+    tlsTrustStoreConfigMap: "example"
+
     # hono contains the adapter's configuration properties as defined in
     # https://www.eclipse.org/hono/docs/admin-guide/mqtt-adapter-config/
     hono:
@@ -715,6 +835,18 @@ authServer:
   # component's container.
   envConfigMap:
 
+  # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+  # securing the component's exposed API endpoint(s).
+  #
+  # Possible values are:
+  # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+  # secretName - the name of an already existing secret which contains (at least) a private key file
+  #              named "tls.key" and an X.509 certificate file named "tls.crt".
+  #              The file names have been chosen deliberately to match those produced by the
+  #              cert-manager operator (https://cert-manager.io/).
+  # "none" - do not create keys nor mount an existing secret containing keys
+  tlsKeysSecret: "example"
+
   # hono contains the Auth Server's configuration properties as defined in
   # https://www.eclipse.org/hono/docs/admin-guide/auth-server-config/
   hono:
@@ -798,6 +930,30 @@ deviceRegistryExample:
   # file system and then refer to the contained files in the component's configuration,
   # e.g. public and private keys or an application.yaml file.
   extraVolumeMounts: []
+
+  # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+  # securing the component's exposed API endpoint(s).
+  #
+  # Possible values are:
+  # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+  # secretName - the name of an already existing secret which contains (at least) a private key file
+  #              named "tls.key" and an X.509 certificate file named "tls.crt".
+  #              The file names have been chosen deliberately to match those produced by the
+  #              cert-manager operator (https://cert-manager.io/).
+  # "none" - do not create keys nor mount an existing secret containing keys
+  tlsKeysSecret: "example"
+
+  # tlsTrustStoreConfigMap identifies the ConfigMap that contains the certificates which should
+  # be used as the trust anchor by this component when it needs to authenticate server identities
+  # during a TLS handshake.
+  #
+  # Possible values are:
+  # "example" - create and use example CA certificates, DO NOT USE IN PRODUCTION!!!
+  # secretName - the name of an already existing secret which contains (at least) a PEM file
+  #              named "ca.crt" which contains X.509 certificates to be used as the trust anchor.
+  # "none" - do not mount an existing secret containing certificates. This might be useful if the
+  #          component does not open any TLS connections to other hosts.
+  tlsTrustStoreConfigMap: "example"
 
   # clientTrustStorePath points to the trustStore the client of this example Device Registry should use to verify the certificates.
   # This can be used when using your own certificates in combination with the example Device Registry
@@ -1156,6 +1312,30 @@ commandRouterService:
   # The configMap to get additional environment variables from for this command router service.
   envConfigMap:
 
+  # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+  # securing the component's exposed API endpoint(s).
+  #
+  # Possible values are:
+  # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+  # secretName - the name of an already existing secret which contains (at least) a private key file
+  #              named "tls.key" and an X.509 certificate file named "tls.crt".
+  #              The file names have been chosen deliberately to match those produced by the
+  #              cert-manager operator (https://cert-manager.io/).
+  # "none" - do not create keys nor mount an existing secret containing keys
+  tlsKeysSecret: "example"
+
+  # tlsTrustStoreConfigMap identifies the ConfigMap that contains the certificates which should
+  # be used as the trust anchor by this component when it needs to authenticate server identities
+  # during a TLS handshake.
+  #
+  # Possible values are:
+  # "example" - create and use example CA certificates, DO NOT USE IN PRODUCTION!!!
+  # secretName - the name of an already existing secret which contains (at least) a PEM file
+  #              named "ca.crt" which contains X.509 certificates to be used as the trust anchor.
+  # "none" - do not mount an existing secret containing certificates. This might be useful if the
+  #          component does not open any TLS connections to other hosts.
+  tlsTrustStoreConfigMap: "example"
+
   # clientTrustStorePath points to the trustStore the client of this command router service should use to verify the certificates.
   # This can be used when using your own certificates in combination with this command router service.
   clientTrustStorePath:
@@ -1338,7 +1518,7 @@ kafka:
       type: "pem"
       pemChainIncluded: true
       existingSecrets:
-      - "{{ .Release.Name }}-kafka-certs"
+      - "{{ .Release.Name }}-kafka-example-keys"
 
   service:
     ports:
@@ -1405,11 +1585,11 @@ amqpMessagingNetworkExample:
     # certFile contains the absolute path to a PEM file containing
     # the X.509 certificate that the router should use for authenticating
     # to clients
-    certFile: "/opt/hono/config/qdrouter-cert.pem"
+    certFile: "/opt/hono/tls/tls.crt"
     # keyFile contains the absolute path to a PEM file containing
     # the private key that the router should use for authenticating
     # to clients
-    keyFile: "/opt/hono/config/qdrouter-key.pem"
+    keyFile: "/opt/hono/tls/tls.key"
     # trustStore contains the absolute path to a PEM file containing
     # the X.509 certificates that the router should use as trust anchors
     # when authenticating clients connecting to the router in a TLS
@@ -1468,6 +1648,30 @@ amqpMessagingNetworkExample:
     # file system and then refer to the contained files in the component's configuration,
     # e.g. public and private keys or an application.yaml file.
     extraVolumeMounts: []
+
+    # tlsKeysSecret identifies the Secret that contains the key material which should be used for
+    # securing the component's exposed API endpoint(s).
+    #
+    # Possible values are:
+    # "example" - create and use example keys, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a private key file
+    #              named "tls.key" and an X.509 certificate file named "tls.crt".
+    #              The file names have been chosen deliberately to match those produced by the
+    #              cert-manager operator (https://cert-manager.io/).
+    # "none" - do not create keys nor mount an existing secret containing keys
+    tlsKeysSecret: "example"
+
+    # tlsTrustStoreConfigMap identifies the ConfigMap that contains the certificates which should
+    # be used as the trust anchor by this component when it needs to authenticate server identities
+    # during a TLS handshake.
+    #
+    # Possible values are:
+    # "example" - create and use example CA certificates, DO NOT USE IN PRODUCTION!!!
+    # secretName - the name of an already existing secret which contains (at least) a PEM file
+    #              named "ca.crt" which contains X.509 certificates to be used as the trust anchor.
+    # "none" - do not mount an existing secret containing certificates. This might be useful if the
+    #          component does not open any TLS connections to other hosts.
+    tlsTrustStoreConfigMap: "example"
 
   # AMQP Messaging Network Broker configuration.
   broker:
