@@ -14,7 +14,7 @@ name: ci
 env:
   CONFIG_OPTION_CHART_TESTING: "--config .github/ct.yaml"
   VERSION_CHART_TESTING: "v3.5.1"
-  VERSION_HELM: "v3.5.4"
+  VERSION_HELM: "v3.9.0"
   VERSION_PYTHON: "3.7"
 on:
   pull_request:
@@ -64,7 +64,6 @@ jobs:
         # which a folder exists at
         # https://github.com/yannh/kubernetes-json-schema/
         k8s:
-          - v1.20.9
           - v1.21.9
           - v1.22.9
           - v1.23.7
@@ -95,7 +94,6 @@ jobs:
         # the versions supported by chart-testing are the tags
         # available for the docker.io/kindest/node image
         # https://hub.docker.com/r/kindest/node/tags
-          - v1.20.15
           - v1.21.12
           - v1.22.9
           - v1.23.6
