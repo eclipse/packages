@@ -1201,9 +1201,8 @@ deviceRegistryExample:
 # The configuration properties below are intended to set up a MongoDB instance that is sufficient
 # for demonstration and/or testing purposes. In order to use a production level MongoDB instance, users
 # should not adapt these properties, but instead set the "createInstance" property to false, set up a
-# separate MongoDB instance according to
-# https://github.com/bitnami/charts/tree/master/bitnami/mongodb#production-configuration-and-horizontal-scaling
-# and configure the registry's connection details under "deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb".
+# separate MongoDB instance and configure the registry's connection details under
+# "deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb".
 mongodb:
   # createInstance indicates whether a MongoDB database instance should be created.
   createInstance: false
@@ -1230,7 +1229,7 @@ mongodb:
   # Use StatefulSet instead of Deployment when deploying standalone
   useStatefulSet: false
   # Setting up replication
-  # ref: https://github.com/bitnami/bitnami-docker-mongodb#setting-up-a-replication
+  # ref: https://github.com/bitnami/bitnami-docker-mongodb#setting-up-replication
   # Whether to create a MongoDB replica set for high availability or not
   replicaSet:
     enabled: false

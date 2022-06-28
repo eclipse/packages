@@ -128,13 +128,19 @@ app.kubernetes.io/component: {{ .component | quote }}
 {{- end }}
 
 {{/*
-Add annotations for marking an object to be scraped by Prometheus.
+Add standard annotations for Hono component pods.
+This includes annotations for marking a pod to be scraped by Prometheus
+and an annotation to define the default container.
+The scope passed in is expected to be a dict with keys
+- "dot": the "." scope and
+- "name": the value to use for the "default-container" annotation
 */}}
-{{- define "hono.monitoringAnnotations" -}}
+{{- define "hono.podAnnotations" -}}
 prometheus.io/scrape: "true"
 prometheus.io/path: "/prometheus"
-prometheus.io/port: {{ include "hono.healthCheckPort" . | quote }}
+prometheus.io/port: {{ include "hono.healthCheckPort" .dot | quote }}
 prometheus.io/scheme: "http"
+kubectl.kubernetes.io/default-container: {{ .name | quote }}
 {{- end }}
 
 
