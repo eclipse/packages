@@ -39,23 +39,27 @@ kafka:
 
 authServer:
   imageName: "eclipse/hono-service-auth-native"
+  cmdLineArgs:
+  - "-Xmx24m"
   resources:
     requests:
       cpu:
-      memory: "32Mi"
+      memory: "30Mi"
     limits:
       cpu:
-      memory: "32Mi"
+      memory: "30Mi"
 
 commandRouterService:
   imageName: "eclipse/hono-service-command-router-native"
+  cmdLineArgs:
+  - "-Xmx96m"
   resources:
     requests:
       cpu:
-      memory: "128Mi"
+      memory: "120Mi"
     limits:
       cpu:
-      memory: "128Mi"
+      memory: "120Mi"
 
 adapters:
   amqp:
@@ -63,6 +67,8 @@ adapters:
   coap:
     enabled: true
     imageName: "eclipse/hono-adapter-coap-native"
+    cmdLineArgs:
+    - "-Xmx96m"
     hono:
       coap:
         bindAddress: "0.0.0.0"

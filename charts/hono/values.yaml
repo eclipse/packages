@@ -219,6 +219,8 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+    cmdLineArgs: []
     # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
     # additional configuration from.
     # Properties are read in the following sequence with properties further down in the list overwriting property
@@ -333,6 +335,8 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+    cmdLineArgs: []
     # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
     # additional configuration from.
     # Properties are read in the following sequence with properties further down in the list overwriting property
@@ -438,6 +442,8 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+    cmdLineArgs: []
     # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
     # additional configuration from.
     # Properties are read in the following sequence with properties further down in the list overwriting property
@@ -552,6 +558,8 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+    cmdLineArgs: []
     # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
     # additional configuration from.
     # Properties are read in the following sequence with properties further down in the list overwriting property
@@ -665,6 +673,8 @@ adapters:
     # javaOptions contains options to pass to the JVM when starting
     # up the service
     javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+    # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+    cmdLineArgs: []
     # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
     # additional configuration from.
     # Properties are read in the following sequence with properties further down in the list overwriting property
@@ -779,6 +789,8 @@ authServer:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80"
+  # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+  cmdLineArgs: []
   # quarkusConfigLocations contains resources that the component should read
   # additional configuration from.
   # Properties are read in the following sequence with properties further down in the list overwriting property
@@ -1028,6 +1040,24 @@ deviceRegistryExample:
     # should be used for the example registry's persistent volume claim.
     # If not set, the cluster's default storage class is used.
     storageClass:
+    # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+    cmdLineArgs: []
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
@@ -1065,6 +1095,8 @@ deviceRegistryExample:
     # the image from.
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
+    # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+    cmdLineArgs: []
     # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
     # additional configuration from.
     # Properties are read in the following sequence with properties further down in the list overwriting property
@@ -1130,6 +1162,24 @@ deviceRegistryExample:
     # the image from.
     # If not specified, the value of the "honoContainerRegistry" property is used.
     # containerRegistry:
+    # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+    cmdLineArgs: []
+    # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
+    # additional configuration from.
+    # Properties are read in the following sequence with properties further down in the list overwriting property
+    # values read from resources further up in the list.
+    # 1. Properties defined in file "/opt/hono/application.yml".
+    # 2. Properties read from the resources defined here.
+    # 3. Properties defined in operating system environment variables.
+    # 4. Properties defined in Java system properties.
+    # See https://smallrye.io/docs/smallrye-config/config/config.html#locations for details regarding supported resource
+    # types.
+    # If not set, default resources configuring logging levels based on the value of "quarkusLoggingProfile" are
+    # being read.
+    quarkusConfigLocations:
+    # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
+    # Supported values are "prod", "dev" or "trace"
+    quarkusLoggingProfile: "dev"
     # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
@@ -1254,6 +1304,8 @@ commandRouterService:
   # javaOptions contains options to pass to the JVM when starting
   # up the service
   javaOptions: "-XX:MinRAMPercentage=80 -XX:MaxRAMPercentage=80 -Djava.security.properties=/opt/hono/config/dns-cache-config.properties"
+  # cmdLineArgs contains additional arguments to be passed to the container's CMD.
+  cmdLineArgs: []
   # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
   # additional configuration from.
   # Properties are read in the following sequence with properties further down in the list overwriting property

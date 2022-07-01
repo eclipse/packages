@@ -485,6 +485,30 @@ The Helm chart can be configured to use these *native* images by means of explic
 name as described in *Using specific Container Images*. The names of the images based on native executables are the
 standard image names appended by `-native`.
 
+The native executables used in the images currently do not properly detect the memory and CPU resource limits defined on the
+container. This is due to a bug in the native-image builder in GraalVM versions before 22.1. Future versions of Hono will
+probably not be affected by this anymore.
+
+In order to make the native executables aware of the memory limits, the
+[`-Xmx` GraalVM parameter](https://www.graalvm.org/22.0/reference-manual/native-image/MemoryManagement/#java-heap-size) can
+be passed to the native executable as a command line parameter. This can be done by setting the `cmdLineArgs` property of the
+component in the `values.yaml`. For example, the Authentication server can be configured to use the native executable based image
+with 80% of the container's memory limit being available to the process like this:
+
+```yaml
+authServer:
+  imageName: "eclipse/hono-service-auth-native"
+  cmdLineArgs:
+  - "-Xmx24m"
+  resources:
+    requests:
+      cpu:
+      memory: "30Mi"
+    limits:
+      cpu:
+      memory: "30Mi"
+```
+
 ## Configuring Storage for Command Routing Data
 
 Hono needs to store information about the connection status of devices during runtime.

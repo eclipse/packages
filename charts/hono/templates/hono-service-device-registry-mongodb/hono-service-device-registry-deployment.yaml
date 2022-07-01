@@ -34,6 +34,12 @@ spec:
       containers:
       {{- include "hono.otel.agent" . | indent 6 }}
       {{- include "hono.container" $args | indent 6 }}
+        {{- with $args.componentConfig.cmdLineArgs }}
+        args:
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
         ports:
           - name: health
             containerPort: {{ include "hono.healthCheckPort" . }}
