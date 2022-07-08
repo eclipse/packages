@@ -1739,7 +1739,7 @@ amqpMessagingNetworkExample:
     artemis:
       # imageName contains the name (including tag) of the container
       # image to use for the example AMQP Messaging Network Broker
-      imageName: "quay.io/enmasse/artemis-base:2.16.0"
+      imageName: "quay.io/artemiscloud/activemq-artemis-broker:1.0.6"
       # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
       # configuration property of the component's liveness probe.
       livenessProbeInitialDelaySeconds: 300

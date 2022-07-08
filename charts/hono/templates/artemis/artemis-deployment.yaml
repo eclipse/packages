@@ -15,7 +15,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  {{- $args := dict "dot" . "component" "amqp-messaging-network-broker" "name" "artemis" "componentConfig" .Values.amqpMessagingNetworkExample.broker.artemis "configMountPath" "/opt/apache-artemis/conf" }}
+  {{- $args := dict "dot" . "component" "amqp-messaging-network-broker" "name" "artemis" "componentConfig" .Values.amqpMessagingNetworkExample.broker.artemis "configMountPath" "/opt/amq/conf" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   replicas: 1
@@ -34,13 +34,19 @@ spec:
       - name: apache-activemq-artemis
         image: {{ .Values.amqpMessagingNetworkExample.broker.artemis.imageName | quote }}
         command:
-        - /opt/apache-artemis/bin/launch.sh
-        - start
+        - "/bin/bash"
+        - "/opt/amq/conf/launch.sh"
         env:
         - name: AMQ_NAME
-          value: custom
+          value: hono-broker
+        - name: AMQ_USER
+          value: admin
+        - name: AMQ_PASSWORD
+          value: admin
         - name: HOME
-          value: /run/artemis/split-1/
+          value: /home/jboss
+        - name: AMQ_EXTRA_ARGS
+          value: "--http-host 0.0.0.0"
         - name: JAVA_INITIAL_MEM_RATIO
           value: "30"
         - name: JAVA_MAX_MEM_RATIO
