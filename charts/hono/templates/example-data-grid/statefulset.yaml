@@ -14,7 +14,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  {{- $args := dict "dot" . "component" "data-grid" "name" "data-grid" }}
+  {{- $args := dict "dot" . "component" "data-grid" "name" "data-grid" "componentConfig" .Values.dataGridExample }}
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   replicas: 1
@@ -65,22 +65,7 @@ spec:
           name: conf
           subPath: mgmt-groups.properties
           readOnly: true
-        livenessProbe:
-          httpGet:
-            path: /rest/v2/cache-managers/routing-info/health/status
-            port: hotrod
-          failureThreshold: 5
-          initialDelaySeconds: {{ .Values.dataGridExample.livenessProbeInitialDelaySeconds }}
-          successThreshold: 1
-          timeoutSeconds: 3
-        readinessProbe:
-          httpGet:
-            path: /rest/v2/cache-managers/routing-info/health/status
-            port: hotrod
-          failureThreshold: 5
-          initialDelaySeconds: {{ .Values.dataGridExample.readinessProbeInitialDelaySeconds }}
-          successThreshold: 1
-          timeoutSeconds: 3
+        {{- include "hono.component.healthChecks" $args | nindent 8 }}
         {{- with .Values.dataGridExample.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}

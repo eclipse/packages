@@ -60,18 +60,7 @@ spec:
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
-        livenessProbe:
-          initialDelaySeconds: {{ .Values.amqpMessagingNetworkExample.dispatchRouter.livenessProbeInitialDelaySeconds }}
-          periodSeconds: 9
-          httpGet:
-            path: /healthz
-            port: health
-        readinessProbe:
-          initialDelaySeconds: {{ .Values.amqpMessagingNetworkExample.dispatchRouter.readinessProbeInitialDelaySeconds }}
-          periodSeconds: 5
-          httpGet:
-            path: /healthz
-            port: health
+        {{- include "hono.component.healthChecks" $args | nindent 8 }}
         securityContext:
           privileged: false
         volumeMounts:

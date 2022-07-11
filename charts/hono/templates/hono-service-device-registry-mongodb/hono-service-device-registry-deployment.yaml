@@ -73,7 +73,7 @@ spec:
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
-        {{- include "hono.component.healthChecks" $args | indent 8 }}
+        {{- include "hono.component.healthChecks" $args | nindent 8 }}
       volumes:
       {{- include "hono.pod.volumes" ( dict "dot" $args.dot "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 6 }}
 {{- end }}

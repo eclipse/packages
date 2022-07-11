@@ -30,23 +30,49 @@ honoContainerRegistry: "index.docker.io"
 # be added to every deployment and statefulset.
 imagePullSecrets: []
 
+# probes allows you to configure http GET probes on most hono services
+# the values below will be used by default but can be overwritten by
+# configuring more specific config in the probes config of the component.
+# Note that only the parameters below can be overwritten.
+probes:
+  livenessProbe:
+    httpGet:
+      path: "/liveness"
+      port: "health"
+      scheme: "HTTP"
+    periodSeconds: 10
+    failureThreshold: 3
+    initialDelaySeconds: 300
+    successThreshold: 1
+    timeoutSeconds: 3
+  readinessProbe:
+    httpGet:
+      path: "/liveness"
+      port: "health"
+      scheme: "HTTP"
+    periodSeconds: 10
+    failureThreshold: 3
+    initialDelaySeconds: 20
+    successThreshold: 1
+    timeoutSeconds: 3
+
 # color indicates if the information printed to the console by components should be
 # formatted in multi-color using ANSI escape sequences.
 console:
   color: false
 
-# livenessProbeInitialDelaySeconds contains the default value to use
+# [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the default value to use
 # for the "initialDelaySeconds" configuration property of a Hono
 # component's liveness probe.
 # The value can be overridden by the corresponding property at the
 # component level.
-livenessProbeInitialDelaySeconds: 300
-# readinessProbeInitialDelaySeconds contains the default value to use
+livenessProbeInitialDelaySeconds:
+# [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the default value to use
 # for the "initialDelaySeconds" configuration property of a Hono
 # component's readiness probe.
 # The value can be overridden by the corresponding property at the
 # component level.
-readinessProbeInitialDelaySeconds: 20
+readinessProbeInitialDelaySeconds:
 
 # platform indicates the type of container orchestration platform we are deploying to.
 # Supported values are:
@@ -237,14 +263,16 @@ adapters:
     # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
     # Supported values are "prod", "dev" or "trace"
     quarkusLoggingProfile: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
     livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes: {}
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -353,14 +381,16 @@ adapters:
     # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
     # Supported values are "prod", "dev" or "trace"
     quarkusLoggingProfile: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
     livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes: {}
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -460,14 +490,16 @@ adapters:
     # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
     # Supported values are "prod", "dev" or "trace"
     quarkusLoggingProfile: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
     livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes: {}
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -576,14 +608,16 @@ adapters:
     # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
     # Supported values are "prod", "dev" or "trace"
     quarkusLoggingProfile: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
     livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes: {}
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -691,14 +725,16 @@ adapters:
     # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
     # Supported values are "prod", "dev" or "trace"
     quarkusLoggingProfile: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
     livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes: {}
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -807,14 +843,16 @@ authServer:
   # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
   # Supported values are "prod", "dev" or "trace"
   quarkusLoggingProfile: "dev"
-  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
   livenessProbeInitialDelaySeconds:
-  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's readiness probe.
   # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
   readinessProbeInitialDelaySeconds:
+  # probes allows you to overwrite the global probes config values for this specific component
+  probes: {}
   # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -1058,14 +1096,16 @@ deviceRegistryExample:
     # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
     # Supported values are "prod", "dev" or "trace"
     quarkusLoggingProfile: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
     livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes: {}
     # resources contains the container's requests and limits for CPU and memory
     # as defined by the Kubernetes API.
     # If not specified here, then the values from "deviceRegistryExample.resources" are used.
@@ -1113,14 +1153,16 @@ deviceRegistryExample:
     # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
     # Supported values are "prod", "dev" or "trace"
     quarkusLoggingProfile: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
     livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes: {}
     # If not specified here, then the values from "deviceRegistryExample.resources" are used.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -1180,14 +1222,16 @@ deviceRegistryExample:
     # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
     # Supported values are "prod", "dev" or "trace"
     quarkusLoggingProfile: "dev"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
     # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
     livenessProbeInitialDelaySeconds:
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
     # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
     readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes: {}
     # If not specified here, then the values from "deviceRegistryExample.resources" are used.
     # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     # for a description of the properties' semantics.
@@ -1322,14 +1366,16 @@ commandRouterService:
   # quarkusLoggingProfile indicates at which level the Quarkus based variant of the component should log.
   # Supported values are "prod", "dev" or "trace"
   quarkusLoggingProfile: "dev"
-  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
   livenessProbeInitialDelaySeconds:
-  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's readiness probe.
   # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
   readinessProbeInitialDelaySeconds:
+  # probes allows you to overwrite the global probes config values for this specific component
+  probes: {}
   # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -1663,12 +1709,26 @@ amqpMessagingNetworkExample:
     # The default value ("Eclipse IoT;Hono") includes all adapters that authenticate with their
     # demo certificate.
     adapterUids: "Eclipse IoT;Hono"
-    # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's liveness probe.
-    livenessProbeInitialDelaySeconds: 300
-    # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+    # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+    livenessProbeInitialDelaySeconds:
+    # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
     # configuration property of the component's readiness probe.
-    readinessProbeInitialDelaySeconds: 20
+    # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+    readinessProbeInitialDelaySeconds:
+    # probes allows you to overwrite the global probes config values for this specific component
+    probes:
+      livenessProbe:
+        httpGet:
+          path: "/healthz"
+        periodSeconds: 9
+        initialDelaySeconds: 300
+      readinessProbe:
+        httpGet:
+          path: "/healthz"
+        periodSeconds: 5
+        initialDelaySeconds: 20
 
     svc:
       annotations: {}
@@ -1740,16 +1800,24 @@ amqpMessagingNetworkExample:
       # imageName contains the name (including tag) of the container
       # image to use for the example AMQP Messaging Network Broker
       imageName: "quay.io/artemiscloud/activemq-artemis-broker:1.0.6"
-      # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+      # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
       # configuration property of the component's liveness probe.
-      livenessProbeInitialDelaySeconds: 300
-      # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+      # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+      livenessProbeInitialDelaySeconds:
+      # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
       # configuration property of the component's readiness probe.
-      readinessProbeInitialDelaySeconds: 20
-      # resources contains the container's requests and limits for CPU and memory
-      # as defined by the Kubernetes API.
-      # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
-      # for a description of the properties' semantics.
+      # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+      readinessProbeInitialDelaySeconds:
+      # probes allows you to overwrite the global probes config values for this specific component
+      probes:
+        livenessProbe:
+          periodSeconds: 17
+          timeoutSeconds: 3
+          initialDelaySeconds: 300
+        readinessProbe:
+          periodSeconds: 10
+          timeoutSeconds: 3
+          initialDelaySeconds: 20
       resources:
         requests:
           cpu: "150m"
@@ -1791,12 +1859,32 @@ dataGridExample:
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
   imageName: "infinispan/server-native:13.0"
-  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
-  livenessProbeInitialDelaySeconds: 300
-  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+  livenessProbeInitialDelaySeconds:
+  # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's readiness probe.
-  readinessProbeInitialDelaySeconds: 30
+  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+  readinessProbeInitialDelaySeconds:
+  # probes allows you to overwrite the global probes config values for this specific component
+  probes:
+    livenessProbe:
+      httpGet:
+        path: "/rest/v2/cache-managers/routing-info/health/status"
+        port: "hotrod"
+      failureThreshold: 5
+      successThreshold: 1
+      timeoutSeconds: 3
+      initialDelaySeconds: 300
+    readinessProbe:
+      httpGet:
+        path: "/rest/v2/cache-managers/routing-info/health/status"
+        port: "hotrod"
+      failureThreshold: 5
+      successThreshold: 1
+      timeoutSeconds: 3
+      initialDelaySeconds: 30
   # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
@@ -1823,12 +1911,23 @@ jaegerBackendExample:
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
   allInOneImage: "jaegertracing/all-in-one:1.31"
-  # livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
-  livenessProbeInitialDelaySeconds: 300
-  # readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
+  # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
+  livenessProbeInitialDelaySeconds:
+  # [DEPRECATED: use probes instead] readinessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's readiness probe.
-  readinessProbeInitialDelaySeconds: 10
+  # The value of the top level "readinessProbeInitialDelaySeconds" property will be used if not set.
+  readinessProbeInitialDelaySeconds:
+  probes:
+    livenessProbe:
+      initialDelaySeconds: 300
+      httpGet:
+        path: "/"
+    readinessProbe:
+      initialDelaySeconds: 10
+      httpGet:
+        path: "/"
   # resources contains the container's requests and limits for CPU and memory
   # as defined by the Kubernetes API.
   # Refer to https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/

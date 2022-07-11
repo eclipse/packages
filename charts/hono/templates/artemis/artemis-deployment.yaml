@@ -65,21 +65,21 @@ spec:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
         livenessProbe:
-          initialDelaySeconds: {{ $args.componentConfig.livenessProbeInitialDelaySeconds }}
-          periodSeconds: 17
+          initialDelaySeconds: {{ $args.componentConfig.probes.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ $args.componentConfig.probes.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ $args.componentConfig.probes.livenessProbe.timeoutSeconds }}
           exec:
             command:
             - "/bin/bash"
             - {{ printf "%s/liveness-probe.sh" $args.configMountPath | quote }}
-          timeoutSeconds: 3
         readinessProbe:
-          initialDelaySeconds: {{ $args.componentConfig.readinessProbeInitialDelaySeconds }}
-          periodSeconds: 10
+          initialDelaySeconds: {{ $args.componentConfig.probes.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ $args.componentConfig.probes.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ $args.componentConfig.probes.readinessProbe.timeoutSeconds }}
           exec:
             command:
             - "/bin/bash"
             - {{ printf "%s/readiness-probe.sh" $args.configMountPath | quote }}
-          timeoutSeconds: 3
         securityContext:
           privileged: false
         volumeMounts:
