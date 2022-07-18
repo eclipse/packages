@@ -64,14 +64,5 @@ spec:
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
-        livenessProbe:
-          httpGet:
-            path: "/"
-            port: health
-          initialDelaySeconds: {{ .Values.jaegerBackendExample.livenessProbeInitialDelaySeconds }}
-        readinessProbe:
-          httpGet:
-            path: "/"
-            port: health
-          initialDelaySeconds: {{ .Values.jaegerBackendExample.readinessProbeInitialDelaySeconds }}
+        {{- include "hono.component.healthChecks" $args | nindent 8 }}
 {{- end }}

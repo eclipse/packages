@@ -103,6 +103,12 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.0.4
+
+* *livenessProbeInitialDelaySeconds* and *readinessProbeInitialDelaySeconds* have been deprecated due to the introduction of the
+  *probes* parameter which allows you to configure the HTTP GET probes more specifically instead of just the initialDelaySeconds. The
+  *probes* parameter is configurable globally but can be overwritten per component.
+
 ### 2.0.0
 
 * The chart now uses Helm API version 2 and thus requires at least Helm version 3 to install.

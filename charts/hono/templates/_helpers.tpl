@@ -479,18 +479,31 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
 */}}
 {{- define "hono.component.healthChecks" }}
+{{- $global := .dot.Values -}}
+{{- $component := .componentConfig -}}
+{{- $probes := mergeOverwrite ( $global.probes | deepCopy ) ( $component.probes | default dict | deepCopy ) -}}
+{{- $deprecatedLivenessProbeInitialDelaySeconds := default .dot.Values.livenessProbeInitialDelaySeconds .componentConfig.livenessProbeInitialDelaySeconds -}}
+{{- $deprecatedReadinessProbeInitialDelaySeconds := default .dot.Values.readinessProbeInitialDelaySeconds .componentConfig.readinessProbeInitialDelaySeconds -}} 
 livenessProbe:
   httpGet:
-    path: "/liveness"
-    port: "health"
-    scheme: "HTTP"
-  initialDelaySeconds: {{ default .dot.Values.livenessProbeInitialDelaySeconds .componentConfig.livenessProbeInitialDelaySeconds }}
+    path: {{ $probes.livenessProbe.httpGet.path }}
+    port: {{ $probes.livenessProbe.httpGet.port }}
+    scheme: {{ $probes.livenessProbe.httpGet.scheme }}
+  periodSeconds: {{ $probes.livenessProbe.periodSeconds }}
+  failureThreshold: {{ $probes.livenessProbe.failureThreshold }}
+  initialDelaySeconds: {{ default $probes.livenessProbe.initialDelaySeconds $deprecatedLivenessProbeInitialDelaySeconds }}
+  successThreshold: {{ $probes.livenessProbe.successThreshold }}
+  timeoutSeconds: {{ $probes.livenessProbe.timeoutSeconds }}
 readinessProbe:
   httpGet:
-    path: "/readiness"
-    port: "health"
-    scheme: "HTTP"
-  initialDelaySeconds: {{ default .dot.Values.readinessProbeInitialDelaySeconds .componentConfig.readinessProbeInitialDelaySeconds }}
+    path: {{ $probes.readinessProbe.httpGet.path }}
+    port: {{ $probes.readinessProbe.httpGet.port }}
+    scheme: {{ $probes.readinessProbe.httpGet.scheme }}
+  periodSeconds: {{ $probes.readinessProbe.periodSeconds }}
+  failureThreshold: {{ $probes.readinessProbe.failureThreshold }}
+  initialDelaySeconds: {{ default $probes.readinessProbe.initialDelaySeconds $deprecatedReadinessProbeInitialDelaySeconds }}
+  successThreshold: {{ $probes.readinessProbe.successThreshold }}
+  timeoutSeconds: {{ $probes.readinessProbe.timeoutSeconds }}
 {{- end }}
 
 {{/*
