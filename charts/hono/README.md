@@ -103,6 +103,12 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.0.5
+
+* Instructions for setting up an Azure Kubernetes Service instance and installing Hono to it have been added.
+  **NOTE**: The instructions have been moved here from the Hono code base *as-is* without review, i.e. the instructions
+  might be outdated and no longer work with the current version of AKS.
+
 ### 2.0.4
 
 * *livenessProbeInitialDelaySeconds* and *readinessProbeInitialDelaySeconds* have been deprecated due to the introduction of the
@@ -420,15 +426,15 @@ The dashboard can then be opened by pointing your browser to `http://localhost:3
 
 ## Using specific Container Images
 
-The chart can be customized to use container images other than the default ones.
-This can be used to install an older version of the images or to install a Hono milestone
-using the chart. It can also be used to install custom built images that need to be
-pulled from a different (private) container registry.
+The chart can be customized to use container images other than the default ones. This can be used to install an older
+version of the images or to install a Hono milestone using the chart. It can also be used to install custom built
+images that need to be pulled from a different (private) container registry. Please refer to Hono's
+[build instructions](https://www.eclipse.org/hono/docs/dev-guide/building_hono/#pushing-images) for details regarding
+building custom images and pushing them to a private container registry.
 
-The `values.yaml` file contains configuration properties for setting the container
-image and tag names to use for Hono's components. The easiest way to override the version
-of all Hono components in one go is to set the `honoImagesTag` and/or `honoContainerRegistry`
-properties to the desired values during installation.
+The `values.yaml` file contains configuration properties for setting the container image and tag names to use for
+Hono's components. The easiest way to override the version of all Hono components in one go is to set the
+`honoImagesTag` and/or `honoContainerRegistry` properties to the desired values during installation.
 
 The following command installs Hono using custom built images published on a private registry with tag
 *2.0.0-custom* instead of the ones indicated by the chart's *appVersion* property:
@@ -441,34 +447,19 @@ It is also possible to define the image and tag names and container registry for
 The easiest way to do that is to create a YAML file that specifies the particular properties:
 
 ```yaml
+# pull standard adapter images in version 2.0.0 from Docker Hub by default
+honoImagesTag: "2.0.0"
+
 deviceRegistryExample:
   # pull custom Device Registry image from private container registry
-  imageName: my-hono/hono-service-device-registry-custom
-  imageTag: 1.0.0
-  containerRegistry: my-private-registry
+  imageName: "my-hono/hono-service-device-registry-custom"
+  imageTag: "1.0.0"
+  containerRegistry: "my-private-registry.io"
 
 authServer:
   # pull "older" release from Docker Hub
-  imageName: eclipse/hono-service-auth
-  imageTag: 1.12.2
-
-# pull standard adapter images in version 2.0.0 from Docker Hub
-adapters:
-  amqp:
-    imageName: eclipse/hono-adapter-amqp
-    imageTag: 2.0.0
-  coap:
-    imageName: eclipse/hono-adapter-coap
-    imageTag: 2.0.0
-  http:
-    imageName: eclipse/hono-adapter-http
-    imageTag: 2.0.0
-  mqtt:
-    imageName: eclipse/hono-adapter-mqtt
-    imageTag: 2.0.0
-  lora:
-    imageName: eclipse/hono-adapter-lora
-    imageTag: 2.0.0
+  imageName: "eclipse/hono-service-auth"
+  imageTag: "1.12.2"
 ```
 
 Assuming that the file is named `customImages.yaml`, the values can then be passed in to the
@@ -477,6 +468,83 @@ Helm `install` command as follows:
 ```bash
 helm install eclipse-hono eclipse-iot/hono -n hono --wait -f /path/to/customImages.yaml
 ```
+
+## Using custom built Container Images
+
+The chart by default installs Hono's official container images. In some cases it might be desirable to build Hono
+from source, e.g. in order to use a different metrics back end.
+
+The container images created as part of the build process need to be made available to the Kubernetes cluster that
+Hono should be installed to. This usually requires the images to be pushed to a (private) container registry that
+the cluster can pull them from. Please refer to the documentation of the employed Kubernetes service provider for
+details regarding the setup and configuration of a private container registry.
+
+### Deploying via a private Registry
+
+Please refer to Hono's [Building from Source](https://www.eclipse.org/hono/docs/dev-guide/building_hono/) instructions
+for details regarding getting the source code, building and pushing the container images.
+
+As in the previous section, the names of the custom images are configured in a YAML file:
+
+```yaml
+# use version 2.0.0-CUSTOM
+honoImagesTag: "2.0.0-CUSTOM"
+
+deviceRegistryExample:
+  imageName: "my.registry.io/eclipse/hono-service-device-registry-mongodb"
+authServer:
+  imageName: "my.registry.io/eclipse/hono-service-auth"
+commandRouterService:
+  imageName: "my.registry.io/eclipse/hono-service-command-router"
+adapters:
+  amqp:
+    imageName: "my.registry.io/eclipse/hono-adapter-amqp"
+  mqtt:
+    imageName: "my.registry.io/eclipse/hono-adapter-mqtt"
+  http:
+    imageName: "my.registry.io/eclipse/hono-adapter-http"
+```
+
+Assuming that the file is named `customImages.yaml`, the values can then be passed in to the
+Helm `install` command as follows:
+
+```bash
+helm install eclipse-hono eclipse-iot/hono -n hono --wait -f /path/to/customImages.yaml
+```
+
+### Deploying to Minikube
+
+When using Minikube as the deployment target, things are a little easier. Minikube comes with an
+embedded Docker daemon which can be used to build the container images instead of using a local
+Docker daemon, thus eliminating the need to push the images to a registry altogether.
+In order to use Minikube's Docker daemon, the following command needs to be run:
+
+~~~sh
+eval $(minikube docker-env)
+~~~
+
+This will set the Docker environment variables to point to Minikube's Docker daemon which can then be
+used for building the container images and storing them locally in the Minikube VM.
+
+In any case the build process can be started using the following command:
+
+~~~sh
+# in base directory of Hono working tree:
+mvn clean install -Pbuild-docker-image,metrics-prometheus
+~~~
+
+To obtain the used Hono version and store it in an environment variable, use:
+
+~~~sh
+# in base directory of Hono working tree:
+HONO_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+~~~
+
+The newly built images can then be deployed using Helm:
+
+~~~sh
+helm install eclipse-hono eclipse-iot/hono -n hono --wait --set honoImagesTag=$HONO_VERSION
+~~~
 
 ## Using Native Executable Images
 
@@ -581,3 +649,216 @@ kubectl get service eclipse-hono-jaeger-query --output="jsonpath={.status.loadBa
 If no example Jaeger back end should be deployed but instead another (existing) tracing back end that is supported
 by OpenTelemetry should be used, the chart's *otelCollectorAgentConfigMap* property can be set to the name of an
 existing ConfigMap that contains a corresponding OpenTelemetry Collector configuration file under key `otel-collector-config.yaml`.
+
+## Using Microsoft Azure Kubernetes Service (AKS)
+
+This section describes how to use Microsoft's
+[Azure Kubernetes Service](https://docs.microsoft.com/azure/aks/) (AKS) to create a managed Kubernetes
+cluster and how to install Hono to it. The steps described include:
+
+* Using [Azure Resource Manager (ARM)](https://docs.microsoft.com/azure/azure-resource-manager/) templates to
+  automatically create infrastructure components on Azure.
+* (Optionally) pushing Hono docker images to an [Azure Container Registry (ACR)](https://azure.microsoft.com/services/container-registry/).
+* Helm based installation of Hono to the AKS instance.
+* (Optionally) using a managed [Azure Service Bus](https://docs.microsoft.com/azure/service-bus-messaging) instance as the
+  broker component for Hono's
+  [AMQP 1.0 based messaging infrastructure](https://www.eclipse.org/hono/docs/architecture/component-view/#amqp-10-based-messaging-infrastructure)
+  instead of the Apache ActiveMQ Artemis instance that is installed by the chart by default.
+- [Virtual Network (VNet) service endpoints](https://docs.microsoft.com/azure/virtual-network) ensure protected communication
+  between AKS and Azure Service Bus.
+
+**NOTE**
+This deployment model is not meant for production use but rather for evaluation as well as demonstration purposes or as a
+baseline to evolve a production grade [Application architecture](https://docs.microsoft.com/azure/architecture/guide/)
+out of it which includes Hono.
+The instructions provided in this section have been created in 2018 and may therefore be outdated!
+
+
+### Prerequisites
+
+* An [Azure subscription](https://azure.microsoft.com/get-started/).
+* [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli) to set up the infrastructure.
+* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and [helm](https://helm.sh/docs/intro/install/)
+  to install Hono into the AKS instance.
+
+### Setup
+
+As described [here](https://docs.microsoft.com/azure/aks/kubernetes-service-principal) we will create an explicit
+service principal. Later we add roles to this principal to access the Azure Container Registry.
+
+```bash
+# Create service principal
+service_principal=`az ad sp create-for-rbac --name http://honoServicePrincipal --skip-assignment --output tsv`
+app_id_principal=`echo $service_principal | cut -f1 -d ' '`
+password_principal=`echo $service_principal | cut -f4 -d ' '`
+object_id_principal=`az ad sp show --id $app_id_principal --query objectId --output tsv`
+```
+
+Note: it might take a few seconds until the principal is available for the next steps.
+
+Now we create the Azure Container Registry instance and provide read access to the service principal.
+
+```bash
+# Resource group where the ACR is deployed.
+acr_resourcegroupname={YOUR_ACR_RG}
+# Name of your ACR.
+acr_registry_name={YOUR_ACR_NAME}
+# Full name of the ACR.
+acr_login_server=$acr_registry_name.azurecr.io
+
+az acr create --resource-group $acr_resourcegroupname --name $acr_registry-name  --sku Basic
+acr_id_access_registry=`az acr show --resource-group $acr_resourcegroupname --name $acr_registry_name --query "id" --output tsv`
+az role assignment create --assignee $app_id_principal --scope $acr_id_access_registry --role Reader
+```
+
+With the next command we will use the provided Azure Resource Manager templates to setup the AKS cluster.
+This might take a while.
+
+```bash
+resourcegroup_name=hono
+az group create --name $resourcegroup_name --location "westeurope"
+unique_solution_prefix=myprefix
+cd infra/azure
+az group deployment create --name HonoBasicInfrastructure --resource-group $resourcegroup_name --template-file arm/honoInfrastructureDeployment.json --parameters uniqueSolutionPrefix=$unique_solution_prefix servicePrincipalObjectId=$object_id_principal servicePrincipalClientId=$app_id_principal servicePrincipalClientSecret=$password_principal
+```
+
+Notes:
+
+- add the following parameter in case you want to opt for the Azure Service Bus as broker in Hono's
+  AMQP 1.0 based messaging infrastructure instead of deploying an Apache ActiveMQ Artemis instance into AKS: *serviceBus=true*
+- add the *kubernetesVersion* parameter to define the k8s version to use for the AKS cluster, e.g. *kubernetesVersion=1.23*.
+  Note that not all versions [might be supported](https://docs.microsoft.com/de-de/azure/aks/supported-kubernetes-versions?tabs=azure-cli#azure-portal-and-cli-versions)
+  in your Azure region, though.
+
+After the deployment is complete you can set your cluster in *kubectl*.
+
+```bash
+az aks get-credentials --resource-group $resourcegroup_name --name $aks_cluster_name
+```
+
+Next create retain storage for the device registry.
+
+```bash
+kubectl apply -f managed-premium-retain.yaml
+```
+
+Now Hono can be installed to the AKS cluster as described in the [next section](#installing-hono-to-aks).
+
+### Monitoring
+
+You can monitor your cluster using
+[Azure Monitor for containers](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-overview).
+
+Navigate to [https://portal.azure.com](https://portal.azure.com) -> your resource group -> your kubernetes cluster
+
+On an overview tab you fill find information about your cluster (status, location, version, etc.). Also, here
+you will find a *Monitor Containers* link. Navigate to *Monitor Containers* and explore metrics and the current status of
+your Cluster, Nodes, Controllers and Containers.
+
+### Cleaning up
+
+Use the following command to delete all created resources once they are no longer needed:
+
+```sh
+az group delete --name $resourcegroup_name --yes --no-wait
+```
+
+### Installing Hono to AKS
+
+First we build the docker images and push them into the Azure Container Registry (ACR). Note that when using a
+custom image tag, the tag name needs to be specified on the command line when when installing the chart using Helm as
+described [above](#deploying-via-a-private-registry).
+
+```bash
+# Resource group where the ACR is deployed.
+acr_resourcegroupname={YOUR_ACR_RG}
+# Name of your ACR.
+acr_registry_name={YOUR_ACR_NAME}
+# Full name of the ACR.
+acr_login_server=$acr_registry_name.azurecr.io
+# Authenticate your docker daemon with the ACR.
+az acr login --name $ACR_NAME
+# Build images.
+cd hono
+mvn install -Pbuild-docker-image -Ddocker.registry=$acr_login_server
+# Push images to ACR.
+./push_hono_images.sh 1.0.0-SNAPSHOT $acr_login_server
+```
+
+Now we can retrieve settings from the deployment for the following steps:
+
+```bash
+# Resource group of the AKS deployment
+resourcegroup_name=hono
+
+aks_cluster_name=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.aksClusterName.value -o tsv`
+http_ip_address=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.httpPublicIPAddress.value -o tsv`
+amqp_ip_address=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.amqpPublicIPAddress.value -o tsv`
+mqtt_ip_address=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.mqttPublicIPAddress.value -o tsv`
+registry_ip_address=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.registryPublicIPAddress.value -o tsv`
+network_ip_address=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.networkPublicIPAddress.value -o tsv`
+```
+
+Note: add the following lines in case you opted for the Azure Service Bus variant:
+
+```bash
+service_bus_namespace=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.serviceBusNamespaceName.value -o tsv`
+service_bus_key_name=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.serviceBusKeyName.value -o tsv`
+service_bus_key=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.serviceBusKey.value -o tsv`
+```
+
+Finally install Hono. Leveraging the *managed-premium-retain* storage in combination with
+*deviceRegistry.resetFiles=false* parameter is optional but ensures that Device registry storage will retain future
+update deployments.
+
+```bash
+# in Hono working tree directory: hono/deploy
+helm install eclipse-hono eclipse-iot/hono -n hono --wait \
+    --set adapters.mqtt.svc.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"=$resourcegroup_name \
+    --set adapters.http.svc.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"=$resourcegroup_name \
+    --set adapters.amqp.svc.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"=$resourcegroup_name \
+    --set deviceRegistryExample.svc.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"=$resourcegroup_name \
+    --set amqpMessagingNetworkExample.dispatchRouter.svc.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-resource-group"=$resourcegroup_name \
+    --set deviceRegistryExample.storageClass=managed-premium-retain \
+    --set deviceRegistryExample.resetFiles=false \
+    --set adapters.mqtt.svc.loadBalancerIP=$mqtt_ip_address \
+    --set adapters.http.svc.loadBalancerIP=$http_ip_address \
+    --set adapters.amqp.svc.loadBalancerIP=$amqp_ip_address \
+    --set deviceRegistryExample.svc.loadBalancerIP=$registry_ip_address \
+    --set amqpMessagingNetworkExample.dispatchRouter.svc.loadBalancerIP=$network_ip_address
+```
+
+Note: add the following lines in case you opted for the Azure Service Bus variant:
+
+```bash
+    # Router update required to work together with Azure Service Bus
+    --set amqpMessagingNetworkExample.broker.servicebus.host=$service_bus_namespace.servicebus.windows.net \
+    --set amqpMessagingNetworkExample.broker.saslUsername=$service_bus_key_name \
+    --set amqpMessagingNetworkExample.broker.saslPassword=$service_bus_key
+```
+
+Have fun with Hono on Microsoft Azure!
+
+Next steps:
+
+You can follow the steps as described in the [Getting Started]({{% homelink "getting-started/" %}}) guide with the
+following differences:
+
+Compared to a plain k8s deployment Azure provides us DNS names with static IPs for the Hono endpoints. To retrieve them:
+
+```bash
+HTTP_ADAPTER_IP=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.httpPublicIPFQDN.value -o tsv`
+AMQP_ADAPTER_IP=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.amqpPublicIPFQDN.value -o tsv`
+MQTT_ADAPTER_IP=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.mqttPublicIPFQDN.value -o tsv`
+REGISTRY_IP=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.registryPublicIPFQDN.value -o tsv`
+AMQP_NETWORK_IP=`az group deployment show --name HonoBasicInfrastructure --resource-group $resourcegroup_name --query properties.outputs.networkPublicIPFQDN.value -o tsv`
+```
+
+As Azure Service Bus does not support auto creation of queues you have to create a queue per tenant (ID), e.g. after
+you have created your tenant run:
+
+```bash
+az servicebus queue create --resource-group $resourcegroup_name \
+    --namespace-name $service_bus_namespace \
+    --name $MY_TENANT
+```
