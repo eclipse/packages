@@ -103,6 +103,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.0.6
+
+* Upgraded app version to Hono 2.0.1
+
 ### 2.0.5
 
 * Instructions for setting up an Azure Kubernetes Service instance and installing Hono to it have been added.
