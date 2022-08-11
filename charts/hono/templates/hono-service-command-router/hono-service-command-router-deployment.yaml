@@ -15,6 +15,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
+  {{- include "hono.deploymentAnnotations" $args | indent 2 }}
 spec:
   replicas: 1
   selector:

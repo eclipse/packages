@@ -289,6 +289,9 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
+    deployment:
+      annotations: {}
+
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
     # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -407,6 +410,9 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
+    deployment:
+      annotations: {}
+
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
     # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -515,6 +521,9 @@ adapters:
     svc:
       annotations: {}
       loadBalancerIP:
+
+    deployment:
+      annotations: {}
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -634,6 +643,9 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
+    deployment:
+      annotations: {}
+
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
     # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -751,6 +763,9 @@ adapters:
       annotations: {}
       loadBalancerIP:
 
+    deployment:
+      annotations: {}
+
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
     # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -864,6 +879,9 @@ authServer:
     limits:
       cpu: "1"
       memory: "256Mi"
+
+  deployment:
+    annotations: {}
 
   # extraVolumes contains additional kubernetes Volume definitions representing volumes
   # that can mounted into the container's file system.
@@ -1191,6 +1209,9 @@ deviceRegistryExample:
     # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
 
+    deployment:
+      annotations: {}
+
   # jdbcBasedDeviceRegistry contains configuration properties specific to the
   # jdbc based device registry.
   jdbcBasedDeviceRegistry:
@@ -1241,6 +1262,9 @@ deviceRegistryExample:
 
     # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
+
+    deployment:
+      annotations: {}
 
     registry:
       jdbc:
@@ -1389,6 +1413,9 @@ commandRouterService:
       memory: "512Mi"
 
   svc:
+    annotations: {}
+
+  deployment:
     annotations: {}
 
   # extraVolumes contains additional kubernetes Volume definitions representing volumes
