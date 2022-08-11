@@ -143,6 +143,19 @@ prometheus.io/scheme: "http"
 kubectl.kubernetes.io/default-container: {{ .name | quote }}
 {{- end }}
 
+{{/*
+Add annotations for Hono component deployments.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
+*/}}
+{{- define "hono.deploymentAnnotations" -}}
+{{- if .componentConfig.deployment.annotations }}
+annotations:
+{{- with .componentConfig.deployment.annotations }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}
 
 {{/*
 Creates a headless Service for a Hono component.
