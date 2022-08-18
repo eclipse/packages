@@ -13,7 +13,7 @@
 {{- $releaseName := .Release.Name -}}
 {{- $name := include "ditto.name" . -}}
 {{- $labels := include "ditto.labels" . -}}
-{{- $root := . -}}
+{{ $root := . }}
 {{ range $path, $bytes := .Files.Glob "nginx-config/**" }}
 ---
 apiVersion: v1

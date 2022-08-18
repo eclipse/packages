@@ -9,7 +9,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-{{- if .Values.openshift.routes.enabled }}
+{{- if .Values.openshift.routes.enabled -}}
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
