@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -12,19 +12,19 @@
 {{- $releaseName := .Release.Name -}}
 {{- $name := include "ditto.name" . -}}
 {{- $labels := include "ditto.labels" . -}}
-{{- $root := . -}}
-{{ range $path, $bytes := .Files.Glob "nginx-config/**" }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $releaseName }}-{{ $path | replace "/" "-" | replace "." "-" }}
+  name: {{ $releaseName }}-nginx-config-nginx-htpasswd
   labels:
     app.kubernetes.io/name: {{ $name }}-nginx-config
 {{ $labels | indent 4 }}
 data:
-  {{ $path | replace "nginx-config/" ""}}: |-
-{{ $root.Files.Get $path | indent 4 }}
----
+  "nginx.htpasswd": |-
+{{ range $key, $value := .Values.global.basicAuthUsers }}
+{{ (htpasswd $value.user $value.password) | indent 4 }}
 {{- end -}}
+
+---
 {{- end -}}
