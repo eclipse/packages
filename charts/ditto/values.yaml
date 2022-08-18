@@ -92,9 +92,6 @@ global:
     ditto:
       user: ditto
       password: ditto
-    ditto2:
-      user: ditto2
-      password: ditto2
   ## jwtOnly controls whether only OpenID-Connect authentication is supported
   ## if false, basicAuth is used
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#openid-connect
