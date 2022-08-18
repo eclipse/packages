@@ -8,6 +8,7 @@
 # http://www.eclipse.org/legal/epl-2.0
 #
 # SPDX-License-Identifier: EPL-2.0
+#
 {{- if .Values.nginx.enabled -}}
 {{- $releaseName := .Release.Name -}}
 {{- $name := include "ditto.name" . -}}
@@ -23,8 +24,7 @@ metadata:
 data:
   "nginx.htpasswd": |-
 {{ range $key, $value := .Values.global.basicAuthUsers }}
-{{ (htpasswd $value.user $value.password) | indent 4 }}
-{{- end -}}
-
+{{- (htpasswd $value.user $value.password) | indent 4 }}
+{{ end }}
 ---
-{{- end -}}
+{{- end }}
