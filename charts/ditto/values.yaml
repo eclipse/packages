@@ -8,6 +8,7 @@
 # http://www.eclipse.org/legal/epl-2.0
 #
 # SPDX-License-Identifier: EPL-2.0
+#
 ---
 # Default values for ditto.
 # This is a YAML-formatted file.
@@ -85,6 +86,19 @@ openshift:
 ## ----------------------------------------------------------------------------
 ## global configuration shared by all components
 global:
+  # Nginx Basic Auth config
+  # either configure one or more basic auth user in the basicAuthUsers section
+  # where you can specify username and password in clear text
+  # or use the hashedBasicAuthUsers section where you can add already hashed username/password combinations
+  # default basic auth user used for authentication in nginx is ditto with password ditto
+  # add more users to the basicAuthUsers array or replace the default user
+  basicAuthUsers:
+    ditto:
+      user: ditto
+      password: ditto
+  # alternative: add already hashed username and password combinations
+  hashedBasicAuthUsers: []
+  #  - ditto:A6BgmB8IEtPTs
   ## jwtOnly controls whether only OpenID-Connect authentication is supported
   ## if false, basicAuth is used
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#openid-connect
@@ -353,7 +367,7 @@ gateway:
     - "-Dakka.cluster.failure-detector.expected-response-after=10s"
     - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
     - "-Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s"
-  ## extraEnv to add arbitrary environment variabled to gateway container
+  ## extraEnv to add arbitrary environment variables to gateway container
   extraEnv: []
     # - name: LOG_LEVEL_APPLICATION
     #   value: "DEBUG"
@@ -432,7 +446,7 @@ nginx:
     ## repository for the nginx docker image
     repository: docker.io/nginx
     ## tag for the nginx docker image
-    tag: 1.21-alpine
+    tag: 1.23.1-alpine
     ## pullPolicy for the nginx docker image
     pullPolicy: IfNotPresent
   ## extraEnv to add arbitrary environment variables to nginx container
@@ -469,7 +483,7 @@ nginx:
   ## affinity
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
-  # init contaiers for nginx
+  # init containers for nginx
   initContainers:
     waitForGateway:
       name: wait-for-gateway

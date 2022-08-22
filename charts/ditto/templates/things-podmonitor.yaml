@@ -8,6 +8,7 @@
 # http://www.eclipse.org/legal/epl-2.0
 #
 # SPDX-License-Identifier: EPL-2.0
+#
 {{- if and .Values.things.podMonitor.enabled .Values.global.prometheus.port -}}
 {{- if .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" -}}
 ---
