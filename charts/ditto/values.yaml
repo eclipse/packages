@@ -98,8 +98,7 @@ global:
       password: ditto
   # alternative: add already hashed username and password combinations
   hashedBasicAuthUsers: []
-  #  ditto:
-  #    hashedUserPassword: ditto:A6BgmB8IEtPTs
+  #  - ditto:A6BgmB8IEtPTs
   ## jwtOnly controls whether only OpenID-Connect authentication is supported
   ## if false, basicAuth is used
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#openid-connect

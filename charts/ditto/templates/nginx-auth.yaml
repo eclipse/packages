@@ -24,8 +24,8 @@ metadata:
 data:
   "nginx.htpasswd": |-
 {{- if .Values.global.hashedBasicAuthUsers }}
-{{ range $key, $value := .Values.global.hashedBasicAuthUsers }}
-{{- $value.hashedUserPassword | indent 4 }}
+{{ range .Values.global.hashedBasicAuthUsers }}
+{{- . | indent 4 }}
 {{ end }}
 {{- else }}
 {{ range $key, $value := .Values.global.basicAuthUsers }}
