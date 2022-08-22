@@ -86,12 +86,20 @@ openshift:
 ## ----------------------------------------------------------------------------
 ## global configuration shared by all components
 global:
+  # Nginx Basic Auth config
+  # either configure one or more basic auth user in the basicAuthUsers section
+  # where you can specify username and password in clear text
+  # or use the hashedBasicAuthUsers section where you can add already hashed username/password combinations
   # default basic auth user used for authentication in nginx is ditto with password ditto
   # add more users to the basicAuthUsers array or replace the default user
   basicAuthUsers:
     ditto:
       user: ditto
       password: ditto
+  # alternative: add already hashed username and password combinations
+  hashedBasicAuthUsers: []
+  #  ditto:
+  #    hashedUserPassword: ditto:A6BgmB8IEtPTs
   ## jwtOnly controls whether only OpenID-Connect authentication is supported
   ## if false, basicAuth is used
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#openid-connect
