@@ -36,6 +36,24 @@ spec:
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       restartPolicy: Never
+      initContainers:
+        - name: "wait-for-services"
+          image: "curlimages/curl:7.68.0"
+          command:
+          - /bin/sh
+          - -c
+          - |
+            set -x
+
+            while [[ "$(curl -sL -w "%{http_code}\n" "http://{{ .Release.Name }}-service-device-registry-ext:8088/liveness" -o /dev/null)" != "200" ]]; do
+              echo '.'
+              sleep 10
+            done
+
+            while [[ "$(curl -sL -w "%{http_code}\n" "http://{{ .Release.Name }}-ditto-nginx:8080/health" -o /dev/null)" != "200" ]]; do
+              echo '.'
+              sleep 10
+            done
       containers:
       - name: "post-install"
         image: "curlimages/curl:7.68.0"
