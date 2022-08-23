@@ -39,6 +39,7 @@ spec:
       annotations:
         checksum/nginx-conf: {{ include (print $.Template.BasePath "/nginx-configmap.yaml") . | sha256sum }}
         checksum/nginx-config: {{ include (print $.Template.BasePath "/nginx-config.yaml") . | sha256sum }}
+        checksum/nginx-auth: {{ include (print $.Template.BasePath "/nginx-auth.yaml") . | sha256sum }}
         {{- with .Values.nginx.additionalAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -109,8 +110,8 @@ spec:
           configMap:
             name: {{ .Release.Name }}-nginx-conf
         - name: nginx-htpasswd
-          configMap:
-            name: {{ .Release.Name }}-nginx-config-nginx-htpasswd
+          secret:
+            secretName: {{ .Release.Name }}-nginx-config-nginx-htpasswd
         - name: nginx-cors
           configMap:
             name: {{ .Release.Name }}-nginx-config-nginx-cors-conf
