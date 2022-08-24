@@ -23,9 +23,14 @@ honoConnection:
 # Configuration properties for Eclipse Hono.
 hono:
 
+# Explicitly check for kafkaMessagingClusterExample because the post-install-job needs to know if it should load
+# the certificates from the kubernetes secrets and attach them to the hono-kafka-connection.json.
+  kafkaMessagingClusterExample:
+    enabled: true
+
   livenessProbeInitialDelaySeconds: 900
   readinessProbeInitialDelaySeconds: 45
-  useLoadBalancer: false
+  useLoadBalancer: true
 
   prometheus:
     createInstance: false

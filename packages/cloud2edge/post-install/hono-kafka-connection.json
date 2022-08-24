@@ -10,7 +10,7 @@
       "name": "eclipse-hono-via-kafka",
       "connectionType": "kafka",
       "connectionStatus": "open",
-      "uri": "tcp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-kafka:9092",
+      "uri": "ssl://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-kafka:9092",
       "sources": [
         {
           "addresses": [
