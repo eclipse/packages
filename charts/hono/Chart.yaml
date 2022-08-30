@@ -15,17 +15,18 @@ name: hono
 description: |
   Eclipse Hono™ provides remote service interfaces for connecting large numbers of IoT devices to a back end and
   interacting with them in a uniform way regardless of the device communication protocol.
-version: 2.0.7
+version: 2.1.0
 # Version of Hono being deployed by the chart
-appVersion: 2.0.1
+appVersion: 2.1.0
 keywords:
 - iot-chart
 - IoT
 - connectivity
 - messaging
+- Kafka
 home: https://www.eclipse.org/hono/
 sources:
-- https://github.com/eclipse/hono
+- https://github.com/eclipse-hono/hono
 icon: https://www.eclipse.org/hono/favicon/favicon-48x48.png
 maintainers:
 - name: dejanb

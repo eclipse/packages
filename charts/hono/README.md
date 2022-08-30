@@ -103,6 +103,12 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.1.0
+
+* Upgraded app version to Hono 2.1.0
+* The Device Registry and the Command Router components are no longer explicitly configured with the Auth server's certificate for
+  validating tokens but instead download the required public key(s) from the Auth server during runtime via its JWK resource.
+
 ### 2.0.6
 
 * Upgraded app version to Hono 2.0.1

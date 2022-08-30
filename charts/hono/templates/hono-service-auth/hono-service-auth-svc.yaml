@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -21,5 +21,9 @@ spec:
     port: 5671
     protocol: TCP
     targetPort: amqps
+  - name: validation-keys
+    port: 8088
+    protocol: TCP
+    targetPort: health
   selector:
     {{- include "hono.matchLabels" $args | nindent 4 }}
