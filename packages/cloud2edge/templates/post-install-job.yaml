@@ -42,7 +42,8 @@ spec:
         command:
         - /bin/sh
         - -c
-        - "PWD=$(cat /var/run/c2e/ditto-gw-users/devops-password) &&
+        - "curlHome=/home/curl_user
+          PWD=$(cat /var/run/c2e/ditto-gw-users/devops-password) &&
           curl -X POST -H 'Content-Type: application/json' --data '{}'
           {{ printf "http://%s-service-device-registry-ext:28080/v1/tenants/%s" .Release.Name .Values.demoDevice.tenant }} &&
           curl -X POST -H 'Content-Type: application/json' --data '{}'
@@ -56,13 +57,13 @@ spec:
           {{- end }}
 
           {{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
-          if [ -e  /var/run/c2e/kafka-connection-cert/tls|.crt ]
-          then
-          certToInsert=\"$(cat /var/run/c2e/kafka-connection-cert/tls.crt | tr -d '\n' | sed 's/E-----/E-----\\\\n/g' | sed 's/-----END/\\\\n-----END/g')\"
-          sed -i '/uri/ a '\"\"ca\": \"$certToInsert\",\"'' /var/run/c2e/post-install-data/hono-kafka-connection.json
-          fi
-          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-kafka-connection.json
+          cp /var/run/c2e/post-install-data/insert-kafka-certs.sh $curlHome/insert-kafka-certs.sh
 
+          chmod +x $curlHome/insert-kafka-certs.sh
+
+          sh $curlHome/insert-kafka-certs.sh
+
+          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @$curlHome/hono-kafka-connection.json
           {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
           {{- end }}
 

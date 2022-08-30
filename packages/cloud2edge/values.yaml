@@ -30,7 +30,7 @@ hono:
 
   livenessProbeInitialDelaySeconds: 900
   readinessProbeInitialDelaySeconds: 45
-  useLoadBalancer: true
+  useLoadBalancer: false
 
   prometheus:
     createInstance: false
