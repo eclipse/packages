@@ -15,14 +15,15 @@
 {{- $labels := include "ditto.labels" . -}}
 ---
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
   name: {{ $releaseName }}-nginx-config-nginx-htpasswd
   labels:
     app.kubernetes.io/name: {{ $name }}-nginx-config
 {{ $labels | indent 4 }}
-data:
-  "nginx.htpasswd": |-
+type: Opaque
+stringData:
+  nginx.htpasswd: |-
 {{- if .Values.global.hashedBasicAuthUsers }}
 {{ range .Values.global.hashedBasicAuthUsers }}
 {{- . | indent 4 }}
