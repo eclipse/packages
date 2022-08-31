@@ -52,9 +52,12 @@ hono:
       limits:
         cpu: "1"
         memory: "256Mi"
-    extraSecretMounts:
-      permissions:
-        secretName: "permissions"
+    extraVolumes:
+      - name: "permissions"
+        secret:
+          secretName: "permissions"
+    extraVolumeMounts:
+      - name: "permissions"
         mountPath: "/var/run/hono/auth"
     hono:
       auth:
