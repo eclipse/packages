@@ -10,7 +10,13 @@
       "name": "eclipse-hono-via-kafka",
       "connectionType": "kafka",
       "connectionStatus": "open",
+      {{- if .Values.hono.kafkaMessagingClusterExample.enabled }}
       "uri": "tcp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-kafka:9092",
+      {{- else }}
+      {{ $kafka := .Values.hono.adapters.kafkaMessagingSpec.commonClientConfig }}
+      {{ $kafkaServers := splitList "," (index $kafka "bootstrap.servers") }}
+      "uri": "tcp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ first $kafkaServers }}",
+      {{- end }}
       "sources": [
         {
           "addresses": [
@@ -151,8 +157,14 @@
         }
       ],
       "specificConfig": {
+        {{- if .Values.hono.kafkaMessagingClusterExample.enabled }}
         "saslMechanism": "plain",
         "bootstrapServers": "{{ .Release.Name }}-kafka:9092",
+        {{- else }}
+        {{ $kafka := .Values.hono.adapters.kafkaMessagingSpec.commonClientConfig }}
+        "saslMechanism": "{{ (or (index $kafka "sasl.mechanism") "PLAIN") | lower }}",
+        "bootstrapServers": "{{ index $kafka "bootstrap.servers" }}",
+        {{- end }}
         "groupId": {{ printf "%s_{{ connection:id }}" .Values.demoDevice.tenant | quote }}
       },
       "clientCount": 1,
