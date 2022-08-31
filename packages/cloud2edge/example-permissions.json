@@ -102,19 +102,19 @@
     ],
     "application_c2e": [
       {
-        "resource": "telemetry/{{ .Values.demoDevice.tenant }}",
+        "resource": "telemetry/{{ .Values.tenant }}",
         "activities": [ "READ" ]
       },
       {
-        "resource": "event/{{ .Values.demoDevice.tenant }}",
+        "resource": "event/{{ .Values.tenant }}",
         "activities": [ "READ" ]
       },
       {
-        "resource": "command/{{ .Values.demoDevice.tenant }}",
+        "resource": "command/{{ .Values.tenant }}",
         "activities": [ "WRITE" ]
       },
       {
-        "resource": "command_response/{{ .Values.demoDevice.tenant }}/*",
+        "resource": "command_response/{{ .Values.tenant }}/*",
         "activities": [ "READ" ]
       }
     ]

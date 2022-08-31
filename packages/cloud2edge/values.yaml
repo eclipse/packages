@@ -11,8 +11,9 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 
+tenant: "org.eclipse.packages.c2e"
 demoDevice:
-  tenant: "org.eclipse.packages.c2e"
+  enabled: true
   deviceId: "demo-device"
   password: "demo-secret"
 

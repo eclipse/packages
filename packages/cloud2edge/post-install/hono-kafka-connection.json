@@ -20,7 +20,7 @@
       "sources": [
         {
           "addresses": [
-            "hono.telemetry.{{ .Values.demoDevice.tenant }}"
+            "hono.telemetry.{{ .Values.tenant }}"
           ],
           "consumerCount": 1,
           "authorizationContext": [
@@ -37,7 +37,7 @@
           "payloadMapping": [],
           "replyTarget": {
             "enabled": true,
-            "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+            "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.tenant | quote }},
             "headerMapping": {
               "device_id": {{ "{{ thing:id }}" | quote }},
               "subject": {{ "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response" | quote }},
@@ -56,7 +56,7 @@
         },
         {
           "addresses": [
-            "hono.event.{{ .Values.demoDevice.tenant }}"
+            "hono.event.{{ .Values.tenant }}"
           ],
           "consumerCount": 1,
           "authorizationContext": [
@@ -73,7 +73,7 @@
           "payloadMapping": [],
           "replyTarget": {
             "enabled": true,
-            "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+            "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.tenant | quote }},
             "headerMapping": {
               "device_id": {{ "{{ thing:id }}" | quote }},
               "subject": {{ "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response" | quote }},
@@ -91,7 +91,7 @@
         },
         {
           "addresses": [
-            "hono.command_response.{{ .Values.demoDevice.tenant }}"
+            "hono.command_response.{{ .Values.tenant }}"
           ],
           "consumerCount": 1,
           "authorizationContext": [
@@ -125,7 +125,7 @@
       ],
       "targets": [
         {
-          "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+          "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.tenant | quote }},
           "authorizationContext": [
             "pre-authenticated:hono-connection"
           ],
@@ -141,7 +141,7 @@
           ]
         },
         {
-          "address": {{ printf "hono.command.%s/{{thing:id}}" .Values.demoDevice.tenant | quote }},
+          "address": {{ printf "hono.command.%s/{{thing:id}}" .Values.tenant | quote }},
           "authorizationContext": [
             "pre-authenticated:hono-connection"
           ],
@@ -165,7 +165,7 @@
         "saslMechanism": "{{ (or (index $kafka "sasl.mechanism") "PLAIN") | lower }}",
         "bootstrapServers": "{{ index $kafka "bootstrap.servers" }}",
         {{- end }}
-        "groupId": {{ printf "%s_{{ connection:id }}" .Values.demoDevice.tenant | quote }}
+        "groupId": {{ printf "%s_{{ connection:id }}" .Values.tenant | quote }}
       },
       "clientCount": 1,
       "failoverEnabled": true,
