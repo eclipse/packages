@@ -1,5 +1,6 @@
 #!/bin/sh
-
+#Necessary transformation in order to comply with the expected format of certificates
+#imposed by the Ditto connectivity API: "ca": "-----BEGIN CERTIFICATE-----\n<trusted certificate>\n-----END CERTIFICATE-----"
 certPath=/var/run/c2e/kafka-connection-cert/tls.crt
 curlHome=/home/curl_user
 

@@ -157,7 +157,7 @@
       },
       "clientCount": 1,
       "failoverEnabled": true,
-      "validateCertificates": false
+      "validateCertificates": true
     }
   }
 }

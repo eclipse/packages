@@ -59,8 +59,6 @@ spec:
           {{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
           cp /var/run/c2e/post-install-data/insert-kafka-certs.sh $curlHome/insert-kafka-certs.sh
 
-          chmod +x $curlHome/insert-kafka-certs.sh
-
           sh $curlHome/insert-kafka-certs.sh
 
           curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @$curlHome/hono-kafka-connection.json
