@@ -85,9 +85,6 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
-            - name: swagger-ui-api
-              mountPath: /usr/share/nginx/html/
-              subPath: openapi
             - name: swagger-ui-cache
               mountPath: /var/cache/nginx
             - name: swagger-ui-work
@@ -99,9 +96,6 @@ spec:
             - name: swagger-ui-run
               mountPath: /run/nginx
       volumes:
-        - name: swagger-ui-api
-          configMap:
-            name: {{ include "ditto.fullname" . }}-swaggerui
         - name: swagger-ui-cache
           emptyDir: {}
         - name: swagger-ui-work
