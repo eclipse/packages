@@ -47,7 +47,7 @@ probes:
     timeoutSeconds: 3
   readinessProbe:
     httpGet:
-      path: "/liveness"
+      path: "/readiness"
       port: "health"
       scheme: "HTTP"
     periodSeconds: 10
