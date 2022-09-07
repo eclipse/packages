@@ -649,7 +649,9 @@ Adds port type declarations to a component's service spec.
 Configures NodePort on component's service spec.
 */}}
 {{- define "hono.nodePort" }}
-{{- if and (ne .dot.Values.platform "openshift") (ne (default "nil" .dot.Values.serviceType) "ClusterIP") }}
-nodePort: {{ .port  }}
+{{- if ne .dot.Values.platform "openshift" }}
+{{- if any ( eq (default "nil" .dot.Values.serviceType) "NodePort" ) ( eq .dot.Values.useLoadBalancer false ) }}
+nodePort: {{ .port }}
+{{- end }}
 {{- end }}
 {{- end }}
