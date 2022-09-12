@@ -428,7 +428,11 @@ quarkus:
     tracer:
       exporter:
         otlp:
+          {{- if .dot.Values.jaegerBackendExample.enabled }}
+          endpoint: {{ printf "http://%s-jaeger-collector:4317" .dot.Release.Name | quote }}
+          {{- else }}
           endpoint: "http://127.0.0.1:4317"
+          {{- end }}
   {{- end }}
   vertx:
     prefer-native-transport: true
@@ -459,7 +463,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Adds an OpenTelemetry Collector Agent container to a template spec.
 */}}
 {{- define "hono.otel.agent" }}
-{{- $deploySidecar := or .Values.jaegerBackendExample.enabled .Values.otelCollectorAgentConfigMap }}
+{{- $deploySidecar := and .Values.otelCollectorAgentConfigMap ( not .Values.jaegerBackendExample.enabled ) }}
 {{- if $deploySidecar }}
 - name: "otel-collector-agent-sidecar"
   image: {{ .Values.otelCollectorAgentImage | quote }}
@@ -590,11 +594,10 @@ The scope passed in is expected to be a dict with keys
 - name: {{ $volumeName | quote }}
   secret:
     secretName: {{ printf "%s-%s" .dot.Release.Name $volumeName | quote }}
-{{- $otelCollectorConfigMap := ternary ( printf "%s-%s" .dot.Release.Name "otel-collector-agent-config" ) ( default "none" .dot.Values.otelCollectorAgentConfigMap ) .dot.Values.jaegerBackendExample.enabled }}
-{{- if ne $otelCollectorConfigMap "none" }}
+{{- if and .dot.Values.otelCollectorAgentConfigMap ( not .dot.Values.jaegerBackendExample.enabled ) }}
 - name: "otel-collector-config"
   configMap:
-    name: {{ $otelCollectorConfigMap | quote }}
+    name: {{ .dot.Values.otelCollectorAgentConfigMap | quote }}
 {{- end }}
 {{- with .componentConfig.extraVolumes }}
 {{ . | toYaml }}

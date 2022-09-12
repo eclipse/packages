@@ -40,6 +40,8 @@ spec:
         env:
         - name: ADMIN_HTTP_HOST_PORT
           value: {{ printf ":%s" $healthCheckPort | quote }}
+        - name: COLLECTOR_OTLP_ENABLED
+          value: "true"
         {{- with .Values.jaegerBackendExample.env }}
         {{- range $name,$value := . }}
         - name: {{ .name }}
@@ -49,6 +51,9 @@ spec:
         ports:
         - name: collector-grpc
           containerPort: 14250
+          protocol: TCP
+        - name: otlp-grpc
+          containerPort: 4317
           protocol: TCP
         - name: server-http
           containerPort: 5778
