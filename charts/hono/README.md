@@ -103,6 +103,11 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.1.2
+
+* The Jaeger 'all-in-one' container, deployed if *jaegerBackendExample.enabled: true* is set, now supports collecting
+  traces in the OpenTelemetry (OTLP) format.
+
 ### 2.1.0
 
 * Upgraded app version to Hono 2.1.0

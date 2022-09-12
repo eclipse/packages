@@ -1937,7 +1937,7 @@ jaegerBackendExample:
   enabled: false
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
-  allInOneImage: "jaegertracing/all-in-one:1.31"
+  allInOneImage: "jaegertracing/all-in-one:1.37"
   # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
@@ -1994,14 +1994,16 @@ jaegerBackendExample:
   # envConfigMap contains the name of an (existing) ConfigMap to get additional environment variables from.
   envConfigMap:
 
-# otelCollectorAgentImage contains the name (including tag)
-# of the container image to use for the OpenTelemetry collector agent sidecar deployed
-# with Hono's components.
-# A sidecar container will be deployed if either "jaegerBackendExample.enabled" is set to "true"
-# or else if "otelCollectorAgentConfigMap" is not null.
+# otelCollectorAgentImage contains the name (including tag) of the container image
+# to use for the OpenTelemetry collector agent sidecar containers.
+# These containers are deployed with Hono's components if the example Jaeger all-in-one
+# deployment is disabled and "otelCollectorAgentConfigMap" is not null.
 otelCollectorAgentImage: "otel/opentelemetry-collector:0.53.0"
 # otelCollectorAgentConfigMap can be used to specify the name of an existing ConfigMap
-# from which the collector's configuration should be read.
-# The map is expected to contain the configuration under key "otel-collector-config.yaml".
+# from which an OpenTelemetry collector configuration should be read.
+# If a ConfigMap name is given, an OpenTelemetry collector agent sidecar container will
+# be deployed with each Hono component and the Hono component will send tracing data to
+# that collector. The collector configuration is taken from a "otel-collector-config.yaml"
+# file defined in the ConfigMap and must contain an OTLP receiver using the gRPC protocol.
 # This property will only be used if "jaegerBackendExample.enabled" is set to "false".
 otelCollectorAgentConfigMap:
