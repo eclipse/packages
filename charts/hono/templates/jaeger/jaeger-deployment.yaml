@@ -25,10 +25,12 @@ spec:
   template:
     metadata:
       {{- include "hono.metadata" $args | nindent 6 }}
+      {{- include "hono.podAdditionalLabels" $args | nindent 8 }}
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: {{ $healthCheckPort | quote }}
         prometheus.io/scheme: "http"
+        {{- include "hono.podAdditionalAnnotations" $args | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

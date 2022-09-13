@@ -144,6 +144,32 @@ kubectl.kubernetes.io/default-container: {{ .name | quote }}
 {{- end }}
 
 {{/*
+Add additional annotations for Hono component pods.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
+*/}}
+{{- define "hono.podAdditionalAnnotations" -}}
+{{- if .componentConfig.pod.annotations }}
+{{- with .componentConfig.pod.annotations }}
+{{- toYaml . }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Add additional labels for Hono component pods.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
+*/}}
+{{- define "hono.podAdditionalLabels" -}}
+{{- if .componentConfig.pod.labels }}
+{{- with .componentConfig.pod.labels }}
+{{- toYaml . }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Add annotations for Hono component deployments.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "componentConfig": the component's configuration properties from the values.yaml file

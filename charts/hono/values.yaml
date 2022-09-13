@@ -292,6 +292,10 @@ adapters:
     deployment:
       annotations: {}
 
+    pod:
+      labels: {}
+      annotations: {}
+
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
     # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -413,6 +417,10 @@ adapters:
     deployment:
       annotations: {}
 
+    pod:
+      labels: {}
+      annotations: {}
+
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
     # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -523,6 +531,10 @@ adapters:
       loadBalancerIP:
 
     deployment:
+      annotations: {}
+
+    pod:
+      labels: {}
       annotations: {}
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
@@ -646,6 +658,10 @@ adapters:
     deployment:
       annotations: {}
 
+    pod:
+      labels: {}
+      annotations: {}
+
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
     # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -766,6 +782,10 @@ adapters:
     deployment:
       annotations: {}
 
+    pod:
+      labels: {}
+      annotations: {}
+
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
     # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -881,6 +901,10 @@ authServer:
       memory: "256Mi"
 
   deployment:
+    annotations: {}
+
+  pod:
+    labels: {}
     annotations: {}
 
   # extraVolumes contains additional kubernetes Volume definitions representing volumes
@@ -1137,6 +1161,10 @@ deviceRegistryExample:
         cpu: "1"
         memory: "500Mi"
 
+    pod:
+      labels: {}
+      annotations: {}
+
     # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
 
@@ -1212,6 +1240,10 @@ deviceRegistryExample:
     deployment:
       annotations: {}
 
+    pod:
+      labels: {}
+      annotations: {}
+
   # jdbcBasedDeviceRegistry contains configuration properties specific to the
   # jdbc based device registry.
   jdbcBasedDeviceRegistry:
@@ -1264,6 +1296,10 @@ deviceRegistryExample:
     envConfigMap:
 
     deployment:
+      annotations: {}
+
+    pod:
+      labels: {}
       annotations: {}
 
     registry:
@@ -1416,6 +1452,10 @@ commandRouterService:
     annotations: {}
 
   deployment:
+    annotations: {}
+
+  pod:
+    labels: {}
     annotations: {}
 
   # extraVolumes contains additional kubernetes Volume definitions representing volumes
@@ -1969,6 +2009,10 @@ jaegerBackendExample:
   svc:
     annotations: {}
     loadBalancerIP:
+
+  pod:
+    labels: {}
+    annotations: {}
 
   # env contains environment variables to set for the Jaeger all-in-one container.
   # The default variables configure the container to keep up to 100000 traces in memory.
