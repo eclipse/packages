@@ -56,18 +56,8 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.openshift.enabled }}
-      {{- with .Values.openshift.securityContext }}
       securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- else }}
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
         fsGroup: 1000
-      {{- end }}
       {{- if .Values.global.logging.logFiles.enabled }}
       initContainers:
         - name: change-volume-owner
@@ -168,8 +158,18 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.policies.resources | nindent 12 }}
+          {{- if .Values.openshift.enabled }}
+          {{- with .Values.openshift.securityContext }}
           securityContext:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- else }}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
             allowPrivilegeEscalation: false
+          {{- end }}
       {{- with .Values.policies.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
