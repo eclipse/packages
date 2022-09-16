@@ -12,11 +12,11 @@
 dependencies:
   - name: mysql
     version: 6.14.10
-    # use older bitnami repo index, as referenced version is not in the current index any more (see https://github.com/bitnami/charts/issues/10539)
-    repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
+    # referenced chart version not in main bitnami index any more, therefore using the full index (see https://github.com/bitnami/charts/issues/10833)
+    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: mysql.enabled
   - name: rabbitmq
     version: 7.8.0
-    # use older bitnami repo index, as referenced version is not in the current index any more (see https://github.com/bitnami/charts/issues/10539)
-    repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
+    # referenced chart version not in main bitnami index any more, therefore using the full index (see https://github.com/bitnami/charts/issues/10833)
+    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
     condition: rabbitmq.enabled
