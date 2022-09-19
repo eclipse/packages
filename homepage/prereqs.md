@@ -175,7 +175,7 @@ ingress but also on the TCP level.
      namespace: ambassador
    spec:
      port: 18080
-     service: {name-of-helm-release}-adapter-http-vertx.{kubernetes-namespace}:8080
+     service: {name-of-helm-release}-adapter-http.{kubernetes-namespace}:8080
    ---
    apiVersion: getambassador.io/v2
    kind:  TCPMapping
@@ -184,7 +184,7 @@ ingress but also on the TCP level.
      namespace: ambassador
    spec:
      port: 1883
-     service: {name-of-helm-release}-adapter-mqtt-vertx.{kubernetes-namespace}:1883
+     service: {name-of-helm-release}-adapter-mqtt.{kubernetes-namespace}:1883
    ---
    apiVersion: getambassador.io/v2
    kind:  TCPMapping

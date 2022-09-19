@@ -62,10 +62,10 @@ function getService {
 
 getService dispatch-router-ext "amqp amqps" AMQP_NETWORK
 getService service-device-registry-ext "http https" REGISTRY
-getService adapter-amqp-vertx "amqp amqps" AMQP_ADAPTER
-getService adapter-coap-vertx "coap coaps" COAP_ADAPTER
-getService adapter-http-vertx "http https" HTTP_ADAPTER
-getService adapter-mqtt-vertx "mqtt secure-mqtt" MQTT_ADAPTER
+getService adapter-amqp "amqp amqps" AMQP_ADAPTER
+getService adapter-coap "coap coaps" COAP_ADAPTER
+getService adapter-http "http https" HTTP_ADAPTER
+getService adapter-mqtt "mqtt secure-mqtt" MQTT_ADAPTER
 getService ditto-nginx "http" DITTO_API
 
 echo "# Run this command to populate environment variables"

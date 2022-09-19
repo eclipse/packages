@@ -46,7 +46,7 @@ NS=cloud2edge
 NS=cloud2edge
 RELEASE=c2e
 DEVICE_REGISTRY_URL=https://$(oc get -n $NS route ${RELEASE}-service-device-registry-https --template='{{"{{.spec.host"}}}}')
-HTTP_ADAPTER_URL=$(oc get -n $NS route ${RELEASE}-adapter-http-vertx-sec --template='{{"{{.spec.host"}}}}')
+HTTP_ADAPTER_URL=$(oc get -n $NS route ${RELEASE}-adapter-http-sec --template='{{"{{.spec.host"}}}}')
 HTTP_ADAPTER_PORT=443
 {% endclipboard %}
 {% endvariant %}
