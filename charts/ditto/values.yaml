@@ -1,4 +1,4 @@
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -143,7 +143,7 @@ akka:
 
 # Set "dittoTag" in order to specify another Ditto version to use for all Ditto services:
 # you may also use "1" (for latest Ditto 1.x.x) or "1.5" (for latest Ditto 1.5.x)
-# dittoTag: 2.4.1
+# dittoTag: 2.4.2
 
 ## ----------------------------------------------------------------------------
 ## concierge configuration
@@ -169,7 +169,7 @@ concierge:
     ## repository for the concierge docker image
     repository: docker.io/eclipse/ditto-concierge
     ## tag for the concierge docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.1
+    # tag: 2.4.2
     ## pullPolicy for the concierge docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -255,7 +255,7 @@ connectivity:
     ## repository for the connectivity docker image
     repository: docker.io/eclipse/ditto-connectivity
     ## tag for the connectivity docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.1
+    # tag: 2.4.2
     ## pullPolicy for the connectivity docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -357,7 +357,7 @@ gateway:
     ## repository for the gateway docker image
     repository: docker.io/eclipse/ditto-gateway
     ## tag for the gateway docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.1
+    # tag: 2.4.2
     ## pullPolicy for the gateway docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for gateway service
@@ -514,7 +514,7 @@ policies:
     ## repository for the policies docker image
     repository: docker.io/eclipse/ditto-policies
     ## tag for the policies docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.1
+    # tag: 2.4.2
     ## pullPolicy for the policies docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -598,7 +598,7 @@ swaggerui:
     ## repository for the swagger ui docker image
     repository: docker.io/swaggerapi/swagger-ui
     ## tag for the swagger ui docker image
-    tag: v4.6.1
+    tag: v4.14.0
     ## pullPolicy for the swagger ui docker image
     pullPolicy: IfNotPresent
   ## extraEnv to add arbitrary environment variable to swagger ui container
@@ -645,7 +645,7 @@ things:
     ## repository for the things docker image
     repository: docker.io/eclipse/ditto-things
     ## tag for the things docker image- overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.1
+    # tag: 2.4.2
     ## pullPolicy for the things docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -731,7 +731,7 @@ thingsSearch:
     ## repository for the things-search docker image
     repository: docker.io/eclipse/ditto-things-search
     ## tag for the things-search docker image- overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.1
+    # tag: 2.4.2
     ## pullPolicy for the things-search docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS

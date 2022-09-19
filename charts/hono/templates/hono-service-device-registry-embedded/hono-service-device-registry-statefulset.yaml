@@ -25,8 +25,10 @@ spec:
   template:
     metadata:
       {{- include "hono.metadata" $args | nindent 6 }}
+      {{- include "hono.podAdditionalLabels" $args | nindent 8 }}
       annotations:
         {{- include "hono.podAnnotations" $args | nindent 8 }}
+        {{- include "hono.podAdditionalAnnotations" $args | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
