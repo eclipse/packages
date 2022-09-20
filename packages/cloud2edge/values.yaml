@@ -28,8 +28,10 @@ hono:
       sasl:
         jaas:
           clientUsers:
+            - "hono"
             - "ditto-c2e"
           clientPasswords:
+            - "hono-secret"
             - "verysecret"
 
   livenessProbeInitialDelaySeconds: 900
