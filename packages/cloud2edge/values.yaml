@@ -23,9 +23,20 @@ honoConnection:
 # Configuration properties for Eclipse Hono.
 hono:
 
+  kafka:
+    auth:
+      sasl:
+        jaas:
+          clientUsers:
+            - "hono"
+            - "ditto-c2e"
+          clientPasswords:
+            - "hono-secret"
+            - "verysecret"
+
   livenessProbeInitialDelaySeconds: 900
   readinessProbeInitialDelaySeconds: 45
-  useLoadBalancer: false
+  useLoadBalancer: true
 
   prometheus:
     createInstance: false
@@ -52,9 +63,12 @@ hono:
       limits:
         cpu: "1"
         memory: "256Mi"
-    extraSecretMounts:
-      permissions:
-        secretName: "permissions"
+    extraVolumes:
+      - name: "permissions"
+        secret:
+          secretName: "permissions"
+    extraVolumeMounts:
+      - name: "permissions"
         mountPath: "/var/run/hono/auth"
     hono:
       auth:

@@ -42,7 +42,8 @@ spec:
         command:
         - /bin/sh
         - -c
-        - "PWD=$(cat /var/run/c2e/ditto-gw-users/devops-password) &&
+        - "curlHome=/home/curl_user
+          PWD=$(cat /var/run/c2e/ditto-gw-users/devops-password) &&
           curl -X POST -H 'Content-Type: application/json' --data '{}'
           {{ printf "http://%s-service-device-registry-ext:28080/v1/tenants/%s" .Release.Name .Values.demoDevice.tenant }} &&
           curl -X POST -H 'Content-Type: application/json' --data '{}'
@@ -56,7 +57,11 @@ spec:
           {{- end }}
 
           {{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
-          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-kafka-connection.json
+          cp /var/run/c2e/post-install-data/insert-kafka-certs.sh $curlHome/insert-kafka-certs.sh
+
+          sh $curlHome/insert-kafka-certs.sh
+
+          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @$curlHome/hono-kafka-connection.json
           {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
           {{- end }}
 
@@ -66,9 +71,14 @@ spec:
         - name: post-install-data
           mountPath: "/var/run/c2e/post-install-data"
           readOnly: true
-        - name : ditto-gw-users
+        - name: ditto-gw-users
           mountPath: "/var/run/c2e/ditto-gw-users"
           readOnly: true
+          {{- if and .Values.hono.kafkaMessagingClusterExample .Values.hono.kafkaMessagingClusterExample.enabled }}
+        - name: kafka-connection-cert
+          mountPath: "/var/run/c2e/kafka-connection-cert"
+          readOnly: true
+          {{- end}}
       volumes:
       - name: post-install-data
         secret:
@@ -76,3 +86,8 @@ spec:
       - name: ditto-gw-users
         secret:
           secretName: {{ printf "%s-%s" .Release.Name "ditto-gateway-secret" }}
+      {{- if and .Values.hono.kafkaMessagingClusterExample .Values.hono.kafkaMessagingClusterExample.enabled }}
+      - name: kafka-connection-cert
+        secret:
+          secretName: {{ printf "%s-%s" .Release.Name "kafka-example-keys" }}
+      {{- end}}
