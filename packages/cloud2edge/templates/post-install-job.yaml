@@ -45,11 +45,14 @@ spec:
         - "curlHome=/home/curl_user
           PWD=$(cat /var/run/c2e/ditto-gw-users/devops-password) &&
           curl -X POST -H 'Content-Type: application/json' --data '{}'
-          {{ printf "http://%s-service-device-registry-ext:28080/v1/tenants/%s" .Release.Name .Values.demoDevice.tenant }} &&
+          {{ printf "http://%s-service-device-registry-ext:28080/v1/tenants/%s" .Release.Name .Values.tenant }} &&
+
+          {{- if .Values.demoDevice.enabled }}
           curl -X POST -H 'Content-Type: application/json' --data '{}'
-          {{ printf "http://%s-service-device-registry-ext:28080/v1/devices/%s/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.tenant .Values.demoDevice.deviceId }} &&
+          {{ printf "http://%s-service-device-registry-ext:28080/v1/devices/%s/%s:%s" .Release.Name .Values.tenant .Values.tenant .Values.demoDevice.deviceId }} &&
           curl -X PUT -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/demo-device-credentials.json
-          {{ printf "http://%s-service-device-registry-ext:28080/v1/credentials/%s/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.tenant .Values.demoDevice.deviceId }} &&
+          {{ printf "http://%s-service-device-registry-ext:28080/v1/credentials/%s/%s:%s" .Release.Name .Values.tenant .Values.tenant .Values.demoDevice.deviceId }} &&
+          {{- end }}
 
           {{- if ( has "amqp" .Values.hono.messagingNetworkTypes ) }}
           curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-amqp-connection.json
@@ -65,8 +68,12 @@ spec:
           {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
           {{- end }}
 
+          {{- if .Values.demoDevice.enabled }}
           curl -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/demo-device-thing.json
-          {{ printf "http://%s-ditto-nginx:8080/api/2/things/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.deviceId }};"
+          {{ printf "http://%s-ditto-nginx:8080/api/2/things/%s:%s" .Release.Name .Values.tenant .Values.demoDevice.deviceId }} &&
+          {{- end }}
+
+          true;"
         volumeMounts:
         - name: post-install-data
           mountPath: "/var/run/c2e/post-install-data"
