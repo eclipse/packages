@@ -23,5 +23,5 @@ spec:
     termination: passthrough
   to:
     kind: Service
-    name: {{ .Release.Name }}-adapter-mqtt
+    name: {{ printf "%s-adapter-mqtt" ( include "hono.fullname" . ) }}
 {{- end }}

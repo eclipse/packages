@@ -21,5 +21,5 @@ spec:
     targetPort: 5671
   to:
     kind: Service
-    name: {{ .Release.Name}}-service-command-router
+    name: {{ printf "%s-service-command-router" ( include "hono.fullname" . ) }}
 {{end}}

@@ -72,4 +72,4 @@ spec:
         {{- include "hono.component.healthChecks" $args | nindent 8 }}
       volumes:
       {{- include "hono.pod.volumes" $args | indent 6 }}
-      serviceAccountName: {{ printf "%s-%s" .Release.Name $args.name | quote }}
+      serviceAccountName: {{ printf "%s-%s" ( include "hono.fullname" . ) $args.name | quote }}
