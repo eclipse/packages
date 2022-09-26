@@ -102,7 +102,7 @@ The scope passed in is expected to be a dict with keys
 - "component": the value to use for the "app.kubernetes.io/component" label
 */}}
 {{- define "hono.metadata" -}}
-name: {{ printf "%s-%s" .dot.Release.Name .name | quote }}
+name: {{ printf "%s-%s" (include "hono.fullname" .dot ) .name | quote }}
 namespace: {{ .dot.Release.Namespace | quote }}
 labels:
   app.kubernetes.io/name: {{ include "hono.name" .dot | quote }}
@@ -237,7 +237,7 @@ messaging:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: {{ printf "Hono %s" .component | quote }}
   amqpHostname: "hono-internal"
-  host: {{ printf "%s-dispatch-router" .dot.Release.Name | quote }}
+  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" .dot ) | quote }}
   port: 5673
   keyPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.keyPath | quote }}
   certPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.certPath | quote }}
@@ -263,7 +263,7 @@ The scope passed in is expected to be a dict with keys
 kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
-    {{- $bootstrapServers := printf "%[1]s-%[2]s-0.%[1]s-%[2]s-headless:%d" .dot.Release.Name .dot.Values.kafka.nameOverride ( .dot.Values.kafka.service.ports.client | int ) }}
+    {{- $bootstrapServers := printf "%[1]s-%[2]s-0.%[1]s-%[2]s-headless:%d" ( include "hono.fullname" .dot ) .dot.Values.kafka.nameOverride ( .dot.Values.kafka.service.ports.client | int ) }}
     bootstrap.servers: {{ $bootstrapServers | quote }}
   {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
     security.protocol: "SASL_SSL"
@@ -321,7 +321,7 @@ The scope passed in is expected to be a dict with keys
 */}}
 {{- define "hono.deviceRegistryExampleClientConfig" -}}
 name: {{ printf "Hono %s" .component | quote }}
-host: {{ printf "%s-service-device-registry" .dot.Release.Name | quote }}
+host: {{ printf "%s-service-device-registry" ( include "hono.fullname" .dot ) | quote }}
 port: 5671
 credentialsPath: "/opt/hono/config/adapter.credentials"
 trustStorePath: {{ .dot.Values.deviceRegistryExample.clientTrustStorePath | default "/opt/hono/tls/ca.crt" | quote }}
@@ -343,7 +343,7 @@ command:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: {{ printf "Hono %s" $adapter | quote }}
   amqpHostname: "hono-internal"
-  host: {{ printf "%s-dispatch-router" .dot.Release.Name | quote }}
+  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" .dot ) | quote }}
   port: 5673
   keyPath: {{ .dot.Values.adapters.commandAndControlSpec.keyPath | quote }}
   certPath: {{ .dot.Values.adapters.commandAndControlSpec.certPath | quote }}
@@ -384,7 +384,7 @@ commandRouter:
   {{- .dot.Values.adapters.commandRouterSpec | toYaml | nindent 2 }}
 {{- else }}
   name: {{ printf "Hono %s" $adapter | quote }}
-  host: {{ printf "%s-service-command-router" .dot.Release.Name | quote }}
+  host: {{ printf "%s-service-command-router" ( include "hono.fullname" .dot ) | quote }}
   port: 5671
   credentialsPath: "/opt/hono/config/adapter.credentials"
   trustStorePath: {{ .dot.Values.commandRouterService.clientTrustStorePath | default "/opt/hono/tls/ca.crt" | quote }}
@@ -455,7 +455,7 @@ quarkus:
       exporter:
         otlp:
           {{- if .dot.Values.jaegerBackendExample.enabled }}
-          endpoint: {{ printf "http://%s-jaeger-collector:4317" .dot.Release.Name | quote }}
+          endpoint: {{ printf "http://%s-jaeger-collector:4317" ( include "hono.fullname" .dot ) | quote }}
           {{- else }}
           endpoint: "http://127.0.0.1:4317"
           {{- end }}
@@ -526,7 +526,7 @@ The scope passed in is expected to be a dict with keys
 {{- $component := .componentConfig -}}
 {{- $probes := mergeOverwrite ( $global.probes | deepCopy ) ( $component.probes | default dict | deepCopy ) -}}
 {{- $deprecatedLivenessProbeInitialDelaySeconds := default .dot.Values.livenessProbeInitialDelaySeconds .componentConfig.livenessProbeInitialDelaySeconds -}}
-{{- $deprecatedReadinessProbeInitialDelaySeconds := default .dot.Values.readinessProbeInitialDelaySeconds .componentConfig.readinessProbeInitialDelaySeconds -}} 
+{{- $deprecatedReadinessProbeInitialDelaySeconds := default .dot.Values.readinessProbeInitialDelaySeconds .componentConfig.readinessProbeInitialDelaySeconds -}}
 livenessProbe:
   httpGet:
     path: {{ $probes.livenessProbe.httpGet.path }}
@@ -604,22 +604,22 @@ The scope passed in is expected to be a dict with keys
 {{- if ( ne $keySecretName "none" ) }}
 - name: "tls-keys"
   secret:
-    secretName: {{ ternary ( printf "%s-%s-example-keys" .dot.Release.Name .name ) $keySecretName ( eq $keySecretName "example" ) | quote }}
+    secretName: {{ ternary ( printf "%s-%s-example-keys" ( include "hono.fullname" .dot ) .name ) $keySecretName ( eq $keySecretName "example" ) | quote }}
 {{- end }}
 {{- $trustStoreConfigMapName := ( default "none" .componentConfig.tlsTrustStoreConfigMap | toString ) }}
 {{- if ( ne $trustStoreConfigMapName "none" ) }}
 - name: "tls-trust-store"
   configMap:
-    name: {{ ternary ( printf "%s-example-trust-store" .dot.Release.Name ) $trustStoreConfigMapName ( eq $trustStoreConfigMapName "example" ) | quote }}
+    name: {{ ternary ( printf "%s-example-trust-store" ( include "hono.fullname" .dot )) $trustStoreConfigMapName ( eq $trustStoreConfigMapName "example" ) | quote }}
 {{- end }}
 - name: "default-logging-config"
   configMap:
-    name: {{ printf "%s-default-logging-config" .dot.Release.Name | quote }}
+    name: {{ printf "%s-default-logging-config" ( include "hono.fullname" .dot ) | quote }}
     optional: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
   secret:
-    secretName: {{ printf "%s-%s" .dot.Release.Name $volumeName | quote }}
+    secretName: {{ printf "%s-%s" ( include "hono.fullname" .dot ) $volumeName | quote }}
 {{- if and .dot.Values.otelCollectorAgentConfigMap ( not .dot.Values.jaegerBackendExample.enabled ) }}
 - name: "otel-collector-config"
   configMap:
