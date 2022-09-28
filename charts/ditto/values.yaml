@@ -174,7 +174,6 @@ connectivity:
   ## systemProps used to define arbitrary system properties for connectivity service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps:
-    - "-Dakka.cluster.distributed-data.durable.lmdb.dir=/var/tmp/ddata"
     - "-Dakka.cluster.failure-detector.threshold=15.0"
     - "-Dakka.cluster.failure-detector.expected-response-after=10s"
     - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"

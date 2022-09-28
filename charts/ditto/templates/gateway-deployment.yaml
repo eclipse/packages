@@ -74,15 +74,6 @@ spec:
         - name: {{ .Chart.Name }}-gateway
           image: {{ printf "%s:%s" .Values.gateway.image.repository ( default .Chart.AppVersion ( default .Values.dittoTag .Values.gateway.image.tag ) ) }}
           imagePullPolicy: {{ .Values.gateway.image.pullPolicy }}
-          args:
-            - "java"
-          {{- if .Values.gateway.systemProps }}
-            {{- range .Values.gateway.systemProps }}
-            - {{ . | quote }}
-            {{- end }}
-          {{- end }}
-            - "-jar"
-            - "/opt/ditto/starter.jar"
           env:
             - name: DITTO_LOGGING_DISABLE_SYSOUT_LOG
               value: "{{ if .Values.global.logging.sysout.enabled }}false{{ else }}true{{ end }}"
@@ -113,7 +104,7 @@ spec:
             - name: TZ
               value: "{{ .Values.global.timezone }}"
             - name: JAVA_TOOL_OPTIONS
-              value: "{{ .Values.global.jvmOptions }} {{ .Values.gateway.additionalJvmOptions }}"
+              value: "{{ .Values.global.jvmOptions }} {{ .Values.gateway.additionalJvmOptions }} {{ join " " .Values.gateway.systemProps }}"
             - name: DEVOPS_SECURE_STATUS
               value: "{{ .Values.gateway.devopsSecureStatus }}"
             - name: DEVOPS_PASSWORD
