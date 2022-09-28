@@ -31,9 +31,6 @@ fullnameOverride: ""
 ## dbconfig for mongodb connections
 ## will be handled as k8s secret as connection uri might contain auth credentials
 dbconfig:
-  concierge:
-    uri: mongodb://ditto-mongodb:27017/concierge
-    ssl: false
   connectivity:
     uri: mongodb://ditto-mongodb:27017/connectivity
     ssl: false
@@ -143,93 +140,7 @@ akka:
 
 # Set "dittoTag" in order to specify another Ditto version to use for all Ditto services:
 # you may also use "1" (for latest Ditto 1.x.x) or "1.5" (for latest Ditto 1.5.x)
-# dittoTag: 2.4.2
-
-## ----------------------------------------------------------------------------
-## concierge configuration
-## ref: https://www.eclipse.org/ditto/architecture-services-concierge.html
-concierge:
-  ## enabled controls whether Concierge related resources should be created
-  enabled: true
-  ## replicaCount for concierge service
-  replicaCount: 1
-  ## updateStrategy for concierge service
-  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
-  minReadySeconds: 45
-  ## additionalLabels on concierge pods
-  additionalLabels: {}
-  ## additionalAnnotations on concierge pods
-  additionalAnnotations: {}
-  image:
-    ## repository for the concierge docker image
-    repository: docker.io/eclipse/ditto-concierge
-    ## tag for the concierge docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.2
-    ## pullPolicy for the concierge docker image
-    pullPolicy: IfNotPresent
-  ## additional JVM options to put into JAVA_TOOL_OPTIONS
-  additionalJvmOptions: ""
-  ## systemProps used to define arbitrary system properties for concierge service
-  ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
-  systemProps:
-    - "-Dakka.cluster.failure-detector.threshold=15.0"
-    - "-Dakka.cluster.failure-detector.expected-response-after=10s"
-    - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
-    - "-Dakka.cluster.shutdown-after-unsuccessful-join-seed-nodes=120s"
-  ## extraEnv to add arbitrary environment variable to concierge container
-  extraEnv: []
-  ## resources for the concierge container
-  resources:
-    requests:
-      cpu: 150m
-      memory: 512Mi
-    limits:
-      # ## no cpu limit to avoid CFS scheduler limits
-      # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
-      # cpu: ""
-      memory: 512Mi
-  ## readinessProbe configuration for concierge
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
-  readinessProbe:
-    initialDelaySeconds: 90
-    periodSeconds: 10
-    timeoutSeconds: 1
-    failureThreshold: 3
-  ## livenessProbe configuration for concierge
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
-  livenessProbe:
-    initialDelaySeconds: 160
-    periodSeconds: 10
-    timeoutSeconds: 3
-    failureThreshold: 4
-  networkPolicy:
-    ## enabled controls whether concierge related NetworkPolicy should be created
-    enabled: true
-  podDisruptionBudget:
-    ## enabled controls whether concierge related PodDisruptionBudget should be created
-    enabled: true
-    ## minAvailable number of replicas during voluntary disruptions
-    minAvailable: 1
-  ## nodeSelector
-  ## https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-  nodeSelector: {}
-  ## tolerations
-  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  tolerations: []
-  ## affinity
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  affinity: {}
-  ## podMonitor configuration for concierge
-  ## when enabled podMonitor resource to scrape concierge will be created
-  podMonitor:
-    enabled: false
-  #  interval: 30s
-  #  scrapeTimeout: 15s
+# dittoTag: 3.0.0
 
 ## ----------------------------------------------------------------------------
 ## connectivity configuration
@@ -255,7 +166,7 @@ connectivity:
     ## repository for the connectivity docker image
     repository: docker.io/eclipse/ditto-connectivity
     ## tag for the connectivity docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.2
+    # tag: 3.0.0
     ## pullPolicy for the connectivity docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -263,7 +174,6 @@ connectivity:
   ## systemProps used to define arbitrary system properties for connectivity service
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#configuration
   systemProps:
-    - "-Dakka.cluster.distributed-data.durable.lmdb.dir=/var/tmp/ddata"
     - "-Dakka.cluster.failure-detector.threshold=15.0"
     - "-Dakka.cluster.failure-detector.expected-response-after=10s"
     - "-Dakka.cluster.failure-detector.acceptable-heartbeat-pause=30s"
@@ -357,7 +267,7 @@ gateway:
     ## repository for the gateway docker image
     repository: docker.io/eclipse/ditto-gateway
     ## tag for the gateway docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.2
+    # tag: 3.0.0
     ## pullPolicy for the gateway docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for gateway service
@@ -418,7 +328,7 @@ gateway:
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
   ## podMonitor configuration for gateway
-  ## when enabled podMonitor resource to scrape concierge will be created
+  ## when enabled podMonitor resource to scrape gateway will be created
   podMonitor:
     enabled: false
   #  interval: 30s
@@ -514,7 +424,7 @@ policies:
     ## repository for the policies docker image
     repository: docker.io/eclipse/ditto-policies
     ## tag for the policies docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.2
+    # tag: 3.0.0
     ## pullPolicy for the policies docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -598,7 +508,7 @@ swaggerui:
     ## repository for the swagger ui docker image
     repository: docker.io/swaggerapi/swagger-ui
     ## tag for the swagger ui docker image
-    tag: v4.14.0
+    tag: v4.14.1
     ## pullPolicy for the swagger ui docker image
     pullPolicy: IfNotPresent
   ## extraEnv to add arbitrary environment variable to swagger ui container
@@ -644,8 +554,8 @@ things:
   image:
     ## repository for the things docker image
     repository: docker.io/eclipse/ditto-things
-    ## tag for the things docker image- overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.2
+    ## tag for the things docker image - overwrite to specify something else than Chart.AppVersion
+    # tag: 3.0.0
     ## pullPolicy for the things docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -730,8 +640,8 @@ thingsSearch:
   image:
     ## repository for the things-search docker image
     repository: docker.io/eclipse/ditto-things-search
-    ## tag for the things-search docker image- overwrite to specify something else than Chart.AppVersion
-    # tag: 2.4.2
+    ## tag for the things-search docker image - overwrite to specify something else than Chart.AppVersion
+    # tag: 3.0.0
     ## pullPolicy for the things-search docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS

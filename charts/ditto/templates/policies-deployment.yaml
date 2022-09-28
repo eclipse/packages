@@ -73,15 +73,6 @@ spec:
         - name: {{ .Chart.Name }}-policies
           image: {{ printf "%s:%s" .Values.policies.image.repository ( default .Chart.AppVersion ( default .Values.dittoTag .Values.policies.image.tag ) ) }}
           imagePullPolicy: {{ .Values.policies.image.pullPolicy }}
-          args:
-            - "java"
-          {{- if .Values.policies.systemProps }}
-            {{- range .Values.policies.systemProps }}
-            - {{ . | quote }}
-            {{- end }}
-          {{- end }}
-            - "-jar"
-            - "/opt/ditto/starter.jar"
           env:
             - name: DITTO_LOGGING_DISABLE_SYSOUT_LOG
               value: "{{ if .Values.global.logging.sysout.enabled }}false{{ else }}true{{ end }}"
@@ -110,7 +101,7 @@ spec:
             - name: TZ
               value: "{{ .Values.global.timezone }}"
             - name: JAVA_TOOL_OPTIONS
-              value: "{{ .Values.global.jvmOptions }} {{ .Values.policies.additionalJvmOptions }}"
+              value: "{{ .Values.global.jvmOptions }} {{ .Values.policies.additionalJvmOptions }} {{ join " " .Values.policies.systemProps }}"
             - name: MONGO_DB_SSL_ENABLED
               value: "{{ if .Values.dbconfig.policies.ssl }}true{{ else }}false{{ end }}"
             - name: MONGO_DB_URI
