@@ -2,7 +2,7 @@ Thank you for installing the Cloud2Edge Eclipse IoT Package.
 
 Your release is named '{{ .Release.Name }}'.
 
-It might take some time for all of the package's services to start up.
+It might take some time for all the package's services to start up.
 You can check the current status by issuing the following command:
 {{ if ( eq .Release.Namespace "default" ) }}
   $ kubectl get pods
@@ -18,7 +18,6 @@ NAME                                         {{ "READY   STATUS    RESTARTS   AG
 {{ .Release.Name }}-adapter-mqtt-765fcd578b-5rl7n               1/1     Running   0          3m15s
 {{ .Release.Name }}-artemis-f8f7dc7f4-864cj                     1/1     Running   0          3m15s
 {{ .Release.Name }}-dispatch-router-6c77dc78bd-hjn4l            1/1     Running   0          3m15s
-{{ .Release.Name }}-ditto-concierge-5949cb449d-46vp5            1/1     Running   0          3m15s
 {{ .Release.Name }}-ditto-connectivity-779fc6f574-gd5gq         1/1     Running   0          3m15s
 {{ .Release.Name }}-ditto-gateway-5cfdc9f9fc-kl6mh              1/1     Running   0          3m15s
 {{ .Release.Name }}-ditto-nginx-864cffd948-mvcdg                1/1     Running   0          3m15s

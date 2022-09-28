@@ -110,13 +110,6 @@ hono:
 ditto:
   # do not set cpu limits for Ditto to avoid CFS scheduler limits
   # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
-  concierge:
-    resources:
-      requests:
-        cpu: 200m
-      limits:
-        memory: "768Mi"
-
   connectivity:
     resources:
       requests:
