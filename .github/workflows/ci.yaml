@@ -64,10 +64,10 @@ jobs:
         # which a folder exists at
         # https://github.com/yannh/kubernetes-json-schema/
         k8s:
-          - v1.21.9
-          - v1.22.9
-          - v1.23.7
-          - v1.24.1
+          - v1.22.15
+          - v1.23.12
+          - v1.24.6
+          - v1.25.2
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -94,10 +94,10 @@ jobs:
         # the versions supported by chart-testing are the tags
         # available for the docker.io/kindest/node image
         # https://hub.docker.com/r/kindest/node/tags
-          - v1.21.12
-          - v1.22.9
-          - v1.23.6
-          - v1.24.1
+          - v1.22.15
+          - v1.23.12
+          - v1.24.6
+          - v1.25.2
     steps:
       - name: Checkout
         uses: actions/checkout@v2
