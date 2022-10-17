@@ -41,7 +41,7 @@ spec:
       annotations:
         {{- if .Values.global.prometheus.enabled }}
         prometheus.io/scrape: "true"
-        prometheus.io/path: "/"
+        prometheus.io/path: "{{ .Values.global.prometheus.path }}"
         prometheus.io/port: "{{ .Values.global.prometheus.port }}"
         {{- end }}
         checksum/password-config: {{ include (print $.Template.BasePath "/gateway-secret.yaml") . | sha256sum }}
