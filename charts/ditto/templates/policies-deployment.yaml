@@ -130,7 +130,7 @@ spec:
             - name: prometheus
               protocol: TCP
               port: 9095
-            {{ - end }}
+            {{- end }}
           readinessProbe:
             httpGet:
               port: management
