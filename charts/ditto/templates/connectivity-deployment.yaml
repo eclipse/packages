@@ -123,6 +123,11 @@ spec:
             - name: management
               containerPort: {{ .Values.akka.mgmthttp.port }}
               protocol: TCP
+            {{- if .Values.global.prometheus.enabled }}
+            - name: prometheus
+              protocol: TCP
+              port: 9095
+            {{- end }}
           readinessProbe:
             httpGet:
               port: management

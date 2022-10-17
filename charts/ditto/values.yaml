@@ -110,7 +110,7 @@ global:
     ## enabled controls whether scrape config annotation will be added to pod templates
     enabled: true
     ## path where prometheus metric will be provided
-    path: /
+    path: "/"
     ## port where prometheus metrics will be provided
     port: 9095
   ## logging configuration for ditto
