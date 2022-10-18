@@ -12,7 +12,7 @@
 ---
 
 # profile for installing Ditto
-# - with Ingress enabled
+# - with Ingress enabled and low cpu requests
 
 ## ingress configuration
 ingress:
@@ -34,3 +34,28 @@ ingress:
     - secretName: ditto-tls
       hosts:
         - ditto.example.com
+
+connectivity:
+  resources:
+    requests:
+      cpu: 150m
+
+gateway:
+  resources:
+    requests:
+      cpu: 150m
+
+policies:
+  resources:
+    requests:
+      cpu: 150m
+
+things:
+  resources:
+    requests:
+      cpu: 150m
+
+thingsSearch:
+  resources:
+    requests:
+      cpu: 150m
