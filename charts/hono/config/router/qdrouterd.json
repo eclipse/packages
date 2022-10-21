@@ -1,6 +1,6 @@
 [
   ["router", {
-    "id": "{{ .Release.Name }}.Example.Router",
+    "id": "{{ include "hono.fullname" . }}.Example.Router",
     "mode": "standalone",
     "workerThreads": 3
   }],
@@ -13,7 +13,7 @@
 
   ["authServicePlugin", {
     "name": "Hono Auth",
-    "host": "{{ .Release.Name }}-service-auth",
+    "host": "{{ include "hono.fullname" . }}-service-auth",
     "port": 5671,
     "sslProfile": "auth-server-profile"
   }],
@@ -90,7 +90,7 @@
     "host": "{{ .Values.amqpMessagingNetworkExample.broker.serviceBus.host }}",
     "idleTimeoutSeconds": 120
     {{- else }}
-    "host": "{{ .Release.Name }}-artemis",
+    "host": "{{ include "hono.fullname" . }}-artemis",
     "verifyHostname": false
     {{- end }}
   }],

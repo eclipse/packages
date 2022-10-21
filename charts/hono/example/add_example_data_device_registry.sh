@@ -11,7 +11,7 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #*******************************************************************************
-HTTP_BASE_URL="http://{{ .Release.Name }}-service-device-registry:8080/v1"
+HTTP_BASE_URL="http://{{ include "hono.fullname" . }}-service-device-registry:8080/v1"
 
 check_status() {
   EXIT_STATUS=$1
