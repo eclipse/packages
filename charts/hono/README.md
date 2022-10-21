@@ -143,6 +143,10 @@ The command removes all the Kubernetes components associated with the chart and 
 * Update to MongoDB chart version 13.x (using Mongo DB 6.x).
 * Limit Kafka and Zookeeper JVM's memory consumption.
 
+### 2.2.1
+
+* Allow customizing the pod/service names irrespective or .Release.Name
+
 ### 2.2.0
 
 * Use Hono 2.2.0 container images.
@@ -403,7 +407,7 @@ amqpMessagingNetworkExample:
 
 # mount (existing) Kubernetes secret which contains
 # credentials for connecting to AMQP network
-# into Command Router and protocol adapter containers 
+# into Command Router and protocol adapter containers
 commandRouterService:
   extraVolumes:
   - name: "amqp-network"

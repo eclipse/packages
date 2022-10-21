@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
     Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
-   
+
     See the NOTICE file(s) distributed with this work for additional
     information regarding copyright ownership.
-   
+
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License 2.0 which is available at
     http://www.eclipse.org/legal/epl-2.0
-   
+
     SPDX-License-Identifier: EPL-2.0
  -->
 <infinispan
@@ -84,7 +84,7 @@
         <hotrod-connector name="hotrod">
           <authentication security-realm="ApplicationRealm">
             <sasl mechanisms="SCRAM-SHA-512 SCRAM-SHA-384 DIGEST-SHA-512 DIGEST-SHA-384 DIGEST-MD5"
-                  server-name='{{ printf "%s-data-grid" .Release.Name }}'
+                  server-name='{{ printf "%s-data-grid" (include "hono.fullname" .) }}'
                   qop="auth" />
           </authentication>
         </hotrod-connector>

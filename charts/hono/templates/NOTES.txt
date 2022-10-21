@@ -14,41 +14,41 @@ The output should look similar to this:
 
 NAME                                       {{ "READY   STATUS    RESTARTS   AGE" | indent ( len .Release.Name ) }}
 {{- if .Values.adapters.amqp.enabled }}
-{{ .Release.Name }}-adapter-amqp-65cfb4d675-g5wn4             1/1     Running   0          5m50s
+{{ include "hono.fullname" . }}-adapter-amqp-65cfb4d675-g5wn4             1/1     Running   0          5m50s
 {{- end }}
 {{- if .Values.adapters.coap.enabled }}
-{{ .Release.Name }}-adapter-coap-786b784f47-qx9tg             1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-adapter-coap-786b784f47-qx9tg             1/1     Running   0          5m51s
 {{- end }}
 {{- if .Values.adapters.http.enabled }}
-{{ .Release.Name }}-adapter-http-66bd6bb89c-mng5t             1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-adapter-http-66bd6bb89c-mng5t             1/1     Running   0          5m51s
 {{- end }}
 {{- if .Values.adapters.lora.enabled }}
-{{ .Release.Name }}-adapter-lora-341fca588c-1hl8n             1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-adapter-lora-341fca588c-1hl8n             1/1     Running   0          5m51s
 {{- end }}
 {{- if .Values.adapters.mqtt.enabled }}
-{{ .Release.Name }}-adapter-mqtt-765fcd578b-5rl7n             1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-adapter-mqtt-765fcd578b-5rl7n             1/1     Running   0          5m51s
 {{- end }}
 {{- if ( has "amqp" .Values.messagingNetworkTypes ) }}
-{{ .Release.Name }}-artemis-f8f7dc7f4-864cj                   1/1     Running   0          5m51s
-{{ .Release.Name }}-dispatch-router-6c77dc78bd-hjn4l          1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-artemis-f8f7dc7f4-864cj                   1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-dispatch-router-6c77dc78bd-hjn4l          1/1     Running   0          5m51s
 {{- end }}
 {{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
-{{ .Release.Name }}-kafka-0                                   1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-kafka-0                                   1/1     Running   0          5m51s
 {{- end }}
 {{- if all .Values.deviceRegistryExample.enabled ( eq .Values.deviceRegistryExample.type "mongodb" ) }}
-{{ .Release.Name }}-monogodb-server-77ffb85c97-78554          1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-monogodb-server-77ffb85c97-78554          1/1     Running   0          5m51s
 {{- end }}
-{{ .Release.Name }}-service-auth-84d9695cfc-5wlfh             1/1     Running   0          5m51s
-{{ .Release.Name }}-service-command-router-687fd4fbcf-7527b   1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-service-auth-84d9695cfc-5wlfh             1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-service-command-router-687fd4fbcf-7527b   1/1     Running   0          5m51s
 {{- if .Values.deviceRegistryExample.enabled }}
 {{- if eq .Values.deviceRegistryExample.type "embedded" }}
-{{ .Release.Name }}-service-device-registry-0                 1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-service-device-registry-0                 1/1     Running   0          5m51s
 {{- else }}
-{{ .Release.Name }}-service-device-registry-64d645dd9c-q9c5q  1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-service-device-registry-64d645dd9c-q9c5q  1/1     Running   0          5m51s
 {{- end }}
 {{- end }}
 {{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
-{{ .Release.Name }}-zookeeper-0                               1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-zookeeper-0                               1/1     Running   0          5m51s
 {{- end }}
 
 Once all pods have reached the READY state, you can start using Hono.
