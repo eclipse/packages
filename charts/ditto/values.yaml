@@ -109,6 +109,8 @@ global:
   prometheus:
     ## enabled controls whether scrape config annotation will be added to pod templates
     enabled: true
+    ## path where prometheus metric will be provided
+    path: "/"
     ## port where prometheus metrics will be provided
     port: 9095
   ## logging configuration for ditto
@@ -185,7 +187,7 @@ connectivity:
   ## resources for the connectivity container
   resources:
     requests:
-      cpu: 150m
+      cpu: 500m
       memory: 768Mi
     limits:
       # ## no cpu limit to avoid CFS scheduler limits
@@ -284,7 +286,7 @@ gateway:
   ## resources for the gateway container
   resources:
     requests:
-      cpu: 150m
+      cpu: 250m
       memory: 512Mi
     limits:
       # ## no cpu limit to avoid CFS scheduler limits
@@ -399,7 +401,6 @@ nginx:
       name: wait-for-gateway
       image: curlimages/curl:latest
 
-
 ## ----------------------------------------------------------------------------
 ## policies configuration
 ## ref: https://www.eclipse.org/ditto/architecture-services-policies.html
@@ -441,7 +442,7 @@ policies:
   ## resources for the policies container
   resources:
     requests:
-      cpu: 150m
+      cpu: 500m
       memory: 512Mi
     limits:
       # ## no cpu limit to avoid CFS scheduler limits
@@ -572,7 +573,7 @@ things:
   ## resources for the things container
   resources:
     requests:
-      cpu: 150m
+      cpu: 500m
       memory: 512Mi
     limits:
       # ## no cpu limit to avoid CFS scheduler limits
@@ -658,7 +659,7 @@ thingsSearch:
   ## resources for the things-search container
   resources:
     requests:
-      cpu: 150m
+      cpu: 250m
       memory: 512Mi
     limits:
       # ## no cpu limit to avoid CFS scheduler limits
