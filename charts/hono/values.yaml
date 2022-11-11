@@ -1360,6 +1360,13 @@ deviceRegistryExample:
 mongodb:
   # createInstance indicates whether a MongoDB database instance should be created.
   createInstance: false
+  # do not use the default name ("mongodb") because it will lead to a config
+  # property name clash in the device registry pod when using "hono" as the release name
+  nameOverride: "monogodb-server"
+  # run single node instance
+  architecture: "standalone"
+  # Use StatefulSet instead of Deployment when deploying standalone
+  useStatefulSet: false
   # If authentication to be enabled or not.
   # ref: https://docs.mongodb.com/manual/tutorial/enable-authentication/
   auth:
@@ -1377,19 +1384,9 @@ mongodb:
   # Configure the MongoDB service to be accessed from inside the cluster only.
   service:
     type: ClusterIP
-    port: 27017
-    targetPort: 27017
+    ports:
+      mongodb: 27017
     annotations: {}
-  # Use StatefulSet instead of Deployment when deploying standalone
-  useStatefulSet: false
-  # Setting up replication
-  # ref: https://github.com/bitnami/bitnami-docker-mongodb#setting-up-replication
-  # Whether to create a MongoDB replica set for high availability or not
-  replicaSet:
-    enabled: false
-  # do not use the default name ("mongodb") because it will lead to a config
-  # property name clash in the device registry pod when using "hono" as the release name
-  nameOverride: "monogodb-server"
 
 # commandRouterService contains configuration properties for the
 # Command Router service.
@@ -1718,15 +1715,31 @@ kafka:
     # Note that this could require creating RBAC rules, for more information refer to
     # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
     create: true
+  # limit Kafka JVM's memory consumption
+  heapOpts: "-Xms620M -Xmx620M"
+  resources:
+    requests:
+      memory: "800Mi"
+    limits:
+      memory: "800Mi"
+
   zookeeper:
     persistence:
       enabled: false
     auth:
-      enabled: true
-      clientUser: "zookeeperUser"
-      clientPassword: "zookeeperPassword"
-      serverUsers: "zookeeperUser"
-      serverPasswords: "zookeeperPassword"
+      client:
+        enabled: true
+        clientUser: "zookeeperUser"
+        clientPassword: "zookeeperPassword"
+        serverUsers: "zookeeperUser"
+        serverPasswords: "zookeeperPassword"
+    # limit Zookeeper JVM's memory consumption
+    heapSize: 400
+    resources:
+      requests:
+        memory: "256Mi"
+      limits:
+        memory: "500Mi"
 
 # amqpMessagingNetworkExample contains properties for configuring an example AMQP network
 # to be used for messaging if "messagingNetworkTypes" contains "amqp"
