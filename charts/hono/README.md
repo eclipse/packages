@@ -103,6 +103,12 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.2.1
+
+* Update to Kafka chart version 20.x (using Kafka 3.3.x).
+* Update to MongoDB chart version 13.x (using Mongo DB 6.x).
+* Limit Kafka and Zookeeper JVM's memory consumption.
+
 ### 2.2.0
 
 * Use Hono 2.2.0 container images.
