@@ -14,6 +14,11 @@
 # Default values for eclipse-hono.
 # Declare variables to be passed into your templates.
 
+global:
+  hono:
+    nameOverride: ""
+    fullnameOverride: ""
+
 # honoImagesTag contains the (common) tag name of the Hono component
 # container images to deploy.
 # If not set explicitly, the chart's appVersion is used as the tag name.

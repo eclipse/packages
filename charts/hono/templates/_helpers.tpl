@@ -16,7 +16,8 @@
 Expand the name of the chart.
 */}}
 {{- define "hono.name" -}}
-  {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+  {{- $nameOverride := .Values.global.hono.nameOverride -}}
+  {{- empty $nameOverride | ternary .Chart.Name (tpl $nameOverride $) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -25,10 +26,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "hono.fullname" -}}
-  {{- if .Values.fullnameOverride -}}
-    {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+  {{- $fullnameOverride := .Values.global.hono.fullnameOverride -}}
+  {{- if $fullnameOverride  -}}
+    {{- (tpl $fullnameOverride $) | trunc 63 | trimSuffix "-" -}}
   {{- else -}}
-    {{- $name := default .Chart.Name .Values.nameOverride -}}
+    {{- $nameOverride := .Values.global.hono.nameOverride -}}
+    {{- $name := empty $nameOverride | ternary .Chart.Name (tpl $nameOverride $) -}}
     {{- if contains $name .Release.Name -}}
       {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
     {{- else -}}
