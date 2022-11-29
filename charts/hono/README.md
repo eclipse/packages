@@ -103,6 +103,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.2.0
+
+* Use Hono 2.2.0 container images.
+
 ### 2.1.5
 
 * Use Hono 2.1.1 container images.
