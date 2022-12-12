@@ -20,6 +20,11 @@ honoConnection:
   username: "ditto-c2e"
   password: "verysecret"
 
+#configuration properties for kafka as deployed by Hono
+kafka:
+  nameOverride:
+  fullnameOverride:
+
 # Configuration properties for Eclipse Hono.
 hono:
 
