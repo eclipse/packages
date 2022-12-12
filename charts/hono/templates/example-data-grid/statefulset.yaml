@@ -74,5 +74,5 @@ spec:
       volumes:
       - name: conf
         configMap:
-          name: {{ printf "%s-%s-conf" (include "hono.fullname" .) $args.name }}
+          name: {{ printf "%s-%s-conf" (include "hono.fullname" $args) $args.name }}
 {{- end }}

@@ -21,5 +21,5 @@ spec:
     targetPort: 5671
   to:
     kind: Service
-    name: {{ printf "%s-service-command-router" ( include "hono.fullname" . ) }}
+    name: {{ printf "%s-service-command-router" ( include "hono.fullname" $args ) }}
 {{end}}

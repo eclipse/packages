@@ -240,7 +240,7 @@ messaging:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: {{ printf "Hono %s" .component | quote }}
   amqpHostname: "hono-internal"
-  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" .dot ) | quote }}
+  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" . ) | quote }}
   port: 5673
   keyPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.keyPath | quote }}
   certPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.certPath | quote }}
