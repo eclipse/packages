@@ -87,7 +87,8 @@ spec:
         secret:
           secretName: {{ printf "%s-%s" .Release.Name "ditto-gateway-secret" }}
       {{- if and .Values.hono.kafkaMessagingClusterExample .Values.hono.kafkaMessagingClusterExample.enabled }}
+      {{- $args := dict "dot" (. | deepCopy | merge (dict "Values" (pick .Values.kafka "nameOverride" "fullnameOverride"))) }}
       - name: kafka-connection-cert
         secret:
-          secretName: {{ printf "%s-%s" .Release.Name "kafka-example-keys" }}
+          secretName: {{ printf "%s-%s" (include "hono.fullname" $args) "kafka-example-keys" }}
       {{- end}}
