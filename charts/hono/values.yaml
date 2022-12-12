@@ -14,10 +14,8 @@
 # Default values for eclipse-hono.
 # Declare variables to be passed into your templates.
 
-global:
-  hono:
-    nameOverride: ""
-    fullnameOverride: ""
+nameOverride: ""
+fullnameOverride: ""
 
 # honoImagesTag contains the (common) tag name of the Hono component
 # container images to deploy.
@@ -1713,7 +1711,7 @@ kafka:
       type: "pem"
       pemChainIncluded: true
       existingSecrets:
-      - "{{ include \"hono.fullname\" . }}-kafka-example-keys"
+      - "{{ include \"hono.fullname\" (dict \"dot\" .) }}-kafka-example-keys"
 
   service:
     ports:

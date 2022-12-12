@@ -16,8 +16,8 @@
 Expand the name of the chart.
 */}}
 {{- define "hono.name" -}}
-  {{- $nameOverride := .Values.global.hono.nameOverride -}}
-  {{- empty $nameOverride | ternary .Chart.Name (tpl $nameOverride $) | trunc 63 | trimSuffix "-" -}}
+  {{- $nameOverride := .dot.Values.nameOverride -}}
+  {{- empty $nameOverride | ternary .dot.Chart.Name (tpl $nameOverride .dot ) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -26,16 +26,16 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "hono.fullname" -}}
-  {{- $fullnameOverride := .Values.global.hono.fullnameOverride -}}
+  {{- $fullnameOverride := .dot.Values.fullnameOverride -}}
   {{- if $fullnameOverride  -}}
-    {{- (tpl $fullnameOverride $) | trunc 63 | trimSuffix "-" -}}
+    {{- (tpl $fullnameOverride .dot) | trunc 63 | trimSuffix "-" -}}
   {{- else -}}
-    {{- $nameOverride := .Values.global.hono.nameOverride -}}
-    {{- $name := empty $nameOverride | ternary .Chart.Name (tpl $nameOverride $) -}}
-    {{- if contains $name .Release.Name -}}
-      {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+    {{- $nameOverride := .dot.Values.nameOverride -}}
+    {{- $name := empty $nameOverride | ternary .dot.Chart.Name (tpl $nameOverride .dot) -}}
+    {{- if contains $name .dot.Release.Name -}}
+      {{- .dot.Release.Name | trunc 63 | trimSuffix "-" -}}
     {{- else -}}
-      {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+      {{- printf "%s-%s" .dot.Release.Name $name | trunc 63 | trimSuffix "-" -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -44,7 +44,7 @@ If release name contains chart name it will be used as a full name.
 Create chart name and version as used by the chart label.
 */}}
 {{- define "hono.chart" }}
-  {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+  {{- printf "%s-%s" .dot.Chart.Name .dot.Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -91,9 +91,9 @@ Add standard labels for resources as recommended by Helm best practices.
 {{- define "hono.std.labels" -}}
 app.kubernetes.io/name: {{ include "hono.name" . | quote }}
 helm.sh/chart: {{ include "hono.chart" . | quote }}
-app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
-app.kubernetes.io/instance: {{ .Release.Name | quote }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .dot.Release.Service | quote }}
+app.kubernetes.io/instance: {{ .dot.Release.Name | quote }}
+app.kubernetes.io/version: {{ .dot.Chart.AppVersion | quote }}
 {{- end }}
 
 
@@ -105,11 +105,11 @@ The scope passed in is expected to be a dict with keys
 - "component": the value to use for the "app.kubernetes.io/component" label
 */}}
 {{- define "hono.metadata" -}}
-name: {{ printf "%s-%s" (include "hono.fullname" .dot ) .name | quote }}
+name: {{ printf "%s-%s" (include "hono.fullname" . ) .name | quote }}
 namespace: {{ .dot.Release.Namespace | quote }}
 labels:
-  app.kubernetes.io/name: {{ include "hono.name" .dot | quote }}
-  helm.sh/chart: {{ include "hono.chart" .dot | quote }}
+  app.kubernetes.io/name: {{ include "hono.name" . | quote }}
+  helm.sh/chart: {{ include "hono.chart" . | quote }}
   app.kubernetes.io/managed-by: {{ .dot.Release.Service | quote }}
   app.kubernetes.io/instance: {{ .dot.Release.Name | quote }}
   app.kubernetes.io/version: {{ .dot.Chart.AppVersion | quote }}
@@ -125,7 +125,7 @@ The scope passed in is expected to be a dict with keys
 - "component": the value of the "app.kubernetes.io/component" label to match
 */}}
 {{- define "hono.matchLabels" -}}
-app.kubernetes.io/name: {{ include "hono.name" .dot | quote }}
+app.kubernetes.io/name: {{ include "hono.name" . | quote }}
 app.kubernetes.io/instance: {{ .dot.Release.Name | quote }}
 app.kubernetes.io/component: {{ .component | quote }}
 {{- end }}
@@ -266,7 +266,7 @@ The scope passed in is expected to be a dict with keys
 kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
-    {{- $bootstrapServers := printf "%[1]s-%[2]s-0.%[1]s-%[2]s-headless:%d" ( include "hono.fullname" .dot ) .dot.Values.kafka.nameOverride ( .dot.Values.kafka.service.ports.client | int ) }}
+    {{- $bootstrapServers := printf "%[1]s-%[2]s-0.%[1]s-%[2]s-headless:%d" ( include "hono.fullname" . ) .dot.Values.kafka.nameOverride ( .dot.Values.kafka.service.ports.client | int ) }}
     bootstrap.servers: {{ $bootstrapServers | quote }}
   {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
     security.protocol: "SASL_SSL"
@@ -613,22 +613,22 @@ The scope passed in is expected to be a dict with keys
 {{- if ( ne $keySecretName "none" ) }}
 - name: "tls-keys"
   secret:
-    secretName: {{ ternary ( printf "%s-%s-example-keys" ( include "hono.fullname" .dot ) .name ) $keySecretName ( eq $keySecretName "example" ) | quote }}
+    secretName: {{ ternary ( printf "%s-%s-example-keys" ( include "hono.fullname" . ) .name ) $keySecretName ( eq $keySecretName "example" ) | quote }}
 {{- end }}
 {{- $trustStoreConfigMapName := ( default "none" .componentConfig.tlsTrustStoreConfigMap | toString ) }}
 {{- if ( ne $trustStoreConfigMapName "none" ) }}
 - name: "tls-trust-store"
   configMap:
-    name: {{ ternary ( printf "%s-example-trust-store" ( include "hono.fullname" .dot )) $trustStoreConfigMapName ( eq $trustStoreConfigMapName "example" ) | quote }}
+    name: {{ ternary ( printf "%s-example-trust-store" ( include "hono.fullname" . )) $trustStoreConfigMapName ( eq $trustStoreConfigMapName "example" ) | quote }}
 {{- end }}
 - name: "default-logging-config"
   configMap:
-    name: {{ printf "%s-default-logging-config" ( include "hono.fullname" .dot ) | quote }}
+    name: {{ printf "%s-default-logging-config" ( include "hono.fullname" . ) | quote }}
     optional: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
   secret:
-    secretName: {{ printf "%s-%s" ( include "hono.fullname" .dot ) $volumeName | quote }}
+    secretName: {{ printf "%s-%s" ( include "hono.fullname" . ) $volumeName | quote }}
 {{- if and .dot.Values.otelCollectorAgentConfigMap ( not .dot.Values.jaegerBackendExample.enabled ) }}
 - name: "otel-collector-config"
   configMap:

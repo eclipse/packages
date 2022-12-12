@@ -14,7 +14,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  {{- $args := dict "dot" . "component" "kafka" "name" "kafka-example-keys" }}
+  {{- $args := dict "dot" (. | deepCopy | merge (dict "Values" (pick .Values.kafka "nameOverride" "fullnameOverride"))) "component" "kafka" "name" "kafka-example-keys" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 type: Opaque
 data:

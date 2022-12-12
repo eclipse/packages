@@ -18,7 +18,7 @@ metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 spec:
   replicas: 1
-  serviceName: {{ printf "%s-%s" (include "hono.fullname" .) $args.name }}
+  serviceName: {{ printf "%s-%s" (include "hono.fullname" $args) $args.name }}
   selector:
     matchLabels:
       {{- include "hono.matchLabels" $args | nindent 6 }}
@@ -43,7 +43,7 @@ spec:
         - name: JDK_JAVA_OPTIONS
           value: "-XX:MinRAMPercentage=85 -XX:MaxRAMPercentage=85"
         - name: JAVA_OPTIONS
-          value: {{ printf "-Djgroups.dns.query=%s-%s" (include "hono.fullname" .) $args.name }}
+          value: {{ printf "-Djgroups.dns.query=%s-%s" (include "hono.fullname" $args) $args.name }}
         ports:
         - name: hotrod
           containerPort: 11222
