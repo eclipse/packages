@@ -27,7 +27,7 @@ The Helm chart is being tested to successfully install on the five most recent K
 
 ## Installing the Chart
 
-The instructions below illustrate how Ditto can be installed to the `ditto` name space in a Kubernetes cluster using 
+The instructions below illustrate how Ditto can be installed to the `ditto` namespace in a Kubernetes cluster using 
 release name `eclipse-ditto`.  
 The commands can easily be adapted to use a different name space or release name.
 
@@ -40,7 +40,7 @@ kubectl create namespace ditto
 The chart can then be installed to name space `ditto` using release name `eclipse-ditto`:
 
 ```bash
-helm install --dependency-update -n ditto eclipse-ditto eclipse-iot/ditto
+helm install --dependency-update -n ditto eclipse-ditto eclipse-iot/ditto --wait
 ```
 
 

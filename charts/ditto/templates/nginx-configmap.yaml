@@ -41,6 +41,17 @@ data:
     
       merge_slashes off; # allow multiple slashes for CRS Authentication
     
+      map $http_authorization $authentication {
+        default "Authentication required";
+        "~Bearer" "off";
+        # the above means: if we get a request containing an "Authorization: Bearer ..." header, set "off" to $authentication
+      }
+    
+      map $http_authorization $nginx_auth_user {
+        default "nginx:${remote_user}";
+        "~Bearer" "";
+      }
+    
       upstream {{ include "ditto.fullname" . }}-gateway {
         server {{ include "ditto.fullname" . }}-gateway:8080;
       }
@@ -61,10 +72,10 @@ data:
           proxy_pass_request_headers    on;
           proxy_set_header              Authorization             $http_authorization;
           {{ else }}
-          auth_basic                    "Authentication required";
+          auth_basic                    $authentication;
           auth_basic_user_file          nginx.htpasswd;
-          proxy_set_header              X-Forwarded-User           $remote_user;
-          proxy_set_header              x-ditto-pre-authenticated "nginx:${remote_user}";
+          proxy_set_header              X-Forwarded-User          $remote_user;
+          proxy_set_header              x-ditto-pre-authenticated $nginx_auth_user;
           {{- end }}
         
           proxy_pass                    http://{{ include "ditto.fullname" . }}-gateway;
@@ -86,10 +97,10 @@ data:
           proxy_pass_request_headers    on;
           proxy_set_header              Authorization             $http_authorization;
           {{ else }}
-          auth_basic                    "Authentication required";
+          auth_basic                    $authentication;
           auth_basic_user_file          nginx.htpasswd;
-          proxy_set_header              X-Forwarded-User           $remote_user;
-          proxy_set_header              x-ditto-pre-authenticated "nginx:${remote_user}";
+          proxy_set_header              X-Forwarded-User          $remote_user;
+          proxy_set_header              x-ditto-pre-authenticated $nginx_auth_user;
           {{- end }}
           
           proxy_pass                    http://{{ include "ditto.fullname" . }}-gateway;
