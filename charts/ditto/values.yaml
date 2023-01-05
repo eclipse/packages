@@ -32,16 +32,16 @@ fullnameOverride: ""
 ## will be handled as k8s secret as connection uri might contain auth credentials
 dbconfig:
   connectivity:
-    uri: mongodb://ditto-mongodb:27017/connectivity
+    uri: mongodb://#{PLACEHOLDER_MONGODB_HOSTNAME}#:27017/connectivity
     ssl: false
   things:
-    uri: mongodb://ditto-mongodb:27017/things
+    uri: mongodb://#{PLACEHOLDER_MONGODB_HOSTNAME}#:27017/things
     ssl: false
   searchDB:
-    uri: mongodb://ditto-mongodb:27017/searchDB
+    uri: mongodb://#{PLACEHOLDER_MONGODB_HOSTNAME}#:27017/searchDB
     ssl: false
   policies:
-    uri: mongodb://ditto-mongodb:27017/policies
+    uri: mongodb://#{PLACEHOLDER_MONGODB_HOSTNAME}#:27017/policies
     ssl: false
   ## If following property is set, an existing secret will be used to retrieve the mongodb connectionUris from.
   # uriSecret: my-uri-secret
@@ -97,7 +97,7 @@ global:
   hashedBasicAuthUsers: []
   #  - ditto:A6BgmB8IEtPTs
   ## jwtOnly controls whether only OpenID-Connect authentication is supported
-  ## if false, basicAuth is used
+  ## if false, both OpenID-Connect and basicAuth via nginx (see above "basicAuthUsers" and "hashedBasicAuthUsers") is used
   ## ref: https://www.eclipse.org/ditto/installation-operating.html#openid-connect
   jwtOnly: false
   ## JVM options applied to all Ditto services running in the JVM, is put in JAVA_TOOL_OPTIONS
@@ -358,7 +358,7 @@ nginx:
     ## repository for the nginx docker image
     repository: docker.io/nginx
     ## tag for the nginx docker image
-    tag: 1.23.1-alpine
+    tag: 1.23.3-alpine
     ## pullPolicy for the nginx docker image
     pullPolicy: IfNotPresent
   ## extraEnv to add arbitrary environment variables to nginx container
@@ -509,7 +509,7 @@ swaggerui:
     ## repository for the swagger ui docker image
     repository: docker.io/swaggerapi/swagger-ui
     ## tag for the swagger ui docker image
-    tag: v4.14.1
+    tag: v4.15.5
     ## pullPolicy for the swagger ui docker image
     pullPolicy: IfNotPresent
   ## extraEnv to add arbitrary environment variable to swagger ui container
@@ -709,7 +709,7 @@ thingsSearch:
 mongodb:
   ## enabled controls usage of dependency chart
   enabled: true
-  fullnameOverride: ditto-mongodb
+  # fullnameOverride: ditto-mongodb
   auth:
     enabled: false
   securityContext:
