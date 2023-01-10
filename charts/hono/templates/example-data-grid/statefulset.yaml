@@ -65,6 +65,10 @@ spec:
           name: conf
           subPath: mgmt-groups.properties
           readOnly: true
+        {{- if .Values.dataGridExample.persistence.enabled }}
+        - name: storage
+          mountPath: /opt/infinispan/server/data
+        {{- end}}
         {{- include "hono.component.healthChecks" $args | nindent 8 }}
         {{- with .Values.dataGridExample.resources }}
         resources:
@@ -75,4 +79,10 @@ spec:
       - name: conf
         configMap:
           name: {{ printf "%s-%s-conf" .Release.Name $args.name }}
+      {{- if .Values.dataGridExample.persistence.enabled }}
+      - name: storage
+        persistentVolumeClaim:
+          claimName: {{ printf "%s-%s-pvc" .Release.Name $args.name | quote }}
+      {{- end}}
+
 {{- end }}

@@ -1983,6 +1983,13 @@ dataGridExample:
   # dataMaxSize contains the maximum size of off-heap memory used for storing data per Infinispan node
   dataMaxSize: "30 MB"
 
+  # persistence contains configuration on the dataGrid persitence settings.
+  persistence:
+    # enabled defines whether or not persistence is enabled for the example dataGrid
+    enabled: false
+    # pvcSize determines the size of the pvc created to write the cache data to
+    pvcSize: "100M"
+
 jaegerBackendExample:
 
   # enabled indicates whether the example Jaeger all-in-one
