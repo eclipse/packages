@@ -142,7 +142,7 @@ akka:
 
 # Set "dittoTag" in order to specify another Ditto version to use for all Ditto services:
 # you may also use "1" (for latest Ditto 1.x.x) or "1.5" (for latest Ditto 1.5.x)
-# dittoTag: 3.1.1
+# dittoTag: 3.1.2
 
 ## ----------------------------------------------------------------------------
 ## connectivity configuration
@@ -168,7 +168,7 @@ connectivity:
     ## repository for the connectivity docker image
     repository: docker.io/eclipse/ditto-connectivity
     ## tag for the connectivity docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 3.1.1
+    # tag: 3.1.2
     ## pullPolicy for the connectivity docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -269,7 +269,7 @@ gateway:
     ## repository for the gateway docker image
     repository: docker.io/eclipse/ditto-gateway
     ## tag for the gateway docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 3.1.1
+    # tag: 3.1.2
     ## pullPolicy for the gateway docker image
     pullPolicy: IfNotPresent
   ## systemProps used to define arbitrary system properties for gateway service
@@ -425,7 +425,7 @@ policies:
     ## repository for the policies docker image
     repository: docker.io/eclipse/ditto-policies
     ## tag for the policies docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 3.1.1
+    # tag: 3.1.2
     ## pullPolicy for the policies docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -556,7 +556,7 @@ things:
     ## repository for the things docker image
     repository: docker.io/eclipse/ditto-things
     ## tag for the things docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 3.1.1
+    # tag: 3.1.2
     ## pullPolicy for the things docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
@@ -642,7 +642,7 @@ thingsSearch:
     ## repository for the things-search docker image
     repository: docker.io/eclipse/ditto-things-search
     ## tag for the things-search docker image - overwrite to specify something else than Chart.AppVersion
-    # tag: 3.1.1
+    # tag: 3.1.2
     ## pullPolicy for the things-search docker image
     pullPolicy: IfNotPresent
   ## additional JVM options to put into JAVA_TOOL_OPTIONS
