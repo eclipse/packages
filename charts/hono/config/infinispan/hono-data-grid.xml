@@ -38,7 +38,20 @@
       <security>
         <authorization enabled="true" />
       </security>
+      {{- if .Values.dataGridExample.persistence.enabled }}
+      <persistence passivation="false">
+        <file-store>
+          <index path="/opt/infinispan/server/data/index" />
+          <data path="/opt/infinispan/server/data/data" />
+        </file-store>
+      </persistence>
+      {{- end }}
     </distributed-cache>
+    {{- if .Values.dataGridExample.persistence.enabled }}
+    <global-state>
+      <persistent-location path="/opt/infinispan/server/data"/>
+    </global-state>
+    {{- end }}
   </cache-container>
 
   <server xmlns="urn:infinispan:server:13.0">

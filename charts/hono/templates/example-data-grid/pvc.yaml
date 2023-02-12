@@ -1,0 +1,13 @@
+{{- if .Values.dataGridExample.persistence.enabled -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  {{- $args := dict "dot" . "component" "data-grid" "name" "data-grid-pvc" }}
+  {{- include "hono.metadata" $args | nindent 2 }}
+spec:
+ accessModes:
+ - ReadWriteOnce
+ resources:
+   requests:
+     storage: {{ .Values.dataGridExample.persistence.pvcSize }}
+{{- end }}
