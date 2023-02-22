@@ -32,7 +32,7 @@ maybe reach out to learn more or give some feedback:
 
 ## What is next?
 
-Here are a few ideas of what you could do.
+Here are a few ideas of what you could do next.
 
 ### Add a new sensor value
 
