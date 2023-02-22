@@ -145,14 +145,14 @@ podTemplate(
 
                     stage ('Checkout website') {
                         dir ("www") {
-                            sshagent(['git.eclipse.org-bot-ssh']) {
+                            sshagent(['github-bot-ssh']) {
                                 sh '''
                                     if [ ${BRANCH_NAME} == "develop" ]; then
                                       BRANCH_NAME="staging"
                                     fi
                                     git config --global user.email "${PROJECT_NAME}-bot@eclipse.org"
                                     git config --global user.name "${PROJECT_BOT_NAME}"
-                                    git clone ssh://genie.${PROJECT_NAME}@git.eclipse.org:29418/www.eclipse.org/${PROJECT_NAME} .
+                                    git clone git@github.com:eclipse/${PROJECT_NAME}-website.git .
                                     git checkout ${BRANCH_NAME}
                                 '''
                             }
@@ -160,7 +160,7 @@ podTemplate(
                     }
 
                     stage ('Copy content') {
-                        // delete the whole directory, and re-populate with the new content 
+                        // delete the whole directory, and re-populate with the new content
                         sh 'rm -rf www/* && cp -Rvf build/homepage/_site/* www/'
 
                         // pre-fill with the published charts and index from the git repository
@@ -185,10 +185,10 @@ podTemplate(
                     if (fileExists('build/perform-merge')) {
                     stage ('Rebuild helm Index') {
                         // merge added content with existing index
-	                    if ( isStaging() ) {
-	                        sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://staging.eclipse.org/packages/charts'
-	                    } else {
-	                        sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://eclipse.org/packages/charts'
+                        if ( isStaging() ) {
+                            sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://staging.eclipse.org/packages/charts'
+                        } else {
+                            sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://eclipse.org/packages/charts'
                         }
                         // copy new content and index to www-repo
                         sh 'cp -v build/helm-add/* www/charts/'
@@ -197,7 +197,7 @@ podTemplate(
 
                     stage ('Commit and push') {
                         dir("www") {
-                            sshagent(['git.eclipse.org-bot-ssh']) {
+                            sshagent(['github-bot-ssh']) {
                                 sh '''
                                 if [ ${BRANCH_NAME} == "develop" ]; then
                                   BRANCH_NAME="staging"
