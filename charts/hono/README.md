@@ -103,6 +103,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.3.0
+
+* Use Hono 2.3.0 container images.
+
 ### 2.2.1
 
 * Update to Kafka chart version 20.x (using Kafka 3.3.x).

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -15,9 +15,9 @@ name: hono
 description: |
   Eclipse Hono™ provides remote service interfaces for connecting large numbers of IoT devices to a back end and
   interacting with them in a uniform way regardless of the device communication protocol.
-version: 2.2.1
+version: 2.3.0
 # Version of Hono being deployed by the chart
-appVersion: 2.2.0
+appVersion: 2.3.0
 keywords:
 - iot-chart
 - IoT
