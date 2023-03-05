@@ -110,12 +110,12 @@ spec:
             - name: DEVOPS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "ditto.fullname" . }}-gateway-secret
+                  name: {{ .Values.gateway.existingSecret | default ( printf "%s-gateway-secret" ( include "ditto.fullname" . )) }}
                   key: devops-password
             - name: STATUS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "ditto.fullname" . }}-gateway-secret
+                  name: {{ .Values.gateway.existingSecret | default ( printf "%s-gateway-secret" ( include "ditto.fullname" . )) }}
                   key: status-password
             {{- if .Values.global.prometheus.enabled }}
             - name: PROMETHEUS_PORT
