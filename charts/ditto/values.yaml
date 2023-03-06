@@ -249,6 +249,9 @@ gateway:
   ## statusPassword will be used for accessing /status resource (username: devops)
   ## if not set a random password will be set
   statusPassword:
+  ## Name of existing secret containing status and devops passwords
+  ## if not set then default secret is created
+  existingSecret:
   ## replicaCount for gateway service
   replicaCount: 1
   ## updateStrategy for gateway service
