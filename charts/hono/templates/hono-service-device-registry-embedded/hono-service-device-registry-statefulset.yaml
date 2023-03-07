@@ -67,7 +67,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         {{- include "hono.component.frameworkEnv" $args | indent 8 }}
-        {{- include "hono.component.envConfigMap" $args | indent 8 }}
+        {{- include "hono.component.envFrom" $args | indent 8 }}
         securityContext:
           privileged: false
         volumeMounts:

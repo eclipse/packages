@@ -418,18 +418,24 @@ The scope passed in is expected to be a dict with keys
 {{- end }}
 
 {{/*
-Adds environment variables from a given configmap
+Adds environment variables from a given configmap and/or secret
 to a component's container.
 
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".")
 - (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
 */}}
-{{- define "hono.component.envConfigMap" }}
-{{- if .componentConfig.envConfigMap }}
+{{- define "hono.component.envFrom" }}
+{{- if or .componentConfig.envConfigMap .componentConfig.envSecret }}
 envFrom:
+{{- if .componentConfig.envConfigMap }}
 - configMapRef:
     name: {{ .componentConfig.envConfigMap | quote }}
+{{- end }}
+{{- if .componentConfig.envSecret }}
+- secretRef:
+    name: {{ .componentConfig.envSecret | quote }}
+{{- end }}
 {{- end }}
 {{- end }}
 
