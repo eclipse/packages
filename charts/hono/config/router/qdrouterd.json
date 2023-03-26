@@ -36,6 +36,7 @@
     "saslPlugin": "Hono Auth"
   }],
 
+{{- if .Values.amqpMessagingNetworkExample.insecurePortEnabled }}
   ["listener", {
     "host": "0.0.0.0",
     "port": 5672,
@@ -44,6 +45,7 @@
     "saslMechanisms": "PLAIN",
     "saslPlugin": "Hono Auth"
   }],
+{{- end }}
 
   ["sslProfile", {
     "name": "internal",

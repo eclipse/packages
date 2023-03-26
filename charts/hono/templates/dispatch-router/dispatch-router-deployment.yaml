@@ -47,9 +47,11 @@ spec:
         - name: amqps
           containerPort: 5671
           protocol: TCP
+        {{- if .Values.amqpMessagingNetworkExample.insecurePortEnabled }}
         - name: amqp
           containerPort: 5672
           protocol: TCP
+        {{- end }}
         - name: internal
           containerPort: 5673
           protocol: TCP

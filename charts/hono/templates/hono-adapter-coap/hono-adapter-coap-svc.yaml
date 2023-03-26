@@ -1,6 +1,6 @@
 {{- if .Values.adapters.coap.enabled }}
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -23,12 +23,14 @@ metadata:
 
 spec:
   ports:
+  {{- if ( eq .Values.adapters.coap.hono.coap.insecurePortEnabled true ) }}
   - name: coap
     port: 5683
     protocol: UDP
     targetPort: coap
     {{- $coapArgs := dict "dot" . "port" 30683 }}
     {{- include "hono.nodePort" $coapArgs | nindent 4 }}
+  {{- end }}
   - name: coaps
     port: 5684
     protocol: UDP

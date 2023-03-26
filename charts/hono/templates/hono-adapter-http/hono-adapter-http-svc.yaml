@@ -1,6 +1,6 @@
 {{- if .Values.adapters.http.enabled }}
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -22,12 +22,14 @@ metadata:
   {{- end }}
 spec:
   ports:
+  {{- if ( eq .Values.adapters.http.hono.http.insecurePortEnabled true ) }}
   - name: http
     port: 8080
     protocol: TCP
     targetPort: http
     {{- $httpArgs := dict "dot" . "port" 30080 }}
     {{- include "hono.nodePort" $httpArgs | nindent 4 }}
+  {{- end }}
   - name: https
     port: 8443
     protocol: TCP

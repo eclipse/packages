@@ -1,6 +1,6 @@
 {{- if .Values.deviceRegistryExample.enabled }}
 #
-# Copyright (c) 2019 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -22,12 +22,14 @@ metadata:
   {{- end }}
 spec:
   ports:
+  {{- if ( eq .Values.deviceRegistryExample.hono.registry.http.insecurePortEnabled true ) }}
   - name: http
     port: 28080
     protocol: TCP
     targetPort: http
     {{- $httpArgs := dict "dot" . "port" 31080 }}
     {{- include "hono.nodePort" $httpArgs | nindent 4 }}
+  {{- end }}
   - name: https
     port: 28443
     protocol: TCP

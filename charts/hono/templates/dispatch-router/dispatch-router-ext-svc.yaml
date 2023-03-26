@@ -29,12 +29,14 @@ spec:
     targetPort: amqps
     {{- $amqpsArgs := dict "dot" . "port" 30671 }}
     {{- include "hono.nodePort" $amqpsArgs | nindent 4 }}
+  {{- if .Values.amqpMessagingNetworkExample.insecurePortEnabled }}
   - name: amqp
     port: 15672
     protocol: TCP
     targetPort: amqp
     {{- $amqpArgs := dict "dot" . "port" 30672 }}
     {{- include "hono.nodePort" $amqpArgs | nindent 4 }}
+  {{- end }}
   {{- if .Values.adapters.externalAdaptersEnabled }}
   - name: internal
     port: 15673
