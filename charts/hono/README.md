@@ -106,6 +106,12 @@ The command removes all the Kubernetes components associated with the chart and 
 
 * Fix using custom host with amqp Messaging Network Example
 
+### 2.4.0
+
+* Do not expose insecure service port if insecure port is disabled for a component.
+  Support disabling the insecure port of the Dispatch Router of the AMQP 1.0 based
+  example messaging infrastructure.
+
 ### 2.3.1
 
 * Update to Grafana Dashboard to work with the new metrics

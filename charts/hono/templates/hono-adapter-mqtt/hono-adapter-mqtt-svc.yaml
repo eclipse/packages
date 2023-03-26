@@ -1,6 +1,6 @@
 {{- if .Values.adapters.mqtt.enabled }}
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -22,12 +22,14 @@ metadata:
   {{- end }}
 spec:
   ports:
+  {{- if ( eq .Values.adapters.mqtt.hono.mqtt.insecurePortEnabled true ) }}
   - name: mqtt
     port: 1883
     protocol: TCP
     targetPort: mqtt
     {{- $mqttArgs := dict "dot" . "port" 31883 }}
     {{- include "hono.nodePort" $mqttArgs | nindent 4 }}
+  {{- end }}
   - name: secure-mqtt
     port: 8883
     protocol: TCP

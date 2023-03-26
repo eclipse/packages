@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -350,7 +350,7 @@ adapters:
       # exposed AMQP endpoints.
       # If not set, the adapter by default exposes the secure and insecure ports
       # using an example key and certificate.
-      amqp:
+      amqp: {}
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
@@ -469,6 +469,13 @@ adapters:
         # maxInstances defines the number of adapter Verticle instances to deploy
         # to the vert.x runtime during start-up.
         maxInstances: 1
+      # coap contains configuration properties for the adapter's
+      # exposed CoAP endpoints.
+      # If not set, the adapter by default exposes the secure port
+      # using an example key and certificate.
+      coap: {}
+      #  insecurePortEnabled: true
+      #  insecurePortBindAddress: "0.0.0.0"
 
   http:
     # enabled indicates if Hono's HTTP adapter should be deployed.
@@ -591,7 +598,7 @@ adapters:
       # exposed HTTP endpoints.
       # If not set, the adapter by default exposes the secure and insecure ports
       # using an example key and certificate.
-      http:
+      http: {}
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
@@ -715,7 +722,7 @@ adapters:
       # exposed HTTP endpoints.
       # If not set, the adapter by default exposes the secure and insecure ports
       # using an example key and certificate.
-      lora:
+      lora: {}
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
@@ -840,7 +847,7 @@ adapters:
       # exposed MQTT endpoints.
       # If not set, the adapter by default exposes the secure and insecure ports
       # using an example key and certificate.
-      mqtt:
+      mqtt: {}
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
@@ -959,7 +966,7 @@ authServer:
       # exposed AMQP endpoints.
       # If not set, the sever by default exposes the secure and insecure ports
       # using an example key and certificate.
-      amqp:
+      amqp: {}
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
@@ -1064,7 +1071,7 @@ deviceRegistryExample:
       # exposed AMQP endpoints.
       # If not set, the registry by default exposes the secure port
       # using an example key and certificate.
-      amqp:
+      amqp: {}
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
@@ -1073,12 +1080,12 @@ deviceRegistryExample:
       # If not set, the registry by default exposes the insecure and secure ports
       # using an example key and certificate.
       # NOTE: For the file based device registry use "rest" instead of "http".
-      http:
+      http: {}
       #  insecurePortEnabled: true
       #  insecurePortBindAddress: "0.0.0.0"
 
       # svc contains configuration properties for the registry's service implementation.
-      svc:
+      svc: {}
       #  maxDevicesPerTenant: 100
 
     # kafka contains the configuration used by the device registry
@@ -1222,7 +1229,7 @@ deviceRegistryExample:
     # mongodb contains the configuration properties to connect to the MongoDB database instance.
     # If you would like to use an already existing MongoDB database instance, then configure
     # the below section accordingly.
-    mongodb:
+    mongodb: {}
     # The host name or IP address of the MongoDB instance.
     # host:
     # The port that the MongoDB instance is listening on.
@@ -1749,6 +1756,9 @@ amqpMessagingNetworkExample:
   # deployed and used. By default an internal Broker is deployed.
   # As alternative an external Broker can be configured as well.
   enabled: false
+  # insecurePortEnabled indicates if the non-TLS secured API endpoint of the Dispatch Router
+  # should be enabled or not.
+  insecurePortEnabled: true
 
   # dispatchRouter contains properties for configuring the Qpid Dispatch Router
   dispatchRouter:

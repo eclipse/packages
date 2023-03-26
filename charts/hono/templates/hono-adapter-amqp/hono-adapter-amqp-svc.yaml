@@ -1,6 +1,6 @@
 {{- if .Values.adapters.amqp.enabled }}
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -22,12 +22,14 @@ metadata:
   {{- end }}
 spec:
   ports:
+  {{- if ( eq .Values.adapters.amqp.hono.amqp.insecurePortEnabled true ) }}
   - name: amqp
     port: 5672
     protocol: TCP
     targetPort: amqp
     {{- $amqpArgs := dict "dot" . "port" 32672 }}
     {{- include "hono.nodePort" $amqpArgs | nindent 4 }}
+  {{- end }}
   - name: amqps
     port: 5671
     protocol: TCP
