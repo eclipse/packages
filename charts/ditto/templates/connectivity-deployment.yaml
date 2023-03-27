@@ -107,7 +107,7 @@ spec:
             - name: MONGO_DB_URI
               valueFrom:
                 secretKeyRef:
-                  name: {{ if .Values.dbconfig.uriSecret }}{{ .Values.dbconfig.uriSecret }}{{ else }}{{ include "ditto.fullname" . }}-mongodb-secret{{ end }}
+                  name: {{ .Values.dbconfig.uriSecret | default ( printf "%s-mongodb-secret" ( include "ditto.fullname" . )) }}
                   key: connectivity-uri
             {{- if .Values.global.prometheus.enabled }}
             - name: PROMETHEUS_PORT
