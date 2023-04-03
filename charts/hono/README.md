@@ -106,6 +106,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 * Fix using custom host with amqp Messaging Network Example
 
+### 2.3.1
+
+* Update to Grafana Dashboard to work with the new metrics
+
 ### 2.3.0
 
 * Use Hono 2.3.0 container images.

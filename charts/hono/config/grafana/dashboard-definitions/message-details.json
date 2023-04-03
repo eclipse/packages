@@ -57,7 +57,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
+          "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -166,7 +166,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum(rate(hono_telemetry_processing_duration_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -247,7 +247,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum(rate(hono_telemetry_processing_duration_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -328,7 +328,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_received_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum(rate(hono_telemetry_processing_duration_seconds_count{status=\"forwarded\",component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -387,21 +387,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",status=\"forwarded\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
+          "expr": "sum(irate(hono_telemetry_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",status=\"forwarded\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "forwarded",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",status=\"undeliverable\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
+          "expr": "sum(irate(hono_telemetry_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",status=\"undeliverable\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "undeliverable",
           "refId": "B"
         },
         {
-          "expr": "sum(irate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",status=\"unprocessable\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
+          "expr": "sum(irate(hono_telemetry_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",status=\"unprocessable\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "unprocessable",
@@ -509,7 +509,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum(rate(hono_telemetry_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -590,7 +590,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum(rate(hono_telemetry_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -671,7 +671,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "sum(rate(hono_messages_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum(rate(hono_telemetry_payload_bytes_sum{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -730,14 +730,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{component_name=~\"$componentname\",type=~\"$type\",status=\"undeliverable\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
+          "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{component_name=~\"$componentname\",type=~\"$type\",status=\"undeliverable\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "undeliverable",
           "refId": "A"
         },
         {
-          "expr": "sum(irate(hono_messages_received_seconds_count{component_name=~\"$componentname\",type=~\"$type\",status=\"unprocessable\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
+          "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{component_name=~\"$componentname\",type=~\"$type\",status=\"unprocessable\",tenant=~\"$tenant\",host=~\"$instance\"}[$__range]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "unprocessable",
@@ -846,7 +846,7 @@
       "tableColumn": "",
       "targets": [
         {
-          "expr": "(sum(rate(hono_messages_received_seconds_count{component_name=~\"$componentname\",type=~\"$type\",status!=\"forwarded\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))\n/\n sum(rate(hono_messages_received_seconds_count{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval])))\n* 100\n",
+          "expr": "(sum(rate(hono_telemetry_processing_duration_seconds_count{component_name=~\"$componentname\",type=~\"$type\",status!=\"forwarded\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval]))\n/\n sum(rate(hono_telemetry_processing_duration_seconds_count{component_name=~\"$componentname\",type=~\"$type\",tenant=~\"$tenant\",host=~\"$instance\"}[$__rate_interval])))\n* 100\n",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -889,7 +889,7 @@
         "multi": true,
         "name": "componentname",
         "options": [],
-        "query": "label_values(hono_messages_received_seconds_count,component_name)",
+        "query": "label_values(hono_telemetry_processing_duration_seconds_count,component_name)",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -934,7 +934,7 @@
         "multi": true,
         "name": "type",
         "options": [],
-        "query": "label_values(hono_messages_received_seconds_count,type)",
+        "query": "label_values(hono_telemetry_processing_duration_seconds_count,type)",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -960,7 +960,7 @@
         "multi": true,
         "name": "instance",
         "options": [],
-        "query": "label_values(hono_messages_received_seconds_count,host)",
+        "query": "label_values(hono_telemetry_processing_duration_seconds_count,host)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
