@@ -87,7 +87,7 @@
     "saslUsername": "{{ .Values.amqpMessagingNetworkExample.broker.saslUsername }}",
     "saslPassword": "file:/opt/hono/config/broker-password",
     {{- if .Values.amqpMessagingNetworkExample.broker.servicebus.host }}
-    "host": "{{ .Values.amqpMessagingNetworkExample.broker.serviceBus.host }}",
+    "host": "{{ .Values.amqpMessagingNetworkExample.broker.servicebus.host }}",
     "idleTimeoutSeconds": 120
     {{- else }}
     "host": "{{ .Release.Name }}-artemis",
