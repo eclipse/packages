@@ -22,6 +22,10 @@ metadata:
   {{- end }}
 spec:
   ports:
+  - name: health
+    port: 8088
+    protocol: TCP
+    targetPort: health
   - name: http
     port: 28080
     protocol: TCP
