@@ -102,6 +102,10 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+### 2.4.1
+
+* Add the ability to use secrets to load environment variables.
+
 ### 2.3.2
 
 * Fix using custom host with amqp Messaging Network Example
