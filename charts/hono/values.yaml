@@ -313,6 +313,8 @@ adapters:
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
+    # The secret to get additional environment variables from for this adapter.
+    envSecret:
 
     # tlsKeysSecret identifies the Secret that contains the key material which should be used for
     # securing the component's exposed API endpoint(s).
@@ -438,6 +440,8 @@ adapters:
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
+    # The secret to get additional environment variables from for this adapter.
+    envSecret:
 
     # tlsKeysSecret identifies the Secret that contains the key material which should be used for
     # securing the component's exposed API endpoint(s).
@@ -561,6 +565,8 @@ adapters:
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
+    # The secret to get additional environment variables from for this adapter.
+    envSecret:
 
     # tlsKeysSecret identifies the Secret that contains the key material which should be used for
     # securing the component's exposed API endpoint(s).
@@ -686,6 +692,8 @@ adapters:
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
+    # The secret to get additional environment variables from for this adapter.
+    envSecret:
 
     # tlsKeysSecret identifies the Secret that contains the key material which should be used for
     # securing the component's exposed API endpoint(s).
@@ -810,6 +818,8 @@ adapters:
 
     # The configMap to get additional environment variables from for this adapter.
     envConfigMap:
+    # The secret to get additional environment variables from for this adapter.
+    envSecret:
 
     # tlsKeysSecret identifies the Secret that contains the key material which should be used for
     # securing the component's exposed API endpoint(s).
@@ -933,6 +943,10 @@ authServer:
   # that contains additional environment variables that should be set on the
   # component's container.
   envConfigMap:
+  # envSecret may be used to set the name of a (already existing) Secret
+  # that contains additional environment variables that should be set on the
+  # component's container.
+  envSecret:
 
   # tlsKeysSecret identifies the Secret that contains the key material which should be used for
   # securing the component's exposed API endpoint(s).
@@ -1174,6 +1188,8 @@ deviceRegistryExample:
 
     # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
+    # The secret to get additional environment variables from for this device registry.
+    envSecret:
 
   # mongoDBBasedDeviceRegistry contains configuration properties specific to the
   # MongoDB based device registry.
@@ -1243,6 +1259,8 @@ deviceRegistryExample:
 
     # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
+    # The secret to get additional environment variables from for this device registry.
+    envSecret:
 
     deployment:
       annotations: {}
@@ -1301,6 +1319,8 @@ deviceRegistryExample:
 
     # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
+    # The secret to get additional environment variables from for this device registry.
+    envSecret:
 
     deployment:
       annotations: {}
@@ -1479,6 +1499,8 @@ commandRouterService:
 
   # The configMap to get additional environment variables from for this command router service.
   envConfigMap:
+  # The secret to get additional environment variables from for this command router service.
+  envSecret:
 
   # tlsKeysSecret identifies the Secret that contains the key material which should be used for
   # securing the component's exposed API endpoint(s).
@@ -2060,6 +2082,8 @@ jaegerBackendExample:
 
   # envConfigMap contains the name of an (existing) ConfigMap to get additional environment variables from.
   envConfigMap:
+  # envConfigMap contains the name of an (existing) Secret to get additional environment variables from.
+  envSecret:
 
 # otelCollectorAgentImage contains the name (including tag) of the container image
 # to use for the OpenTelemetry collector agent sidecar containers.
