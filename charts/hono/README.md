@@ -102,6 +102,9 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+### 2.5.0
+
+* Allow customizing the pod/service names irrespective or .Release.Name
 
 ### 2.4.4
 
@@ -142,10 +145,6 @@ The command removes all the Kubernetes components associated with the chart and 
 * Update to Kafka chart version 20.x (using Kafka 3.3.x).
 * Update to MongoDB chart version 13.x (using Mongo DB 6.x).
 * Limit Kafka and Zookeeper JVM's memory consumption.
-
-### 2.2.1
-
-* Allow customizing the pod/service names irrespective or .Release.Name
 
 ### 2.2.0
 
