@@ -14,7 +14,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  {{- $args := dict "dot" . "component" "metrics" "name" "prometheus-config" }}
+  {{- $args := dict "dot" (. | deepCopy | merge (dict "Values" (pick .Values.prometheus.server "nameOverride" "fullnameOverride"))) "component" "metrics" "name" "prometheus-config" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 data:
   rules: |
