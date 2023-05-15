@@ -17,7 +17,7 @@ Expand the name of the chart.
 */}}
 {{- define "hono.name" -}}
   {{- $nameOverride := .dot.Values.nameOverride -}}
-  {{- empty $nameOverride | ternary .dot.Chart.Name (tpl $nameOverride .dot ) | trunc 63 | trimSuffix "-" -}}
+  {{- empty $nameOverride | ternary .dot.Chart.Name $nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -28,10 +28,10 @@ If release name contains chart name it will be used as a full name.
 {{- define "hono.fullname" -}}
   {{- $fullnameOverride := .dot.Values.fullnameOverride -}}
   {{- if $fullnameOverride  -}}
-    {{- (tpl $fullnameOverride .dot) | trunc 63 | trimSuffix "-" -}}
+    {{- $fullnameOverride | trunc 63 | trimSuffix "-" -}}
   {{- else -}}
     {{- $nameOverride := .dot.Values.nameOverride -}}
-    {{- $name := empty $nameOverride | ternary .dot.Chart.Name (tpl $nameOverride .dot) -}}
+    {{- $name := empty $nameOverride | ternary .dot.Chart.Name $nameOverride -}}
     {{- if contains $name .dot.Release.Name -}}
       {{- .dot.Release.Name | trunc 63 | trimSuffix "-" -}}
     {{- else -}}
