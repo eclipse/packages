@@ -32,13 +32,6 @@ sources:
 - https://github.com/eclipse-ditto/ditto
 - https://github.com/eclipse/packages
 icon: https://www.eclipse.org/ditto/images/ditto.svg
-maintainers:
-- name: axdotl
-  email: axel.koehler@kiwigrid.com
-- name: thjaeckle
-  email: thomas.jaeckle@bosch.io
-- name: stmaute
-  email: stefan.maute@bosch.io
 dependencies:
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
