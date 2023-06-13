@@ -13,12 +13,16 @@
 apiVersion: v2
 name: ditto
 description: |
-  Eclipse Ditto™ is a technology in the IoT implementing a software pattern called “digital twins”.
+  DEPRECATED chart of Eclipse Ditto™, which is a technology in the IoT implementing a software pattern called “digital twins”.
   A digital twin is a virtual, cloud based, representation of his real world counterpart
   (real world “Things”, e.g. devices like sensors, smart heating, connected cars, smart grids, EV charging stations etc).
 type: application
-version: 3.2.2
+version: 3.2.3
 appVersion: 3.2.1
+# The eclipse-iot-packages Ditto chart is deprecated and no longer maintained.
+# Its location moved to https://github.com/eclipse-ditto/ditto/tree/master/deployment/helm and
+# it is now server from Docker Hub at: https://hub.docker.com/r/eclipse/ditto
+deprecated: true
 keywords:
 - iot-chart
 - digital-twin
