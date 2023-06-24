@@ -102,13 +102,13 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+### 2.4.2
+
+* Recreate expired demo certificates.
+
 ### 2.4.1
 
 * Add the ability to use secrets to load environment variables.
-
-### 2.3.2
-
-* Fix using custom host with amqp Messaging Network Example
 
 ### 2.4.0
 
@@ -116,9 +116,13 @@ The command removes all the Kubernetes components associated with the chart and 
   Support disabling the insecure port of the Dispatch Router of the AMQP 1.0 based
   example messaging infrastructure.
 
+### 2.3.2
+
+* Fix using custom host with amqp Messaging Network Example.
+
 ### 2.3.1
 
-* Update to Grafana Dashboard to work with the new metrics
+* Update to Grafana Dashboard to work with the new metrics.
 
 ### 2.3.0
 
@@ -149,13 +153,13 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ### 2.1.0
 
-* Upgraded app version to Hono 2.1.0
+* Upgraded app version to Hono 2.1.0.
 * The Device Registry and the Command Router components are no longer explicitly configured with the Auth server's certificate for
   validating tokens but instead download the required public key(s) from the Auth server during runtime via its JWK resource.
 
 ### 2.0.6
 
-* Upgraded app version to Hono 2.0.1
+* Upgraded app version to Hono 2.0.1.
 
 ### 2.0.5
 
@@ -820,7 +824,7 @@ az group delete --name $resourcegroup_name --yes --no-wait
 ### Installing Hono to AKS
 
 First we build the docker images and push them into the Azure Container Registry (ACR). Note that when using a
-custom image tag, the tag name needs to be specified on the command line when when installing the chart using Helm as
+custom image tag, the tag name needs to be specified on the command line when installing the chart using Helm as
 described [above](#deploying-via-a-private-registry).
 
 ```bash
