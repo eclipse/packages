@@ -324,7 +324,7 @@ The scope passed in is expected to be a dict with keys
 */}}
 {{- define "hono.deviceRegistryExampleClientConfig" -}}
 name: {{ printf "Hono %s" .component | quote }}
-host: {{ printf "%s-service-device-registry" ( include "hono.fullname" .dot ) | quote }}
+host: {{ printf "%s-service-device-registry" ( include "hono.fullname" . ) | quote }}
 port: 5671
 credentialsPath: "/opt/hono/config/adapter.credentials"
 trustStorePath: {{ .dot.Values.deviceRegistryExample.clientTrustStorePath | default "/opt/hono/tls/ca.crt" | quote }}
@@ -346,7 +346,7 @@ command:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: {{ printf "Hono %s" $adapter | quote }}
   amqpHostname: "hono-internal"
-  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" .dot ) | quote }}
+  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" . ) | quote }}
   port: 5673
   keyPath: {{ .dot.Values.adapters.commandAndControlSpec.keyPath | quote }}
   certPath: {{ .dot.Values.adapters.commandAndControlSpec.certPath | quote }}
@@ -387,7 +387,7 @@ commandRouter:
   {{- .dot.Values.adapters.commandRouterSpec | toYaml | nindent 2 }}
 {{- else }}
   name: {{ printf "Hono %s" $adapter | quote }}
-  host: {{ printf "%s-service-command-router" ( include "hono.fullname" .dot ) | quote }}
+  host: {{ printf "%s-service-command-router" ( include "hono.fullname" . ) | quote }}
   port: 5671
   credentialsPath: "/opt/hono/config/adapter.credentials"
   trustStorePath: {{ .dot.Values.commandRouterService.clientTrustStorePath | default "/opt/hono/tls/ca.crt" | quote }}
@@ -464,7 +464,7 @@ quarkus:
       exporter:
         otlp:
           {{- if .dot.Values.jaegerBackendExample.enabled }}
-          endpoint: {{ printf "http://%s-jaeger-collector:4317" ( include "hono.fullname" .dot ) | quote }}
+          endpoint: {{ printf "http://%s-jaeger-collector:4317" ( include "hono.fullname" . ) | quote }}
           {{- else }}
           endpoint: "http://127.0.0.1:4317"
           {{- end }}
