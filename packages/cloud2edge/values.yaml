@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -164,6 +164,9 @@ ditto:
         memory: "768Mi"
 
   mongodb:
+    # usage of default name (including release name) not supported in hono.deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb for now
+    # - therefore using fixed name here
+    fullnameOverride: ditto-mongodb
     resources:
       requests:
         cpu: 150m
@@ -171,3 +174,33 @@ ditto:
       limits:
         cpu: 250m
         memory: "512Mi"
+    # apply workaround for high CPU/memory usage of liveness/readiness check - see https://github.com/bitnami/charts/issues/10264
+    # using deprecated 'mongo' executable (still available in mongodb chart 12.x) showing much lower CPU/memory usage;
+    # needs to be adapted if TLS is enabled - see https://github.com/bitnami/charts/blob/2246e0540e621cd529e32ea2c7c2724c0fbc066a/bitnami/mongodb/templates/standalone/dep-sts.yaml#L285
+    livenessProbe:
+      enabled: false
+    customLivenessProbe:
+      exec:
+        command:
+          - mongo
+          - --disableImplicitSessions
+          - --eval
+          - "db.adminCommand('ping')"
+      failureThreshold: 6
+      initialDelaySeconds: 30
+      periodSeconds: 20
+      successThreshold: 1
+      timeoutSeconds: 10
+    readinessProbe:
+      enabled: false
+    customReadinessProbe:
+      exec:
+        command:
+          - sh
+          - '-c'
+          - mongo --disableImplicitSessions --eval 'db.hello().isWritablePrimary || db.hello().secondary' | grep -q 'true'
+      failureThreshold: 6
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 5
