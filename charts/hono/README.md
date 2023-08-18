@@ -102,6 +102,11 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+
+### 2.4.3
+
+* Use Hono 2.4.0 container images.
+
 ### 2.4.2
 
 * Recreate expired demo certificates.
