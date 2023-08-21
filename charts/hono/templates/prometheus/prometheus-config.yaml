@@ -14,7 +14,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  {{- $args := dict "dot" (. | deepCopy | merge (dict "Values" (pick .Values.prometheus.server "nameOverride" "fullnameOverride"))) "component" "metrics" "name" "prometheus-config" }}
+  {{- /* prometheus chart expects metadata.name to be "{ReleaseName}-{prometheus.server.configMapOverrideName}" */}}
+  {{- $prometheusDotScope := . | deepCopy | merge (dict "Values" (dict "fullnameOverride" .Release.Name)) }}
+  {{- $args := dict "dot" $prometheusDotScope "component" "metrics" "name" .Values.prometheus.server.configMapOverrideName }}
   {{- include "hono.metadata" $args | nindent 2 }}
 data:
   rules: |

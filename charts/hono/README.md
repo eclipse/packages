@@ -104,7 +104,7 @@ The command removes all the Kubernetes components associated with the chart and 
 ## Release Notes
 ### 2.5.0
 
-* Allow customizing the pod/service names irrespective or .Release.Name
+* Allow customizing the pod/service names irrespective of .Release.Name.
 
 ### 2.4.4
 

@@ -278,7 +278,9 @@ The scope passed in is expected to be a dict with keys
 kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
-    {{- $bootstrapServers := printf "%[1]s-%[2]s-0.%[1]s-%[2]s-headless:%d" ( include "hono.fullname" . ) .dot.Values.kafka.nameOverride ( .dot.Values.kafka.service.ports.client | int ) }}
+    {{- $kafkaNameValues := pick .dot.Values.kafka "nameOverride" "fullnameOverride" }}
+    {{- $kafkaChartDotScope := dict "dot" (dict "Release" .dot.Release "Chart" (dict "Name" "kafka") "Values" $kafkaNameValues) }}
+    {{- $bootstrapServers := printf "%[1]s-0.%[1]s-headless:%d" ( include "hono.fullname" $kafkaChartDotScope ) ( .dot.Values.kafka.service.ports.client | int ) }}
     bootstrap.servers: {{ $bootstrapServers | quote }}
   {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
     security.protocol: "SASL_SSL"
@@ -497,10 +499,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- .Values.prometheus.server.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- $name := default "prometheus" .Values.prometheus.nameOverride -}}
-{{- if contains $name ( include "hono.fullname" . ) -}}
-{{- printf "%s-%s" ( include "hono.fullname" . ) .Values.prometheus.server.name | trunc 63 | trimSuffix "-" -}}
+{{- if contains $name .Release.Name -}}
+{{- printf "%s-%s" .Release.Name .Values.prometheus.server.name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "%s-%s-%s" ( include "hono.fullname" . ) $name .Values.prometheus.server.name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s" .Release.Name $name .Values.prometheus.server.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

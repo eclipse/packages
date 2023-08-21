@@ -1711,7 +1711,8 @@ kafka:
       type: "pem"
       pemChainIncluded: true
       existingSecrets:
-      - "{{ include \"hono.fullname\" (dict \"dot\" .) }}-kafka-example-keys"
+      # Evaluated in kafka chart via tpl; kafka chart full name used here!
+      - "{{ include \"hono.fullname\" (dict \"dot\" .) }}-example-keys"
 
   service:
     ports:
