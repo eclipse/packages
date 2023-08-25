@@ -14,12 +14,14 @@
 
 {{/*
 Expand the name of the chart.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 
 The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root (".") scope
 */}}
 {{- define "hono.name" -}}
   {{- $nameOverride := .dot.Values.nameOverride -}}
+  {{/* Create the Hono chart name. When nameOverride is set use it instead of the chart name. */}}
   {{- empty $nameOverride | ternary .dot.Chart.Name $nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 

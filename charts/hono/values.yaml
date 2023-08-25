@@ -1712,7 +1712,7 @@ kafka:
       pemChainIncluded: true
       existingSecrets:
       # Evaluated in kafka chart via tpl; kafka chart full name used here!
-      - "{{ include \"hono.fullname\" (dict \"dot\" .) }}-example-keys"
+      - '{{ include "hono.fullname" (dict "dot" .) }}-example-keys'
 
   service:
     ports:
