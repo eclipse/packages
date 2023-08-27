@@ -35,9 +35,12 @@ Download the [setCloud2EdgeEnv script](../scripts/setCloud2EdgeEnv.sh) and use i
 to set environment variables for the Cloud2Edge package's service endpoints.
 
 {% clipboard %}
+curl https://www.eclipse.org/packages/packages/cloud2edge/scripts/setCloud2EdgeEnv.sh --output setCloud2EdgeEnv.sh
+chmod u+x setCloud2EdgeEnv.sh
+
 RELEASE=c2e
 NS=cloud2edge
-./setCloud2EdgeEnv.sh $RELEASE $NS
+eval $(./setCloud2EdgeEnv.sh $RELEASE $NS)
 {% endclipboard %}
 {% endvariant %}
 
@@ -63,12 +66,12 @@ The demo device's digital twin supports a temperature property which will be set
 by means of the following command:
 
 {% clipboard %}
-curl -i -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'application/json' --data-binary '{
+curl -i -k -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'application/json' --data-binary '{
   "topic": "org.eclipse.packages.c2e/demo-device/things/twin/commands/modify",
   "headers": {},
   "path": "/features/temperature/properties/value",
   "value": 45
-}' http://${HTTP_ADAPTER_IP}:${HTTP_ADAPTER_PORT_HTTP}/telemetry
+}' ${HTTP_ADAPTER_BASE_URL:?}/telemetry
 {% endclipboard %}
 
 ## Retrieving the digital twin's current state
@@ -76,14 +79,14 @@ curl -i -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'application/json
 The updated state of the digital twin can then be retrieved using:
 
 {% clipboard %}
-curl -u ditto:ditto -w '\n' http://$DITTO_API_IP:$DITTO_API_PORT_HTTP/api/2/things/org.eclipse.packages.c2e:demo-device
+curl -u ditto:ditto -w '\n' ${DITTO_API_BASE_URL:?}/api/2/things/org.eclipse.packages.c2e:demo-device
 {% endclipboard %}
 
 Alternatively you can also use the following command to subscribe to Ditto's
 stream of thing update events:
 
 {% clipboard %}
-curl --http2 -u ditto:ditto -H 'Accept:text/event-stream' -N http://$DITTO_API_IP:$DITTO_API_PORT_HTTP/api/2/things
+curl --http2 -u ditto:ditto -H 'Accept:text/event-stream' -N ${DITTO_API_BASE_URL:?}/api/2/things
 {% endclipboard %}
 
 ## Sending a command to the device via its digital twin
@@ -93,7 +96,7 @@ Ditto digital twin may also be used to send a command down to the device connect
 {% clipboard %}
 curl -i -X POST -u ditto:ditto -H 'Content-Type: application/json' -w '\n' --data '{
   "water-amount": "3liters"
-}' http://$DITTO_API_IP:$DITTO_API_PORT_HTTP/api/2/things/org.eclipse.packages.c2e:demo-device/inbox/messages/start-watering?timeout=0
+}' ${DITTO_API_BASE_URL:?}/api/2/things/org.eclipse.packages.c2e:demo-device/inbox/messages/start-watering?timeout=0
 {% endclipboard %}
 
 Specifying the `timeout=0` parameter indicates that the HTTP request will directly be accepted and Ditto does not wait
@@ -105,7 +108,7 @@ timeout to the amount of seconds to wait:
 {% clipboard %}
 curl -i -X POST -u ditto:ditto -H 'Content-Type: application/json' -w '\n' --data '{
   "water-amount": "3liters"
-}' http://$DITTO_API_IP:$DITTO_API_PORT_HTTP/api/2/things/org.eclipse.packages.c2e:demo-device/inbox/messages/start-watering?timeout=60
+}' ${DITTO_API_BASE_URL:?}/api/2/things/org.eclipse.packages.c2e:demo-device/inbox/messages/start-watering?timeout=60
 {% endclipboard %}
  
 ### Receiving a command at the device
@@ -113,12 +116,12 @@ curl -i -X POST -u ditto:ditto -H 'Content-Type: application/json' -w '\n' --dat
 The device may receive a command by specifying a `ttd` when e.g. sending telemetry via HTTP to Hono:
 
 {% clipboard %}
-curl -i -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'hono-ttd: 50' -H 'application/json' -w '\n' --data '{
+curl -i -k -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'hono-ttd: 50' -H 'application/json' -w '\n' --data '{
   "topic": "org.eclipse.packages.c2e/demo-device/things/twin/commands/modify",
   "headers": {},
   "path": "/features/temperature/properties/value",
   "value": 45
-}' http://${HTTP_ADAPTER_IP}:${HTTP_ADAPTER_PORT_HTTP}/telemetry
+}' ${HTTP_ADAPTER_BASE_URL:?}/telemetry
 {% endclipboard %}
 
 An example response for the device containing the command sent via the Ditto twin (see previous step for sending the 
@@ -145,7 +148,7 @@ The response has to be correlated twice:
   with the `"correlation-id"` value from the received Ditto Protocol message's `"headers"` object.
 
 {% clipboard %}
-curl -i -X PUT -u demo-device@org.eclipse.packages.c2e:demo-secret -H "content-type: application/json" --data-binary '{
+curl -i -k -X PUT -u demo-device@org.eclipse.packages.c2e:demo-secret -H "content-type: application/json" --data-binary '{
   "topic": "org.eclipse.packages.c2e/demo-device/things/live/messages/start-watering",
   "headers": {
     "content-type": "application/json",
@@ -156,7 +159,7 @@ curl -i -X PUT -u demo-device@org.eclipse.packages.c2e:demo-secret -H "content-t
     "starting-watering": true
   },
   "status": 200
-}' http://${HTTP_ADAPTER_IP}:${HTTP_ADAPTER_PORT_HTTP}/command/res/org.eclipse.packages.c2e/org.eclipse.packages.c2e:demo-device/insert-hono-cmd-req-id-here?hono-cmd-status=200
+}' ${HTTP_ADAPTER_BASE_URL:?}/command/res/org.eclipse.packages.c2e/org.eclipse.packages.c2e:demo-device/insert-hono-cmd-req-id-here?hono-cmd-status=200
 {% endclipboard %}
 
 An example message response (omitting some additional HTTP headers) at the Ditto twin which waited for the command
@@ -184,7 +187,7 @@ e.g.: `org.acme:my-device`.
 Create a new tenant named `my-tenant` in Hono:
 
 {% clipboard %}
-curl -i -X POST http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/tenants/my-tenant
+curl -i -k -X POST ${REGISTRY_BASE_URL:?}/v1/tenants/my-tenant
 {% endclipboard %}
 
 This should return a result of `201 Created`.
@@ -204,7 +207,7 @@ This should return a result of `201 Created`.
 Next we can register a new device, named `org.acme:my-device-1` for the tenant we just created:
 
 {% clipboard %}
-    curl -i -X POST http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/devices/my-tenant/org.acme:my-device-1
+    curl -i -k -X POST ${REGISTRY_BASE_URL:?}/v1/devices/my-tenant/org.acme:my-device-1
 {% endclipboard %}
 
 This should return a result of `201 Created`.
@@ -227,14 +230,14 @@ a *gateway device*, but we want this device to be able to connect, so the next s
 to assign a username/password combination:
 
 {% clipboard %}
-curl -i -X PUT -H "Content-Type: application/json" --data '[
+curl -i -k -X PUT -H "Content-Type: application/json" --data '[
 {
   "type": "hashed-password",
   "auth-id": "my-auth-id-1",
   "secrets": [{
     "pwd-plain": "my-password"
   }]
-}]' http://${REGISTRY_IP}:${REGISTRY_PORT_HTTP}/v1/credentials/my-tenant/org.acme:my-device-1
+}]' ${REGISTRY_BASE_URL:?}/v1/credentials/my-tenant/org.acme:my-device-1
 {% endclipboard %}
 
 {% details Example of a successful result %}
@@ -261,7 +264,7 @@ we use distinct values to show the difference.
 
 In order to create digital twins in Ditto for a newly added Hono tenant, a new connection has to be created.
 
-The `NS` and `RELEASE` variables must still be set to the value you chose during the [installation](../installation/#install-the-package).
+The `NS` and `RELEASE` variables must still be set to the values you chose during the [installation](../installation/#install-the-package).
 The documented defaults are:
 {% clipboard %}
 NS=cloud2edge
@@ -388,7 +391,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
       ]
     }
   }
-}' http://${DITTO_API_IP}:${DITTO_API_PORT_HTTP}/devops/piggyback/connectivity
+}' ${DITTO_API_BASE_URL:?}/devops/piggyback/connectivity
 {% endclipboard %}
 
 
@@ -443,7 +446,7 @@ curl -i -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data '{
       }
     }
   }
-}' http://${DITTO_API_IP}:${DITTO_API_PORT_HTTP}/api/2/policies/org.acme:my-policy
+}' ${DITTO_API_BASE_URL:?}/api/2/policies/org.acme:my-policy
 {% endclipboard %}
 
 This should return a result of `201 Created` containing as response body of the created policy JSON.
@@ -476,7 +479,7 @@ curl -i -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data '{
       }
     }
   }
-}' http://${DITTO_API_IP}:${DITTO_API_PORT_HTTP}/api/2/things/org.acme:my-device-1
+}' ${DITTO_API_BASE_URL:?}/api/2/things/org.acme:my-device-1
 {% endclipboard %}
 
 This should return a result of `201 Created` containing as response body of the created thing JSON.
