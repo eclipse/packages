@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -27,6 +27,7 @@ metadata:
     helm.sh/hook-weight: "-5"
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
 spec:
+  backoffLimit: 3
   template:
     metadata:
       name: {{ printf "%s-%s" .Release.Name "post-install" | quote }}
@@ -38,35 +39,13 @@ spec:
       restartPolicy: Never
       containers:
       - name: "post-install"
-        image: "curlimages/curl:7.68.0"
+        image: "curlimages/curl:8.2.1"
         command:
         - /bin/sh
         - -c
-        - "curlHome=/home/curl_user
-          PWD=$(cat /var/run/c2e/ditto-gw-users/devops-password) &&
-          curl -X POST -H 'Content-Type: application/json' --data '{}'
-          {{ printf "http://%s-service-device-registry-ext:28080/v1/tenants/%s" .Release.Name .Values.demoDevice.tenant }} &&
-          curl -X POST -H 'Content-Type: application/json' --data '{}'
-          {{ printf "http://%s-service-device-registry-ext:28080/v1/devices/%s/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.tenant .Values.demoDevice.deviceId }} &&
-          curl -X PUT -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/demo-device-credentials.json
-          {{ printf "http://%s-service-device-registry-ext:28080/v1/credentials/%s/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.tenant .Values.demoDevice.deviceId }} &&
-
-          {{- if ( has "amqp" .Values.hono.messagingNetworkTypes ) }}
-          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/hono-amqp-connection.json
-          {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
-          {{- end }}
-
-          {{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
-          cp /var/run/c2e/post-install-data/insert-kafka-certs.sh $curlHome/insert-kafka-certs.sh
-
-          sh $curlHome/insert-kafka-certs.sh
-
-          curl -X POST -u devops:$PWD -H 'Content-Type: application/json' --data-binary @$curlHome/hono-kafka-connection.json
-          {{ printf "http://%s-ditto-nginx:8080/devops/piggyback/connectivity" .Release.Name }} &&
-          {{- end }}
-
-          curl -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data-binary @/var/run/c2e/post-install-data/demo-device-thing.json
-          {{ printf "http://%s-ditto-nginx:8080/api/2/things/%s:%s" .Release.Name .Values.demoDevice.tenant .Values.demoDevice.deviceId }};"
+        - |
+          cd /var/run/c2e/post-install-data/
+          ./post-install.sh
         volumeMounts:
         - name: post-install-data
           mountPath: "/var/run/c2e/post-install-data"
@@ -83,6 +62,7 @@ spec:
       - name: post-install-data
         secret:
           secretName: {{ printf "%s-%s" .Release.Name "post-install-data" }}
+          defaultMode: 0555
       - name: ditto-gw-users
         secret:
           secretName: {{ printf "%s-%s" .Release.Name "ditto-gateway-secret" }}
