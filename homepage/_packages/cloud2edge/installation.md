@@ -58,7 +58,7 @@ IP addresses. To install the Cloud2Edge package using load balancers, run the fo
 
 {% clipboard %}
 RELEASE=c2e
-helm install -n $NS --wait --timeout 15m --set hono.useLoadBalancer=true --set ditto.nginx.service.type=LoadBalancer $RELEASE eclipse-iot/cloud2edge
+helm install -n $NS --wait --timeout 20m --set hono.useLoadBalancer=true --set ditto.nginx.service.type=LoadBalancer $RELEASE eclipse-iot/cloud2edge
 {% endclipboard %}
 {% endvariant %}
 
