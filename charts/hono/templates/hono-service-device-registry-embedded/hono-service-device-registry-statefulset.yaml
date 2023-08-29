@@ -83,5 +83,5 @@ spec:
       {{- include "hono.pod.volumes" ( dict "dot" $args.dot "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 6 }}
       - name: "registry"
         persistentVolumeClaim:
-          claimName: {{ printf "%s-%s" ( include "hono.fullname" $args ) $args.name | quote }}
+          claimName: {{ printf "%s-%s" ( include "hono.fullname" . ) $args.name | quote }}
 {{- end }}

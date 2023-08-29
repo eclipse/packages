@@ -15,7 +15,9 @@ apiVersion: v1
 kind: Secret
 metadata:
   {{/* metadata.name is set to "{fullNameOfKafkaSubChart}-example-keys" here, meaning e.g. "{ReleaseName}-kafka-example-keys", not "{ReleaseName}-hono-example-keys" */}}
-  {{- $args := dict "dot" (. | deepCopy | merge (dict "Values" (pick .Values.kafka "nameOverride" "fullnameOverride"))) "component" "kafka" "name" "example-keys" }}
+  {{- $kafkaNameValues := pick .Values.kafka "nameOverride" "fullnameOverride" }}
+  {{- $kafkaChartDotScope := dict "Release" .Release "Chart" (dict "Name" "kafka") "Values" $kafkaNameValues }}
+  {{- $args := dict "dot" ($kafkaChartDotScope) "component" "kafka" "name" "example-keys" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 type: Opaque
 data:

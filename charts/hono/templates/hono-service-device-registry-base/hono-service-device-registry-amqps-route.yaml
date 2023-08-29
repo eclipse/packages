@@ -23,5 +23,5 @@ spec:
     termination: passthrough
   to:
     kind: Service
-    name: {{ printf "%s-service-device-registry" ( include "hono.fullname" $args ) }}
+    name: {{ printf "%s-service-device-registry" ( include "hono.fullname" . ) }}
 {{- end }}

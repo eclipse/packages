@@ -21,5 +21,5 @@ spec:
     targetPort: http
   to:
     kind: Service
-    name: {{ printf "%s-service-device-registry" ( include "hono.fullname" $args ) }}
+    name: {{ printf "%s-service-device-registry" ( include "hono.fullname" . ) }}
 {{- end }}

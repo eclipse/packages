@@ -34,16 +34,16 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root (".") scope
 */}}
 {{- define "hono.fullname" -}}
-  {{- $fullnameOverride := .dot.Values.fullnameOverride -}}
+  {{- $fullnameOverride := .Values.fullnameOverride -}}
   {{- if $fullnameOverride  -}}
     {{- $fullnameOverride | trunc 63 | trimSuffix "-" -}}
   {{- else -}}
-    {{- $nameOverride := .dot.Values.nameOverride -}}
-    {{- $name := empty $nameOverride | ternary .dot.Chart.Name $nameOverride -}}
-    {{- if contains $name .dot.Release.Name -}}
-      {{- .dot.Release.Name | trunc 63 | trimSuffix "-" -}}
+    {{- $nameOverride := .Values.nameOverride -}}
+    {{- $name := empty $nameOverride | ternary .Chart.Name $nameOverride -}}
+    {{- if contains $name .Release.Name -}}
+      {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
     {{- else -}}
-      {{- printf "%s-%s" .dot.Release.Name $name | trunc 63 | trimSuffix "-" -}}
+      {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -119,7 +119,7 @@ The scope passed in is expected to be a dict with keys
 - "component": the value to use for the "app.kubernetes.io/component" label
 */}}
 {{- define "hono.metadata" -}}
-name: {{ printf "%s-%s" (include "hono.fullname" . ) .name | quote }}
+name: {{ printf "%s-%s" (include "hono.fullname" .dot ) .name | quote }}
 namespace: {{ .dot.Release.Namespace | quote }}
 labels:
   app.kubernetes.io/name: {{ include "hono.name" . | quote }}
@@ -254,7 +254,7 @@ messaging:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: {{ printf "Hono %s" .component | quote }}
   amqpHostname: "hono-internal"
-  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" . ) | quote }}
+  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" .dot ) | quote }}
   port: 5673
   keyPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.keyPath | quote }}
   certPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.certPath | quote }}
@@ -281,7 +281,7 @@ kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
     {{- $kafkaNameValues := pick .dot.Values.kafka "nameOverride" "fullnameOverride" }}
-    {{- $kafkaChartDotScope := dict "dot" (dict "Release" .dot.Release "Chart" (dict "Name" "kafka") "Values" $kafkaNameValues) }}
+    {{- $kafkaChartDotScope := dict "Release" .dot.Release "Chart" (dict "Name" "kafka") "Values" $kafkaNameValues }}
     {{- $bootstrapServers := printf "%[1]s-0.%[1]s-headless:%d" ( include "hono.fullname" $kafkaChartDotScope ) ( .dot.Values.kafka.service.ports.client | int ) }}
     bootstrap.servers: {{ $bootstrapServers | quote }}
   {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
@@ -340,7 +340,7 @@ The scope passed in is expected to be a dict with keys
 */}}
 {{- define "hono.deviceRegistryExampleClientConfig" -}}
 name: {{ printf "Hono %s" .component | quote }}
-host: {{ printf "%s-service-device-registry" ( include "hono.fullname" . ) | quote }}
+host: {{ printf "%s-service-device-registry" ( include "hono.fullname" .dot ) | quote }}
 port: 5671
 credentialsPath: "/opt/hono/config/adapter.credentials"
 trustStorePath: {{ .dot.Values.deviceRegistryExample.clientTrustStorePath | default "/opt/hono/tls/ca.crt" | quote }}
@@ -362,7 +362,7 @@ command:
 {{- if .dot.Values.amqpMessagingNetworkExample.enabled }}
   name: {{ printf "Hono %s" $adapter | quote }}
   amqpHostname: "hono-internal"
-  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" . ) | quote }}
+  host: {{ printf "%s-dispatch-router" ( include "hono.fullname" .dot ) | quote }}
   port: 5673
   keyPath: {{ .dot.Values.adapters.commandAndControlSpec.keyPath | quote }}
   certPath: {{ .dot.Values.adapters.commandAndControlSpec.certPath | quote }}
@@ -403,7 +403,7 @@ commandRouter:
   {{- .dot.Values.adapters.commandRouterSpec | toYaml | nindent 2 }}
 {{- else }}
   name: {{ printf "Hono %s" $adapter | quote }}
-  host: {{ printf "%s-service-command-router" ( include "hono.fullname" . ) | quote }}
+  host: {{ printf "%s-service-command-router" ( include "hono.fullname" .dot ) | quote }}
   port: 5671
   credentialsPath: "/opt/hono/config/adapter.credentials"
   trustStorePath: {{ .dot.Values.commandRouterService.clientTrustStorePath | default "/opt/hono/tls/ca.crt" | quote }}
@@ -480,7 +480,7 @@ quarkus:
       exporter:
         otlp:
           {{- if .dot.Values.jaegerBackendExample.enabled }}
-          endpoint: {{ printf "http://%s-jaeger-collector:4317" ( include "hono.fullname" . ) | quote }}
+          endpoint: {{ printf "http://%s-jaeger-collector:4317" ( include "hono.fullname" .dot ) | quote }}
           {{- else }}
           endpoint: "http://127.0.0.1:4317"
           {{- end }}
@@ -629,22 +629,22 @@ The scope passed in is expected to be a dict with keys
 {{- if ( ne $keySecretName "none" ) }}
 - name: "tls-keys"
   secret:
-    secretName: {{ ternary ( printf "%s-%s-example-keys" ( include "hono.fullname" . ) .name ) $keySecretName ( eq $keySecretName "example" ) | quote }}
+    secretName: {{ ternary ( printf "%s-%s-example-keys" ( include "hono.fullname" .dot ) .name ) $keySecretName ( eq $keySecretName "example" ) | quote }}
 {{- end }}
 {{- $trustStoreConfigMapName := ( default "none" .componentConfig.tlsTrustStoreConfigMap | toString ) }}
 {{- if ( ne $trustStoreConfigMapName "none" ) }}
 - name: "tls-trust-store"
   configMap:
-    name: {{ ternary ( printf "%s-example-trust-store" ( include "hono.fullname" . )) $trustStoreConfigMapName ( eq $trustStoreConfigMapName "example" ) | quote }}
+    name: {{ ternary ( printf "%s-example-trust-store" ( include "hono.fullname" .dot )) $trustStoreConfigMapName ( eq $trustStoreConfigMapName "example" ) | quote }}
 {{- end }}
 - name: "default-logging-config"
   configMap:
-    name: {{ printf "%s-default-logging-config" ( include "hono.fullname" . ) | quote }}
+    name: {{ printf "%s-default-logging-config" ( include "hono.fullname" .dot ) | quote }}
     optional: true
 {{- $volumeName := printf "%s-conf" .name }}
 - name: {{ $volumeName | quote }}
   secret:
-    secretName: {{ printf "%s-%s" ( include "hono.fullname" . ) $volumeName | quote }}
+    secretName: {{ printf "%s-%s" ( include "hono.fullname" .dot ) $volumeName | quote }}
 {{- if and .dot.Values.otelCollectorAgentConfigMap ( not .dot.Values.jaegerBackendExample.enabled ) }}
 - name: "otel-collector-config"
   configMap:

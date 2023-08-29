@@ -5,9 +5,9 @@ metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 roleRef:
   kind: Role
-  name: {{ printf "%s-%s" ( include "hono.fullname" $args ) $args.name | quote }}
+  name: {{ printf "%s-%s" ( include "hono.fullname" . ) $args.name | quote }}
   apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
-    name: {{ printf "%s-%s" ( include "hono.fullname" $args ) $args.name | quote }}
+    name: {{ printf "%s-%s" ( include "hono.fullname" . ) $args.name | quote }}
     namespace: {{ .Release.Namespace }}
