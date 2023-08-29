@@ -15,7 +15,7 @@ name: hono
 description: |
   Eclipse Hono™ provides remote service interfaces for connecting large numbers of IoT devices to a back end and
   interacting with them in a uniform way regardless of the device communication protocol.
-version: 2.4.3
+version: 2.4.4
 # Version of Hono being deployed by the chart
 appVersion: 2.4.0
 keywords:
@@ -46,7 +46,7 @@ dependencies:
   condition: "grafana.enabled"
 - name: "mongodb"
   repository: "https://charts.bitnami.com/bitnami"
-  version: "^13.x"
+  version: "~13.16.x"
   condition: "mongodb.createInstance"
 - name: "kafka"
   repository: "https://charts.bitnami.com/bitnami"

@@ -103,6 +103,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.4.4
+
+* Pin MongoDB chart version to 13.16.x to fix incompatibilities with the used Kafka chart version.
+
 ### 2.4.3
 
 * Use Hono 2.4.0 container images.
