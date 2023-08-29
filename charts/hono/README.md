@@ -10,12 +10,12 @@ This repository contains a *chart* that can be used to install Hono to a Kuberne
 ## Prerequisites
 
 Installing Hono using the chart requires the Helm tool to be installed as described on the
-[IoT Packages chart repository prerequisites](https://www.eclipse.org/packages/prereqs/)
+[IoT Packages chart repository prerequisites](https://www.eclipse.org/packages/prereqs/#helm)
 page.
 
 In addition, a Kubernetes cluster to install the chart to is required.
-Hono's [Kubernetes setup guide](https://www.eclipse.org/hono/docs/deployment/create-kubernetes-cluster/)
-describes options available for setting up a cluster suitable for running Hono.
+See the corresponding section on the [IoT Packages prerequisites](https://www.eclipse.org/packages/prereqs/#kubernetes-cluster)
+page for information on how to set up a cluster suitable for running Hono.
 
 The Helm chart is being tested to successfully install on the five most recent Kubernetes versions.
 
@@ -23,17 +23,17 @@ The Helm chart is being tested to successfully install on the five most recent K
 
 Helm can be used to install applications multiple times to the same cluster. Each such
 installation is called a *release* in Helm. Each release needs to have a unique name within
-a Kubernetes name space.
+a Kubernetes namespace.
 
-The instructions below illustrate how Hono can be installed to the `hono` name space
+The instructions below illustrate how Hono can be installed to the `hono` namespace
 in a Kubernetes cluster using release name `eclipse-hono`. The commands can easily be adapted
-to use a different name space or release name.
+to use a different namespace or release name.
 
-1. The target name space in Kubernetes only needs to be created if it doesn't exist yet:
+1. The target namespace in Kubernetes only needs to be created if it doesn't exist yet:
    ```bash
    kubectl create namespace hono
    ```
-1. Install the chart to name space `hono` using release name `eclipse-hono`:
+1. Install the chart to namespace `hono` using release name `eclipse-hono`:
    ```bash
    helm install eclipse-hono eclipse-iot/hono -n hono --wait
    ```
@@ -42,7 +42,7 @@ to use a different name space or release name.
 
 Once installation has completed, Hono's external API endpoints are exposed via corresponding
 Kubernetes *Services*. The following command lists all services and their endpoints
-(replace `hono` with the name space that you have installed to):
+(replace `hono` with the namespace that you have installed to):
 
 ```bash
 kubectl get service -n hono
@@ -64,7 +64,7 @@ eclipse-hono-zookeeper-headless                 ClusterIP      None            <
 ```
 
 The listing above has been retrieved from a Minikube cluster that emulates a load balancer via the `minikube tunnel`
-command (refer to the [Minikube docs](https://minikube.sigs.k8s.io/docs/tasks/loadbalancer/) for details).
+command (refer to the [Minikube docs](https://minikube.sigs.k8s.io/docs/handbook/accessing/#loadbalancer-access) for details).
 The service endpoints can be accessed at the *EXTERNAL-IP* addresses and corresponding *PORT(S)*, e.g. 8080 for the
 HTTP adapter (*hono-adapter-http*) and 28080 for the device registry (*hono-service-device-registry*).
 
@@ -93,7 +93,7 @@ content-length: 260
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `eclipse-hono` release from the target name space:
+To uninstall/delete the `eclipse-hono` release from the target namespace:
 
 ```bash
 helm uninstall eclipse-hono -n hono
@@ -345,7 +345,7 @@ All of the *specs* need to contain Hono client configuration properties as descr
 Make sure to adapt/add properties as required by the custom service implementations.
 The information contained in the *specs* will then be used by all protocol adapters that get deployed.
 
-Note that *custom-http-secret* and *custom-http-secret* are expected to already exist in the name space
+Note that *custom-http-secret* and *custom-http-secret* are expected to already exist in the namespace
 that Hono gets installed to, i.e. the Helm chart will **not** create these secrets. Also note that even
 if the two secrets both contain a file *adapter.properties*, the content of these files can be specific
 to each adapter, i.e. the adapters can still use credentials that are specific to the type of adapter.
@@ -364,7 +364,7 @@ The chart can be configured to use AMQP 1.0 based messaging infrastructure inste
 The configuration `messagingNetworkTypes[0]=amqp` deploys Hono configured to use AMQP 1.0 for messaging.
 It is possible to enable both Kafka _and_ AMQP based messaging at the same time using command line parameters
 `--set messagingNetworkTypes[0]=kafka --set messagingNetworkTypes[1]=amqp`. Each tenant in Hono can then be
-[configured](https://www.eclipse.org/hono/docs/admin-guide/hono-kafka-client-configuration/#configure-for-kafka-based-messaging)
+[configured](https://eclipse.dev/hono/docs/admin-guide/amqp-network-config/#configuring-tenants-to-use-amqp-10-based-messaging)
 separately to use either Kafka _or_ AMQP for messaging.
 
 The following command provides a quick start for AMQP 1.0 based messaging (ensure `minikube tunnel` is running when using
@@ -451,7 +451,7 @@ Both the *amqpMessagingNetworkSpec* and the *commandAndControlSpec* need to cont
 as described in the [client admin guide](https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/).
 Make sure to adapt/add properties as required by the AMQP Messaging Network.
 
-Note that *my-secret* is expected to already exist in the name space that Hono gets installed to, i.e. the Helm chart
+Note that *my-secret* is expected to already exist in the namespace that Hono gets installed to, i.e. the Helm chart
 will **not** create this secret.
 
 Assuming that the file is named `customAmqpNetwork.yaml`, the values can then be passed in to the Helm `install`

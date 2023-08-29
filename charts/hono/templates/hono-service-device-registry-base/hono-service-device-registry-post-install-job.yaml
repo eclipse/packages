@@ -1,6 +1,6 @@
 {{- if and .Values.deviceRegistryExample.enabled .Values.deviceRegistryExample.addExampleData }}
 #
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -34,7 +34,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: "post-install"
-          image: "curlimages/curl:7.71.0"
+          image: "curlimages/curl:8.2.1"
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh

@@ -1,6 +1,6 @@
 #!/bin/sh
 #*******************************************************************************
-# Copyright (c) 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -65,9 +65,9 @@ add_credentials(){
 
   echo "Adding credentials [$TENANT_ID:$DEVICE_ID]"
   HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
-                -X PUT "$HTTP_BASE_URL/credentials/$1/$2" \
+                -X PUT "$HTTP_BASE_URL/credentials/$TENANT_ID/$DEVICE_ID" \
                 --header 'Content-Type: application/json' \
-                --data-raw "$3")
+                --data-raw "$HTTP_REQUEST_BODY")
 
   check_status $? $HTTP_RESPONSE
 }

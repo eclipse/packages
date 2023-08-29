@@ -174,9 +174,9 @@
         "amqpDnsLabelPrefix": "[if(empty(parameters('amqpDnsLabelPrefix')),concat(parameters('uniqueSolutionPrefix'),'-hono-amqp'),parameters('amqpDnsLabelPrefix'))]",
         "registryDnsLabelPrefix": "[if(empty(parameters('registryDnsLabelPrefix')),concat(parameters('uniqueSolutionPrefix'),'-hono-registry'),parameters('registryDnsLabelPrefix'))]",
         "networkDnsLabelPrefix": "[if(empty(parameters('networkDnsLabelPrefix')),concat(parameters('uniqueSolutionPrefix'),'-hono-network'),parameters('networkDnsLabelPrefix'))]",
-        "mqttPulicIPAddressName": "[if(empty(parameters('mqttPublicIPAddressName')),concat(parameters('uniqueSolutionPrefix'),'honomqttpip'),parameters('mqttPublicIPAddressName'))]",
-        "httpPulicIPAddressName": "[if(empty(parameters('httpPublicIPAddressName')),concat(parameters('uniqueSolutionPrefix'),'honohttppip'),parameters('httpPublicIPAddressName'))]",
-        "amqpPulicIPAddressName": "[if(empty(parameters('amqpPublicIPAddressName')),concat(parameters('uniqueSolutionPrefix'),'honoamqppip'),parameters('amqpPublicIPAddressName'))]",
+        "mqttPublicIPAddressName": "[if(empty(parameters('mqttPublicIPAddressName')),concat(parameters('uniqueSolutionPrefix'),'honomqttpip'),parameters('mqttPublicIPAddressName'))]",
+        "httpPublicIPAddressName": "[if(empty(parameters('httpPublicIPAddressName')),concat(parameters('uniqueSolutionPrefix'),'honohttppip'),parameters('httpPublicIPAddressName'))]",
+        "amqpPublicIPAddressName": "[if(empty(parameters('amqpPublicIPAddressName')),concat(parameters('uniqueSolutionPrefix'),'honoamqppip'),parameters('amqpPublicIPAddressName'))]",
         "registryPublicIPAddressName": "[if(empty(parameters('registryPublicIPAddressName')),concat(parameters('uniqueSolutionPrefix'),'honoregistrypip'),parameters('registryPublicIPAddressName'))]",
         "networkPublicIPAddressName": "[if(empty(parameters('networkPublicIPAddressName')),concat(parameters('uniqueSolutionPrefix'),'hononetworkpip'),parameters('networkPublicIPAddressName'))]",
         "aksClusterName": "[if(empty(parameters('aksClusterName')),concat(parameters('uniqueSolutionPrefix'), 'honoaks'),parameters('aksClusterName'))]",
@@ -229,13 +229,13 @@
                         "value": "[resourceGroup().name]"
                     },
                     "mqttPublicIPAddressName": {
-                        "value": "[variables('mqttPulicIPAddressName')]"
+                        "value": "[variables('mqttPublicIPAddressName')]"
                     },
                     "httpPublicIPAddressName": {
-                        "value": "[variables('httpPulicIPAddressName')]"
+                        "value": "[variables('httpPublicIPAddressName')]"
                     },
                     "amqpPublicIPAddressName": {
-                        "value": "[variables('amqpPulicIPAddressName')]"
+                        "value": "[variables('amqpPublicIPAddressName')]"
                     },
                     "registryPublicIPAddressName": {
                         "value": "[variables('registryPublicIPAddressName')]"
