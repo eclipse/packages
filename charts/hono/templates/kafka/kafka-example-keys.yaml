@@ -16,7 +16,7 @@ kind: Secret
 metadata:
   {{/* metadata.name is set to "{fullNameOfKafkaSubChart}-example-keys" here, meaning e.g. "{ReleaseName}-kafka-example-keys", not "{ReleaseName}-hono-example-keys" */}}
   {{- $kafkaNameValues := pick .Values.kafka "nameOverride" "fullnameOverride" }}
-  {{- $kafkaChartDotScope := dict "Release" .Release "Chart" (dict "Name" "kafka") "Values" $kafkaNameValues }}
+  {{- $kafkaChartDotScope := dict "Release" .Release "Chart" (dict "Name" "kafka" "Version" .Chart.Version "AppVersion" .Chart.AppVersion) "Values" $kafkaNameValues }}
   {{- $args := dict "dot" ($kafkaChartDotScope) "component" "kafka" "name" "example-keys" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 type: Opaque
