@@ -15,14 +15,11 @@
 {{/*
 Expand the name of the chart.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-
-The scope passed in is expected to be a dict with keys
-- (mandatory) "dot": the root (".") scope
 */}}
 {{- define "hono.name" -}}
-  {{- $nameOverride := .dot.Values.nameOverride -}}
+  {{- $nameOverride := .Values.nameOverride -}}
   {{/* Create the Hono chart name. When nameOverride is set use it instead of the chart name. */}}
-  {{- empty $nameOverride | ternary .dot.Chart.Name $nameOverride | trunc 63 | trimSuffix "-" -}}
+  {{- empty $nameOverride | ternary .Chart.Name $nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -47,12 +44,9 @@ If release name contains chart name it will be used as a full name.
 
 {{/*
 Create chart name and version as used by the chart label.
-
-The scope passed in is expected to be a dict with keys
-- (mandatory) "dot": the root (".") scope
 */}}
 {{- define "hono.chart" }}
-  {{- printf "%s-%s" .dot.Chart.Name .dot.Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+  {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -100,8 +94,8 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root (".") scope
 */}}
 {{- define "hono.std.labels" -}}
-app.kubernetes.io/name: {{ include "hono.name" . | quote }}
-helm.sh/chart: {{ include "hono.chart" . | quote }}
+app.kubernetes.io/name: {{ include "hono.name" .dot | quote }}
+helm.sh/chart: {{ include "hono.chart" .dot | quote }}
 app.kubernetes.io/managed-by: {{ .dot.Release.Service | quote }}
 app.kubernetes.io/instance: {{ .dot.Release.Name | quote }}
 app.kubernetes.io/version: {{ .dot.Chart.AppVersion | quote }}
@@ -119,8 +113,8 @@ The scope passed in is expected to be a dict with keys
 name: {{ printf "%s-%s" (include "hono.fullname" .dot ) .name | quote }}
 namespace: {{ .dot.Release.Namespace | quote }}
 labels:
-  app.kubernetes.io/name: {{ include "hono.name" . | quote }}
-  helm.sh/chart: {{ include "hono.chart" . | quote }}
+  app.kubernetes.io/name: {{ include "hono.name" .dot | quote }}
+  helm.sh/chart: {{ include "hono.chart" .dot | quote }}
   app.kubernetes.io/managed-by: {{ .dot.Release.Service | quote }}
   app.kubernetes.io/instance: {{ .dot.Release.Name | quote }}
   app.kubernetes.io/version: {{ .dot.Chart.AppVersion | quote }}
@@ -136,7 +130,7 @@ The scope passed in is expected to be a dict with keys
 - "component": the value of the "app.kubernetes.io/component" label to match
 */}}
 {{- define "hono.matchLabels" -}}
-app.kubernetes.io/name: {{ include "hono.name" . | quote }}
+app.kubernetes.io/name: {{ include "hono.name" .dot | quote }}
 app.kubernetes.io/instance: {{ .dot.Release.Name | quote }}
 app.kubernetes.io/component: {{ .component | quote }}
 {{- end }}
