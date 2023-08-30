@@ -29,9 +29,6 @@ The scope passed in is expected to be a dict with keys
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
-
-The scope passed in is expected to be a dict with keys
-- (mandatory) "dot": the root (".") scope
 */}}
 {{- define "hono.fullname" -}}
   {{- $fullnameOverride := .Values.fullnameOverride -}}
