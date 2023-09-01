@@ -18,7 +18,7 @@ metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 data:
   add_example_data_device_registry.sh: |
-    {{- tpl (.Files.Get "example/add_example_data_device_registry.sh") $ | nindent 4 }}
+    {{- tpl (.Files.Get "example/add_example_data_device_registry.sh") . | nindent 4 }}
   example-tenants.sh: |
     {{ .Files.Get "example/example-tenants.sh" | nindent 4 }}
   example-devices.sh: |

@@ -18,7 +18,7 @@ metadata:
   {{- include "hono.metadata" $args | nindent 2 }}
 data:
   hono-data-grid.xml: |
-    {{- tpl ( .Files.Get "config/infinispan/hono-data-grid.xml" ) $ | nindent 4 }}
+    {{- tpl ( .Files.Get "config/infinispan/hono-data-grid.xml" ) . | nindent 4 }}
   users.properties: |
     {{ printf "%s=%s" .Values.dataGridExample.authUsername .Values.dataGridExample.authPassword }}
   public-groups.properties: |
