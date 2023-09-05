@@ -13,13 +13,14 @@
 {{/* vim: set filetype=mustache: */}}
 
 {{/*
-Expand the name of the chart.
+Expand the name of the chart using the Chart name.
+If .Values.nameOverride is set use that instead of the Chart Name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "hono.name" -}}
   {{- $nameOverride := .Values.nameOverride -}}
-  {{/* Create the Hono chart name. When nameOverride is set use it instead of the chart name. */}}
-  {{- empty $nameOverride | ternary .Chart.Name $nameOverride | trunc 63 | trimSuffix "-" -}}
+  {{- $name := empty $nameOverride | ternary .Chart.Name $nameOverride -}}
+  {{- trunc 63 $name | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
