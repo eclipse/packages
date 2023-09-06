@@ -25,7 +25,7 @@ metadata:
 spec:
   template:
     metadata:
-      name: {{ printf "%s-%s" .Release.Name "post-install" | quote }}
+      name: {{ printf "%s-%s" ( include "hono.fullname" . ) "post-install" | quote }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -48,6 +48,6 @@ spec:
       volumes:
       - name: post-install-data
         configMap:
-          name: {{ printf "%s-post-install-device-registry-conf" .Release.Name }}
+          name: {{ printf "%s-post-install-device-registry-conf" ( include "hono.fullname" . ) }}
           defaultMode: 0555
 {{- end }}

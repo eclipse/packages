@@ -102,6 +102,9 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+### 2.5.0
+
+* Allow customizing the pod/service names irrespective of .Release.Name.
 
 ### 2.4.4
 
@@ -403,7 +406,7 @@ amqpMessagingNetworkExample:
 
 # mount (existing) Kubernetes secret which contains
 # credentials for connecting to AMQP network
-# into Command Router and protocol adapter containers 
+# into Command Router and protocol adapter containers
 commandRouterService:
   extraVolumes:
   - name: "amqp-network"

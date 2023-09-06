@@ -14,7 +14,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  {{- $args := dict "dot" . "component" "metrics" "name" "prometheus-config" }}
+  {{- /* prometheus chart expects metadata.name to be "{ReleaseName}-{prometheus.server.configMapOverrideName}" */}}
+  {{- $prometheusDotScope := . | deepCopy | merge (dict "Values" (dict "fullnameOverride" .Release.Name)) }}
+  {{- $args := dict "dot" $prometheusDotScope "component" "metrics" "name" .Values.prometheus.server.configMapOverrideName }}
   {{- include "hono.metadata" $args | nindent 2 }}
 data:
   rules: |
@@ -47,7 +49,7 @@ data:
             - {{ .Release.Namespace }}
           selectors:
           - role: pod
-            label: {{ printf "app.kubernetes.io/instance=%s,helm.sh/chart=%s" .Release.Name ( include "hono.chart" . ) }}
+            label: {{ printf "app.kubernetes.io/instance=%s,helm.sh/chart=%s" ( include "hono.fullname" . ) ( include "hono.chart" . ) }}
 
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
