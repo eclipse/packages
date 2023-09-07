@@ -327,7 +327,7 @@ minikube start ... --addons ingress
 You will need an installation of Helm on the machine which is used to deploy the packages. You can find
 installation instructions for Helm in the Helm documentation under [Installing Helm](https://helm.sh/docs/using_helm/#installing-helm).
 
-The required Helm version is 3.4 or later.
+The required Helm version is 3.8 or later.
 
 ### Repository
 
