@@ -6,8 +6,8 @@
   "piggybackCommand": {
     "type": "connectivity.commands:createConnection",
     "connection": {
-      "id": "eclipse-hono-via-kafka",
-      "name": "eclipse-hono-via-kafka",
+      "id": "hono-kafka-connection-for-{{ .Values.demoDevice.tenant | replace "." "_" }}",
+      "name": "[Hono/Kafka] {{ .Values.demoDevice.tenant }}",
       "connectionType": "kafka",
       "connectionStatus": "open",
       {{- if .Values.hono.kafkaMessagingClusterExample.enabled }}
@@ -24,7 +24,7 @@
           ],
           "consumerCount": 1,
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "qos": 0,
           "enforcement": {
@@ -60,7 +60,7 @@
           ],
           "consumerCount": 1,
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "qos": 1,
           "enforcement": {
@@ -95,7 +95,7 @@
           ],
           "consumerCount": 1,
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "qos": 0,
           "enforcement": {
@@ -127,7 +127,7 @@
         {
           "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "headerMapping": {
             "device_id": {{ "{{ thing:id }}" | quote }},
@@ -143,7 +143,7 @@
         {
           "address": {{ printf "hono.command.%s/{{thing:id}}" .Values.demoDevice.tenant | quote }},
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "topics": [
             "_/_/things/twin/events",

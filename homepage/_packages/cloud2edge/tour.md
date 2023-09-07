@@ -320,8 +320,8 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
   "piggybackCommand": {
     "type": "connectivity.commands:createConnection",
     "connection": {
-      "id": "hono-connection-for-'"${HONO_TENANT}"'",
-      "name": "hono-connection-for-'"${HONO_TENANT}"'",
+      "id": "hono-kafka-connection-for-'"${HONO_TENANT/./_}"'",
+      "name": "[Hono/Kafka] '"${HONO_TENANT}"'",
       "connectionType": "kafka",
       "connectionStatus": "open",
       "uri": "ssl://ditto-c2e:verysecret@'"${RELEASE}"'-kafka:9092",
@@ -334,7 +334,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
           ],
           "consumerCount": 1,
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "qos": 0,
           "enforcement": {
@@ -370,7 +370,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
           ],
           "consumerCount": 1,
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "qos": 1,
           "enforcement": {
@@ -405,7 +405,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
           ],
           "consumerCount": 1,
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "qos": 0,
           "enforcement": {
@@ -437,7 +437,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
         {
           "address": "hono.command.'"${HONO_TENANT}"'/{{ thing:id }}",
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "headerMapping": {
             "device_id": "{{ thing:id }}",
@@ -453,7 +453,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
         {
           "address": "hono.command.'"${HONO_TENANT}"'/{{thing:id}}",
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "topics": [
             "_/_/things/twin/events",
@@ -492,7 +492,8 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
   "piggybackCommand": {
     "type": "connectivity.commands:createConnection",
     "connection": {
-      "id": "hono-connection-for-'"${HONO_TENANT}"'",
+      "id": "hono-amqp-connection-for-'"${HONO_TENANT/./_}"'",
+      "name": "[Hono/AMQP1.0] '"${HONO_TENANT}"'",
       "connectionType": "amqp-10",
       "connectionStatus": "open",
       "uri": "amqp://consumer%40HONO:verysecret@'"${RELEASE}"'-dispatch-router-ext:15672",
@@ -504,7 +505,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
             "event/'"${HONO_TENANT}"'"
           ],
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "enforcement": {
             "input": "{%raw%}{{ header:device_id }}{%endraw%}",
@@ -540,7 +541,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
             "command_response/'"${HONO_TENANT}"'/replies"
           ],
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "headerMapping": {
             "content-type": "{%raw%}{{ header:content-type }}{%endraw%}",
@@ -560,7 +561,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
         {
           "address": "command/'"${HONO_TENANT}"'",
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "topics": [
             "_/_/things/live/commands",
@@ -577,7 +578,7 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
         {
           "address": "command/'"${HONO_TENANT}"'",
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
           ],
           "topics": [
             "_/_/things/twin/events",
@@ -636,7 +637,7 @@ curl -i -X PUT -u ditto:ditto -H 'Content-Type: application/json' --data '{
     },
     "HONO": {
       "subjects": {
-        "pre-authenticated:hono-connection": {
+        "pre-authenticated:hono-connection-'"${HONO_TENANT}"'": {
           "type": "Connection to Eclipse Hono"
         }
       },

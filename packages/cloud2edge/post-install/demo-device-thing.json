@@ -24,7 +24,7 @@
             },
             "HONO": {
                 "subjects": {
-                    "pre-authenticated:hono-connection": {
+                    "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}": {
                         "type": "Connection to Eclipse Hono"
                     }
                 },
