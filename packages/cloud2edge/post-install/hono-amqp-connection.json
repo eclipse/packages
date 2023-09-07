@@ -6,7 +6,8 @@
   "piggybackCommand": {
     "type": "connectivity.commands:createConnection",
     "connection": {
-      "id": "eclipse-hono-via-amqp-10",
+      "id": "hono-amqp-connection-for-{{ .Values.demoDevice.tenant | replace "." "_" }}",
+      "name": "[Hono/AMQP1.0] {{ .Values.demoDevice.tenant }}",
       "connectionType": "amqp-10",
       "connectionStatus": "open",
       "uri": "amqp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-dispatch-router-ext:15672",
@@ -18,7 +19,7 @@
             "event/{{ .Values.demoDevice.tenant }}"
           ],
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "enforcement": {
             "input": {{ "{{ header:device_id }}" | quote }},
@@ -54,7 +55,7 @@
             "command_response/{{ .Values.demoDevice.tenant }}/replies"
           ],
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "headerMapping": {
             "content-type": {{ "{{ header:content-type }}" | quote }},
@@ -74,7 +75,7 @@
         {
           "address": "command/{{ .Values.demoDevice.tenant }}",
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "topics": [
             "_/_/things/live/commands",
@@ -91,7 +92,7 @@
         {
           "address": "command/{{ .Values.demoDevice.tenant }}",
           "authorizationContext": [
-            "pre-authenticated:hono-connection"
+            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
           ],
           "topics": [
             "_/_/things/twin/events",
