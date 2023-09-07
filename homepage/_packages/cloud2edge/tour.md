@@ -197,7 +197,7 @@ This should return a result of `201 Created`.
     etag: be547a07-4a03-4c43-a274-d02f63f8d467
     location: /v1/tenants/my-tenant
     content-type: application/json; charset=utf-8
-    content-length: 12
+    content-length: 18
     
     {"id":"my-tenant"}
 {% enddetails %}
@@ -215,9 +215,9 @@ This should return a result of `201 Created`.
 {% details Example of a successful result %}
     HTTP/1.1 201 Created
     etag: d48f4e13-b398-4c73-bbc3-5ac97a81b3e8
-    location: /v1/devices/iot/org.acme:my-device-1
+    location: /v1/devices/my-tenant/org.acme:my-device-1
     content-type: application/json; charset=utf-8
-    content-length: 17
+    content-length: 29
     
     {"id":"org.acme:my-device-1"}
 {% enddetails %}
@@ -279,7 +279,191 @@ HONO_TENANT=my-tenant
 DITTO_DEVOPS_PWD=$(kubectl --namespace ${NS} get secret ${RELEASE}-ditto-gateway-secret -o jsonpath="{.data.devops-password}" | base64 --decode)
 {% endclipboard %}
 
-Now, create the connection:
+Now, the connection can be created. By default, a Kafka based connection is to be used. If the cloud2edge chart has been deployed with the
+[AMQP messaging profile](https://github.com/eclipse/packages/blob/master/packages/cloud2edge/profileAmqpMessaging.yaml), a connection of type `amqp-10` needs to be created.
+
+{% variants %}
+
+{% variant Kafka %}
+The deployed Kafka instance uses a self-signed certificate. To let the Ditto connection perform certificate validation, the certificate can be obtained and converted into the format expected by the Ditto API call with the following command:
+
+{% clipboard %}
+KAFKA_CERT=$(kubectl --namespace ${NS} get secret ${RELEASE}-kafka-example-keys -o jsonpath="{.data.tls\.crt}" | base64 --decode | tr -d '\n' | sed 's/E-----/E-----\\n/g' | sed 's/-----END/\\n-----END/g')
+{% endclipboard %}
+
+Then, create the connection:
+
+{% clipboard %}
+curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json' --data '{
+  "targetActorSelection": "/system/sharding/connection",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:createConnection",
+    "connection": {
+      "id": "hono-connection-for-'"${HONO_TENANT}"'",
+      "name": "hono-connection-for-'"${HONO_TENANT}"'",
+      "connectionType": "kafka",
+      "connectionStatus": "open",
+      "uri": "ssl://ditto-c2e:verysecret@'"${RELEASE}"'-kafka:9092",
+      "ca": "'"${KAFKA_CERT}"'",
+      "failoverEnabled": true,
+      "sources": [
+        {
+          "addresses": [
+            "hono.telemetry.'"${HONO_TENANT}"'"
+          ],
+          "consumerCount": 1,
+          "authorizationContext": [
+            "pre-authenticated:hono-connection"
+          ],
+          "qos": 0,
+          "enforcement": {
+            "input": "{{ header:device_id }}",
+            "filters": [
+              "{{ entity:id }}"
+            ]
+          },
+          "headerMapping": {},
+          "payloadMapping": [],
+          "replyTarget": {
+            "enabled": true,
+            "address": "hono.command.'"${HONO_TENANT}"'/{{ thing:id }}",
+            "headerMapping": {
+              "device_id": "{{ thing:id }}",
+              "subject": "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response",
+              "correlation-id": "{{ header:correlation-id }}"
+            },
+            "expectedResponseTypes": [
+              "response",
+              "error"
+            ]
+          },
+          "acknowledgementRequests": {
+            "includes": [],
+            "filter": "fn:delete()"
+          },
+          "declaredAcks": []
+        },
+        {
+          "addresses": [
+            "hono.event.'"${HONO_TENANT}"'"
+          ],
+          "consumerCount": 1,
+          "authorizationContext": [
+            "pre-authenticated:hono-connection"
+          ],
+          "qos": 1,
+          "enforcement": {
+            "input": "{{ header:device_id }}",
+            "filters": [
+              "{{ entity:id }}"
+            ]
+          },
+          "headerMapping": {},
+          "payloadMapping": [],
+          "replyTarget": {
+            "enabled": true,
+            "address": "hono.command.'"${HONO_TENANT}"'/{{ thing:id }}",
+            "headerMapping": {
+              "device_id": "{{ thing:id }}",
+              "subject": "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response",
+              "correlation-id": "{{ header:correlation-id }}"
+            },
+            "expectedResponseTypes": [
+              "response",
+              "error"
+            ]
+          },
+          "acknowledgementRequests": {
+            "includes": []
+          },
+          "declaredAcks": []
+        },
+        {
+          "addresses": [
+            "hono.command_response.'"${HONO_TENANT}"'"
+          ],
+          "consumerCount": 1,
+          "authorizationContext": [
+            "pre-authenticated:hono-connection"
+          ],
+          "qos": 0,
+          "enforcement": {
+            "input": "{{ header:device_id }}",
+            "filters": [
+              "{{ entity:id }}"
+            ]
+          },
+          "headerMapping": {
+            "correlation-id": "{{ header:correlation-id }}",
+            "status": "{{ header:status }}"
+          },
+          "payloadMapping": [],
+          "replyTarget": {
+            "enabled": false,
+            "expectedResponseTypes": [
+              "response",
+              "error"
+            ]
+          },
+          "acknowledgementRequests": {
+            "includes": [],
+            "filter": "fn:delete()"
+          },
+          "declaredAcks": []
+        }
+      ],
+      "targets": [
+        {
+          "address": "hono.command.'"${HONO_TENANT}"'/{{ thing:id }}",
+          "authorizationContext": [
+            "pre-authenticated:hono-connection"
+          ],
+          "headerMapping": {
+            "device_id": "{{ thing:id }}",
+            "subject": "{{ header:subject | fn:default(topic:action-subject) }}",
+            "correlation-id": "{{ header:correlation-id }}",
+            "response-required": "{{ header:response-required }}"
+          },
+          "topics": [
+            "_/_/things/live/commands",
+            "_/_/things/live/messages"
+          ]
+        },
+        {
+          "address": "hono.command.'"${HONO_TENANT}"'/{{thing:id}}",
+          "authorizationContext": [
+            "pre-authenticated:hono-connection"
+          ],
+          "topics": [
+            "_/_/things/twin/events",
+            "_/_/things/live/events"
+          ],
+          "headerMapping": {
+            "device_id": "{{ thing:id }}",
+            "subject": "{{ header:subject | fn:default(topic:action-subject) }}",
+            "correlation-id": "{{ header:correlation-id }}"
+          }
+        }
+      ],
+      "specificConfig": {
+        "saslMechanism": "plain",
+        "bootstrapServers": "'"${RELEASE}"'-kafka:9092",
+        "groupId": "'"${HONO_TENANT}"'_{{ connection:id }}"
+      },
+      "clientCount": 1,
+      "failoverEnabled": true,
+      "validateCertificates": true
+    }
+  }
+}' ${DITTO_API_BASE_URL:?}/devops/piggyback/connectivity
+{% endclipboard %}
+
+{% endvariant %}
+
+{% variant AMQP Messaging %}
 
 {% clipboard %}
 curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json' --data '{
@@ -394,6 +578,10 @@ curl -i -X POST -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json
 }' ${DITTO_API_BASE_URL:?}/devops/piggyback/connectivity
 {% endclipboard %}
 
+{% endvariant %}
+
+{% endvariants %}
+
 
 ### Create the digital twin
 
@@ -487,6 +675,20 @@ This should return a result of `201 Created` containing as response body of the 
 In order to add more twins, we simply create additional devices via ["Register a new device"](#register-a-new-device)
 and add twins for them with the above snippet by simply adjusting the *device id* and *thing id* in the URL of both
 HTTP requests.
+
+#### Publish telemetry data
+
+To send a telemetry message via Hono's HTTP protocol adapter and thereby update the device's twin representation, the
+following command can be used:
+
+{% clipboard %}
+curl -i -k -u my-auth-id-1@my-tenant:my-password -H 'application/json' --data-binary '{
+  "topic": "org.acme/my-device-1/things/twin/commands/modify",
+  "headers": {},
+  "path": "/features/temperature/properties/value",
+  "value": 45
+}' ${HTTP_ADAPTER_BASE_URL:?}/telemetry
+{% endclipboard %}
 
 ## Next Steps
 
