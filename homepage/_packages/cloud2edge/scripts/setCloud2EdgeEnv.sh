@@ -36,9 +36,16 @@ function getPorts {
     PORT=$(kubectl get service $SERVICENAME -n $NS -o jsonpath='{.spec.ports[?(@.name=='"'$NAME'"')].'$TYPE'}' 2> /dev/null)
     if [ $? -eq 0 ] && [ "$PORT" != '' ]; then
       NAME=${NAME/secure-mqtt/mqtts}
+      NAME=${NAME/query-http/http}
       UPPERCASE_PORT_NAME=$(echo $NAME | tr [a-z\-] [A-Z_])
       echo "export ${ENV_VAR_PREFIX}_PORT_${UPPERCASE_PORT_NAME}=\"$PORT\""
-      echo "export ${ENV_VAR_PREFIX}_BASE_URL=\"$NAME://$IP:$PORT\""
+      if [ "$PORT" = '80' ]; then
+        echo "export ${ENV_VAR_PREFIX}_BASE_URL=\"$NAME://$IP\""
+        declare -g ${ENV_VAR_PREFIX}_BASE_URL="$NAME://$IP"
+      else
+        echo "export ${ENV_VAR_PREFIX}_BASE_URL=\"$NAME://$IP:$PORT\""
+        declare -g ${ENV_VAR_PREFIX}_BASE_URL="$NAME://$IP:$PORT"
+      fi
     fi
   done
 
@@ -74,6 +81,11 @@ getService adapter-coap "coap coaps" COAP_ADAPTER
 getService adapter-http "http https" HTTP_ADAPTER
 getService adapter-mqtt "mqtt secure-mqtt" MQTT_ADAPTER
 getService ditto-nginx "http" DITTO_API
+getService jaeger-query "query-http" JAEGER_QUERY
+
+DITTO_DEVOPS_PWD=$(kubectl --namespace ${NS} get secret ${RELEASE}-ditto-gateway-secret -o jsonpath="{.data.devops-password}" | base64 --decode)
+echo "export DITTO_DEVOPS_PWD=\"$DITTO_DEVOPS_PWD\""
+echo "export DITTO_UI_ENV_JSON=\"{\\\"api_uri\\\":\\\"${DITTO_API_BASE_URL}\\\",\\\"defaultUsernamePassword\\\":\\\"ditto:ditto\\\",\\\"defaultDittoPreAuthenticatedUsername\\\":null,\\\"defaultUsernamePasswordDevOps\\\":\\\"devops:${DITTO_DEVOPS_PWD}\\\",\\\"mainAuth\\\":\\\"basic\\\",\\\"devopsAuth\\\":\\\"basic\\\"}\""
 
 echo
 echo "# Run this command to populate environment variables"

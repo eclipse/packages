@@ -15,5 +15,5 @@ dependencies:
     version: ~2.4.0
     repository: "https://eclipse.org/packages/charts/"
   - name: ditto
-    version: ~3.1.0
-    repository: "https://eclipse.org/packages/charts/"
+    version: ~3.3.6
+    repository: "oci://registry-1.docker.io/eclipse"

@@ -35,7 +35,8 @@ Download the [setCloud2EdgeEnv script](../scripts/setCloud2EdgeEnv.sh) and use i
 to set environment variables for the Cloud2Edge package's service endpoints.
 
 {% clipboard %}
-curl https://www.eclipse.org/packages/packages/cloud2edge/scripts/setCloud2EdgeEnv.sh --output setCloud2EdgeEnv.sh
+curl https://www.eclipse.org/packages/packages/cloud2edge/scripts/setCloud2EdgeEnv.sh \
+  --output setCloud2EdgeEnv.sh
 chmod u+x setCloud2EdgeEnv.sh
 
 RELEASE=c2e
@@ -55,6 +56,23 @@ HTTP_ADAPTER_PORT=443
 {% endvariant %}
 
 {% endvariants %}
+
+## Accessing the Ditto Explorer User Interface
+
+The browser based [Ditto Explorer UI](https://eclipse.dev/ditto/user-interface.html) shows Ditto things, policies and connections.
+On Kubernetes, the above-mentioned `setCloud2EdgeEnv` script provides environment variables to access and configure it.
+The command
+{% clipboard %}
+echo $DITTO_API_BASE_URL
+{% endclipboard %}
+prints out the URL where to access the Ditto UI and Ditto API documentation.
+
+In the Ditto UI, click on the `Environments` link at the top and then the `Environment JSON` tab. Clicking on "Edit" lets you enter an arbitrary Name (e.g. `default`)
+and below a JSON value, to be taken from the output of the following command.
+{% clipboard %}
+echo $DITTO_UI_ENV_JSON
+{% endclipboard %}
+Clicking on `Create` and switching to the created environment in the top bar `Environment` dropdown completes the configuration.
 
 ## Publishing telemetry data
 
