@@ -648,6 +648,19 @@ The scope passed in is expected to be a dict with keys
 {{- end }}
 
 {{/*
+Adds a priority class name to a component's pod spec.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "name": the name of the component
+- (mandatory) "componentConfig": the component's configuration properties as defined in .Values
+- (mandatory) "dot": the root scope (".")
+*/}}
+{{- define "hono.pod.priorityClassName" }}
+{{- if .componentConfig.pod.priorityClassName }}
+priorityClassName: {{ .componentConfig.pod.priorityClassName | quote }}
+{{- end }}
+{{- end }}
+
+{{/*
 Adds port type declarations to a component's service spec.
 */}}
 {{- define "hono.serviceType" }}

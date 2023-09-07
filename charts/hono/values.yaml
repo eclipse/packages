@@ -298,6 +298,7 @@ adapters:
     pod:
       labels: {}
       annotations: {}
+      priorityClassName: ""
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -425,6 +426,7 @@ adapters:
     pod:
       labels: {}
       annotations: {}
+      priorityClassName: ""
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -550,6 +552,7 @@ adapters:
     pod:
       labels: {}
       annotations: {}
+      priorityClassName: ""
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -677,6 +680,7 @@ adapters:
     pod:
       labels: {}
       annotations: {}
+      priorityClassName: ""
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -803,6 +807,7 @@ adapters:
     pod:
       labels: {}
       annotations: {}
+      priorityClassName: ""
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -926,6 +931,7 @@ authServer:
   pod:
     labels: {}
     annotations: {}
+    priorityClassName: ""
 
   # extraVolumes contains additional kubernetes Volume definitions representing volumes
   # that can mounted into the container's file system.
@@ -1192,6 +1198,7 @@ deviceRegistryExample:
     pod:
       labels: {}
       annotations: {}
+      priorityClassName: ""
 
     # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
@@ -1249,6 +1256,8 @@ deviceRegistryExample:
       limits:
         cpu: "1"
         memory: "400Mi"
+
+
     # mongodb contains the configuration properties to connect to the MongoDB database instance.
     # If you would like to use an already existing MongoDB database instance, then configure
     # the below section accordingly.
@@ -1275,6 +1284,7 @@ deviceRegistryExample:
     pod:
       labels: {}
       annotations: {}
+      priorityClassName: ""
 
   # jdbcBasedDeviceRegistry contains configuration properties specific to the
   # jdbc based device registry.
@@ -1335,6 +1345,7 @@ deviceRegistryExample:
     pod:
       labels: {}
       annotations: {}
+      priorityClassName: ""
 
     registry:
       jdbc:
@@ -1488,6 +1499,7 @@ commandRouterService:
   pod:
     labels: {}
     annotations: {}
+    priorityClassName: ""
 
   # extraVolumes contains additional kubernetes Volume definitions representing volumes
   # that can mounted into the container's file system.
@@ -1850,6 +1862,9 @@ amqpMessagingNetworkExample:
         periodSeconds: 5
         initialDelaySeconds: 20
 
+    pod:
+      priorityClassName: ""
+
     svc:
       annotations: {}
       loadBalancerIP:
@@ -1946,6 +1961,9 @@ amqpMessagingNetworkExample:
           cpu: "1"
           memory: "600Mi"
 
+      pod:
+        priorityClassName: ""
+
       # extraVolumes contains additional kubernetes Volume definitions representing volumes
       # that can mounted into the container's file system.
       # The syntax is defined in https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.24/#volume-v1-core
@@ -2016,6 +2034,10 @@ dataGridExample:
     limits:
       cpu: "1"
       memory: "200Mi"
+
+  pod:
+    priorityClassName: ""
+
   # authUsername contains the name of the user that is authorized to connect to the example data grid.
   authUsername: "hono"
   # authPassword contains the secret of the user that is authorized to connect to the example data grid
@@ -2066,6 +2088,7 @@ jaegerBackendExample:
   pod:
     labels: {}
     annotations: {}
+    priorityClassName: ""
 
   # env contains environment variables to set for the Jaeger all-in-one container.
   # The default variables configure the container to keep up to 100000 traces in memory.
