@@ -31,6 +31,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- include "hono.pod.priorityClassName" $args | nindent 6 }}
+      {{- include "hono.pod.affinity" $args | nindent 6 }}
       containers:
       - image: {{ .Values.dataGridExample.imageName | quote }}
         imagePullPolicy: IfNotPresent

@@ -35,6 +35,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- include "hono.pod.priorityClassName" $args | nindent 6 }}
+      {{- include "hono.pod.affinity" $args | nindent 6 }}
       containers:
       {{- include "hono.otel.agent" . | indent 6 }}
       {{- include "hono.container" $args | indent 6 }}
