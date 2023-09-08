@@ -102,6 +102,9 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+### 2.5.3
+
+* Allow configuring pod affinities.
 
 ### 2.5.2
 

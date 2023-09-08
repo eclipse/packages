@@ -299,6 +299,7 @@ adapters:
       labels: {}
       annotations: {}
       priorityClassName: ""
+      affinity: {}
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -427,6 +428,7 @@ adapters:
       labels: {}
       annotations: {}
       priorityClassName: ""
+      affinity: {}
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -553,6 +555,7 @@ adapters:
       labels: {}
       annotations: {}
       priorityClassName: ""
+      affinity: {}
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -681,6 +684,7 @@ adapters:
       labels: {}
       annotations: {}
       priorityClassName: ""
+      affinity: {}
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -808,6 +812,7 @@ adapters:
       labels: {}
       annotations: {}
       priorityClassName: ""
+      affinity: {}
 
     # extraVolumes contains additional kubernetes Volume definitions representing volumes
     # that can mounted into the container's file system.
@@ -932,6 +937,7 @@ authServer:
     labels: {}
     annotations: {}
     priorityClassName: ""
+    affinity: {}
 
   # extraVolumes contains additional kubernetes Volume definitions representing volumes
   # that can mounted into the container's file system.
@@ -1199,6 +1205,7 @@ deviceRegistryExample:
       labels: {}
       annotations: {}
       priorityClassName: ""
+      affinity: {}
 
     # The configMap to get additional environment variables from for this device registry.
     envConfigMap:
@@ -1285,6 +1292,7 @@ deviceRegistryExample:
       labels: {}
       annotations: {}
       priorityClassName: ""
+      affinity: {}
 
   # jdbcBasedDeviceRegistry contains configuration properties specific to the
   # jdbc based device registry.
@@ -1346,6 +1354,7 @@ deviceRegistryExample:
       labels: {}
       annotations: {}
       priorityClassName: ""
+      affinity: {}
 
     registry:
       jdbc:
@@ -1500,6 +1509,7 @@ commandRouterService:
     labels: {}
     annotations: {}
     priorityClassName: ""
+    affinity: {}
 
   # extraVolumes contains additional kubernetes Volume definitions representing volumes
   # that can mounted into the container's file system.
@@ -1864,6 +1874,7 @@ amqpMessagingNetworkExample:
 
     pod:
       priorityClassName: ""
+      affinity: {}
 
     svc:
       annotations: {}
@@ -1963,6 +1974,7 @@ amqpMessagingNetworkExample:
 
       pod:
         priorityClassName: ""
+        affinity: {}
 
       # extraVolumes contains additional kubernetes Volume definitions representing volumes
       # that can mounted into the container's file system.
@@ -2037,6 +2049,7 @@ dataGridExample:
 
   pod:
     priorityClassName: ""
+    affinity: {}
 
   # authUsername contains the name of the user that is authorized to connect to the example data grid.
   authUsername: "hono"
@@ -2089,6 +2102,7 @@ jaegerBackendExample:
     labels: {}
     annotations: {}
     priorityClassName: ""
+    affinity: {}
 
   # env contains environment variables to set for the Jaeger all-in-one container.
   # The default variables configure the container to keep up to 100000 traces in memory.

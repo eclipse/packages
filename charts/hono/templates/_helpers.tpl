@@ -179,6 +179,20 @@ The scope passed in is expected to be a dict with keys
 {{- end }}
 
 {{/*
+Add affinity rules for Hono component pods.
+The scope passed in is expected to be a dict with keys
+- (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
+*/}}
+{{- define "hono.pod.affinity" -}}
+{{- if .componentConfig.pod.affinity }}
+{{- with .componentConfig.pod.affinity }}
+affinity:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Add annotations for Hono component deployments.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "componentConfig": the component's configuration properties from the values.yaml file
