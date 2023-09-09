@@ -114,60 +114,47 @@ ditto:
         user: ditto
         password: ditto
 
-  # do not set cpu limits for Ditto to avoid CFS scheduler limits
-  # ref: https://doc.akka.io/docs/akka/snapshot/additional/deploy.html#in-kubernetes
   connectivity:
     resources:
-      requests:
-        cpu: 200m
-      limits:
-        memory: "1Gi"
+      cpu: 0.2
+      memoryMi: 1024
 
   gateway:
     resources:
-      requests:
-        cpu: 200m
-      limits:
-        memory: "768Mi"
+      cpu: 0.2
+      memoryMi: 768
 
   nginx:
     service:
       type: NodePort
     resources:
-      requests:
-        cpu: 50m
-      limits:
-        cpu: 150m
-        memory: "32Mi"
+      cpu: 0.05
+      memoryMi: 32
 
   policies:
     resources:
-      requests:
-        cpu: 200m
-      limits:
-        memory: "768Mi"
+      cpu: 0.2
+      memoryMi: 768
 
   swaggerui:
     resources:
-      requests:
-        cpu: 50m
-      limits:
-        cpu: 100m
-        memory: "32Mi"
+      cpu: 0.05
+      memoryMi: 32
 
   things:
     resources:
-      requests:
-        cpu: 200m
-      limits:
-        memory: "768Mi"
+      cpu: 0.2
+      memoryMi: 768
 
   thingsSearch:
     resources:
-      requests:
-        cpu: 200m
-      limits:
-        memory: "768Mi"
+      cpu: 0.2
+      memoryMi: 768
+
+  dittoui:
+    resources:
+      cpu: 0.05
+      memoryMi: 32
 
   mongodb:
     # usage of default name (including release name) not supported in hono.deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb for now
