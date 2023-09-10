@@ -1,175 +1,165 @@
 {
-  "targetActorSelection": "/system/sharding/connection",
-  "headers": {
-    "aggregate": false
-  },
-  "piggybackCommand": {
-    "type": "connectivity.commands:createConnection",
-    "connection": {
-      "id": "hono-kafka-connection-for-{{ .Values.demoDevice.tenant | replace "." "_" }}",
-      "name": "[Hono/Kafka] {{ .Values.demoDevice.tenant }}",
-      "connectionType": "kafka",
-      "connectionStatus": "open",
-      {{- if .Values.hono.kafkaMessagingClusterExample.enabled }}
-      "uri": "ssl://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-kafka:9092",
-      {{- else }}
-      {{ $kafka := .Values.hono.adapters.kafkaMessagingSpec.commonClientConfig }}
-      {{ $kafkaServers := splitList "," (index $kafka "bootstrap.servers") }}
-      "uri": "tcp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ first $kafkaServers }}",
-      {{- end }}
-      "sources": [
-        {
-          "addresses": [
-            "hono.telemetry.{{ .Values.demoDevice.tenant }}"
-          ],
-          "consumerCount": 1,
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "qos": 0,
-          "enforcement": {
-            "input": {{ "{{ header:device_id }}" | quote }},
-            "filters": [
-              {{ "{{ entity:id }}" | quote }}
-            ]
-          },
-          "headerMapping": {},
-          "payloadMapping": [],
-          "replyTarget": {
-            "enabled": true,
-            "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
-            "headerMapping": {
-              "device_id": {{ "{{ thing:id }}" | quote }},
-              "subject": {{ "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response" | quote }},
-              "correlation-id": {{ "{{ header:correlation-id }}" | quote }}
-            },
-            "expectedResponseTypes": [
-              "response",
-              "error"
-            ]
-          },
-          "acknowledgementRequests": {
-            "includes": [],
-            "filter": "fn:delete()"
-          },
-          "declaredAcks": []
-        },
-        {
-          "addresses": [
-            "hono.event.{{ .Values.demoDevice.tenant }}"
-          ],
-          "consumerCount": 1,
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "qos": 1,
-          "enforcement": {
-            "input": {{ "{{ header:device_id }}" | quote }},
-            "filters": [
-              {{ "{{ entity:id }}" | quote }}
-            ]
-          },
-          "headerMapping": {},
-          "payloadMapping": [],
-          "replyTarget": {
-            "enabled": true,
-            "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
-            "headerMapping": {
-              "device_id": {{ "{{ thing:id }}" | quote }},
-              "subject": {{ "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response" | quote }},
-              "correlation-id": {{ "{{ header:correlation-id }}" | quote }}
-            },
-            "expectedResponseTypes": [
-              "response",
-              "error"
-            ]
-          },
-          "acknowledgementRequests": {
-            "includes": []
-          },
-          "declaredAcks": []
-        },
-        {
-          "addresses": [
-            "hono.command_response.{{ .Values.demoDevice.tenant }}"
-          ],
-          "consumerCount": 1,
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "qos": 0,
-          "enforcement": {
-            "input": {{ "{{ header:device_id }}" | quote }},
-            "filters": [
-              {{ "{{ entity:id }}" | quote }}
-            ]
-          },
-          "headerMapping": {
-            "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
-            "status": {{ "{{ header:status }}" | quote }}
-          },
-          "payloadMapping": [],
-          "replyTarget": {
-            "enabled": false,
-            "expectedResponseTypes": [
-              "response",
-              "error"
-            ]
-          },
-          "acknowledgementRequests": {
-            "includes": [],
-            "filter": "fn:delete()"
-          },
-          "declaredAcks": []
-        }
+  "name": "[Hono/Kafka] {{ .Values.demoDevice.tenant }}",
+  "connectionType": "kafka",
+  "connectionStatus": "open",
+  {{- if .Values.hono.kafkaMessagingClusterExample.enabled }}
+  "uri": "ssl://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-kafka:9092",
+  {{- else }}
+  {{ $kafka := .Values.hono.adapters.kafkaMessagingSpec.commonClientConfig }}
+  {{ $kafkaServers := splitList "," (index $kafka "bootstrap.servers") }}
+  "uri": "tcp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ first $kafkaServers }}",
+  {{- end }}
+  "sources": [
+    {
+      "addresses": [
+        "hono.telemetry.{{ .Values.demoDevice.tenant }}"
       ],
-      "targets": [
-        {
-          "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "headerMapping": {
-            "device_id": {{ "{{ thing:id }}" | quote }},
-            "subject": {{ "{{ header:subject | fn:default(topic:action-subject) }}" | quote }},
-            "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
-            "response-required": {{ "{{ header:response-required }}" | quote }}
-          },
-          "topics": [
-            "_/_/things/live/commands",
-            "_/_/things/live/messages"
-          ]
-        },
-        {
-          "address": {{ printf "hono.command.%s/{{thing:id}}" .Values.demoDevice.tenant | quote }},
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "topics": [
-            "_/_/things/twin/events",
-            "_/_/things/live/events"
-          ],
-          "headerMapping": {
-            "device_id": {{ "{{ thing:id }}" | quote }},
-            "subject": {{ "{{ header:subject | fn:default(topic:action-subject) }}" | quote }},
-            "correlation-id": {{ "{{ header:correlation-id }}" | quote }}
-          }
-        }
+      "consumerCount": 1,
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
       ],
-      "specificConfig": {
-        {{- if .Values.hono.kafkaMessagingClusterExample.enabled }}
-        "saslMechanism": "plain",
-        "bootstrapServers": "{{ .Release.Name }}-kafka:9092",
-        {{- else }}
-        {{ $kafka := .Values.hono.adapters.kafkaMessagingSpec.commonClientConfig }}
-        "saslMechanism": "{{ (or (index $kafka "sasl.mechanism") "PLAIN") | lower }}",
-        "bootstrapServers": "{{ index $kafka "bootstrap.servers" }}",
-        {{- end }}
-        "groupId": {{ printf "%s_{{ connection:id }}" .Values.demoDevice.tenant | quote }}
+      "qos": 0,
+      "enforcement": {
+        "input": {{ "{{ header:device_id }}" | quote }},
+        "filters": [
+          {{ "{{ entity:id }}" | quote }}
+        ]
       },
-      "clientCount": 1,
-      "failoverEnabled": true,
-      "validateCertificates": true
+      "headerMapping": {},
+      "payloadMapping": [],
+      "replyTarget": {
+        "enabled": true,
+        "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+        "headerMapping": {
+          "device_id": {{ "{{ thing:id }}" | quote }},
+          "subject": {{ "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response" | quote }},
+          "correlation-id": {{ "{{ header:correlation-id }}" | quote }}
+        },
+        "expectedResponseTypes": [
+          "response",
+          "error"
+        ]
+      },
+      "acknowledgementRequests": {
+        "includes": [],
+        "filter": "fn:delete()"
+      },
+      "declaredAcks": []
+    },
+    {
+      "addresses": [
+        "hono.event.{{ .Values.demoDevice.tenant }}"
+      ],
+      "consumerCount": 1,
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
+      ],
+      "qos": 1,
+      "enforcement": {
+        "input": {{ "{{ header:device_id }}" | quote }},
+        "filters": [
+          {{ "{{ entity:id }}" | quote }}
+        ]
+      },
+      "headerMapping": {},
+      "payloadMapping": [],
+      "replyTarget": {
+        "enabled": true,
+        "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+        "headerMapping": {
+          "device_id": {{ "{{ thing:id }}" | quote }},
+          "subject": {{ "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response" | quote }},
+          "correlation-id": {{ "{{ header:correlation-id }}" | quote }}
+        },
+        "expectedResponseTypes": [
+          "response",
+          "error"
+        ]
+      },
+      "acknowledgementRequests": {
+        "includes": []
+      },
+      "declaredAcks": []
+    },
+    {
+      "addresses": [
+        "hono.command_response.{{ .Values.demoDevice.tenant }}"
+      ],
+      "consumerCount": 1,
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
+      ],
+      "qos": 0,
+      "enforcement": {
+        "input": {{ "{{ header:device_id }}" | quote }},
+        "filters": [
+          {{ "{{ entity:id }}" | quote }}
+        ]
+      },
+      "headerMapping": {
+        "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
+        "status": {{ "{{ header:status }}" | quote }}
+      },
+      "payloadMapping": [],
+      "replyTarget": {
+        "enabled": false,
+        "expectedResponseTypes": [
+          "response",
+          "error"
+        ]
+      },
+      "acknowledgementRequests": {
+        "includes": [],
+        "filter": "fn:delete()"
+      },
+      "declaredAcks": []
     }
-  }
+  ],
+  "targets": [
+    {
+      "address": {{ printf "hono.command.%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
+      ],
+      "headerMapping": {
+        "device_id": {{ "{{ thing:id }}" | quote }},
+        "subject": {{ "{{ header:subject | fn:default(topic:action-subject) }}" | quote }},
+        "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
+        "response-required": {{ "{{ header:response-required }}" | quote }}
+      },
+      "topics": [
+        "_/_/things/live/commands",
+        "_/_/things/live/messages"
+      ]
+    },
+    {
+      "address": {{ printf "hono.command.%s/{{thing:id}}" .Values.demoDevice.tenant | quote }},
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
+      ],
+      "topics": [
+        "_/_/things/twin/events",
+        "_/_/things/live/events"
+      ],
+      "headerMapping": {
+        "device_id": {{ "{{ thing:id }}" | quote }},
+        "subject": {{ "{{ header:subject | fn:default(topic:action-subject) }}" | quote }},
+        "correlation-id": {{ "{{ header:correlation-id }}" | quote }}
+      }
+    }
+  ],
+  "specificConfig": {
+    {{- if .Values.hono.kafkaMessagingClusterExample.enabled }}
+    "saslMechanism": "plain",
+    "bootstrapServers": "{{ .Release.Name }}-kafka:9092",
+    {{- else }}
+    {{ $kafka := .Values.hono.adapters.kafkaMessagingSpec.commonClientConfig }}
+    "saslMechanism": "{{ (or (index $kafka "sasl.mechanism") "PLAIN") | lower }}",
+    "bootstrapServers": "{{ index $kafka "bootstrap.servers" }}",
+    {{- end }}
+    "groupId": {{ printf "%s_{{ connection:id }}" .Values.demoDevice.tenant | quote }}
+  },
+  "clientCount": 1,
+  "failoverEnabled": true,
+  "validateCertificates": true
 }
