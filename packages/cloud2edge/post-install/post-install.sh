@@ -14,8 +14,7 @@
 
 DITTO_DEVOPS_USER_PW="devops:$(cat /var/run/c2e/ditto-gw-users/devops-password)"
 DEVICE_REGISTRY_BASE_URL="http://{{ .Release.Name }}-service-device-registry:8080/v1"
-# TODO use HTTP API instead of piggyback commands (https://eclipse.dev/ditto/connectivity-manage-connections.html)
-DITTO_CONNECTIVITY_URL="http://{{ .Release.Name }}-ditto-nginx:8080/devops/piggyback/connectivity"
+DITTO_CONNECTIONS_BASE_URL="http://{{ .Release.Name }}-ditto-nginx:8080/api/2/connections"
 DITTO_THINGS_BASE_URL="http://{{ .Release.Name }}-ditto-nginx:8080/api/2/things"
 
 DEMO_TENANT="{{ .Values.demoDevice.tenant }}"
@@ -79,13 +78,16 @@ add_hono_device_credentials(){
 }
 
 add_connection_in_ditto(){
-  connection_name="$1"
-  http_request_body_file="$2"
+  connection_id_prefix="$1"
+  tenant_id="$2"
+  http_request_body_file="$3"
 
-  echo "Adding $connection_name ditto connection [URL: $DITTO_CONNECTIVITY_URL]"
+  tenant_adapted=$(echo "$tenant_id" | sed "s/\./_/g")
+  connection_id="${connection_id_prefix}${tenant_adapted}"
+  echo "Adding ditto connection '$connection_id' [URL: ${DITTO_CONNECTIONS_BASE_URL}/${connection_id}]"
   response_body_and_status=$(curl --silent --write-out "\n%{http_code}" \
-                -X POST -u "$DITTO_DEVOPS_USER_PW" --header 'Content-Type: application/json' \
-                --data-binary "@$http_request_body_file" "$DITTO_CONNECTIVITY_URL")
+                -X PUT -u "$DITTO_DEVOPS_USER_PW" --header 'Content-Type: application/json' \
+                --data-binary "@$http_request_body_file" "${DITTO_CONNECTIONS_BASE_URL}/${connection_id}")
   check_status $? "$response_body_and_status"
 }
 
@@ -93,7 +95,7 @@ add_ditto_device(){
   device="$1"
   http_request_body_file="$2"
   
-  echo "Adding '$device' ditto thing [URL: $DITTO_THINGS_BASE_URL/$device]"
+  echo "Adding ditto thing '$device' [URL: $DITTO_THINGS_BASE_URL/$device]"
   response_body_and_status=$(curl --silent --write-out "\n%{http_code}" \
                 -X PUT -u ditto:ditto --header 'Content-Type: application/json' \
                 --data-binary "@$http_request_body_file" "$DITTO_THINGS_BASE_URL/$device")
@@ -108,7 +110,7 @@ register_hono_device "$DEMO_TENANT" "$DEMO_DEVICE" "{}"
 add_hono_device_credentials "$DEMO_TENANT" "$DEMO_DEVICE" "demo-device-credentials.json"
 
 if [ "$IS_USING_AMQP" = "true" ]; then
-  add_connection_in_ditto "Hono AMQP" "hono-amqp-connection.json"
+  add_connection_in_ditto "hono-amqp-connection-for-" "$DEMO_TENANT" "hono-amqp-connection.json"
 fi
 if [ "$IS_USING_KAFKA" = "true" ]; then
   cp hono-kafka-connection.json /tmp/hono-kafka-connection.json
@@ -121,7 +123,7 @@ if [ "$IS_USING_KAFKA" = "true" ]; then
       cert="$(< $certPath tr -d '\n' | sed 's/E-----/E-----\\\\n/g' | sed 's/-----END/\\\\n-----END/g')"
       sed -i '/uri/ a '"\"ca\": \"$cert\","'' /tmp/hono-kafka-connection.json
   fi
-  add_connection_in_ditto "Hono Kafka" "/tmp/hono-kafka-connection.json"
+  add_connection_in_ditto "hono-kafka-connection-for-" "$DEMO_TENANT" "/tmp/hono-kafka-connection.json"
 fi
 
 add_ditto_device "$DEMO_DEVICE" "demo-device-thing.json"

@@ -1,111 +1,101 @@
 {
-  "targetActorSelection": "/system/sharding/connection",
-  "headers": {
-    "aggregate": false
-  },
-  "piggybackCommand": {
-    "type": "connectivity.commands:createConnection",
-    "connection": {
-      "id": "hono-amqp-connection-for-{{ .Values.demoDevice.tenant | replace "." "_" }}",
-      "name": "[Hono/AMQP1.0] {{ .Values.demoDevice.tenant }}",
-      "connectionType": "amqp-10",
-      "connectionStatus": "open",
-      "uri": "amqp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-dispatch-router-ext:15672",
-      "failoverEnabled": true,
-      "sources": [
-        {
-          "addresses": [
-            "telemetry/{{ .Values.demoDevice.tenant }}",
-            "event/{{ .Values.demoDevice.tenant }}"
-          ],
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "enforcement": {
-            "input": {{ "{{ header:device_id }}" | quote }},
-            "filters": [
-              {{ "{{ entity:id }}" | quote }}
-            ]
-          },
-          "headerMapping": {
-            "hono-device-id": {{ "{{ header:device_id }}" | quote }},
-            "content-type": {{ "{{ header:content-type }}" | quote }}
-          },
-          "replyTarget": {
-            "enabled": true,
-            "address": {{ "{{ header:reply-to }}" | quote }},
-            "headerMapping": {
-              "to": {{ printf "command/%s/{{ header:hono-device-id }}" .Values.demoDevice.tenant | quote }},
-              "subject": {{ "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response" | quote }},
-              "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
-              "content-type": {{ "{{ header:content-type | fn:default('application/vnd.eclipse.ditto+json') }}" | quote }}
-            },
-            "expectedResponseTypes": [
-              "response",
-              "error"
-            ]
-          },
-          "acknowledgementRequests": {
-            "includes": [],
-            "filter": "fn:filter(header:qos,'eq','1')"
-          }
-        },
-        {
-          "addresses": [
-            "command_response/{{ .Values.demoDevice.tenant }}/replies"
-          ],
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "headerMapping": {
-            "content-type": {{ "{{ header:content-type }}" | quote }},
-            "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
-            "status": {{ "{{ header:status }}" | quote }}
-          },
-          "replyTarget": {
-            "enabled": false,
-            "expectedResponseTypes": [
-              "response",
-              "error"
-            ]
-          }
-        }
+  "name": "[Hono/AMQP1.0] {{ .Values.demoDevice.tenant }}",
+  "connectionType": "amqp-10",
+  "connectionStatus": "open",
+  "uri": "amqp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-dispatch-router-ext:15672",
+  "failoverEnabled": true,
+  "sources": [
+    {
+      "addresses": [
+        "telemetry/{{ .Values.demoDevice.tenant }}",
+        "event/{{ .Values.demoDevice.tenant }}"
       ],
-      "targets": [
-        {
-          "address": "command/{{ .Values.demoDevice.tenant }}",
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "topics": [
-            "_/_/things/live/commands",
-            "_/_/things/live/messages"
-          ],
-          "headerMapping": {
-            "to": {{ printf "command/%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
-            "subject": {{ "{{ header:subject | fn:default(topic:action-subject) }}" | quote }},
-            "content-type": {{ "{{ header:content-type | fn:default('application/vnd.eclipse.ditto+json') }}" | quote }},
-            "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
-            "reply-to": {{ printf "{{ fn:default('command_response/%s/replies') | fn:filter(header:response-required,'ne','false') }}" .Values.demoDevice.tenant | quote }}
-          }
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
+      ],
+      "enforcement": {
+        "input": {{ "{{ header:device_id }}" | quote }},
+        "filters": [
+          {{ "{{ entity:id }}" | quote }}
+        ]
+      },
+      "headerMapping": {
+        "hono-device-id": {{ "{{ header:device_id }}" | quote }},
+        "content-type": {{ "{{ header:content-type }}" | quote }}
+      },
+      "replyTarget": {
+        "enabled": true,
+        "address": {{ "{{ header:reply-to }}" | quote }},
+        "headerMapping": {
+          "to": {{ printf "command/%s/{{ header:hono-device-id }}" .Values.demoDevice.tenant | quote }},
+          "subject": {{ "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response" | quote }},
+          "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
+          "content-type": {{ "{{ header:content-type | fn:default('application/vnd.eclipse.ditto+json') }}" | quote }}
         },
-        {
-          "address": "command/{{ .Values.demoDevice.tenant }}",
-          "authorizationContext": [
-            "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
-          ],
-          "topics": [
-            "_/_/things/twin/events",
-            "_/_/things/live/events"
-          ],
-          "headerMapping": {
-            "to": {{ printf "command/%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
-            "subject": {{ "{{ header:subject | fn:default(topic:action-subject) }}" | quote }},
-            "content-type": {{ "{{ header:content-type | fn:default('application/vnd.eclipse.ditto+json') }}" | quote }},
-            "correlation-id": {{ "{{ header:correlation-id }}" | quote }}
-          }
-        }
-      ]
+        "expectedResponseTypes": [
+          "response",
+          "error"
+        ]
+      },
+      "acknowledgementRequests": {
+        "includes": [],
+        "filter": "fn:filter(header:qos,'eq','1')"
+      }
+    },
+    {
+      "addresses": [
+        "command_response/{{ .Values.demoDevice.tenant }}/replies"
+      ],
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
+      ],
+      "headerMapping": {
+        "content-type": {{ "{{ header:content-type }}" | quote }},
+        "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
+        "status": {{ "{{ header:status }}" | quote }}
+      },
+      "replyTarget": {
+        "enabled": false,
+        "expectedResponseTypes": [
+          "response",
+          "error"
+        ]
+      }
     }
-  }
+  ],
+  "targets": [
+    {
+      "address": "command/{{ .Values.demoDevice.tenant }}",
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
+      ],
+      "topics": [
+        "_/_/things/live/commands",
+        "_/_/things/live/messages"
+      ],
+      "headerMapping": {
+        "to": {{ printf "command/%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+        "subject": {{ "{{ header:subject | fn:default(topic:action-subject) }}" | quote }},
+        "content-type": {{ "{{ header:content-type | fn:default('application/vnd.eclipse.ditto+json') }}" | quote }},
+        "correlation-id": {{ "{{ header:correlation-id }}" | quote }},
+        "reply-to": {{ printf "{{ fn:default('command_response/%s/replies') | fn:filter(header:response-required,'ne','false') }}" .Values.demoDevice.tenant | quote }}
+      }
+    },
+    {
+      "address": "command/{{ .Values.demoDevice.tenant }}",
+      "authorizationContext": [
+        "pre-authenticated:hono-connection-{{ .Values.demoDevice.tenant }}"
+      ],
+      "topics": [
+        "_/_/things/twin/events",
+        "_/_/things/live/events"
+      ],
+      "headerMapping": {
+        "to": {{ printf "command/%s/{{ thing:id }}" .Values.demoDevice.tenant | quote }},
+        "subject": {{ "{{ header:subject | fn:default(topic:action-subject) }}" | quote }},
+        "content-type": {{ "{{ header:content-type | fn:default('application/vnd.eclipse.ditto+json') }}" | quote }},
+        "correlation-id": {{ "{{ header:correlation-id }}" | quote }}
+      }
+    }
+  ]
 }
