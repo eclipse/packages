@@ -330,20 +330,20 @@ curl -i -X PUT -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json'
       ],
       "qos": 0,
       "enforcement": {
-        "input": "{{ header:device_id }}",
+        "input": "{%raw%}{{ header:device_id }}{%endraw%}",
         "filters": [
-          "{{ entity:id }}"
+          "{%raw%}{{ entity:id }}{%endraw%}"
         ]
       },
       "headerMapping": {},
       "payloadMapping": [],
       "replyTarget": {
         "enabled": true,
-        "address": "hono.command.'"${HONO_TENANT}"'/{{ thing:id }}",
+        "address": "hono.command.'"${HONO_TENANT}"'/{%raw%}{{ thing:id }}{%endraw%}",
         "headerMapping": {
-          "device_id": "{{ thing:id }}",
-          "subject": "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response",
-          "correlation-id": "{{ header:correlation-id }}"
+          "device_id": "{%raw%}{{ thing:id }}{%endraw%}",
+          "subject": "{%raw%}{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}{%endraw%}-response",
+          "correlation-id": "{%raw%}{{ header:correlation-id }}{%endraw%}"
         },
         "expectedResponseTypes": [
           "response",
@@ -366,20 +366,20 @@ curl -i -X PUT -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json'
       ],
       "qos": 1,
       "enforcement": {
-        "input": "{{ header:device_id }}",
+        "input": "{%raw%}{{ header:device_id }}{%endraw%}",
         "filters": [
-          "{{ entity:id }}"
+          "{%raw%}{{ entity:id }}{%endraw%}"
         ]
       },
       "headerMapping": {},
       "payloadMapping": [],
       "replyTarget": {
         "enabled": true,
-        "address": "hono.command.'"${HONO_TENANT}"'/{{ thing:id }}",
+        "address": "hono.command.'"${HONO_TENANT}"'/{%raw%}{{ thing:id }}{%endraw%}",
         "headerMapping": {
-          "device_id": "{{ thing:id }}",
-          "subject": "{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}-response",
-          "correlation-id": "{{ header:correlation-id }}"
+          "device_id": "{%raw%}{{ thing:id }}{%endraw%}",
+          "subject": "{%raw%}{{ header:subject | fn:default(topic:action-subject) | fn:default(topic:criterion) }}{%endraw%}-response",
+          "correlation-id": "{%raw%}{{ header:correlation-id }}{%endraw%}"
         },
         "expectedResponseTypes": [
           "response",
@@ -401,14 +401,14 @@ curl -i -X PUT -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json'
       ],
       "qos": 0,
       "enforcement": {
-        "input": "{{ header:device_id }}",
+        "input": "{%raw%}{{ header:device_id }}{%endraw%}",
         "filters": [
-          "{{ entity:id }}"
+          "{%raw%}{{ entity:id }}{%endraw%}"
         ]
       },
       "headerMapping": {
-        "correlation-id": "{{ header:correlation-id }}",
-        "status": "{{ header:status }}"
+        "correlation-id": "{%raw%}{{ header:correlation-id }}{%endraw%}",
+        "status": "{%raw%}{{ header:status }}{%endraw%}"
       },
       "payloadMapping": [],
       "replyTarget": {
@@ -427,15 +427,15 @@ curl -i -X PUT -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json'
   ],
   "targets": [
     {
-      "address": "hono.command.'"${HONO_TENANT}"'/{{ thing:id }}",
+      "address": "hono.command.'"${HONO_TENANT}"'/{%raw%}{{ thing:id }}{%endraw%}",
       "authorizationContext": [
         "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
       ],
       "headerMapping": {
-        "device_id": "{{ thing:id }}",
-        "subject": "{{ header:subject | fn:default(topic:action-subject) }}",
-        "correlation-id": "{{ header:correlation-id }}",
-        "response-required": "{{ header:response-required }}"
+        "device_id": "{%raw%}{{ thing:id }}{%endraw%}",
+        "subject": "{%raw%}{{ header:subject | fn:default(topic:action-subject) }}{%endraw%}",
+        "correlation-id": "{%raw%}{{ header:correlation-id }}{%endraw%}",
+        "response-required": "{%raw%}{{ header:response-required }}{%endraw%}"
       },
       "topics": [
         "_/_/things/live/commands",
@@ -443,7 +443,7 @@ curl -i -X PUT -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json'
       ]
     },
     {
-      "address": "hono.command.'"${HONO_TENANT}"'/{{thing:id}}",
+      "address": "hono.command.'"${HONO_TENANT}"'/{%raw%}{{thing:id}}{%endraw%}",
       "authorizationContext": [
         "pre-authenticated:hono-connection-'"${HONO_TENANT}"'"
       ],
@@ -452,16 +452,16 @@ curl -i -X PUT -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json'
         "_/_/things/live/events"
       ],
       "headerMapping": {
-        "device_id": "{{ thing:id }}",
-        "subject": "{{ header:subject | fn:default(topic:action-subject) }}",
-        "correlation-id": "{{ header:correlation-id }}"
+        "device_id": "{%raw%}{{ thing:id }}{%endraw%}",
+        "subject": "{%raw%}{{ header:subject | fn:default(topic:action-subject) }}{%endraw%}",
+        "correlation-id": "{%raw%}{{ header:correlation-id }}{%endraw%}"
       }
     }
   ],
   "specificConfig": {
     "saslMechanism": "plain",
     "bootstrapServers": "'"${RELEASE}"'-kafka:9092",
-    "groupId": "'"${HONO_TENANT}"'_{{ connection:id }}"
+    "groupId": "'"${HONO_TENANT}"'_{%raw%}{{ connection:id }}{%endraw%}"
   },
   "clientCount": 1,
   "failoverEnabled": true,
