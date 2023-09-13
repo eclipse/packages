@@ -30,7 +30,7 @@ This should print out the version of the client, but must also print out the ver
 
 The Cloud2Edge package consists of multiple components. In order to keep them together and separate
 from other components running in your Kubernetes cluster, it is feasible to install them into
-their own name space. The following command creates the `cloud2edge` name space but you can select any
+their own namespace. The following command creates the `cloud2edge` namespace, but you can select any
 other name as well.
 
 {% clipboard %}
@@ -38,27 +38,35 @@ NS=cloud2edge
 kubectl create namespace $NS
 {% endclipboard %}
 
-Next, install the package to the name space using Helm.
+Next, install the package to the namespace using Helm.
 
 {% variants %}
 
 {% variant NodePort %}
-Kubernetes variants like *kind* or *Minikube* do not support exposing service endpoints via load balancers
-out of the box. Instead, services are exposed via *NodePorts*.
+For a single-node Kubernetes cluster, the most basic and universally supported way to direct traffic to the
+Kubernetes services is done via *NodePorts*.
+
+To install the Cloud2Edge package using NodePort services, run the following command:
 
 {% clipboard %}
 RELEASE=c2e
-helm install -n $NS --wait --timeout 15m $RELEASE eclipse-iot/cloud2edge
+helm install -n $NS --wait --timeout 20m $RELEASE eclipse-iot/cloud2edge
 {% endclipboard %}
 {% endvariant %}
 
 {% variant LoadBalancer %}
 Managed Kubernetes variants usually support exposing service endpoints via load balancers on public
-IP addresses. To install the Cloud2Edge package using load balancers, run the following command:
+IP addresses. On a local Kubernetes cluster, load balancer support requires additional preparation
+(e.g. running [minikube tunnel](https://minikube.sigs.k8s.io/docs/handbook/accessing/#loadbalancer-access) on Minikube, 
+or setting up [MetalLB](https://metallb.universe.tf/) on [Kind](https://kind.sigs.k8s.io/docs/user/loadbalancer/) or [MicroK8s](https://microk8s.io/docs/addon-metallb)).
+
+To install the Cloud2Edge package using load balancers, run the following command:
 
 {% clipboard %}
 RELEASE=c2e
-helm install -n $NS --wait --timeout 20m --set hono.useLoadBalancer=true --set ditto.nginx.service.type=LoadBalancer $RELEASE eclipse-iot/cloud2edge
+helm install -n $NS --wait --timeout 20m --set hono.useLoadBalancer=true \
+ --set hono.kafka.externalAccess.service.type=LoadBalancer \
+ --set ditto.nginx.service.type=LoadBalancer $RELEASE eclipse-iot/cloud2edge
 {% endclipboard %}
 {% endvariant %}
 

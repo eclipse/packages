@@ -33,10 +33,13 @@ hono:
           clientPasswords:
             - "hono-secret"
             - "verysecret"
+    externalAccess:
+      service:
+        type: NodePort
 
   livenessProbeInitialDelaySeconds: 900
   readinessProbeInitialDelaySeconds: 45
-  useLoadBalancer: true
+  useLoadBalancer: false
 
   prometheus:
     createInstance: false
