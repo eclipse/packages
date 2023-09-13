@@ -1144,6 +1144,10 @@ deviceRegistryExample:
     # should be used for the example registry's persistent volume claim.
     # If not set, the cluster's default storage class is used.
     storageClass:
+    # storageSize contains the size of the storage that will be created using the
+    # storageClass or the cluster's default configuration.
+    # If no value is specified, the default value will be assumed.
+    storageSize: 1Mi
     # cmdLineArgs contains additional arguments to be passed to the container's CMD.
     cmdLineArgs: []
     # quarkusConfigLocations contains resources that the Quarkus based variant of the component should read
