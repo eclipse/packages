@@ -84,7 +84,7 @@ The demo device's digital twin supports a temperature property which will be set
 by means of the following command:
 
 {% clipboard %}
-curl -i -k -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'application/json' --data-binary '{
+curl -i -k -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'Content-Type: application/json' --data-binary '{
   "topic": "org.eclipse.packages.c2e/demo-device/things/twin/commands/modify",
   "headers": {},
   "path": "/features/temperature/properties/value",
@@ -131,15 +131,13 @@ curl -i -X POST -u ditto:ditto -H 'Content-Type: application/json' -w '\n' --dat
  
 ### Receiving a command at the device
 
-The device may receive a command by specifying a `ttd` when e.g. sending telemetry via HTTP to Hono:
+For the device to receive a command via the HTTP adapter, the device may send a telemetry message with the `hono-ttd` header.
+The header value specifies the number of seconds to wait for a command.
+If no telemetry data shall be sent along with the request, the `application/vnd.eclipse-hono-empty-notification` header can be used:
 
 {% clipboard %}
-curl -i -k -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'hono-ttd: 50' -H 'application/json' -w '\n' --data '{
-  "topic": "org.eclipse.packages.c2e/demo-device/things/twin/commands/modify",
-  "headers": {},
-  "path": "/features/temperature/properties/value",
-  "value": 45
-}' ${HTTP_ADAPTER_BASE_URL:?}/telemetry
+curl -i -X POST -k -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'hono-ttd: 50' \
+  -H 'Content-Type: application/vnd.eclipse-hono-empty-notification' ${HTTP_ADAPTER_BASE_URL:?}/telemetry
 {% endclipboard %}
 
 An example response for the device containing the command sent via the Ditto twin (see previous step for sending the 
@@ -166,7 +164,7 @@ The response has to be correlated twice:
   with the `"correlation-id"` value from the received Ditto Protocol message's `"headers"` object.
 
 {% clipboard %}
-curl -i -k -X PUT -u demo-device@org.eclipse.packages.c2e:demo-secret -H "content-type: application/json" --data-binary '{
+curl -i -k -X PUT -u demo-device@org.eclipse.packages.c2e:demo-secret -H "Content-Type: application/json" --data-binary '{
   "topic": "org.eclipse.packages.c2e/demo-device/things/live/messages/start-watering",
   "headers": {
     "content-type": "application/json",
@@ -681,7 +679,7 @@ To send a telemetry message via Hono's HTTP protocol adapter and thereby update 
 following command can be used:
 
 {% clipboard %}
-curl -i -k -u my-auth-id-1@my-tenant:my-password -H 'application/json' --data-binary '{
+curl -i -k -u my-auth-id-1@my-tenant:my-password -H 'Content-Type: application/json' --data-binary '{
   "topic": "org.acme/my-device-1/things/twin/commands/modify",
   "headers": {},
   "path": "/features/temperature/properties/value",
