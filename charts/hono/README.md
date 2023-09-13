@@ -102,6 +102,10 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+### 2.5.1
+
+* Allow customizing the PVC storage size for the Device Registry service.
+
 ### 2.5.0
 
 * Allow customizing the pod/service names irrespective of .Release.Name.
