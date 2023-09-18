@@ -66,7 +66,7 @@ a particular way. An IoT Package must not *contain* the Helm charts of the proje
 but instead must only *refer* to the projects' Helm charts which are maintained and distributed separately.
 This allows for a modular approach where projects can easily be (re)used in multiple IoT Packages.
 
-The IoT Packages GitHub repository can be used to maintain both individual charts for Eclipse IoT Projects
+The IoT Packages GitHub repository can be used to maintain individual charts for Eclipse IoT Projects
 as well as packages that are comprised of multiple projects:
 
 * The `charts` folder contains Helm charts for Eclipse IoT projects. Each sub-folder contains a chart for
@@ -92,16 +92,16 @@ Helm charts
     * use Deployments in favor of ReplicationControllers
 * should follow Kubernetes best practices
     * include Health Checks wherever practical
-    * allow configurable [resource requests and limits](http://kubernetes.io/docs/user-guide/compute-resources/#resource-requests-and-limits-of-pod-and-container)
+    * allow configurable [resource requests and limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-requests-and-limits-of-pod-and-container)
 * must provide a method for data persistence (if applicable)
 * must support application upgrades
 * must allow customization of the application configuration by means of Helm properties
 * must provide a secure default configuration
 * must not leverage alpha features of Kubernetes
-* must include a [NOTES.txt](https://github.com/helm/helm/blob/master/docs/charts.md#chart-license-readme-and-notes) explaining how to use the application after install
-* must follow [best practices](https://github.com/helm/helm/tree/master/docs/chart_best_practices)
-  (especially for [labels](https://github.com/helm/helm/blob/master/docs/chart_best_practices/labels.md)
-  and [values](https://github.com/helm/helm/blob/master/docs/chart_best_practices/values.md))
+* must include a [NOTES.txt](https://helm.sh/docs/topics/charts/#chart-license-readme-and-notes) explaining how to use the application after install
+* must follow [best practices](https://helm.sh/docs/chart_best_practices/)
+  (especially for [labels](https://helm.sh/docs/chart_best_practices/labels/)
+  and [values](https://helm.sh/docs/chart_best_practices/values/))
 
 ### Documentation Requirements
 

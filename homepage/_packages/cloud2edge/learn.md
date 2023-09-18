@@ -24,7 +24,7 @@ devices. This makes it easier to implement back end applications, as the state i
 by the digital twin platform.
 
 In addition to the actual processing of data, the package also provides a feature to plan, orchestrate
-and and monitor the roll out of software updates to connected devices.
+and monitor the roll-out of software updates to connected devices.
 
 ## Example use-case
 
@@ -37,7 +37,7 @@ and and monitor the roll out of software updates to connected devices.
 ## Also see
 
 * About Eclipse Hono
-    * [Getting started](https://www.eclipse.org/hono/getting-started/)
+    * [Getting started](https://www.eclipse.org/hono/docs/getting-started/)
     * [Documentation](https://www.eclipse.org/hono/docs/)
 * About Eclipse Ditto
     * [Overview](https://www.eclipse.org/ditto/intro-overview.html)
