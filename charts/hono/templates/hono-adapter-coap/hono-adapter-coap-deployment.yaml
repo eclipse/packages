@@ -1,6 +1,6 @@
 {{- if .Values.adapters.coap.enabled }}
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -36,6 +36,7 @@ spec:
       {{- end }}
       {{- include "hono.pod.priorityClassName" $args | nindent 6 }}
       {{- include "hono.pod.affinity" $args | nindent 6 }}
+      serviceAccountName: {{ printf "%s-%s" ( include "hono.fullname" . ) "adapter" | quote }}
       containers:
       {{- include "hono.otel.agent" . | indent 6 }}
       {{- include "hono.container" $args | indent 6 }}
