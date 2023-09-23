@@ -1757,7 +1757,7 @@ kafka:
     enabled: false
   # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
   # To use service type NodePort instead of LoadBalancer, refer to
-  # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
+  # https://github.com/bitnami/charts/tree/40bf90ef4a52969b9ed8acca3d8a67e90d800673/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
   externalAccess:
     enabled: true
     autoDiscovery:

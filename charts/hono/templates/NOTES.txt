@@ -54,7 +54,7 @@ NAME                                       {{ "READY   STATUS    RESTARTS   AGE"
 Once all pods have reached the READY state, you can start using Hono.
 
 To learn more about Hono's functionality, you should follow the Getting started guide at
-https://eclipse.org/hono/getting-started/
+https://eclipse.dev/hono/docs/getting-started/
 
 {{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
 {{- if .Values.kafkaMessagingClusterExample.enabled }}
