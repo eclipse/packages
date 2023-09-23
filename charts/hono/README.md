@@ -102,6 +102,13 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+### 2.5.4
+
+* Fix Grafana dashboard being empty in case a release name is used that doesn't contain 'hono'.
+* Use Bitnami OCI packages in Hono chart dependencies.
+* Support using Chart/Release value references in 'deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb.host'.
+* Fix some links, apply README corrections.
+
 ### 2.5.3
 
 * Allow configuring pod affinities.
