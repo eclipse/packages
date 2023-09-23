@@ -1267,7 +1267,8 @@ deviceRegistryExample:
 
     # mongodb contains the configuration properties to connect to the MongoDB database instance.
     # If you would like to use an already existing MongoDB database instance, then configure
-    # the below section accordingly.
+    # the below section accordingly. Note that the values are processed via the 'tpl' function here,
+    # allowing for example the inclusion of the release name in the 'host' property.
     mongodb: {}
     # The host name or IP address of the MongoDB instance.
     # host:
