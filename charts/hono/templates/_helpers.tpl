@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -286,9 +286,7 @@ The scope passed in is expected to be a dict with keys
 kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
-    {{- $kafkaNameValues := pick .dot.Values.kafka "nameOverride" "fullnameOverride" }}
-    {{- $kafkaChartDotScope := dict "Release" .dot.Release "Chart" (dict "Name" "kafka") "Values" $kafkaNameValues }}
-    {{- $bootstrapServers := printf "%[1]s-0.%[1]s-headless:%d" ( include "hono.fullname" $kafkaChartDotScope ) ( .dot.Values.kafka.service.ports.client | int ) }}
+    {{- $bootstrapServers := printf "%[1]s-0.%[1]s-headless:%d" ( include "common.names.fullname" .dot.Subcharts.kafka ) ( .dot.Values.kafka.service.ports.client | int ) }}
     bootstrap.servers: {{ $bootstrapServers | quote }}
   {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
     security.protocol: "SASL_SSL"
@@ -586,7 +584,6 @@ Adds volume mounts to a component's container.
 The scope passed in is expected to be a dict with keys
 - (mandatory) "name": the name of the component
 - (mandatory) "componentConfig": the component's configuration properties as defined in .Values
-- (optional) "dot": the root scope (".")
 - (optional) "configMountPath": the mount path to use for the component's config secret
                                 instead of the default "/opt/hono/config"
 */}}
@@ -664,9 +661,7 @@ The scope passed in is expected to be a dict with keys
 {{/*
 Adds a priority class name to a component's pod spec.
 The scope passed in is expected to be a dict with keys
-- (mandatory) "name": the name of the component
 - (mandatory) "componentConfig": the component's configuration properties as defined in .Values
-- (mandatory) "dot": the root scope (".")
 */}}
 {{- define "hono.pod.priorityClassName" }}
 {{- if .componentConfig.pod.priorityClassName }}

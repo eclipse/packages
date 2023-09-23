@@ -1,6 +1,6 @@
 {{- if .Values.prometheus.createInstance }}
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -15,7 +15,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   {{- /* prometheus chart expects metadata.name to be "{ReleaseName}-{prometheus.server.configMapOverrideName}" */}}
-  {{- $prometheusDotScope := . | deepCopy | merge (dict "Values" (dict "fullnameOverride" .Release.Name)) }}
+  {{- /* letting this name be created via the combination "{$args.Values.fullnameOverride}-{$args.name}" */}}
+  {{- $prometheusDotScope := dict "Release" .Release "Chart" .Chart "Values" (dict "fullnameOverride" .Release.Name) }}
   {{- $args := dict "dot" $prometheusDotScope "component" "metrics" "name" .Values.prometheus.server.configMapOverrideName }}
   {{- include "hono.metadata" $args | nindent 2 }}
 data:

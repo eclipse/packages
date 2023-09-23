@@ -1,6 +1,6 @@
 {{- if and .Values.deviceRegistryExample.enabled ( eq .Values.deviceRegistryExample.type "mongodb" ) }}
 #
-# Copyright (c) 2020, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -73,7 +73,7 @@ spec:
         securityContext:
           privileged: false
         volumeMounts:
-        {{- include "hono.container.volumeMounts" ( dict "dot" $args.dot "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 8 }}
+        {{- include "hono.container.volumeMounts" ( dict "name" $args.name "componentConfig" .Values.deviceRegistryExample ) | indent 8 }}
         {{- with ( default .Values.deviceRegistryExample.resources $args.componentConfig.resources ) }}
         resources:
           {{- . | toYaml | nindent 10 }}
