@@ -1,6 +1,6 @@
 {{- if .Values.kafkaMessagingClusterExample.enabled }}
 #
-# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -15,9 +15,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   {{/* metadata.name is set to "{fullNameOfKafkaSubChart}-example-keys" here, meaning e.g. "{ReleaseName}-kafka-example-keys", not "{ReleaseName}-hono-example-keys" */}}
-  {{- $kafkaNameValues := pick .Values.kafka "nameOverride" "fullnameOverride" }}
-  {{- $kafkaChartDotScope := dict "Release" .Release "Chart" (dict "Name" "kafka" "Version" .Chart.Version "AppVersion" .Chart.AppVersion) "Values" $kafkaNameValues }}
-  {{- $args := dict "dot" ($kafkaChartDotScope) "component" "kafka" "name" "example-keys" }}
+  {{- $args := dict "dot" .Subcharts.kafka "component" "kafka" "name" "example-keys" }}
   {{- include "hono.metadata" $args | nindent 2 }}
 type: Opaque
 data:
