@@ -49,7 +49,7 @@ data:
             - {{ .Release.Namespace }}
           selectors:
           - role: pod
-            label: {{ printf "app.kubernetes.io/instance=%s,helm.sh/chart=%s" ( include "hono.fullname" . ) ( include "hono.chart" . ) }}
+            label: {{ printf "app.kubernetes.io/instance=%s,helm.sh/chart=%s" .Release.Name ( include "hono.chart" . ) }}
 
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
