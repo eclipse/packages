@@ -17,7 +17,7 @@ In addition, a Kubernetes cluster to install the chart to is required.
 See the corresponding section on the [IoT Packages prerequisites](https://www.eclipse.org/packages/prereqs/#kubernetes-cluster)
 page for information on how to set up a cluster suitable for running Hono.
 
-The Helm chart is being tested to successfully install on the five most recent Kubernetes versions.
+The Helm chart is being tested to successfully install on the four most recent Kubernetes versions.
 
 ## Installing the chart
 
@@ -79,7 +79,7 @@ The following command can then be used to check for the existence of the *DEFAUL
 of the installation:
 
 ```bash
-curl -sIX GET http://$REGISTRY_IP:28080/v1/tenants/DEFAULT_TENANT
+curl -skIX GET https://$REGISTRY_IP:28443/v1/tenants/DEFAULT_TENANT
 ```
 
 the output should look similar to
@@ -88,7 +88,7 @@ the output should look similar to
 HTTP/1.1 200 OK
 etag: 89d40d26-5956-4cc6-b978-b15fda5d1823
 content-type: application/json; charset=utf-8
-content-length: 260
+content-length: 445
 ```
 
 ## Uninstalling the Chart
@@ -218,7 +218,7 @@ In order to set a property to a non-default value, the `--set key=value[,key=val
 `helm install`. For example:
 
 ```bash
-helm install eclipse-hono eclipse-iot/hono -n hono --wait --set useLoadBalancer=false
+helm install eclipse-hono eclipse-iot/hono -n hono --wait --set jaegerBackendExample.enabled=true
 ```
 
 Alternatively, one or more YAML files that contain the properties can be provided when installing the chart:
