@@ -1724,82 +1724,61 @@ kafka:
   # Set to false for productive setups. Topic management then needs to be provided externally.
   autoCreateTopicsEnable: true
   deleteTopicEnable: true
-  auth:
-    clientProtocol: "sasl_tls"
-    sasl:
-      jaas:
-        clientUsers:
-        - "hono"
-        clientPasswords:
-        - "hono-secret"
-        zookeeperUser: "zookeeperUser"
-        zookeeperPassword: "zookeeperPassword"
-    tls:
-      type: "pem"
-      pemChainIncluded: true
-      existingSecrets:
-      # Evaluated in kafka chart via tpl; kafka chart full name used here!
-      - '{{ include "hono.fullname" . }}-example-keys'
 
-  service:
-    ports:
-      client: 9092
-      internal: 9093
-      external: 9094
+  broker:
+    automountServiceAccountToken: true
 
-  replicaCount: 1
-  # Do not write data to a PersistentVolume by default.
-  # When setting this to true, make sure to also set "kafka.zookeeper.persistence.enabled" to true and
-  # make sure that Kafka is stopped cleanly using SIGTERM _before_ Zookeeper is stopped.
-  # Otherwise you will most likely run into issues like
-  # https://stackoverflow.com/questions/39759071/error-while-starting-kafka-broker
-  persistence:
-    enabled: false
+  controller:
+    replicaCount: 1
+    automountServiceAccountToken: true
+    extraConfig: |
+      group.initial.rebalance.delay.ms=0
+      offsets.topic.replication.factor=1
+      transaction.state.log.min.isr=1
+      transaction.state.log.replication.factor=1
+
+  listeners:
+    client:
+      protocol: "SASL_SSL"
+    external:
+      protocol: "SASL_SSL"
+
+  sasl:
+    client:
+      users:
+      - "hono"
+      passwords:
+      - "hono-secret"
+
+  tls:
+    type: "PEM"
+    pemChainIncluded: false
+    # Evaluated in kafka chart via tpl; kafka chart full name used here!
+    existingSecret: '{{ include "hono.fullname" . }}-example-keys'
+
   # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
   # To use service type NodePort instead of LoadBalancer, refer to
-  # https://github.com/bitnami/charts/tree/40bf90ef4a52969b9ed8acca3d8a67e90d800673/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
+  # https://github.com/bitnami/charts/blob/main/bitnami/kafka/README.md#accessing-kafka-brokers-from-outside-the-cluster
   externalAccess:
     enabled: true
     autoDiscovery:
       enabled: true
-    service:
-      type: "LoadBalancer"
-      ports:
-        external: 9094
-      # length of the array must match replicaCount
-      nodePorts:
-      - 32094
+    broker:
+      service:
+        type: "LoadBalancer"
+        ports:
+          external: 9094
+    controller:
+      service:
+        type: "LoadBalancer"
+        ports:
+          external: 9094
   serviceAccount:
     create: true
   rbac:
     # Note that this could require creating RBAC rules, for more information refer to
     # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
     create: true
-  # limit Kafka JVM's memory consumption
-  heapOpts: "-Xms620M -Xmx620M"
-  resources:
-    requests:
-      memory: "800Mi"
-    limits:
-      memory: "800Mi"
-
-  zookeeper:
-    persistence:
-      enabled: false
-    auth:
-      client:
-        enabled: true
-        clientUser: "zookeeperUser"
-        clientPassword: "zookeeperPassword"
-        serverUsers: "zookeeperUser"
-        serverPasswords: "zookeeperPassword"
-    # limit Zookeeper JVM's memory consumption
-    heapSize: 400
-    resources:
-      requests:
-        memory: "256Mi"
-      limits:
-        memory: "500Mi"
 
 # amqpMessagingNetworkExample contains properties for configuring an example AMQP network
 # to be used for messaging if "messagingNetworkTypes" contains "amqp"

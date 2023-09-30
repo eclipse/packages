@@ -48,19 +48,17 @@ Kubernetes *Services*. The following command lists all services and their endpoi
 kubectl get service -n hono
 
 NAME                                            TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                           AGE
-eclipse-hono-adapter-amqp                       LoadBalancer   10.99.197.79    127.0.0.1     5672:32672/TCP,5671:32671/TCP     2m30s
-eclipse-hono-adapter-http                       LoadBalancer   10.102.247.45   127.0.0.1     8080:30080/TCP,8443:30443/TCP     2m29s
-eclipse-hono-adapter-mqtt                       LoadBalancer   10.98.68.57     127.0.0.1     1883:31883/TCP,8883:30883/TCP     2m29s
-eclipse-hono-kafka                              ClusterIP      10.104.176.12   <none>        9092/TCP                          2m30s
-eclipse-hono-kafka-0-external                   LoadBalancer   10.98.132.252   127.0.0.1     9094:32094/TCP                    2m29s
-eclipse-hono-kafka-headless                     ClusterIP      None            <none>        9092/TCP,9093/TCP                 2m30s
-eclipse-hono-service-auth                       ClusterIP      10.99.220.217   <none>        5671/TCP                          2m29s
+eclipse-hono-adapter-amqp                       LoadBalancer   10.99.197.79    127.0.0.1     5671:32671/TCP                    2m30s
+eclipse-hono-adapter-http                       LoadBalancer   10.102.247.45   127.0.0.1     8443:30443/TCP                    2m29s
+eclipse-hono-adapter-mqtt                       LoadBalancer   10.98.68.57     127.0.0.1     8883:30883/TCP                    2m29s
+eclipse-hono-kafka                              ClusterIP      10.104.176.12   <none>        9092/TCP,9095/TCP                 2m30s
+eclipse-hono-kafka-controller0-external         LoadBalancer   10.98.132.252   127.0.0.1     9094:32094/TCP                    2m29s
+eclipse-hono-kafka-controller-headless          ClusterIP      None            <none>        9094/TCP,9092/TCP,9093/TCP        2m30s
+eclipse-hono-service-auth                       ClusterIP      10.99.220.217   <none>        5671/TCP,8088/TCP                 2m29s
 eclipse-hono-service-command-router             ClusterIP      10.98.52.92     <none>        5671/TCP                          2m29s
 eclipse-hono-service-device-registry            ClusterIP      10.109.46.233   <none>        5671/TCP,8080/TCP,8443/TCP        2m29s
-eclipse-hono-service-device-registry-ext        LoadBalancer   10.97.217.173   127.0.0.1     28080:31080/TCP,28443:31443/TCP   2m29s
+eclipse-hono-service-device-registry-ext        LoadBalancer   10.97.217.173   127.0.0.1     28443:31443/TCP                   2m29s
 eclipse-hono-service-device-registry-headless   ClusterIP      None            <none>        <none>                            2m30s
-eclipse-hono-zookeeper                          ClusterIP      10.104.9.153    <none>        2181/TCP,2888/TCP,3888/TCP        2m29s
-eclipse-hono-zookeeper-headless                 ClusterIP      None            <none>        2181/TCP,2888/TCP,3888/TCP        2m30s
 ```
 
 The listing above has been retrieved from a Minikube cluster that emulates a load balancer via the `minikube tunnel`
@@ -102,6 +100,12 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+
+### 2.6.0
+
+* Use Hono 2.5.0 container images.
+* Update bitnami/kafka chart to version 26.8.x which uses Kafka 3.6 in Kraft mode.
+* Update to latest MongoDB chart version 13.x.
 
 ### 2.5.6
 

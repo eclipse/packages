@@ -33,7 +33,7 @@ NAME                                       {{ "READY   STATUS    RESTARTS   AGE"
 {{ include "hono.fullname" . }}-dispatch-router-6c77dc78bd-hjn4l          1/1     Running   0          5m51s
 {{- end }}
 {{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
-{{ include "hono.fullname" . }}-kafka-0                                   1/1     Running   0          5m51s
+{{ include "hono.fullname" . }}-kafka-controller-0                        1/1     Running   0          5m51s
 {{- end }}
 {{- if all .Values.deviceRegistryExample.enabled ( eq .Values.deviceRegistryExample.type "mongodb" ) }}
 {{ include "hono.fullname" . }}-monogodb-server-77ffb85c97-78554          1/1     Running   0          5m51s
@@ -47,9 +47,6 @@ NAME                                       {{ "READY   STATUS    RESTARTS   AGE"
 {{ include "hono.fullname" . }}-service-device-registry-64d645dd9c-q9c5q  1/1     Running   0          5m51s
 {{- end }}
 {{- end }}
-{{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
-{{ include "hono.fullname" . }}-zookeeper-0                               1/1     Running   0          5m51s
-{{- end }}
 
 Once all pods have reached the READY state, you can start using Hono.
 
@@ -58,15 +55,15 @@ https://eclipse.dev/hono/docs/getting-started/
 
 {{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
 {{- if .Values.kafkaMessagingClusterExample.enabled }}
-{{- $isKafkaTlsEnabled := ( eq .Values.kafka.auth.clientProtocol "sasl_tls" ) }}
+{{- $isKafkaTlsEnabled := ( eq .Values.kafka.listeners.external.protocol "SASL_SSL" ) }}
 Hono is configured with an example Kafka cluster for messaging. Clients can connect to the
 example Kafka cluster using the configuration properties below.
 Please refer to the guide mentioned above for details on how to determine the values for
 $KAFKA_IP{{ if $isKafkaTlsEnabled }} and $KAFKA_TRUSTSTORE_PATH{{ end }}.
 
-  bootstrap.servers=$KAFKA_IP:{{ .Values.kafka.externalAccess.service.ports.external }}
+  bootstrap.servers=$KAFKA_IP:{{ .Values.kafka.externalAccess.controller.service.ports.external }}
   sasl.mechanism=SCRAM-SHA-512
-  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="{{ first .Values.kafka.auth.sasl.jaas.clientUsers }}" password="{{ first .Values.kafka.auth.sasl.jaas.clientPasswords }}";
+  sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username="{{ first .Values.kafka.sasl.client.users }}" password="{{ first .Values.kafka.sasl.client.passwords }}";
 {{- if $isKafkaTlsEnabled }}
   security.protocol=SASL_SSL
   ssl.endpoint.identification.algorithm=""
