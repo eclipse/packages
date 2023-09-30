@@ -286,21 +286,21 @@ The scope passed in is expected to be a dict with keys
 kafka:
 {{- if .dot.Values.kafkaMessagingClusterExample.enabled }}
   commonClientConfig:
-    {{- $bootstrapServers := printf "%[1]s-0.%[1]s-headless:%d" ( include "common.names.fullname" .dot.Subcharts.kafka ) ( .dot.Values.kafka.service.ports.client | int ) }}
+    {{- $bootstrapServers := printf "%[1]s-%[2]s-controller-headless:%d" .dot.Release.Name .dot.Values.kafka.nameOverride ( .dot.Values.kafka.service.ports.client | int ) }}
     bootstrap.servers: {{ $bootstrapServers | quote }}
-  {{- if eq .dot.Values.kafka.auth.clientProtocol "sasl_tls" }}
+  {{- if eq .dot.Values.kafka.listeners.client.protocol "SASL_SSL" }}
     security.protocol: "SASL_SSL"
     sasl.mechanism: "SCRAM-SHA-512"
-    sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
+    sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.sasl.client.users }}\" password=\"{{ first .dot.Values.kafka.sasl.client.passwords }}\";"
     ssl.truststore.type: "PEM"
     ssl.truststore.location: "/opt/hono/tls/ca.crt"
     ssl.endpoint.identification.algorithm: "" # Disables hostname verification. Don't do this in productive setups!
-  {{- else if eq .dot.Values.kafka.auth.clientProtocol "sasl" }}
+  {{- else if eq .dot.Values.kafka.listeners.client.protocol "SASL_PLAINTEXT" }}
     security.protocol: "SASL_PLAINTEXT"
     sasl.mechanism: "SCRAM-SHA-512"
-    sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientUsers }}\" password=\"{{ first .dot.Values.kafka.auth.sasl.jaas.clientPasswords }}\";"
+    sasl.jaas.config: "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ first .dot.Values.kafka.sasl.client.users }}\" password=\"{{ first .dot.Values.kafka.sasl.client.passwords }}\";"
   {{- else }}
-    {{- required ".Values.kafka.auth.clientProtocol has unsupported value" nil }}
+    {{- required ".Values.kafka.listeners.client.protocol has unsupported value" nil }}
   {{- end }}
 {{- else }}
   {{- $bootstrapServers := dig "kafkaMessagingSpec" "commonClientConfig" "bootstrap.servers" "" . }}
@@ -324,13 +324,13 @@ The scope passed in is expected to be a dict with keys
 - (mandatory) "dot": the root scope (".")
 */}}
 {{- define "hono.kafkaConfigCheck" -}}
-  {{- if and (has "kafka" .dot.Values.messagingNetworkTypes) .dot.Values.kafkaMessagingClusterExample.enabled }}
+  {{- if and (has "kafka" .dot.Values.messagingNetworkTypes) .dot.Values.kafkaMessagingClusterExample.enabled .dot.Values.kafka.externalAccess.enabled }}
     {{- if .dot.Values.useLoadBalancer }}
-      {{- if not (eq .dot.Values.kafka.externalAccess.service.type "LoadBalancer") }}
-        {{- required ".Values.kafka.externalAccess.service.type MUST be 'LoadBalancer' if .Values.useLoadBalancer is true" nil }}
+      {{- if not (and (eq .dot.Values.kafka.externalAccess.controller.service.type "LoadBalancer") (eq .dot.Values.kafka.externalAccess.broker.service.type "LoadBalancer") )}}
+        {{- required ".Values.kafka.externalAccess.(controller|broker).service.type MUST be 'LoadBalancer' if .Values.useLoadBalancer is true" nil }}
       {{- end }}
-    {{- else if not (eq .dot.Values.kafka.externalAccess.service.type "NodePort") }}
-      {{- required ".Values.kafka.externalAccess.service.type MUST be 'NodePort' if .Values.useLoadBalancer is false" nil }}
+    {{- else if not (and (eq .dot.Values.kafka.externalAccess.controller.service.type "NodePort") (eq .dot.Values.kafka.externalAccess.broker.service.type "NodePort") )}}
+      {{- required ".Values.kafka.externalAccess.(controller|broker).service.type MUST be 'NodePort' if .Values.useLoadBalancer is false" nil }}
     {{- end }}
   {{- end }}
 {{- end }}
