@@ -2066,7 +2066,7 @@ jaegerBackendExample:
   enabled: false
   # allInOneImage contains the name (including tag)
   # of the container image to use for the example Jaeger back end.
-  allInOneImage: "jaegertracing/all-in-one:1.37"
+  allInOneImage: "jaegertracing/all-in-one:1.50"
   # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
@@ -2135,7 +2135,7 @@ jaegerBackendExample:
 # to use for the OpenTelemetry collector agent sidecar containers.
 # These containers are deployed with Hono's components if the example Jaeger all-in-one
 # deployment is disabled and "otelCollectorAgentConfigMap" is not null.
-otelCollectorAgentImage: "otel/opentelemetry-collector:0.53.0"
+otelCollectorAgentImage: "otel/opentelemetry-collector:0.86.0"
 # otelCollectorAgentConfigMap can be used to specify the name of an existing ConfigMap
 # from which an OpenTelemetry collector configuration should be read.
 # If a ConfigMap name is given, an OpenTelemetry collector agent sidecar container will

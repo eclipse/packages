@@ -27,7 +27,7 @@ keywords:
 home: https://www.eclipse.org/hono/
 sources:
 - https://github.com/eclipse-hono/hono
-icon: https://eclipse.dev/hono/img/favicon.ico
+icon: https://eclipse.dev/hono/img/hono-logo_image.svg
 maintainers:
 - name: dejanb
   email: dbosanac@redhat.com
