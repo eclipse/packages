@@ -102,6 +102,12 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+### 2.5.5
+
+* Add service account for protocol-adapter pods. Needed to query the container id via the K8s API, as it is
+  done in upcoming Hono releases in case cgroups v2 is used.
+* Update jaegertracing/all-in-one and opentelemetry-collector image versions.
+
 ### 2.5.4
 
 * Fix Grafana dashboard being empty in case a release name is used that doesn't contain 'hono'.
