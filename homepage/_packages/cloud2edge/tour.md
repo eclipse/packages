@@ -296,7 +296,7 @@ DITTO_DEVOPS_PWD=$(kubectl --namespace ${NS} get secret ${RELEASE}-ditto-gateway
 {% endclipboard %}
 
 Now, the connection can be created. By default, a Kafka based connection is to be used. If the cloud2edge chart has been deployed with the
-[AMQP messaging profile](https://github.com/eclipse/packages/blob/master/packages/cloud2edge/profileAmqpMessaging.yaml), a connection of type `amqp-10` needs to be created.
+[AMQP messaging profile](https://github.com/eclipse/packages/blob/master/packages/cloud2edge/profileAmqpMessaging-values.yaml), a connection of type `amqp-10` needs to be created.
 
 {% variants %}
 

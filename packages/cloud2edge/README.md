@@ -11,8 +11,17 @@ The package currently consists of
 The package is supposed to provide an easy way for developers to start using Eclipse Hono and Ditto in their
 IoT application.
 
-For installation and examples please visit [Cloud2Edge home page](https://www.eclipse.org/packages/packages/cloud2edge)
+For installation instructions and examples please visit the [Cloud2Edge home page](https://www.eclipse.org/packages/packages/cloud2edge).
 
-There are two profiles to deploy the cloud2edge package. The first one `profileOpenshift.yaml` can be used to deploy into 
-an Openshift cluster and the second one `profileAmqpMessaging.yaml` to use AMQP messaging for the Eclipse Hono project.
-It is possible to specify both profiles with the -f parameter when installing the package via helm.
+Available profiles:
+- [profileAmqpMessaging-values.yaml](https://github.com/eclipse/packages/blob/master/packages/cloud2edge/profileAmqpMessaging-values.yaml)
+  Use AMQP messaging instead of Kafka.
+- [profileTracing-values.yaml](https://github.com/eclipse/packages/blob/master/packages/cloud2edge/profileTracing-values.yaml)
+  Enable tracing in Hono and Ditto and deploy the Jaeger all-in-one image as tracing backend and frontend. 
+  The Jaeger UI is exposed via the `{release-name}-hono-jaeger-query` Kubernetes service. Having run the `setCloud2EdgeEnv.sh`
+  script from the [tour](https://www.eclipse.org/packages/packages/cloud2edge/tour/), the URL is in the `JAEGER_QUERY_BASE_URL`
+  environment variable.
+- [profileOpenshift-values.yaml](https://github.com/eclipse/packages/blob/master/packages/cloud2edge/profileOpenshift-values.yaml)
+  Deploy the package in Openshift.
+
+These profiles can be applied using the `-f` parameter when installing the package via helm.
