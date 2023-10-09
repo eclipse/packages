@@ -39,10 +39,10 @@ NAME                                            {{ "READY   STATUS    RESTARTS  
 {{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
 {{ .Release.Name }}-kafka-0                                        1/1     Running   0          3m15s
 {{- end }}
+{{ .Release.Name }}-mongodb-8ff6bb7cf-r7hh5                        1/1     Running   0          3m15s
 {{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
 {{ .Release.Name }}-zookeeper-0                                    1/1     Running   0          3m15s
 {{- end }}
-ditto-mongodb-8ff6bb7cf-r7hh5                   {{ "1/1     Running   0          3m15s" | indent ( len .Release.Name ) }}
 
 Once all pods have status 'Running', the Cloud2Edge package is ready to be used.
 
