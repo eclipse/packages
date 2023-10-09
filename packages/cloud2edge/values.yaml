@@ -90,7 +90,10 @@ hono:
         requests:
           cpu: 200m
       mongodb:
-        host: ditto-mongodb
+        # Note that the host value expression is evaluated in the context of the Hono chart. As the ditto chart values
+        # can't be accessed from the Hono chart context (specifically ditto.mongodb), we have to assume that
+        # the default ditto.mongodb name is used (i.e. that ditto.mongodb.nameOverride or fullnameOverride isn't set).
+        host: '{{ .Release.Name }}-mongodb'
         port: 27017
         dbName: hono
 
@@ -160,9 +163,6 @@ ditto:
       memoryMi: 32
 
   mongodb:
-    # usage of default name (including release name) not supported in hono.deviceRegistryExample.mongoDBBasedDeviceRegistry.mongodb for now
-    # - therefore using fixed name here
-    fullnameOverride: ditto-mongodb
     resources:
       requests:
         cpu: 150m
