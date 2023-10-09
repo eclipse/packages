@@ -23,7 +23,10 @@ if [[ -z "$RELEASE" ]] || [[ -z "$NS" ]] ; then
   exit 1
 fi
 
-NODE_IP=$(kubectl get nodes -n $NS -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2> /dev/null)
+NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="ExternalIP")].address}' 2> /dev/null)
+if [[ -z "$NODE_IP" ]] ; then
+  NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2> /dev/null)
+fi
 
 function getPorts {
   SERVICENAME=$1
