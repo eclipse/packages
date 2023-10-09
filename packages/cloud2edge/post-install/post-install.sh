@@ -13,9 +13,9 @@
 #*******************************************************************************
 
 DITTO_DEVOPS_USER_PW="devops:$(cat /var/run/c2e/ditto-gw-users/devops-password)"
-DEVICE_REGISTRY_BASE_URL="http://{{ .Release.Name }}-service-device-registry:8080/v1"
-DITTO_CONNECTIONS_BASE_URL="http://{{ .Release.Name }}-ditto-nginx:8080/api/2/connections"
-DITTO_THINGS_BASE_URL="http://{{ .Release.Name }}-ditto-nginx:8080/api/2/things"
+DEVICE_REGISTRY_BASE_URL="http://{{ include "c2e.hono.fullname" . }}-service-device-registry:8080/v1"
+DITTO_CONNECTIONS_BASE_URL="http://{{ include "c2e.ditto.fullname" . }}-nginx:8080/api/2/connections"
+DITTO_THINGS_BASE_URL="http://{{ include "c2e.ditto.fullname" . }}-nginx:8080/api/2/things"
 
 DEMO_TENANT="{{ .Values.demoDevice.tenant }}"
 DEMO_DEVICE="$DEMO_TENANT:{{ .Values.demoDevice.deviceId }}"

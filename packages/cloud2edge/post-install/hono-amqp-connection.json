@@ -2,7 +2,7 @@
   "name": "[Hono/AMQP1.0] {{ .Values.demoDevice.tenant }}",
   "connectionType": "amqp-10",
   "connectionStatus": "open",
-  "uri": "amqp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ .Release.Name }}-dispatch-router-ext:15672",
+  "uri": "amqp://{{ .Values.honoConnection.username }}:{{ .Values.honoConnection.password }}@{{ include "c2e.hono.fullname" . }}-dispatch-router-ext:15672",
   "failoverEnabled": true,
   "sources": [
     {

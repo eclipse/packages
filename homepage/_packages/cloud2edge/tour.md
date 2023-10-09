@@ -476,7 +476,7 @@ curl -i -X PUT -u devops:${DITTO_DEVOPS_PWD} -H 'Content-Type: application/json'
   "name": "[Hono/AMQP1.0] '"${HONO_TENANT}"'",
   "connectionType": "amqp-10",
   "connectionStatus": "open",
-  "uri": "amqp://consumer%40HONO:verysecret@'"${RELEASE}"'-dispatch-router-ext:15672",
+  "uri": "amqp://consumer%40HONO:verysecret@'"${RELEASE}"'-hono-dispatch-router-ext:15672",
   "failoverEnabled": true,
   "sources": [
     {
