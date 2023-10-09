@@ -14,12 +14,14 @@
 
 RELEASE=${1:-$RELEASE}
 NS=${2:-$NS}
+TRUSTSTORE_PATH=${3:-$TRUSTSTORE_PATH}
 
-if [[ -z "$RELEASE" ]] || [[ -z "$NS" ]] ; then
-  echo "# Usage: $(basename "$0") [RELEASE] [NS]"
+if [[ -z "$RELEASE" ]] || [[ -z "$NS" ]] || [[ -z "$TRUSTSTORE_PATH" ]]; then
+  echo "# Usage: $(basename "$0") [RELEASE] [NS] [TRUSTSTORE_PATH]"
   echo "#   RELEASE is the release name used for the cloud2edge deployment"
   echo "#   NS is the namespace the cloud2edge chart was deployed in"
-  echo "#  If arguments are omitted, the values of RELEASE and NS environment variables are used, respectively."
+  echo "#   TRUSTSTORE_PATH is the file path that the hono example truststore will be written to"
+  echo "#  If arguments are omitted, the values of RELEASE, NS and TRUSTSTORE_PATH environment variables are used, respectively."
   exit 1
 fi
 
@@ -93,9 +95,12 @@ DITTO_DEVOPS_PWD=$(kubectl --namespace ${NS} get secret ${RELEASE}-ditto-gateway
 echo "export DITTO_DEVOPS_PWD=\"$DITTO_DEVOPS_PWD\""
 echo "export DITTO_UI_ENV_JSON=\"{\\\"api_uri\\\":\\\"${DITTO_API_BASE_URL}\\\",\\\"defaultUsernamePassword\\\":\\\"ditto:ditto\\\",\\\"defaultDittoPreAuthenticatedUsername\\\":null,\\\"defaultUsernamePasswordDevOps\\\":\\\"devops:${DITTO_DEVOPS_PWD}\\\",\\\"mainAuth\\\":\\\"basic\\\",\\\"devopsAuth\\\":\\\"basic\\\"}\""
 
+kubectl get configmaps --namespace ${NS} ${RELEASE}-hono-example-trust-store --template="{{index .data \"ca.crt\"}}" > "${TRUSTSTORE_PATH}"
+echo "export MOSQUITTO_OPTIONS=\"--cafile ${TRUSTSTORE_PATH} --insecure\""
+
 echo
 echo "# Run this command to populate environment variables"
-echo "# with the NodePorts of Hono's and Ditto's API endpoints:"
+echo "# for accessing Hono's and Ditto's API endpoints:"
 echo "#"
 echo "# eval \$(./$(basename "$0") $*)"
 echo

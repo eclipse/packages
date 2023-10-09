@@ -41,7 +41,9 @@ chmod u+x setCloud2EdgeEnv.sh
 
 RELEASE=c2e
 NS=cloud2edge
-eval $(./setCloud2EdgeEnv.sh $RELEASE $NS)
+# file path that the Hono example truststore will be written to
+TRUSTSTORE_PATH=/tmp/c2e_hono_truststore.pem
+eval $(./setCloud2EdgeEnv.sh $RELEASE $NS $TRUSTSTORE_PATH)
 {% endclipboard %}
 {% endvariant %}
 
@@ -131,6 +133,20 @@ curl -i -X POST -u ditto:ditto -H 'Content-Type: application/json' -w '\n' --dat
  
 ### Receiving a command at the device
 
+#### Via MQTT
+
+With the `mosquitto_sub` command, an MQTT subscription on the `command///req/#` MQTT topic can be created, simulating
+an MQTT device connecting to the Hono MQTT adapter and subscribing for command messages. 
+The following command can be used to create the subscription:
+
+{% clipboard %}
+mosquitto_sub -v -h ${MQTT_ADAPTER_IP} -p ${MQTT_ADAPTER_PORT_MQTTS} -u demo-device@org.eclipse.packages.c2e -P demo-secret ${MOSQUITTO_OPTIONS} -t command///req/#
+{% endclipboard %}
+
+With this, commands will be received for as long as `mosquitto_sub` is kept running.
+
+#### Via HTTP
+
 For the device to receive a command via the HTTP adapter, the device may send a telemetry message with the `hono-ttd` header.
 The header value specifies the number of seconds to wait for a command.
 If no telemetry data shall be sent along with the request, the `application/vnd.eclipse-hono-empty-notification` header can be used:
@@ -139,6 +155,10 @@ If no telemetry data shall be sent along with the request, the `application/vnd.
 curl -i -X POST -k -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'hono-ttd: 50' \
   -H 'Content-Type: application/vnd.eclipse-hono-empty-notification' ${HTTP_ADAPTER_BASE_URL:?}/telemetry
 {% endclipboard %}
+
+Note that in contrast to the MQTT example above with its long-running connection, sending the HTTP telemetry request
+message with the `hono-ttd` header will only return at most one command message in the HTTP response. If no command message
+got sent during the waiting period specified via the `hono-ttd` header, an empty response is returned.
 
 An example response for the device containing the command sent via the Ditto twin (see previous step for sending the 
 command) is:
