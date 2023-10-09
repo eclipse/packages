@@ -65,9 +65,9 @@ spec:
           defaultMode: 0555
       - name: ditto-gw-users
         secret:
-          secretName: {{ printf "%s-%s" .Release.Name "ditto-gateway-secret" }}
+          secretName: {{ printf "%s-%s" ( include "c2e.ditto.fullname" . ) "gateway-secret" }}
       {{- if and .Values.hono.kafkaMessagingClusterExample .Values.hono.kafkaMessagingClusterExample.enabled }}
       - name: kafka-connection-cert
         secret:
-          secretName: {{ printf "%s-%s" .Release.Name "kafka-example-keys" }}
+          secretName: {{ printf "%s-%s" (include "c2e.kafka.fullname" .) "example-keys" }}
       {{- end}}

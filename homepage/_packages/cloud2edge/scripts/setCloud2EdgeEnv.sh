@@ -39,12 +39,14 @@ function getPorts {
       NAME=${NAME/query-http/http}
       UPPERCASE_PORT_NAME=$(echo $NAME | tr [a-z\-] [A-Z_])
       echo "export ${ENV_VAR_PREFIX}_PORT_${UPPERCASE_PORT_NAME}=\"$PORT\""
-      if [ "$PORT" = '80' ]; then
-        echo "export ${ENV_VAR_PREFIX}_BASE_URL=\"$NAME://$IP\""
-        declare -g ${ENV_VAR_PREFIX}_BASE_URL="$NAME://$IP"
-      else
-        echo "export ${ENV_VAR_PREFIX}_BASE_URL=\"$NAME://$IP:$PORT\""
-        declare -g ${ENV_VAR_PREFIX}_BASE_URL="$NAME://$IP:$PORT"
+      if [[ $NAME == http* ]]; then
+        if [ "$PORT" = '80' ]; then
+          echo "export ${ENV_VAR_PREFIX}_BASE_URL=\"$NAME://$IP\""
+          declare -g ${ENV_VAR_PREFIX}_BASE_URL="$NAME://$IP"
+        else
+          echo "export ${ENV_VAR_PREFIX}_BASE_URL=\"$NAME://$IP:$PORT\""
+          declare -g ${ENV_VAR_PREFIX}_BASE_URL="$NAME://$IP:$PORT"
+        fi
       fi
     fi
   done
@@ -74,14 +76,15 @@ function getService {
   fi
 }
 
-getService dispatch-router-ext "amqp amqps" AMQP_NETWORK
-getService service-device-registry-ext "http https" REGISTRY
-getService adapter-amqp "amqp amqps" AMQP_ADAPTER
-getService adapter-coap "coap coaps" COAP_ADAPTER
-getService adapter-http "http https" HTTP_ADAPTER
-getService adapter-mqtt "mqtt secure-mqtt" MQTT_ADAPTER
+getService hono-dispatch-router-ext "amqp amqps" AMQP_NETWORK
+getService kafka-0-external "tcp-kafka" KAFKA
+getService hono-service-device-registry-ext "http https" REGISTRY
+getService hono-adapter-amqp "amqp amqps" AMQP_ADAPTER
+getService hono-adapter-coap "coap coaps" COAP_ADAPTER
+getService hono-adapter-http "http https" HTTP_ADAPTER
+getService hono-adapter-mqtt "mqtt secure-mqtt" MQTT_ADAPTER
 getService ditto-nginx "http" DITTO_API
-getService jaeger-query "query-http" JAEGER_QUERY
+getService hono-jaeger-query "query-http" JAEGER_QUERY
 
 DITTO_DEVOPS_PWD=$(kubectl --namespace ${NS} get secret ${RELEASE}-ditto-gateway-secret -o jsonpath="{.data.devops-password}" | base64 --decode)
 echo "export DITTO_DEVOPS_PWD=\"$DITTO_DEVOPS_PWD\""

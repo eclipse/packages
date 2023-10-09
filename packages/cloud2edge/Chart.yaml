@@ -25,9 +25,16 @@ keywords:
 home: https://eclipse.org/packages/packages/cloud2edge/
 icon: https://eclipse.org/packages/packages/cloud2edge/images/c2e-logo.svg
 sources:
-  - https://github.com/eclipse/packages/packages/cloud2edge/
+  - https://github.com/eclipse/packages/tree/master/packages/cloud2edge
 maintainers:
   - name: sophokles73
     email: kai.hudalla@bosch.io
   - name: thjaeckle
     email: thomas.jaeckle@bosch.io
+dependencies:
+  - name: hono
+    version: ~2.5.5
+    repository: "https://eclipse.org/packages/charts/"
+  - name: ditto
+    version: ~3.3.7
+    repository: "oci://registry-1.docker.io/eclipse"
