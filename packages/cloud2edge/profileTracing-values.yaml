@@ -1,0 +1,36 @@
+#
+# Copyright (c) 2023 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+
+# In Hono components, the default tracing sampler configuration is 'parentbased_always_on'
+# see https://eclipse.dev/hono/docs/admin-guide/monitoring-tracing-config/
+# To override, define OTEL_TRACES_SAMPLER and OTEL_TRACES_SAMPLER_ARG environment variables
+# in a ConfigMap and set hono.[component].envConfigMap with the name of that ConfigMap.
+hono:
+  jaegerBackendExample:
+    enabled: true
+
+ditto:
+  global:
+    tracing:
+      enabled: true
+      otelExporterOtlpEndpoint: 'http://{{ .Release.Name }}-hono-jaeger-collector:4317'
+      ## the tracing sampler to use, one of: always, never, random, adaptive
+      sampler: always
+      # randomSampler configures the 'random' sampler
+      randomSampler:
+        # probability configures the probability of a span being sampled, must be a value between 0 and 1
+        probability: 0.01
+      # adaptiveSampler configures the 'adaptive' sampler
+      adaptiveSampler:
+        # throughput the throughput goal trying to achieve with the adaptive sampler
+        throughput: 600
