@@ -11,8 +11,8 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 apiVersion: v1
-version: 0.6.0
-appVersion: 0.6.0
+version: 0.7.0
+appVersion: 0.7.0
 name: cloud2edge
 description: |
   Eclipse IoT Cloud2Edge (C2E) is an integrated suite of services developers can use to build IoT applications

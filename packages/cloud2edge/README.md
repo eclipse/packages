@@ -25,3 +25,29 @@ Available profiles:
   Deploy the package in Openshift.
 
 These profiles can be applied using the `-f` parameter when installing the package via helm.
+
+## Release Notes
+
+### 0.7.0
+
+- [#505] Use Hono chart version 2.5.5.
+  This includes changes to the naming of the Hono resources (now having `{release-name}-hono` as prefix instead of `{release-name}`).
+- Use Ditto chart version 3.3.7.
+- Rename Ditto MongoDB resources (now having `{release-name}-mongodb` as prefix instead of `ditto-mongodb`).
+- Provide profile to enable tracing.
+
+### 0.6.0
+
+- [#433] Restore the original service-type NodePort as default for the cloud2edge chart
+  and fix the installation instructions for using service-type LoadBalancer.
+
+### 0.5.1
+
+- [#501] Use Ditto Connections HTTP API instead of piggyback commands.
+- [#499] Fix Ditto resource config.
+
+### 0.5.0
+
+- [#486] Use Ditto chart version 3.3.6 from the Ditto repository.
+- Update cloud2edge tour to add instructions on using the Ditto UI.
+- Fix Ditto authorizationContext and connection naming.
