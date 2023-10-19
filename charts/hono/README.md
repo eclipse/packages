@@ -102,6 +102,12 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+
+### 2.5.6
+
+* Update bitnami/kafka chart to version 21.x which uses Kafka 3.4.
+* Fix creation of example tenant and devices when Device Registry is configured to expose secure ports only.
+
 ### 2.5.5
 
 * Add service account for protocol-adapter pods. Needed to query the container id via the K8s API, as it is
