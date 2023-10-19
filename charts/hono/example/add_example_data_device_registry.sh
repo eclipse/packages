@@ -11,7 +11,9 @@
 #
 # SPDX-License-Identifier: EPL-2.0
 #*******************************************************************************
-HTTP_BASE_URL="http://{{ include "hono.fullname" . }}-service-device-registry:8080/v1"
+URL_SCHEME="{{- if ( eq .Values.deviceRegistryExample.hono.registry.http.insecurePortEnabled true ) }}http{{ else }}https{{ end }}"
+URL_PORT=$([ "${URL_SCHEME}" = "http" ] && echo "8080" || echo "8443")
+HTTP_BASE_URL="${URL_SCHEME}://{{ include "hono.fullname" . }}-service-device-registry:${URL_PORT}/v1"
 
 check_status() {
   EXIT_STATUS=$1
@@ -35,7 +37,7 @@ add_tenant(){
   HTTP_REQUEST_BODY=$2
 
   echo "Adding tenant [$TENANT_ID]"
-  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" -k \
                     -X POST "$HTTP_BASE_URL/tenants/$TENANT_ID" \
                     --header 'Content-Type: application/json' \
                     --data-raw "$HTTP_REQUEST_BODY")
@@ -49,7 +51,7 @@ register_device(){
   HTTP_REQUEST_BODY=$3
 
   echo "Registering device [$TENANT_ID:$DEVICE_ID]"
-  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" -k \
                   -X POST "$HTTP_BASE_URL/devices/$TENANT_ID/$DEVICE_ID" \
                   --header 'Content-Type: application/json' \
                   --data-raw "$HTTP_REQUEST_BODY")
@@ -64,7 +66,7 @@ add_credentials(){
   HTTP_REQUEST_BODY=$3
 
   echo "Adding credentials [$TENANT_ID:$DEVICE_ID]"
-  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" \
+  HTTP_RESPONSE=$(curl -o /dev/null -sw "%{http_code}" -k \
                 -X PUT "$HTTP_BASE_URL/credentials/$TENANT_ID/$DEVICE_ID" \
                 --header 'Content-Type: application/json' \
                 --data-raw "$HTTP_REQUEST_BODY")
