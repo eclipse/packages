@@ -28,6 +28,13 @@ These profiles can be applied using the `-f` parameter when installing the packa
 
 ## Release Notes
 
+### 0.8.0
+
+- Use Ditto 3.4.0 chart version. 
+  Note that updating to this version requires a migration step. A rolling update is not supported.
+  Refer to the Ditto migration notes for details: https://eclipse.dev/ditto/release_notes_340.html#migration-notes
+- Use Hono 2.5.6 chart version.
+
 ### 0.7.0
 
 - [#505] Use Hono chart version 2.5.5.

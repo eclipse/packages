@@ -13,7 +13,9 @@
 #*******************************************************************************
 
 DITTO_DEVOPS_USER_PW="devops:$(cat /var/run/c2e/ditto-gw-users/devops-password)"
-DEVICE_REGISTRY_BASE_URL="http://{{ include "c2e.hono.fullname" . }}-service-device-registry:8080/v1"
+DEVICE_REGISTRY_URL_SCHEME="{{- if ( eq .Values.hono.deviceRegistryExample.hono.registry.http.insecurePortEnabled true ) }}http{{ else }}https{{ end }}"
+DEVICE_REGISTRY_PORT=$([ "${DEVICE_REGISTRY_URL_SCHEME}" = "http" ] && echo "8080" || echo "8443")
+DEVICE_REGISTRY_BASE_URL="${DEVICE_REGISTRY_URL_SCHEME}://{{ include "c2e.hono.fullname" . }}-service-device-registry:${DEVICE_REGISTRY_PORT}/v1"
 DITTO_CONNECTIONS_BASE_URL="http://{{ include "c2e.ditto.fullname" . }}-nginx:8080/api/2/connections"
 DITTO_THINGS_BASE_URL="http://{{ include "c2e.ditto.fullname" . }}-nginx:8080/api/2/things"
 
@@ -47,7 +49,7 @@ add_hono_tenant(){
   http_request_body="$2"
 
   echo "Adding tenant [$tenant_id]"
-  response_body_and_status=$(curl --silent --write-out "\n%{http_code}" \
+  response_body_and_status=$(curl --silent --write-out "\n%{http_code}" -k \
                     -X POST --header 'Content-Type: application/json' \
                     --data-raw "$http_request_body" "$DEVICE_REGISTRY_BASE_URL/tenants/$tenant_id")
   check_status $? "$response_body_and_status"
@@ -59,7 +61,7 @@ register_hono_device(){
   http_request_body="$3"
 
   echo "Registering device [tenant: $tenant_id, device: $device_id]"
-  response_body_and_status=$(curl --silent --write-out "\n%{http_code}" \
+  response_body_and_status=$(curl --silent --write-out "\n%{http_code}" -k \
                   -X POST --header 'Content-Type: application/json' \
                   --data-raw "$http_request_body" "$DEVICE_REGISTRY_BASE_URL/devices/$tenant_id/$device_id")
   check_status $? "$response_body_and_status"
@@ -71,7 +73,7 @@ add_hono_device_credentials(){
   http_request_body_file="$3"
 
   echo "Adding credentials [tenant: $tenant_id, device: $device_id]"
-  response_body_and_status=$(curl --silent --write-out "\n%{http_code}" \
+  response_body_and_status=$(curl --silent --write-out "\n%{http_code}" -k \
                 -X PUT --header 'Content-Type: application/json' \
                 --data-binary "@$http_request_body_file" "$DEVICE_REGISTRY_BASE_URL/credentials/$tenant_id/$device_id")
   check_status $? "$response_body_and_status"
