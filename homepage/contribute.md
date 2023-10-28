@@ -146,5 +146,5 @@ If you plan on contributing code, you will need to
 and [sign the Eclipse Contributor Agreement](https://accounts.eclipse.org/user/eca).
 
 Is this required? Yes! Is there a way around it? No! Why is this necessary? Because legal
-issues are as though as software engineering issues, and this is the way to solve them.
+issues are as tough as software engineering issues, and this is the way to solve them.
 
