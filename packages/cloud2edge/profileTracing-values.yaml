@@ -23,6 +23,7 @@ ditto:
   global:
     tracing:
       enabled: true
+      otelTraceReporterEnabled: true
       otelExporterOtlpEndpoint: 'http://{{ .Release.Name }}-hono-jaeger-collector:4317'
       ## the tracing sampler to use, one of: always, never, random, adaptive
       sampler: always
