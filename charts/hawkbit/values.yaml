@@ -83,6 +83,7 @@ fileStorage:
 env:
   springDatasourceHost: "hawkbit-mysql"
   springDatasourceDb: "hawkbit"
+  springDatasourceUrl: ""
   springRabbitmqHost: "hawkbit-rabbitmq"
   springRabbitmqUsername: "hawkbit"
   springRabbitmqPassword: "hawkbit"
