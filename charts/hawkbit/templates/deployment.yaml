@@ -37,7 +37,11 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: "{{ .Values.spring.profiles }}"
             - name: "SPRING_DATASOURCE_URL"
+              {{- if .Values.env.springDatasourceUrl }}
+              value: "{{ .Values.env.springDatasourceUrl }}"
+              {{- else }}
               value: "jdbc:mysql://{{ if .Values.mysql.enabled }}{{ .Release.Name }}-mysql{{ else }}{{ .Values.env.springDatasourceHost }}{{ end }}:3306/{{ .Values.env.springDatasourceDb }}"
+              {{- end }}
             - name: "SPRING_APPLICATION_JSON"
               valueFrom:
                 secretKeyRef:

@@ -83,6 +83,8 @@ fileStorage:
 env:
   springDatasourceHost: "hawkbit-mysql"
   springDatasourceDb: "hawkbit"
+  # if springDatasourceUrl is set override default mysql db url
+  springDatasourceUrl: ""
   springRabbitmqHost: "hawkbit-rabbitmq"
   springRabbitmqUsername: "hawkbit"
   springRabbitmqPassword: "hawkbit"
