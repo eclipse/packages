@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -104,6 +104,14 @@ serviceType:
 #     sections "amqpMessagingNetworkExample" and "adapters.amqpMessagingNetworkSpec".
 messagingNetworkTypes:
 - "kafka"
+
+# useLegacyAmqpTraceContextFormat determines how OpenTelemetry trace context information
+# is stored in an AMQP 1.0 message sent to the AMQP Messaging Network. A "true" value here
+# configures the format used in previous Hono versions, while setting "false" chooses a more
+# generic format (compatible with e.g. Eclipse Ditto). Refer to
+# https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+# for the documentation of the corresponding "useLegacyTraceContextFormat" Hono client property.
+useLegacyAmqpTraceContextFormat: true
 
 # Configuration properties for protocol adapters.
 adapters:

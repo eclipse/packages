@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2019, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -266,6 +266,7 @@ messaging:
   certPath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.certPath | quote }}
   trustStorePath: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.trustStorePath | quote }}
   hostnameVerificationRequired: {{ .dot.Values.adapters.amqpMessagingNetworkSpec.hostnameVerificationRequired }}
+  useLegacyTraceContextFormat: {{ .dot.Values.useLegacyAmqpTraceContextFormat }}
 {{- else }}
   {{- required ".Values.adapters.amqpMessagingNetworkSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.amqpMessagingNetworkSpec | toYaml | nindent 2 }}
 {{- end }}
@@ -372,6 +373,7 @@ command:
   certPath: {{ .dot.Values.adapters.commandAndControlSpec.certPath | quote }}
   trustStorePath: {{ .dot.Values.adapters.commandAndControlSpec.trustStorePath | quote }}
   hostnameVerificationRequired: {{ .dot.Values.adapters.commandAndControlSpec.hostnameVerificationRequired }}
+  useLegacyTraceContextFormat: {{ .dot.Values.useLegacyAmqpTraceContextFormat }}
 {{- else }}
   {{- required ".Values.adapters.commandAndControlSpec MUST be set if example AMQP Messaging Network is disabled" .dot.Values.adapters.commandAndControlSpec | toYaml | nindent 2 }}
 {{- end -}}
