@@ -106,6 +106,8 @@ The command removes all the Kubernetes components associated with the chart and 
 * Use Hono 2.5.0 container images.
 * Update bitnami/kafka chart to version 26.8.x which uses Kafka 3.6 in Kraft mode.
 * Update to latest MongoDB chart version 13.x.
+* Add a `useLegacyAmqpTraceContextFormat` configuration property, allowing usage of a more generic format
+  for storing OpenTelemetry trace context information in messages exchanged with an AMQP messaging network.
 
 ### 2.5.6
 
