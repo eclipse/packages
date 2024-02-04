@@ -101,7 +101,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
-### 2.5.7
+### 2.6.0
 
 * Use Hono 2.5.0 container images.
 * Update bitnami/kafka chart to version 26.8.x which uses Kafka 3.6 in Kraft mode.

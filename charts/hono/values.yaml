@@ -1756,16 +1756,9 @@ kafka:
     # Evaluated in kafka chart via tpl; kafka chart full name used here!
     existingSecret: '{{ include "hono.fullname" . }}-example-keys'
 
-  # Do not write data to a PersistentVolume by default.
-  # When setting this to true, make sure to also set "kafka.zookeeper.persistence.enabled" to true and
-  # make sure that Kafka is stopped cleanly using SIGTERM _before_ Zookeeper is stopped.
-  # Otherwise you will most likely run into issues like
-  # https://stackoverflow.com/questions/39759071/error-while-starting-kafka-broker
-#  persistence:
-#    enabled: false
   # Expose the Kafka service to be accessed from outside the cluster (LoadBalancer service).
   # To use service type NodePort instead of LoadBalancer, refer to
-  # https://github.com/bitnami/charts/tree/40bf90ef4a52969b9ed8acca3d8a67e90d800673/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
+  # https://github.com/bitnami/charts/blob/main/bitnami/kafka/README.md#accessing-kafka-brokers-from-outside-the-cluster
   externalAccess:
     enabled: true
     autoDiscovery:
