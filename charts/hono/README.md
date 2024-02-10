@@ -105,6 +105,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 * Use Hono 2.5.0 container images.
 * Update bitnami/kafka chart to version 26.8.x which uses Kafka 3.6 in Kraft mode.
+* Update to latest MongoDB chart version 13.x.
 
 ### 2.5.6
 
