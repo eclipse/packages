@@ -101,6 +101,11 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.6.1
+
+* Use Hono 2.5.1 container images.
+* Update jaegertracing/all-in-one and opentelemetry-collector image versions.
+
 ### 2.6.0
 
 * Use Hono 2.5.0 container images.
@@ -422,7 +427,7 @@ The parameters enable the deployment of a simple AMQP 1.0 based messaging infras
 broker and configure adapters and services to use AMQP 1.0 based messaging.
 
 To use the service type `NodePort` instead of `LoadBalancer`, the following parameters must be added:
-`--set useLoadBalancer=false --set kafka.externalAccess.service.type=NodePort`.
+`--set useLoadBalancer=false --set kafka.externalAccess.broker.service.type=NodePort --set kafka.externalAccess.controller.service.type=NodePort`.
 
 ### Integrating with an existing AMQP Messaging Network
 
@@ -665,10 +670,6 @@ can also not be optimized during runtime which may result in a reduced performan
 The Helm chart can be configured to use these *native* images by means of explicitly specifying the component's image
 name as described in *Using specific Container Images*. The names of the images based on native executables are the
 standard image names appended by `-native`.
-
-The native executables used in the images currently do not properly detect the memory and CPU resource limits defined on the
-container. This is due to a bug in the native-image builder in GraalVM versions before 22.1. Future versions of Hono will
-probably not be affected by this anymore.
 
 In order to make the native executables aware of the memory limits, the
 [`-Xmx` GraalVM parameter](https://www.graalvm.org/22.0/reference-manual/native-image/MemoryManagement/#java-heap-size) can
