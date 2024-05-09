@@ -103,7 +103,7 @@ Once you have everything installed, you should be able to start a new cluster vi
 resources you want to allocate for the cluster:
 
 {%clipboard%}
-minikube start --cpus <cpus> --disk-size <size> --memory <memory> --kubernetes-version <version>
+minikube start --cpus &lt;cpus&gt; --disk-size &lt;size&gt; --memory &lt;memory&gt; --kubernetes-version &lt;version&gt;
 {%endclipboard%}
 
 You can translate the package resources requirements into these arguments:
