@@ -65,7 +65,8 @@ To install the Cloud2Edge package using load balancers, run the following comman
 {% clipboard %}
 RELEASE=c2e
 helm install -n $NS --wait --timeout 20m --set hono.useLoadBalancer=true \
- --set hono.kafka.externalAccess.service.type=LoadBalancer \
+ --set hono.kafka.externalAccess.broker.service.type=NodePort \
+ --set hono.kafka.externalAccess.controller.service.type=NodePort \
  --set ditto.nginx.service.type=LoadBalancer $RELEASE eclipse-iot/cloud2edge
 {% endclipboard %}
 {% endvariant %}

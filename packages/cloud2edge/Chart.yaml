@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2020 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -11,8 +11,8 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 apiVersion: v2
-version: 0.8.0
-appVersion: 0.8.0
+version: 0.9.0
+appVersion: 0.9.0
 name: cloud2edge
 description: |
   Eclipse IoT Cloud2Edge (C2E) is an integrated suite of services developers can use to build IoT applications
@@ -33,8 +33,8 @@ maintainers:
     email: thomas.jaeckle@bosch.io
 dependencies:
   - name: hono
-    version: ~2.5.6
+    version: ~2.6.1
     repository: "https://eclipse.org/packages/charts/"
   - name: ditto
-    version: ~3.4.0
+    version: ~3.5.6
     repository: "oci://registry-1.docker.io/eclipse"
