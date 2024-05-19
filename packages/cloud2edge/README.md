@@ -28,6 +28,13 @@ These profiles can be applied using the `-f` parameter when installing the packa
 
 ## Release Notes
 
+### 0.9.0
+
+- Use Ditto 3.5.6 chart version.
+- Use Hono 2.6.1 chart version.
+- When using AMQP messaging via the [profileAmqpMessaging-values.yaml](https://github.com/eclipse/packages/blob/master/packages/cloud2edge/profileAmqpMessaging-values.yaml) profile along with the [profileTracing-values.yaml](https://github.com/eclipse/packages/blob/master/packages/cloud2edge/profileTracing-values.yaml)
+  profile, there are now combined traces of Hono and Ditto. 
+
 ### 0.8.0
 
 - Use Ditto 3.4.0 chart version. 

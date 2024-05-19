@@ -69,7 +69,7 @@ echo $DITTO_API_BASE_URL
 {% endclipboard %}
 prints out the URL where to access the Ditto UI and Ditto API documentation.
 
-In the Ditto UI, click on the `Environments` link at the top and then the `Environment JSON` tab. Clicking on "Edit" lets you enter an arbitrary Name (e.g. `default`)
+In the Ditto UI, click on the `Environments` link at the top and then the `JSON` tab. Clicking on "Create" lets you enter an arbitrary Name (e.g. `default`)
 and below a JSON value, to be taken from the output of the following command.
 {% clipboard %}
 echo $DITTO_UI_ENV_JSON
@@ -92,6 +92,16 @@ curl -i -k -u demo-device@org.eclipse.packages.c2e:demo-secret -H 'Content-Type:
   "path": "/features/temperature/properties/value",
   "value": 45
 }' ${HTTP_ADAPTER_BASE_URL:?}/telemetry
+{% endclipboard %}
+
+In order to publish the telemetry data via MQTT, the `mosquitto_pub` command can be used:
+{% clipboard %}
+mosquitto_pub -d -h ${MQTT_ADAPTER_IP} -p ${MQTT_ADAPTER_PORT_MQTTS} -u demo-device@org.eclipse.packages.c2e -P demo-secret ${MOSQUITTO_OPTIONS} -t telemetry -m '{
+"topic": "org.eclipse.packages.c2e/demo-device/things/twin/commands/modify",
+"headers": {},
+"path": "/features/temperature/properties/value",
+"value": 45
+}'
 {% endclipboard %}
 
 ## Retrieving the digital twin's current state
