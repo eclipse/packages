@@ -1457,7 +1457,7 @@ commandRouterService:
 
   # imageName contains the name (excluding registry)
   # of the container image to use for the Command Router service
-  imageName: "eclipse/hono-service-command-router"
+  imageName: "eclipse/hono-service-command-router-infinispan"
   # imageTag contains the tag of the container image to deploy.
   # If not specified, the value of the honoImagesTag property is used.
   # imageTag:
