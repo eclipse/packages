@@ -1729,9 +1729,6 @@ kafkaMessagingClusterExample:
 kafka:
   # the name of the template (maintains the release name)
   nameOverride: "kafka"
-  # Set to false for productive setups. Topic management then needs to be provided externally.
-  autoCreateTopicsEnable: true
-  deleteTopicEnable: true
 
   broker:
     automountServiceAccountToken: true
@@ -1740,6 +1737,8 @@ kafka:
     replicaCount: 1
     automountServiceAccountToken: true
     extraConfig: |
+      auto.create.topics.enable=true
+      delete.topic.enable=true
       group.initial.rebalance.delay.ms=0
       offsets.topic.replication.factor=1
       transaction.state.log.min.isr=1
