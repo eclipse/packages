@@ -44,7 +44,7 @@ authServer:
       memory: "30Mi"
 
 commandRouterService:
-  imageName: "eclipse/hono-service-command-router-native"
+  imageName: "eclipse/hono-service-command-router-infinispan-native"
   cmdLineArgs:
   - "-Xmx96m"
   resources:

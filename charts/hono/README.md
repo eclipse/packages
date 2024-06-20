@@ -101,6 +101,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.6.2
+
+* Use Hono 2.6.0 container images.
+
 ### 2.6.1
 
 * Use Hono 2.5.1 container images.
@@ -607,7 +611,7 @@ deviceRegistryExample:
 authServer:
   imageName: "my.registry.io/eclipse/hono-service-auth"
 commandRouterService:
-  imageName: "my.registry.io/eclipse/hono-service-command-router"
+  imageName: "my.registry.io/eclipse/hono-service-command-router-infinispan"
 adapters:
   amqp:
     imageName: "my.registry.io/eclipse/hono-adapter-amqp"

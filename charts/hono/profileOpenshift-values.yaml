@@ -13,12 +13,7 @@
 platform: openshift
 
 kafka:
-  podSecurityContext:
-    enabled: false
-  containerSecurityContext:
-    enabled: false
-
-  zookeeper:
+  controller:
     podSecurityContext:
       enabled: false
     containerSecurityContext:
