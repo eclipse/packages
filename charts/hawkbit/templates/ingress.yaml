@@ -1,6 +1,7 @@
 {{- if .Values.ingress.enabled -}}
+{{- $apiVersion := include "hawkbit.ingressAPIVersion" . -}}
 {{- $fullName := include "hawkbit.fullname" . -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -21,6 +22,9 @@ spec:
       secretName: {{ .secretName }}
   {{- end }}
 {{- end }}
+  {{- if eq $apiVersion "networking.k8s.io/v1" }}
+  ingressClassName: {{ .Values.ingress.ingressClassName  }}
+  {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
@@ -28,9 +32,18 @@ spec:
         paths:
         {{- range .paths }}
           - path: {{ . }}
+            {{- if eq $apiVersion "networking.k8s.io/v1" }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
+            {{- else }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
+            {{- end }}
         {{- end }}
   {{- end }}
 {{- end }}
