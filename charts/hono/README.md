@@ -101,6 +101,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.6.3
+
+* Recreate expired demo certificates.
+
 ### 2.6.2
 
 * Use Hono 2.6.0 container images.
