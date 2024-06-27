@@ -28,6 +28,11 @@ These profiles can be applied using the `-f` parameter when installing the packa
 
 ## Release Notes
 
+### 0.9.1
+
+- Use Hono 2.6.3 chart version (including updated example certificates).
+- Use Ditto 3.5.10 chart version.
+
 ### 0.9.0
 
 - Use Ditto 3.5.6 chart version.
