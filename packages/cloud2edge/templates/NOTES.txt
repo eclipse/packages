@@ -14,6 +14,7 @@ Once all services are up and running, the output should look similar to this:
 
 NAME                                            {{ "READY   STATUS    RESTARTS   AGE" | indent ( len .Release.Name ) }}
 {{ include "c2e.ditto.fullname" . }}-connectivity-779fc6f574-gd5gq            1/1     Running   0          3m15s
+{{ include "c2e.ditto.fullname" . }}-dittoui-59b5b47bc7-4dt9m                 1/1     Running   0          3m15s
 {{ include "c2e.ditto.fullname" . }}-gateway-5cfdc9f9fc-kl6mh                 1/1     Running   0          3m15s
 {{ include "c2e.ditto.fullname" . }}-nginx-864cffd948-mvcdg                   1/1     Running   0          3m15s
 {{ include "c2e.ditto.fullname" . }}-policies-86748888d6-g2xs7                1/1     Running   0          3m15s
@@ -37,12 +38,9 @@ NAME                                            {{ "READY   STATUS    RESTARTS  
 {{ include "c2e.hono.fullname" . }}-service-command-router-8d6bcc664-5xfz8    1/1     Running   0          3m15s
 {{ include "c2e.hono.fullname" . }}-service-device-registry-975dfcdb7-d6d6h   1/1     Running   0          3m15s
 {{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
-{{ .Release.Name }}-kafka-0                                        1/1     Running   0          3m15s
+{{ .Release.Name }}-kafka-controller-0                             1/1     Running   0          3m15s
 {{- end }}
 {{ .Release.Name }}-mongodb-8ff6bb7cf-r7hh5                        1/1     Running   0          3m15s
-{{- if ( has "kafka" .Values.hono.messagingNetworkTypes ) }}
-{{ .Release.Name }}-zookeeper-0                                    1/1     Running   0          3m15s
-{{- end }}
 
 Once all pods have status 'Running', the Cloud2Edge package is ready to be used.
 

@@ -11,8 +11,8 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 apiVersion: v2
-version: 0.9.0
-appVersion: 0.9.0
+version: 0.9.1
+appVersion: 0.9.1
 name: cloud2edge
 description: |
   Eclipse IoT Cloud2Edge (C2E) is an integrated suite of services developers can use to build IoT applications
@@ -33,8 +33,8 @@ maintainers:
     email: thomas.jaeckle@bosch.io
 dependencies:
   - name: hono
-    version: ~2.6.1
+    version: ~2.6.3
     repository: "https://eclipse.org/packages/charts/"
   - name: ditto
-    version: ~3.5.6
+    version: ~3.5.10
     repository: "oci://registry-1.docker.io/eclipse"
