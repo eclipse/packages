@@ -16,7 +16,7 @@ spec:
       command: ['curl']
       args: [
         "-X 'GET'",
-        "-u admin:admin",
+        "-u 'admin:admin'",
         "'http://{{ include "hawkbit.fullname" . }}:{{ .Values.service.port }}/rest/v1/userinfo'"
       ]
   restartPolicy: Never
