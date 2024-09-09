@@ -14,5 +14,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args:  ['{{ include "hawkbit.fullname" . }}:{{ .Values.service.port }}']
+      args:  ['--user', 'admin', '--password', 'admin', '{{ include "hawkbit.fullname" . }}:{{ .Values.service.port }}/rest/v1/userinfo']
   restartPolicy: Never
