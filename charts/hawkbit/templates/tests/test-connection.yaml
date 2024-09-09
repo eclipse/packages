@@ -11,8 +11,12 @@ metadata:
     "helm.sh/hook": test-success
 spec:
   containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args:  ['--user', 'admin', '--password', 'admin', '{{ include "hawkbit.fullname" . }}:{{ .Values.service.port }}/rest/v1/userinfo']
+    - name: curl
+      image: curlimages/curl
+      command: ['curl']
+      args: [
+        "-X 'GET'",
+        "-u admin:admin",
+        "'{{ include "hawkbit.fullname" . }}:{{ .Values.service.port }}/rest/v1/userinfo'"
+      ]
   restartPolicy: Never
