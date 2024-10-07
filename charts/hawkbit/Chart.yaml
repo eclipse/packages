@@ -10,8 +10,8 @@
 # SPDX-License-Identifier: EPL-2.0
 ---
 apiVersion: v2
-version: 1.6.1
-appVersion: "0.3.0M6-mysql"
+version: 1.7.0
+appVersion: "0.5.0-mysql"
 description: |
    Eclipse hawkBit™ is a domain independent back-end framework for rolling out software updates
    to constrained edge devices as well as more powerful controllers and gateways connected to

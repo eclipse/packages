@@ -15,7 +15,7 @@
 
 image:
   repository: "hawkbit/hawkbit-update-server"
-  tag: 0.3.0M6-mysql
+  tag: 0.5.0-mysql
   pullPolicy: IfNotPresent
 
 replicaCount: 1
