@@ -58,6 +58,7 @@ readinessProbe:
 
 ingress:
   enabled: false
+  ingressClassName:
   annotations: {}
     # ingress.kubernetes.io/ssl-redirect: "true"
     # kubernetes.io/tls-acme: "true"
