@@ -41,7 +41,7 @@ updateStrategy:
   type: Recreate
 
 nameOverride: ""
-fullnameOverride: "eclipse-hawkbit"
+fullnameOverride: ""
 
 service:
   type: ClusterIP
