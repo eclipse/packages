@@ -15,7 +15,12 @@
 
 image:
   repository: "hawkbit/hawkbit-update-server"
-  tag: 0.5.0-mysql
+  tag: "0.8.0"
+  pullPolicy: IfNotPresent
+
+imageSimpleUI:
+  repository: "hawkbit/hawkbit-simple-ui"
+  tag: "0.8.0"
   pullPolicy: IfNotPresent
 
 replicaCount: 1
@@ -45,9 +50,14 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
   annotations: {}
     # traefik.ingress.kubernetes.io/affinity: "true"
+
+serviceSimpleUI:
+  type: ClusterIP
+  port: 8088
+  annotations: {}
 
 livenessProbe:
   initialDelaySeconds: 240
