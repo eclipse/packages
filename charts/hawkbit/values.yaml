@@ -72,9 +72,12 @@ ingress:
   annotations: {}
     # ingress.kubernetes.io/ssl-redirect: "true"
     # kubernetes.io/tls-acme: "true"
+    ## ingress service multiple host so has to have api on https://hawkbit.sbx.agreg.io/ and ui on https://hawkbit-simple-ui.sbx.agreg.io/
   hosts:
     - host: hawkbit.local
-      paths: [hawkbit, "hawkbit-simple-ui"]
+      paths: []
+    - host: hawkbit-simple-ui
+      paths: []
   tls: []
   #  - secretName: hawkbit-tls
   #    hosts:
