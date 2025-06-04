@@ -34,36 +34,8 @@ spec:
           image: "{{ .Values.imageSimpleUI.repository }}:{{ .Values.imageSimpleUI.tag }}"
           imagePullPolicy: {{ .Values.imageSimpleUI.pullPolicy }}
           env:
-            - name: SPRING_PROFILES_ACTIVE
-              value: "{{ .Values.spring.profiles }}"
-            - name: "SPRING_DATASOURCE_URL"
-              {{- if .Values.env.springDatasourceUrl }}
-              value: "{{ .Values.env.springDatasourceUrl }}"
-              {{- else }}
-              value: "jdbc:mariadb://{{ if .Values.mysql.enabled }}{{ .Release.Name }}-mysql{{ else }}{{ .Values.env.springDatasourceHost }}{{ end }}:3306/{{ .Values.env.springDatasourceDb }}"
-              {{- end }}
-            - name: "SPRING_APPLICATION_JSON"
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "hawkbit.fullname" . }}
-                  key: "SPRING_APPLICATION_JSON"
-            - name: "SPRING_RABBITMQ_HOST"
-              value: "{{ if .Values.rabbitmq.enabled }}{{ .Release.Name }}-rabbitmq{{ else }}{{ .Values.env.springRabbitmqHost }}{{ end }}"
-            - name: "SPRING_RABBITMQ_USERNAME"
-              value: "{{ .Values.env.springRabbitmqUsername }}"
-            - name: "SPRING_RABBITMQ_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ template "hawkbit.fullname" . }}-rabbitmq-pass"
-                  key: "rabbitmq-pass"
-            {{- if .Values.fileStorage.enabled }}
-            - name: "org.eclipse.hawkbit.repository.file.path"
-              value: {{ .Values.fileStorage.mountPath }}
-            {{- end }}
-            {{- range $key, $value := .Values.extraEnv }}
-            - name: "{{ $key }}"
-              value: "{{ $value }}"
-            {{- end }}
+            - name: SPRING_APPLICATION_JSON
+              value: {{ .Values.envSimpleUI.springAppJson | toJson | quote }}
           ports:
             - name: http
               containerPort: 8080

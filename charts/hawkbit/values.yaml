@@ -103,6 +103,9 @@ env:
   springRabbitmqUsername: "hawkbit"
   springRabbitmqPassword: "hawkbit"
 
+envSimpleUI:
+  springAppJson: {"hawkbit.server.mgmtUrl": "http://hawkbit:8080"}
+
 # optional env vars
 extraEnv: {}
   # JAVA_TOOL_OPTIONS: "-Xms1024m -Xmx1024m"
