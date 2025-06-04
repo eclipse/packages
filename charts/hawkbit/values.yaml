@@ -75,6 +75,8 @@ ingress:
   hosts:
     - host: hawkbit.local
       paths: []
+    - host: hawkbit.simpleui
+      paths: []
   tls: []
   #  - secretName: hawkbit-tls
   #    hosts:
