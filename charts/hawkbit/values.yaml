@@ -74,9 +74,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: hawkbit.local
-      paths: []
-    - host: hawkbit.simpleui
-      paths: []
+      paths: [hawkbit, "hawkbit-simple-ui"]
   tls: []
   #  - secretName: hawkbit-tls
   #    hosts:
