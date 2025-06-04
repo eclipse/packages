@@ -25,14 +25,14 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.image.pullSecrets }}
+    {{- with .Values.imageSimpleUI.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.imageSimpleUI.repository }}:{{ .Values.imageSimpleUI.tag }}"
+          imagePullPolicy: {{ .Values.imageSimpleUI.pullPolicy }}
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "{{ .Values.spring.profiles }}"
@@ -70,13 +70,13 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /swagger-ui/index.html
+              path: /login
               port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           readinessProbe:
             httpGet:
-              path: /swagger-ui/index.html
+              path: /login
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
