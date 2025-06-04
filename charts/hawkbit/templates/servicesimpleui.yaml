@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ include "hawkbit.fullname" . }}-simple-ui"
+  name: "{{ include "hawkbit.fullname" . }}-simple-ui-service"
   labels:
-{{ include "hawkbit.labels" . | indent 4 }}
+    app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
   {{- with .Values.serviceSimpleUI.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
