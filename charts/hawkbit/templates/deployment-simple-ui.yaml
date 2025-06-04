@@ -80,16 +80,6 @@ spec:
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-          volumeMounts:
-            - name: configmap
-              mountPath: {{ .Values.configMap.mountPath }}
-            {{- if .Values.fileStorage.enabled }}
-            - name: storage
-              mountPath: {{ .Values.fileStorage.mountPath }}
-            {{- end }}
-            {{- if .Values.extraVolumeMounts }}
-            {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
-            {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       {{- with .Values.nodeSelector }}
@@ -111,16 +101,4 @@ spec:
         {{- if .Values.securityContext.extra }}
         {{- toYaml .Values.securityContext.extra | nindent 8 }}
         {{- end }}   
-      {{- end }}
-      volumes:
-      - name: configmap
-        configMap:
-          name: {{ include "hawkbit.fullname" . }}
-      {{- if .Values.fileStorage.enabled }}
-      - name: storage
-        persistentVolumeClaim:
-          claimName: {{ include "hawkbit.fullname" . }}-data
-      {{- end}}
-      {{- if .Values.extraVolumes }}
-      {{ toYaml .Values.extraVolumes | nindent 6 }}
       {{- end }}
