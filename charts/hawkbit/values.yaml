@@ -98,10 +98,10 @@ env:
   springDatasourceHost: "hawkbit-mysql"
   springDatasourceDb: "hawkbit"
   # if springDatasourceUrl is set override default mysql db url
-  springDatasourceUrl: ""
-  springRabbitmqHost: "hawkbit-rabbitmq"
-  springRabbitmqUsername: "hawkbit"
-  springRabbitmqPassword: "hawkbit"
+  springDatasourceUrl: "jdbc:mariadb://mysql:3306/hawkbit"
+  springRabbitmqHost: "rabbitmq"
+  springRabbitmqUsername: "guest"
+  springRabbitmqPassword: "guest"
 
 envSimpleUI:
   springAppJson: {"hawkbit.server.mgmtUrl": "http://hawkbit:8080"}
@@ -184,7 +184,7 @@ config:
           # the "{noop}" prefix is needed!
           password: "{noop}admin"
       datasource:
-        username: hawkbit
+        username: root
         password: hawkbit
 
 
