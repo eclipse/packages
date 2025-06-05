@@ -34,7 +34,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: SPRING_PROFILES_ACTIVE
+            - name: PROFILES
               value: "{{ .Values.spring.profiles }}"
             - name: "SPRING_DATASOURCE_URL"
               {{- if .Values.env.springDatasourceUrl }}
@@ -42,7 +42,7 @@ spec:
               {{- else }}
               value: "jdbc:mariadb://{{ if .Values.mysql.enabled }}{{ .Release.Name }}-mysql{{ else }}{{ .Values.env.springDatasourceHost }}{{ end }}:3306/{{ .Values.env.springDatasourceDb }}"
               {{- end }}
-            - name: "SPRING_APPLICATION_JSON"
+            - name: "SPRING_APPLICATION_JSON" ## secret incluing the env SPRING_DATASOURCE_USERNAME TO TEST
               valueFrom:
                 secretKeyRef:
                   name: {{ include "hawkbit.fullname" . }}
