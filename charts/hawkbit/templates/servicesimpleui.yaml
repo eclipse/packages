@@ -12,9 +12,9 @@ spec:
   type: {{ .Values.serviceSimpleUI.type }}
   ports:
     - port: {{ .Values.serviceSimpleUI.port }}
-      targetPort: {{ .Values.serviceSimpleUI.port }}
+      targetPort: http-simple-ui
       protocol: TCP
-      name: http
+      name: http-simple-ui
   selector:
     app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
     app.kubernetes.io/instance: "{{ .Release.Name }}-simple-ui"

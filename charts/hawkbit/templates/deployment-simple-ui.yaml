@@ -37,19 +37,19 @@ spec:
             - name: SPRING_APPLICATION_JSON
               value: {{ .Values.envSimpleUI.springAppJson | toJson | quote }}
           ports:
-            - name: http
+            - name: http-simple-ui
               containerPort: {{ .Values.serviceSimpleUI.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /login
-              port: http
+              port: http-simple-ui
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           readinessProbe:
             httpGet:
               path: /login
-              port: http
+              port: http-simple-ui
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
           resources:
