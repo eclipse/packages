@@ -11,8 +11,8 @@ metadata:
 spec:
   type: {{ .Values.serviceSimpleUI.type }}
   ports:
-    - port: {{ .Values.serviceSimpleUI.port }}
-      targetPort: http-simple-ui
+    - port: {{ .Values.ingress.hosts_hawkbit_simple_ui.port }} #port expose pour ingress
+      targetPort: {{ .Values.serviceSimpleUI.port }} ## port of the pod/deployement
       protocol: TCP
       name: http-simple-ui
   selector:

@@ -50,13 +50,13 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 8080
+  port: 8080 ## port of the container
   annotations: {}
     # traefik.ingress.kubernetes.io/affinity: "true"
 
 serviceSimpleUI:
   type: ClusterIP
-  port: 8088
+  port: 8088 ## port of the container
   annotations: {}
 
 livenessProbe:
@@ -74,9 +74,13 @@ ingress:
     # kubernetes.io/tls-acme: "true"
     ## ingress service multiple host so has to have api on https://hawkbit.sbx.agreg.io/ and ui on https://hawkbit-simple-ui.sbx.agreg.io/
   hosts_hawkbit:
+    port : 8080 ## port exposed by ingress or internal
+    hosts:
     - host: hawkbit
       paths: [ / ]
   hosts_hawkbit_simple_ui:
+    port : 8088 ## port exposed by ingress or internal
+    hosts :
     - host: hawkbit-simple-ui
       paths: [ / ]
   tls: []

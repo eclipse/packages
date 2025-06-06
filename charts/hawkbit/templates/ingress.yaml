@@ -1,6 +1,8 @@
 {{- if .Values.ingress.enabled -}}
 {{- $apiVersion := include "hawkbit.ingressAPIVersion" . -}}
 {{- $fullName := include "hawkbit.fullname" . -}}
+{{- $hostsHawkbitSimpleUIport  := .Values.ingress.hosts_hawkbit_simple_ui.port -}}
+{{- $hostsHawkbitPort  := .Values.ingress.hosts_hawkbit.port -}}
 apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
@@ -26,7 +28,7 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName  }}
   {{- end }}
   rules:
-  {{- range .Values.ingress.hosts_hawkbit }}
+  {{- range .Values.ingress.hosts_hawkbit.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -42,11 +44,11 @@ spec:
             {{- else }}
             backend:
               serviceName: hawkbit
-              servicePort: http
+              servicePort: {{  $hostsHawkbitPort }}
             {{- end }}
         {{- end }}
   {{- end }}
-  {{- range .Values.ingress.hosts_hawkbit_simple_ui }}
+  {{- range .Values.ingress.hosts_hawkbit_simple_ui.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -56,13 +58,13 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: hawkbit-simple-ui-deployement
+                name: hawkbit-simple-ui
                 port:
-                  name: http
+                  name: http-simple-ui
             {{- else }}
             backend:
-              serviceName: hawkbit-simple-ui-deployement
-              servicePort: http
+              serviceName: hawkbit-simple-ui
+              servicePort: {{ $hostsHawkbitSimpleUIport }}
             {{- end }}
         {{- end }}
   {{- end }}
