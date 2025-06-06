@@ -67,17 +67,18 @@ readinessProbe:
   timeoutSeconds: 5
 
 ingress:
-  enabled: false
+  enabled: true
   ingressClassName:
   annotations: {}
     # ingress.kubernetes.io/ssl-redirect: "true"
     # kubernetes.io/tls-acme: "true"
     ## ingress service multiple host so has to have api on https://hawkbit.sbx.agreg.io/ and ui on https://hawkbit-simple-ui.sbx.agreg.io/
-  hosts:
-    - host: hawkbit.local
-      paths: []
+  hosts_hawkbit:
+    - host: hawkbit
+      paths: [ / ]
+  hosts_hawkbit_simple_ui:
     - host: hawkbit-simple-ui
-      paths: []
+      paths: [ / ]
   tls: []
   #  - secretName: hawkbit-tls
   #    hosts:
