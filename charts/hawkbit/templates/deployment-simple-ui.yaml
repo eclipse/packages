@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ include "hawkbit.fullname" . }}-simple-ui-deployement"
+  name: "{{ include "hawkbit.fullname" . }}-simple-ui"
   labels:
     app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
 spec:
@@ -30,7 +30,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: "{{ .Chart.Name }}-simple-ui"
           image: "{{ .Values.imageSimpleUI.repository }}:{{ .Values.imageSimpleUI.tag }}"
           imagePullPolicy: {{ .Values.imageSimpleUI.pullPolicy }}
           env:
