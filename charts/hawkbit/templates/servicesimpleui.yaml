@@ -4,6 +4,7 @@ metadata:
   name: "{{ include "hawkbit.fullname" . }}-simple-ui"
   labels:
     app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
+    app.kubernetes.io/instance: {{ .Release.Name }}
   {{- with .Values.serviceSimpleUI.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -17,4 +18,4 @@ spec:
       name: http-simple-ui
   selector:
     app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
-    app.kubernetes.io/instance: "{{ .Release.Name }}-simple-ui"
+    app.kubernetes.io/instance: {{ .Release.Name }}
