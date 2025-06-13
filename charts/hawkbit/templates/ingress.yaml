@@ -8,6 +8,7 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
+    app.kubernetes.io/instance: {{ .Release.Name }}
 {{ include "hawkbit.labels" . | indent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
