@@ -33,40 +33,18 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-        {{- range .paths }}
-          - path: {{ . }}
+          - path: {{ .paths }}
             {{- if eq $apiVersion "networking.k8s.io/v1" }}
             pathType: Prefix
             backend:
               service:
-                name: hawkbit
+                name: {{ .service }}
                 port:
-                  name: http
+                  number: {{ .port }}
             {{- else }}
             backend:
-              serviceName: hawkbit
+              serviceName: {{ include "hawkbit.fullname" . }}
               servicePort: {{  $hostsHawkbitPort }}
             {{- end }}
-        {{- end }}
-  {{- end }}
-  {{- range .Values.ingress.hosts_hawkbit_simple_ui.hosts }}
-    - host: {{ .host | quote }}
-      http:
-        paths:
-        {{- range .paths }}
-          - path: {{ . }}
-            {{- if eq $apiVersion "networking.k8s.io/v1" }}
-            pathType: Prefix
-            backend:
-              service:
-                name: hawkbit-simple-ui
-                port:
-                  name: http-simple-ui
-            {{- else }}
-            backend:
-              serviceName: hawkbit-simple-ui
-              servicePort: {{ $hostsHawkbitSimpleUIport }}
-            {{- end }}
-        {{- end }}
   {{- end }}
 {{- end }}
