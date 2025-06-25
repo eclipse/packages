@@ -11,8 +11,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.ingress.hosts_hawkbit.port }} #port expose pour ingress
-      targetPort: {{ .Values.service.port }} ## port of the pod/deployement
+    - port: {{ .Values.service.port }}
+      targetPort: http
       protocol: TCP
       name: http
   selector:

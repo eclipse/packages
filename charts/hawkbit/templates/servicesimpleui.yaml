@@ -12,10 +12,10 @@ metadata:
 spec:
   type: {{ .Values.serviceSimpleUI.type }}
   ports:
-    - port: {{ .Values.ingress.hosts_hawkbit_simple_ui.port }} #port expose pour ingress
-      targetPort: {{ .Values.serviceSimpleUI.port }} ## port of the pod/deployement
+    - port: {{ .Values.serviceSimpleUI.port }}
+      targetPort: http
       protocol: TCP
-      name: http-simple-ui
+      name: http
   selector:
     app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
     app.kubernetes.io/instance: {{ .Release.Name }}
