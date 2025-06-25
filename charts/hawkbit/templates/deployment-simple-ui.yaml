@@ -1,3 +1,4 @@
+{{- $hawkbit_service_name :=  include "hawkbit.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,9 +6,9 @@ metadata:
   labels:
     app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.serviceSimpleUI.replicaCount }}
   strategy:
-    {{- with .Values.updateStrategy }}
+    {{- with .Values.serviceSimpleUI.updateStrategy }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   selector:
@@ -34,26 +35,26 @@ spec:
           image: "{{ .Values.imageSimpleUI.repository }}:{{ .Values.imageSimpleUI.tag }}"
           imagePullPolicy: {{ .Values.imageSimpleUI.pullPolicy }}
           env:
-            - name: SPRING_APPLICATION_JSON
-              value: {{ .Values.envSimpleUI.springAppJson | toJson | quote }}
+            - name: HAWKBIT_SERVER_MGMTURL
+              value: {{ .Values.envSimpleUI.hawkbitServerMgmtUrl | default (printf "http://%s:%v" $hawkbit_service_name $.Values.service.port ) }}
           ports:
-            - name: http-simple-ui
-              containerPort: {{ .Values.serviceSimpleUI.port }}
+            - name: http
+              containerPort: 8088
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /login
-              port: http-simple-ui
+              port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           readinessProbe:
             httpGet:
               path: /login
-              port: http-simple-ui
+              port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.serviceSimpleUI.resources | indent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -72,5 +73,5 @@ spec:
         runAsUser: {{ .Values.securityContext.runAsUser }}
         {{- if .Values.securityContext.extra }}
         {{- toYaml .Values.securityContext.extra | nindent 8 }}
-        {{- end }}   
+        {{- end }}
       {{- end }}
