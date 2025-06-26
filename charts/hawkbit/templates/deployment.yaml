@@ -25,6 +25,35 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      initContainers:
+        - name: hawkbit-init
+          image: "{{ .Values.image.initContainer }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: HAWKBIT_DB_MODE
+              value: "migrate"
+            - name: "SPRING_DATASOURCE_URL"
+              value: {{ include "hawkbit.database.url" . | quote }}
+            - name: SPRING_DATASOURCE_USERNAME
+              {{- if include "hawkbit.database.secretUsernameKey" . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hawkbit.database.secretName" . }}
+                  key: {{ include "hawkbit.database.secretUsernameKey" . }}
+              {{- else }}
+              value: {{ include "hawkbit.database.user" . | quote }}
+              {{- end }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hawkbit.database.secretName" . }}
+                  key: {{ include "hawkbit.database.secretPasswordKey" . }}
+            - name: AND_THEN
+              value: "true"
+          {{- if .Values.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+          {{- end }}
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -35,34 +64,52 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: PROFILES
-              value: "{{ .Values.spring.profiles }}"
-            - name: "SPRING_DATASOURCE_URL"
-              {{- if .Values.env.springDatasourceUrl }}
-              value: "{{ .Values.env.springDatasourceUrl }}"
-              {{- else }}
-              value: "jdbc:mariadb://{{ if .Values.mysql.enabled }}{{ .Release.Name }}-mysql{{ else }}{{ .Values.env.springDatasourceHost }}{{ end }}:3306/{{ .Values.env.springDatasourceDb }}"
-              {{- end }}
-            - name: "SPRING_APPLICATION_JSON"
+              value: {{ include "hawkbit.spring.profiles" . | quote }}
+            - name: SPRING_FLYWAY_ENABLED
+              value: "false"
+            - name: SPRING_DATASOURCE_USERNAME
+              {{- if include "hawkbit.database.secretUsernameKey" . }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "hawkbit.fullname" . }}
-                  key: "SPRING_APPLICATION_JSON"
-            - name: "SPRING_RABBITMQ_HOST"
-              value: "{{ if .Values.rabbitmq.enabled }}{{ .Release.Name }}-rabbitmq{{ else }}{{ .Values.env.springRabbitmqHost }}{{ end }}"
-            - name: "SPRING_RABBITMQ_USERNAME"
-              value: "{{ .Values.env.springRabbitmqUsername }}"
+                  name: {{ include "hawkbit.database.secretName" . }}
+                  key: {{ include "hawkbit.database.secretUsernameKey" . }}
+              {{- else }}
+              value: {{ include "hawkbit.database.user" . | quote }}
+              {{- end }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hawkbit.database.secretName" . }}
+                  key: {{ include "hawkbit.database.secretPasswordKey" . }}
+            - name: "SPRING_DATASOURCE_URL"
+              value: {{ include "hawkbit.database.url" . | quote }}
+            {{- if .Values.rabbitmq.enabled }}
             - name: "SPRING_RABBITMQ_PASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "{{ template "hawkbit.fullname" . }}-rabbitmq-pass"
-                  key: "rabbitmq-pass"
+                  name: {{ include "rabbitmq.secretPasswordName" .Subcharts.rabbitmq }}
+                  key: rabbitmq-password
+            {{- end }}
+            - name: {{ printf "HAWKBIT_SECURITY_USER_%s_PASSWORD" (.Values.auth.username | upper) }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hawkbit.secretName" . }}
+                  key: hawkbit-password
             {{- if .Values.fileStorage.enabled }}
             - name: "org.eclipse.hawkbit.repository.file.path"
               value: {{ .Values.fileStorage.mountPath }}
             {{- end }}
+            {{- if .Values.extraEnv }}
+            {{- if kindIs "slice" .Values.extraEnv }}
+            {{- toYaml .Values.extraEnv | nindent 12 }}
+            {{- else if kindIs "map" .Values.extraEnv }}
             {{- range $key, $value := .Values.extraEnv }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
+            {{- end }}
+            {{- else }}
+            # .Values.extraEnv of type {{kindOf .Values.extraEnv}} is ignored
+            {{- end }}
             {{- end }}
           ports:
             - name: http
@@ -88,7 +135,7 @@ spec:
               mountPath: {{ .Values.fileStorage.mountPath }}
             {{- end }}
             {{- if .Values.extraVolumeMounts }}
-            {{ toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
@@ -122,5 +169,5 @@ spec:
             claimName: {{ include "hawkbit.fullname" . }}-data
       {{- end}}
       {{- if .Values.extraVolumes }}
-      {{ toYaml .Values.extraVolumes | nindent 6 }}
+      {{- toYaml .Values.extraVolumes | nindent 8 }}
       {{- end }}
