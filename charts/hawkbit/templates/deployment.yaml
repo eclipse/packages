@@ -69,9 +69,17 @@ spec:
             - name: "org.eclipse.hawkbit.repository.file.path"
               value: {{ .Values.fileStorage.mountPath }}
             {{- end }}
+            {{- if .Values.extraEnv }}
+            {{- if kindIs "slice" .Values.extraEnv }}
+            {{- toYaml .Values.extraEnv | nindent 12 }}
+            {{- else if kindIs "map" .Values.extraEnv }}
             {{- range $key, $value := .Values.extraEnv }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
+            {{- end }}
+            {{- else }}
+            # .Values.extraEnv of type {{kindOf .Values.extraEnv}} is ignored
+            {{- end }}
             {{- end }}
           ports:
             - name: http
