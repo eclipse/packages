@@ -10,7 +10,7 @@
 # SPDX-License-Identifier: EPL-2.0
 ---
 apiVersion: v2
-version: 1.7.0
+version: 1.7.1-alpha2
 appVersion: "0.9.0"
 description: |
    Eclipse hawkBit™ is a domain independent back-end framework for rolling out software updates
@@ -22,7 +22,7 @@ keywords:
 home: https://www.eclipse.org/hawkbit/
 sources:
 - https://github.com/eclipse/hawkbit
-- https://github.com/eclipse/packages
+- https://github.com/joshua-clayton/eclipse-packages
 icon: https://www.eclipse.org/hawkbit/images/hawkbit_icon.png
 maintainers:
 - name: monotek
@@ -31,6 +31,8 @@ maintainers:
   email: axel.koehler@kiwigrid.com
 - name: ctron
   email: ctron@dentrassi.de
+- name: joshua-clayton
+  email: stillcompiling@gmail.com
 dependencies:
 - name: mysql
   version: ^13.x
