@@ -88,17 +88,10 @@ fileStorage:
   pvcSize: "1Gi"
   mountPath: "/artifactrepo"
 
-# env vars for configuration
-env:
-  # if springDatasourceUrl is set override default mysql db url
-  springDatasourceUrl: ""
-  springRabbitmqHost: "hawkbit-rabbitmq"
-  springRabbitmqUsername: "hawkbit"
-  springRabbitmqPassword: "hawkbit"
-
 # optional env vars
-extraEnv: {}
-  # JAVA_TOOL_OPTIONS: "-Xms1024m -Xmx1024m"
+extraEnv: []
+# - name: JAVA_TOOL_OPTIONS:
+#   value: "-Xms1024m -Xmx1024m"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
