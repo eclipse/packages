@@ -129,19 +129,6 @@ config:
     server:
       useForwardHeaders: true
     hawkbit:
-      ## Configuration for the device management federation
-      ## ref: https://www.eclipse.org/hawkbit/apis/dmf_api/
-      ## These configuration will become available once https://github.com/eclipse/hawkbit/pull/890 is merged
-      # dmf:
-      #   hono:
-      #     enabled: false
-      #     tenant-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/admin/tenants"
-      #     device-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/admin/$$tenantId/devices"
-      #     credentials-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/v1/credentials/$$tenantId/$$deviceId"
-      #     authentication-method: "oidc"
-      #     username: "[KEYCLOAK_HAWKBIT_USERNAME]"
-      #     oidc-token-uri: "http://[KEYCLOAK_HOST]:8080/auth/realms/master/protocol/openid-connect/token"
-      #     oidc-client-id: "[KEYCLOAK_DEVICE_REGISTRY_CLIENT_ID]"
     spring:
       cloud:
         stream:

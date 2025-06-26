@@ -113,13 +113,13 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-      - name: configmap
-        configMap:
-          name: {{ include "hawkbit.fullname" . }}
+        - name: configmap
+          configMap:
+            name: {{ include "hawkbit.fullname" . }}
       {{- if .Values.fileStorage.enabled }}
-      - name: storage
-        persistentVolumeClaim:
-          claimName: {{ include "hawkbit.fullname" . }}-data
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ include "hawkbit.fullname" . }}-data
       {{- end}}
       {{- if .Values.extraVolumes }}
       {{ toYaml .Values.extraVolumes | nindent 6 }}
