@@ -16,7 +16,7 @@ spec:
       command: ['curl']
       args: [
         "-X", "GET",
-        "-u", "{{ .Values.config.application.spring.security.user.name }}:{{ trimPrefix "{noop}" .Values.config.secrets.spring.security.user.password }}",
+        "-u", "{{ .Values.auth.username }}:{{ trimPrefix "{noop}" .Values.auth.password }}",
         "http://{{ include "hawkbit.fullname" . }}:{{ .Values.service.port }}/rest/v1/userinfo"
       ]
   restartPolicy: Never

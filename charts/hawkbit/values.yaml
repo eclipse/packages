@@ -18,6 +18,14 @@ image:
   tag: '0.9.0'
   pullPolicy: IfNotPresent
 
+# auth configuration
+auth:
+  # if set, the secret will be used to set the hawkbit user password
+  existingSecret: ""
+  username: "admin"
+  password: "{noop}admin"
+  dmfPassword: "[KEYCLOAK_HAWKBIT_USER_PASSWORD]"
+
 replicaCount: 1
 
 ## podDisruptionBudget configuration
@@ -82,8 +90,6 @@ fileStorage:
 
 # env vars for configuration
 env:
-  springDatasourceHost: "hawkbit-mysql"
-  springDatasourceDb: "hawkbit"
   # if springDatasourceUrl is set override default mysql db url
   springDatasourceUrl: ""
   springRabbitmqHost: "hawkbit-rabbitmq"
@@ -141,23 +147,6 @@ config:
               destination: "device-registry.device-updated"
             device-deleted:
               destination: "device-registry.device-deleted"
-      security:
-        user:
-          name: admin
-  secrets:
-    hawkbit:
-      dmf:
-        hono:
-          password: "[KEYCLOAK_HAWKBIT_USER_PASSWORD]"
-    spring:
-      security:
-        user:
-          # the "{noop}" prefix is needed!
-          password: "{noop}admin"
-      datasource:
-        username: hawkbit
-        password: hawkbit
-
 
 ## dependency charts config
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/values.yaml
@@ -170,6 +159,8 @@ mysql:
     enabled: true
   architecture: standalone
   auth:
+    # The secret has to contain the keys mysql-root-password, mysql-replication-password and mysql-password
+    existingSecret: ""
     username: hawkbit
     password: hawkbit
     database: hawkbit
@@ -184,6 +175,8 @@ rabbitmq:
   volumePermissions:
     enabled: true
   auth:
+    existingPasswordSecret: ""
+    existingSecretPasswordKey: rabbitmq-password
     username: hawkbit
     password: hawkbit
   metrics:
