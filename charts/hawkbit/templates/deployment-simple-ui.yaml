@@ -26,14 +26,14 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-    {{- with .Values.imageSimpleUI.pullSecrets }}
+    {{- with .Values.simpleUIImage.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: "{{ .Chart.Name }}-simple-ui"
-          image: "{{ .Values.imageSimpleUI.repository }}:{{ .Values.imageSimpleUI.tag }}"
-          imagePullPolicy: {{ .Values.imageSimpleUI.pullPolicy }}
+          image: "{{ .Values.simpleUIImage.repository }}:{{ .Values.simpleUIImage.tag }}"
+          imagePullPolicy: {{ .Values.simpleUIImage.pullPolicy }}
           env:
             - name: HAWKBIT_SERVER_MGMTURL
               value: {{ .Values.envSimpleUI.hawkbitServerMgmtUrl | default (printf "http://%s:%v" $hawkbit_service_name $.Values.service.port ) }}
