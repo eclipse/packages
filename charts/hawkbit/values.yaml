@@ -18,12 +18,11 @@ image:
   tag: "0.8.0"
   pullPolicy: IfNotPresent
 
-imageSimpleUI:
+simpleUIImage:
   repository: "hawkbit/hawkbit-simple-ui"
   tag: "0.8.0"
   pullPolicy: IfNotPresent
 
-replicaCount: 1
 
 ## podDisruptionBudget configuration
 podDisruptionBudget:
@@ -39,25 +38,30 @@ securityContext:
   runAsUser: 65534
   extra: {}
 
-## strategy used to replace old Pods by new ones
-## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-updateStrategy:
-  ## default is re-create, because of possible database migrations
-  type: Recreate
 
 nameOverride: ""
 fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 8080 ## port of the container
+  port: 8080
   annotations: {}
+  replicaCount: 1
+  ## strategy used to replace old Pods by new ones
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  updateStrategy:
+    ## default is re-create, because of possible database migrations
+    type: Recreate
     # traefik.ingress.kubernetes.io/affinity: "true"
 
 serviceSimpleUI:
   type: ClusterIP
-  port: 8088 ## port of the container
+  port: 8088
   annotations: {}
+  replicaCount: 1
+  updateStrategy:
+    type: RollingUpdate
+  resources: {}
 
 livenessProbe:
   initialDelaySeconds: 240
@@ -72,17 +76,18 @@ ingress:
   annotations: {}
     # ingress.kubernetes.io/ssl-redirect: "true"
     # kubernetes.io/tls-acme: "true"
-    ## ingress service multiple host so has to have api on https://hawkbit.sbx.agreg.io/ and ui on https://hawkbit-simple-ui.sbx.agreg.io/
-  hosts_hawkbit:
-    hosts:
-    - host: hawkbit
-      path: "/"
-      port : 8080 ## port exposed by ingress or internal
-      service: hawkbit
-    - host: hawkbit-simple-ui
-      path: "/"
-      port : 8088 ## port exposed by ingress or internal
-      service: hawkbit-simple-ui
+  hosts:
+    - host: hawkbit.local
+      paths:
+    # default value:
+    #  - path: "/rest"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #  - path: "/swagger-ui"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #  - path: "/v3"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #²  - path: "/"
+    #    service: {{ include "hawkbit.fullname" . }}-simple-ui
   tls: []
   #  - secretName: hawkbit-tls
   #    hosts:
@@ -103,13 +108,13 @@ env:
   springDatasourceHost: "hawkbit-mysql"
   springDatasourceDb: "hawkbit"
   # if springDatasourceUrl is set override default mysql db url
-  springDatasourceUrl: "jdbc:mariadb://mysql:3306/hawkbit"
-  springRabbitmqHost: "rabbitmq"
-  springRabbitmqUsername: "guest"
-  springRabbitmqPassword: "guest"
+  springDatasourceUrl: ""
+  springRabbitmqHost: "hawkbit-rabbitmq"
+  springRabbitmqUsername: "hawkbit"
+  springRabbitmqPassword: "hawkbit"
 
 envSimpleUI:
-  springAppJson: {"hawkbit.server.mgmtUrl": "http://hawkbit-server:8080"}
+  hawkbitServerMgmtUrl: ""
 
 # optional env vars
 extraEnv: {}
@@ -189,7 +194,7 @@ config:
           # the "{noop}" prefix is needed!
           password: "{noop}admin"
       datasource:
-        username: root
+        username: hawkbit
         password: hawkbit
 
 

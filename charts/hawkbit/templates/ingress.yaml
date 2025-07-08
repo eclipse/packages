@@ -1,14 +1,12 @@
 {{- if .Values.ingress.enabled -}}
+{{- $ingressDefaultPaths := (include "hawkbit.ingressDefaultPaths" $ | fromYamlArray ) }}
 {{- $apiVersion := include "hawkbit.ingressAPIVersion" . -}}
 {{- $fullName := include "hawkbit.fullname" . -}}
-{{- $hostsHawkbitSimpleUIport  := .Values.ingress.hosts_hawkbit_simple_ui.port -}}
-{{- $hostsHawkbitPort  := .Values.ingress.hosts_hawkbit.port -}}
 apiVersion: {{ $apiVersion }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    app.kubernetes.io/instance: {{ .Release.Name }}
 {{ include "hawkbit.labels" . | indent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
@@ -29,22 +27,24 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName  }}
   {{- end }}
   rules:
-  {{- range .Values.ingress.hosts_hawkbit.hosts }}
+  {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
-          - path: {{ .paths }}
+        {{- range default .paths $ingressDefaultPaths }}
+          - path: {{ .path }}
             {{- if eq $apiVersion "networking.k8s.io/v1" }}
             pathType: Prefix
             backend:
               service:
                 name: {{ .service }}
                 port:
-                  number: {{ .port }}
+                  name: http
             {{- else }}
             backend:
-              serviceName: {{ include "hawkbit.fullname" . }}
-              servicePort: {{  $hostsHawkbitPort }}
+              serviceName: {{ .service }}
+              servicePort: http
             {{- end }}
+        {{- end }}
   {{- end }}
 {{- end }}

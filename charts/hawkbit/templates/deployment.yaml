@@ -7,7 +7,7 @@ metadata:
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
-    {{- with .Values.updateStrategy }}
+    {{- with .Values.service.updateStrategy }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
   selector:
@@ -42,7 +42,7 @@ spec:
               {{- else }}
               value: "jdbc:mariadb://{{ if .Values.mysql.enabled }}{{ .Release.Name }}-mysql{{ else }}{{ .Values.env.springDatasourceHost }}{{ end }}:3306/{{ .Values.env.springDatasourceDb }}"
               {{- end }}
-            - name: "SPRING_APPLICATION_JSON" ## secret incluing the env SPRING_DATASOURCE_USERNAME TO TEST
+            - name: "SPRING_APPLICATION_JSON"
               valueFrom:
                 secretKeyRef:
                   name: {{ include "hawkbit.fullname" . }}
@@ -66,7 +66,7 @@ spec:
             {{- end }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 8080
               protocol: TCP
           livenessProbe:
             httpGet:
