@@ -101,6 +101,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.6.4
+
+* Recreate expired demo certificates.
+
 ### 2.6.3
 
 * Recreate expired demo certificates.

@@ -15,7 +15,7 @@ env:
   CONFIG_OPTION_CHART_TESTING: "--config .github/ct.yaml"
   VERSION_CHART_TESTING: "v3.5.1"
   VERSION_HELM: "v3.9.2"
-  VERSION_PYTHON: "3.7"
+  VERSION_PYTHON: "3.8"
 on:
   pull_request:
     paths:
