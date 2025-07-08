@@ -78,9 +78,16 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: hawkbit.local
-  #   paths:
-  #      - path: "/"
-  #        service: "hawkbit"
+      paths:
+    # default value:
+    #  - path: "/rest"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #  - path: "/swagger-ui"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #  - path: "/v3"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #²  - path: "/"
+    #    service: {{ include "hawkbit.fullname" . }}-simple-ui
   tls: []
   #  - secretName: hawkbit-tls
   #    hosts:
