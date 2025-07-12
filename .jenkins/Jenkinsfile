@@ -11,11 +11,7 @@ def label = "packages-${UUID.randomUUID().toString()}"
 def HELM_VERSION = "3.9.2"
 
 def needToDeploy() {
-    return BRANCH_NAME == 'master' || BRANCH_NAME == 'develop'
-}
-
-def isStaging() {
-    return BRANCH_NAME == 'develop'
+    return BRANCH_NAME == 'master'
 }
 
 podTemplate(
@@ -115,11 +111,7 @@ podTemplate(
 
                 stage ('Jekyll Build') {
                     dir ("build/homepage") {
-                        if ( isStaging() ) {
-                            sh 'bundle exec ruby /usr/gem/bin/jekyll build --config _config.yml,_config_staging.yml'
-                        } else {
-                            sh 'bundle exec ruby /usr/gem/bin/jekyll build'
-                        }
+                        sh 'bundle exec ruby /usr/gem/bin/jekyll build'
                     }
                 }
 
@@ -145,9 +137,6 @@ podTemplate(
                         dir ("www") {
                             sshagent(['github-bot-ssh']) {
                                 sh '''
-                                    if [ ${BRANCH_NAME} == "develop" ]; then
-                                      BRANCH_NAME="staging"
-                                    fi
                                     git config --global user.email "${PROJECT_NAME}-bot@eclipse.org"
                                     git config --global user.name "${PROJECT_BOT_NAME}"
                                     git clone git@github.com:eclipse/${PROJECT_NAME}-website.git .
@@ -183,11 +172,7 @@ podTemplate(
                     if (fileExists('build/perform-merge')) {
                     stage ('Rebuild helm Index') {
                         // merge added content with existing index
-                        if ( isStaging() ) {
-                            sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://staging.eclipse.org/packages/charts'
-                        } else {
-                            sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://eclipse.dev/packages/charts'
-                        }
+                        sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://eclipse.dev/packages/charts'
                         // copy new content and index to www-repo
                         sh 'cp -v build/helm-add/* www/charts/'
                     }
@@ -197,10 +182,6 @@ podTemplate(
                         dir("www") {
                             sshagent(['github-bot-ssh']) {
                                 sh '''
-                                if [ ${BRANCH_NAME} == "develop" ]; then
-                                  BRANCH_NAME="staging"
-                                fi
-
                                 git add -A
                                 if ! git diff --cached --exit-code; then
                                   echo "Changes have been detected, publishing to repo 'www.eclipse.org/${PROJECT_NAME}'"
