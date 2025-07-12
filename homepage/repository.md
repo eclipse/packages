@@ -18,7 +18,7 @@ are labeled explicitly.
 You can add the repository with a simple command:
 
 {% clipboard %}
-    helm repo add eclipse-iot https://eclipse.org/packages/charts
+    helm repo add eclipse-iot https://eclipse.dev/packages/charts
 {% endclipboard %}
 
 This will add the repository, using the name `eclipse-iot`. Of course you may choose
@@ -59,7 +59,7 @@ and if you want to search for *packages* only
 
 ## How chart publishing works
 
-All chart changes will be verified by a [Github action](https://github.com/eclipse/packages/actions), this is done on every pull request.
+All chart changes will be verified by a [GitHub action](https://github.com/eclipse/packages/actions), this is done on every pull request.
 
 Once a pull request is merged, the updated chart will be deployed by a [Jenkins job](https://ci.eclipse.org/packages/job/Website/job/master/).
 This job takes care of publishing the resources and generating an updated `index.yaml`.

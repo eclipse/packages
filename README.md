@@ -2,4 +2,4 @@
 
 IoT Packages is an effort by the [Eclipse IoT working group](https://iot.eclipse.org/), to create easy to deploy Eclipse IoT based, end-to-end scenarios, on top of Kubernetes and Helm.
 
-See: https://eclipse.org/packages
+See: https://eclipse.dev/packages

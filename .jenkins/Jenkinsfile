@@ -186,7 +186,7 @@ podTemplate(
                         if ( isStaging() ) {
                             sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://staging.eclipse.org/packages/charts'
                         } else {
-                            sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://eclipse.org/packages/charts'
+                            sh '${WORKSPACE}/helm repo index --merge www/charts/index.yaml build/helm-add --url https://eclipse.dev/packages/charts'
                         }
                         // copy new content and index to www-repo
                         sh 'cp -v build/helm-add/* www/charts/'
