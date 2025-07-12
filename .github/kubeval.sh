@@ -27,7 +27,7 @@ sudo tar -C /usr/local/bin -xf /tmp/kubeval.tar.gz kubeval
 
 # add helm repos to resolve dependencies
 helm repo add stable https://charts.helm.sh/stable
-helm repo add packages https://eclipse.org/packages/charts
+helm repo add packages https://eclipse.dev/packages/charts
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add grafana https://grafana.github.io/helm-charts

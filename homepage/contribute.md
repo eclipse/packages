@@ -122,7 +122,7 @@ Helm charts
 All pull requests will be verified by a CI job which runs the linter and tries to install the chart to at least the three most recent minor releases of kubernetes.
 At least one maintainer needs to explicitly approve the PR before it can be merged.
 
-Once the Chart has been merged, a CI job will automatically package and release the Chart in the [Eclipse IoT Packages repository](https://eclipse.org/packages/repository/).
+Once the Chart has been merged, a CI job will automatically package and release the Chart in the [Eclipse IoT Packages repository](https://eclipse.dev/packages/repository/).
 
 ## When to increase a chart's version number?
 

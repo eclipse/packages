@@ -205,7 +205,7 @@ The Eclipse IoT Packages project hosts a Helm chart repository for Eclipse IoT p
 Adding the repository can be done on your local machine be executing:
 
 {% clipboard %}
-    helm repo add eclipse-iot https://eclipse.org/packages/charts
+    helm repo add eclipse-iot https://eclipse.dev/packages/charts
 {% endclipboard %} 
 
 Read more: [Helm chart repository]({{"/repository" | relative_url }} "title").

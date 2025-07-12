@@ -18,7 +18,7 @@ chart-dirs:
   - packages
 chart-repos:
   - stable=https://charts.helm.sh/stable
-  - packages=https://eclipse.org/packages/charts
+  - packages=https://eclipse.dev/packages/charts
   - bitnami=https://charts.bitnami.com/bitnami
   - prometheus-community=https://prometheus-community.github.io/helm-charts
   - grafana=https://grafana.github.io/helm-charts

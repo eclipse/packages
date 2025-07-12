@@ -2,7 +2,7 @@
 
 This content is produced and maintained by the Eclipse IoT Packages project.
 
-* Project home: https://eclipse.org/packages
+* Project home: https://eclipse.dev/packages
 
 ## Trademarks
 
