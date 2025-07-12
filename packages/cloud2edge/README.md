@@ -28,6 +28,10 @@ These profiles can be applied using the `-f` parameter when installing the packa
 
 ## Release Notes
 
+### 0.9.2
+
+- Use Hono 2.6.4 chart version (including updated example certificates).
+
 ### 0.9.1
 
 - Use Hono 2.6.3 chart version (including updated example certificates).
