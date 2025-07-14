@@ -78,7 +78,7 @@ routes:
 fileStorage:
   enabled: true
   pvcSize: "1Gi"
-  mountPath: "/var/lib/hawkbit-storage"
+  mountPath: "/artifactrepo"
 
 # env vars for configuration
 env:
@@ -119,7 +119,7 @@ extraVolumes: []
 extraVolumeMounts: []
 
 configMap:
-  mountPath: "/opt/hawkbit/config"
+  mountPath: "/config"
 
 spring:
   profiles: "mysql"
