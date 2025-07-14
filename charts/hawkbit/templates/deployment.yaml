@@ -25,6 +25,28 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      initContainers:
+        - name: hawkbit-init
+          image: "{{ .Values.image.initContainer }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: HAWKBIT_DB_MODE
+              value: "migrate"
+            - name: "SPRING_DATASOURCE_URL"
+              {{- if and .Values.env .Values.env.springDatasourceUrl }}
+              value: "{{ .Values.env.springDatasourceUrl }}"
+              {{- else }}
+              value: "jdbc:mariadb://{{ .Release.Name }}-mysql:3306/{{ .Values.mysql.auth.database }}"
+              {{- end }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "{{ .Values.mysql.auth.username }}"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "mysql.secretName" .Subcharts.mysql }}
+                  key: mysql-password
+            - name: AND_THEN
+              value: "true"
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -36,6 +58,8 @@ spec:
           env:
             - name: PROFILES
               value: "{{ .Values.spring.profiles }}"
+            - name: SPRING_FLYWAY_ENABLED
+              value: "false"
             - name: SPRING_DATASOURCE_USERNAME
               value: "{{ .Values.mysql.auth.username }}"
             - name: SPRING_DATASOURCE_PASSWORD
