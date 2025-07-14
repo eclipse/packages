@@ -34,7 +34,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: SPRING_PROFILES_ACTIVE
+            - name: PROFILES
               value: "{{ .Values.spring.profiles }}"
             - name: "SPRING_DATASOURCE_URL"
               {{- if .Values.env.springDatasourceUrl }}
