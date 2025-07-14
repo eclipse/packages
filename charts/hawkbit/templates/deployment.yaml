@@ -39,12 +39,12 @@ spec:
               value: "jdbc:mariadb://{{ .Release.Name }}-mysql:3306/{{ .Values.mysql.auth.database }}"
               {{- end }}
             - name: SPRING_DATASOURCE_USERNAME
-              value: "{{ .Values.mysql.auth.username }}"
+              value: "root"
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "mysql.secretName" .Subcharts.mysql }}
-                  key: mysql-password
+                  key: mysql-root-password
             - name: AND_THEN
               value: "true"
     {{- with .Values.image.pullSecrets }}
@@ -61,12 +61,12 @@ spec:
             - name: SPRING_FLYWAY_ENABLED
               value: "false"
             - name: SPRING_DATASOURCE_USERNAME
-              value: "{{ .Values.mysql.auth.username }}"
+              value: "root"
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "mysql.secretName" .Subcharts.mysql }}
-                  key: mysql-password
+                  key: mysql-root-password
             - name: "SPRING_DATASOURCE_URL"
               {{- if and .Values.env .Values.env.springDatasourceUrl }}
               value: "{{ .Values.env.springDatasourceUrl }}"
