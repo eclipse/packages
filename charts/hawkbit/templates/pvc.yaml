@@ -11,9 +11,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
- accessModes:
- - ReadWriteOnce
- resources:
-   requests:
-     storage: {{ .Values.fileStorage.pvcSize }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.fileStorage.pvcSize }}
 {{- end }}
