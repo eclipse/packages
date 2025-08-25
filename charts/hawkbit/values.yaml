@@ -196,6 +196,7 @@ config:
       datasource:
         username: hawkbit
         password: hawkbit
+  simpleUI: {}
 
 
 ## dependency charts config

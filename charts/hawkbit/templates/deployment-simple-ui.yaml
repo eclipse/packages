@@ -37,6 +37,11 @@ spec:
           env:
             - name: HAWKBIT_SERVER_MGMTURL
               value: {{ .Values.envSimpleUI.hawkbitServerMgmtUrl | default (printf "http://%s:%v" $hawkbit_service_name $.Values.service.port ) }}
+            - name: "SPRING_APPLICATION_JSON"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hawkbit.fullname" . }}
+                  key: SIMPLE_UI_SPRING_APPLICATION_JSON
           ports:
             - name: http
               containerPort: 8088
