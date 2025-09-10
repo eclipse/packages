@@ -54,3 +54,14 @@ Return the appropriate apiVersion for ingress.
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the secret with the Hawkbit credentials.
+*/}}
+{{- define "hawkbit.secretName" -}}
+  {{- if .Values.auth.existingSecret -}}
+    {{ print (tpl .Values.auth.existingSecret $) -}}
+  {{- else -}}
+    {{ printf "%s" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
