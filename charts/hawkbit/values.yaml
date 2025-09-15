@@ -67,8 +67,9 @@ livenessProbe:
   initialDelaySeconds: 240
   timeoutSeconds: 5
 readinessProbe:
-  initialDelaySeconds: 120
+  failureThreshold: 24
   timeoutSeconds: 5
+  periodSeconds: 5
 
 ingress:
   enabled: false
