@@ -1,0 +1,82 @@
+{{- $hawkbit_service_name :=  include "hawkbit.fullname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "hawkbit.fullname" . }}-simple-ui"
+  labels:
+    app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
+spec:
+  replicas: {{ .Values.serviceSimpleUI.replicaCount }}
+  strategy:
+    {{- with .Values.serviceSimpleUI.updateStrategy }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "{{ include "hawkbit.name" . }}-simple-ui"
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print .Template.BasePath "/secrets.yaml") . | sha256sum }}
+        {{- with .Values.podTemplate.annotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+    {{- with .Values.simpleUIImage.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: "{{ .Chart.Name }}-simple-ui"
+          image: "{{ .Values.simpleUIImage.repository }}:{{ .Values.simpleUIImage.tag }}"
+          imagePullPolicy: {{ .Values.simpleUIImage.pullPolicy }}
+          env:
+            - name: HAWKBIT_SERVER_MGMTURL
+              value: {{ .Values.envSimpleUI.hawkbitServerMgmtUrl | default (printf "http://%s:%v" $hawkbit_service_name $.Values.service.port ) }}
+            - name: "SPRING_APPLICATION_JSON"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hawkbit.fullname" . }}
+                  key: SIMPLE_UI_SPRING_APPLICATION_JSON
+          ports:
+            - name: http
+              containerPort: 8088
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /login
+              port: http
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: http
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          resources:
+{{ toYaml .Values.serviceSimpleUI.resources | indent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{- if .Values.securityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        {{- if .Values.securityContext.extra }}
+        {{- toYaml .Values.securityContext.extra | nindent 8 }}
+        {{- end }}
+      {{- end }}
