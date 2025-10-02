@@ -101,6 +101,10 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.6.6
+
+* Update the Hono Grafana dashboards from schemaVersion 16 to 38.
+
 ### 2.6.5
 
 * Use the bitnamilegacy image repository in the mongodb and kafka chart configurations as used images aren't
