@@ -3,7 +3,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -13,7 +16,7 @@
     ]
   },
   "editable": true,
-  "gnetId": null,
+  "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "links": [
     {
@@ -32,9 +35,13 @@
       "type": "dashboards"
     }
   ],
+  "liveNow": false,
   "panels": [
     {
-      "content": "<div class=\"text-center dashboard-header\">\n  <span>Telemetry</span>\n</div>",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "",
       "gridPos": {
         "h": 2,
@@ -44,13 +51,33 @@
       },
       "id": 8,
       "links": [],
-      "mode": "html",
-      "title": "",
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div class=\"text-center dashboard-header\">\n  <span>Telemetry</span>\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
+          "refId": "A"
+        }
+      ],
       "transparent": true,
       "type": "text"
     },
     {
-      "content": "<div class=\"text-center dashboard-header\">\n  <span>Events</span>\n</div>",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "gridPos": {
         "h": 2,
         "w": 8,
@@ -59,13 +86,33 @@
       },
       "id": 12,
       "links": [],
-      "mode": "html",
-      "title": "",
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div class=\"text-center dashboard-header\">\n  <span>Events</span>\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
+          "refId": "A"
+        }
+      ],
       "transparent": true,
       "type": "text"
     },
     {
-      "content": "<div class=\"text-center dashboard-header\">\n  <span>Commands</span>\n</div>",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "gridPos": {
         "h": 2,
         "w": 8,
@@ -74,8 +121,25 @@
       },
       "id": 15,
       "links": [],
-      "mode": "html",
-      "title": "",
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<div class=\"text-center dashboard-header\">\n  <span>Commands</span>\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
+          "refId": "A"
+        }
+      ],
       "transparent": true,
       "type": "text"
     },
@@ -84,15 +148,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of telemetry messages received from devices",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 0,
         "y": 2
       },
+      "hiddenSeries": false,
       "id": 2,
       "legend": {
         "avg": false,
@@ -107,18 +176,17 @@
       "linewidth": 1,
       "links": [
         {
-          "dashboard": "Message details",
-          "includeVars": true,
-          "keepTime": true,
-          "params": "var-type=telemetry",
           "targetBlank": true,
           "title": "Message details",
-          "type": "dashboard",
-          "url": "/d/rcEOBABmk/message-details"
+          "url": "/d/rcEOBABmk/message-details?$__url_time_range&$__all_variables&var-type=telemetry"
         }
       ],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -139,6 +207,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"telemetry\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -146,6 +218,10 @@
           "refId": "C"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"telemetry\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -153,6 +229,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"telemetry\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
@@ -162,20 +242,16 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "messages",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -185,22 +261,17 @@
           "format": "none",
           "label": "messages/sec",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -208,15 +279,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of events received from devices",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 8,
         "y": 2
       },
+      "hiddenSeries": false,
       "id": 17,
       "legend": {
         "avg": false,
@@ -231,18 +307,17 @@
       "linewidth": 1,
       "links": [
         {
-          "dashboard": "Message details",
-          "includeVars": true,
-          "keepTime": true,
-          "params": "type=event",
           "targetBlank": true,
           "title": "Message details",
-          "type": "dashboard",
-          "url": "/d/rcEOBABmk/message-details"
+          "url": "/d/rcEOBABmk/message-details?$__url_time_range&$__all_variables&type=event"
         }
       ],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -263,6 +338,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"event\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -270,6 +349,10 @@
           "refId": "C"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"event\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -277,6 +360,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"event\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
@@ -286,20 +373,16 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "messages",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -309,22 +392,17 @@
           "format": "none",
           "label": "messages/sec",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -332,15 +410,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of commands sent to devices",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 16,
         "y": 2
       },
+      "hiddenSeries": false,
       "id": 20,
       "legend": {
         "avg": false,
@@ -357,7 +440,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -367,6 +454,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_command_processing_duration_seconds_count{direction=~\"one-way|request\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "interval": "",
@@ -375,6 +466,10 @@
           "refId": "C"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_command_processing_duration_seconds_count{direction=~\"one-way|request\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "hide": false,
@@ -384,6 +479,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_command_processing_duration_seconds_count{direction=~\"one-way|request\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
@@ -393,20 +492,16 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "messages",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -416,7 +511,6 @@
           "format": "none",
           "label": "messages/sec",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
@@ -425,14 +519,12 @@
           "format": "none",
           "label": "bytes/sec",
           "logBase": 10,
-          "max": null,
           "min": "0",
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -440,15 +532,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of data received from devices as payload of telemetry messages",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 0,
         "y": 10
       },
+      "hiddenSeries": false,
       "id": 55,
       "legend": {
         "avg": false,
@@ -463,7 +560,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -473,6 +574,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_payload_bytes_sum{type=\"telemetry\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -480,6 +585,10 @@
           "refId": "C"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_payload_bytes_sum{type=\"telemetry\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -487,6 +596,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_payload_bytes_sum{type=\"telemetry\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
@@ -496,20 +609,16 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "payload",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -519,22 +628,17 @@
           "format": "none",
           "label": "bytes/sec",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -542,15 +646,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of data received from devices as payload of events",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 8,
         "y": 10
       },
+      "hiddenSeries": false,
       "id": 59,
       "legend": {
         "avg": false,
@@ -565,7 +674,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -575,6 +688,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_payload_bytes_sum{type=\"event\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -582,6 +699,10 @@
           "refId": "C"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_payload_bytes_sum{type=\"event\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -589,6 +710,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_telemetry_payload_bytes_sum{type=\"event\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
@@ -598,20 +723,16 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "payload",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -621,22 +742,17 @@
           "format": "none",
           "label": "bytes/sec",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -644,15 +760,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of data sent to devices as payload of commands",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 16,
         "y": 10
       },
+      "hiddenSeries": false,
       "id": 60,
       "legend": {
         "alignAsTable": false,
@@ -669,7 +790,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -679,6 +804,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_command_payload_bytes_sum{direction=~\"one-way|request\",status=\"unprocessable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -686,6 +815,10 @@
           "refId": "C"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_command_payload_bytes_sum{direction=~\"one-way|request\",status=\"undeliverable\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -693,6 +826,10 @@
           "refId": "B"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(irate(hono_command_payload_bytes_sum{direction=~\"one-way|request\",status=\"forwarded\"}[$__rate_interval]))",
           "format": "time_series",
           "instant": false,
@@ -702,20 +839,16 @@
         }
       ],
       "thresholds": [],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "payload",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -725,22 +858,17 @@
           "format": "none",
           "label": "bytes/sec",
           "logBase": 1,
-          "max": null,
           "min": "0",
           "show": true
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -748,15 +876,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of valid telemetry messages received from devices which could not be delivered downstream",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 0,
         "y": 18
       },
+      "hiddenSeries": false,
       "id": 61,
       "legend": {
         "avg": false,
@@ -771,7 +904,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -781,6 +918,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "(100 * sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"telemetry\",qos=\"0\",status=\"undeliverable\"}[$__rate_interval])))\n/\nsum(irate(hono_telemetry_processing_duration_seconds_count{type=\"telemetry\",qos=\"0\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -788,6 +929,10 @@
           "refId": "C"
         },
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "(100 * sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"telemetry\",qos=\"1\",status=\"undeliverable\"}[$__rate_interval])))\n/\nsum(irate(hono_telemetry_processing_duration_seconds_count{type=\"telemetry\",qos=\"1\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -813,20 +958,16 @@
           "yaxis": "left"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "undeliverable rate",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -842,16 +983,12 @@
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -859,15 +996,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of valid events received from devices which could not be delivered downstream",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 8,
         "y": 18
       },
+      "hiddenSeries": false,
       "id": 62,
       "legend": {
         "avg": false,
@@ -882,7 +1024,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -892,6 +1038,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "(100 * sum(irate(hono_telemetry_processing_duration_seconds_count{type=\"event\",status=\"undeliverable\"}[$__rate_interval])))\n/\nsum(irate(hono_telemetry_processing_duration_seconds_count{type=\"event\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -917,20 +1067,16 @@
           "yaxis": "left"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "undeliverable rate",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -946,16 +1092,12 @@
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
@@ -963,15 +1105,20 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "average rate of valid commands received from applications which could not be delivered to devices",
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 16,
         "y": 18
       },
+      "hiddenSeries": false,
       "id": 63,
       "legend": {
         "avg": false,
@@ -986,7 +1133,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "10.1.5",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -996,6 +1147,10 @@
       "steppedLine": false,
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "(100 * sum(irate(hono_command_processing_duration_seconds_count{direction=~\"one-way|request\",status=\"undeliverable\"}[$__rate_interval])))\n/\nsum(irate(hono_command_processing_duration_seconds_count{direction=~\"one-way|request\"}[$__rate_interval]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -1021,20 +1176,16 @@
           "yaxis": "left"
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
+      "timeRegions": [],
       "title": "undeliverable rate",
       "tooltip": {
         "shared": true,
         "sort": 0,
         "value_type": "individual"
       },
-      "transparent": false,
       "type": "graph",
       "xaxis": {
-        "buckets": null,
         "mode": "time",
-        "name": null,
         "show": true,
         "values": []
       },
@@ -1050,21 +1201,20 @@
         },
         {
           "format": "short",
-          "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
           "show": false
         }
       ],
       "yaxis": {
-        "align": false,
-        "alignLevel": null
+        "align": false
       }
     },
     {
       "columns": [],
-      "datasource": "hono_metrics",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P8B86E624E541D793"
+      },
       "description": "The number of containers running for each service.",
       "fontSize": "100%",
       "gridPos": {
@@ -1075,7 +1225,6 @@
       },
       "id": 65,
       "links": [],
-      "pageSize": null,
       "scroll": true,
       "showHeader": true,
       "sort": {
@@ -1085,7 +1234,7 @@
       "styles": [
         {
           "alias": "Service",
-          "colorMode": null,
+          "align": "auto",
           "colors": [
             "rgba(245, 54, 54, 0.9)",
             "rgba(237, 129, 40, 0.89)",
@@ -1101,7 +1250,7 @@
         },
         {
           "alias": "Count",
-          "colorMode": null,
+          "align": "auto",
           "colors": [
             "rgba(245, 54, 54, 0.9)",
             "rgba(237, 129, 40, 0.89)",
@@ -1115,7 +1264,7 @@
         },
         {
           "alias": "",
-          "colorMode": null,
+          "align": "auto",
           "colors": [
             "rgba(245, 54, 54, 0.9)",
             "rgba(237, 129, 40, 0.89)",
@@ -1132,6 +1281,10 @@
       ],
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "P8B86E624E541D793"
+          },
           "expr": "sum(up) by (job)",
           "format": "table",
           "instant": true,
@@ -1141,11 +1294,11 @@
       ],
       "title": "Service Instances",
       "transform": "table",
-      "type": "table"
+      "type": "table-old"
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 16,
+  "schemaVersion": 38,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1183,5 +1336,6 @@
   "timezone": "browser",
   "title": "Overview",
   "uid": "QpiDB0Bmz",
-  "version": 1
+  "version": 1,
+  "weekStart": ""
 }
