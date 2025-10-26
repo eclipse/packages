@@ -1426,6 +1426,8 @@ mongodb:
   # do not use the default name ("mongodb") because it will lead to a config
   # property name clash in the device registry pod when using "hono" as the release name
   nameOverride: "monogodb-server"
+  image:
+    repository: bitnamilegacy/mongodb
   # run single node instance
   architecture: "standalone"
   # Use StatefulSet instead of Deployment when deploying standalone
@@ -1730,6 +1732,9 @@ kafka:
   # the name of the template (maintains the release name)
   nameOverride: "kafka"
 
+  image:
+    repository: bitnamilegacy/kafka
+
   broker:
     automountServiceAccountToken: true
 
@@ -1749,6 +1754,11 @@ kafka:
       protocol: "SASL_SSL"
     external:
       protocol: "SASL_SSL"
+
+  metrics:
+    jmx:
+      image:
+        repository: bitnamilegacy/jmx-exporter
 
   sasl:
     client:
@@ -1770,6 +1780,8 @@ kafka:
     enabled: true
     autoDiscovery:
       enabled: true
+      image:
+        repository: bitnamilegacy/kubectl
     broker:
       service:
         type: "LoadBalancer"
@@ -1786,6 +1798,9 @@ kafka:
     # Note that this could require creating RBAC rules, for more information refer to
     # https://github.com/bitnami/charts/tree/master/bitnami/kafka#accessing-kafka-brokers-from-outside-the-cluster
     create: true
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
 
 # amqpMessagingNetworkExample contains properties for configuring an example AMQP network
 # to be used for messaging if "messagingNetworkTypes" contains "amqp"
