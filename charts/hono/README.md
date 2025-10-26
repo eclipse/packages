@@ -101,6 +101,11 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Release Notes
 
+### 2.6.5
+
+* Use the bitnamilegacy image repository in the mongodb and kafka chart configurations as used images aren't
+  available anymore in the bitnami repository.
+
 ### 2.6.4
 
 * Recreate expired demo certificates.
