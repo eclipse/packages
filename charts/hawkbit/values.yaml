@@ -15,8 +15,17 @@
 
 image:
   repository: "hawkbit/hawkbit-update-server"
-  tag: 0.5.0-mysql
+  tag: '0.9.0'
   pullPolicy: IfNotPresent
+  initContainer: "hawkbit/hawkbit-repository-jpa-init"
+
+# auth configuration
+auth:
+  # if set, the secret will be used to set the hawkbit user password
+  existingSecret: ""
+  username: "admin"
+  password: "{noop}admin"
+  dmfPassword: "[KEYCLOAK_HAWKBIT_USER_PASSWORD]"
 
 replicaCount: 1
 
@@ -78,21 +87,12 @@ routes:
 fileStorage:
   enabled: true
   pvcSize: "1Gi"
-  mountPath: "/var/lib/hawkbit-storage"
-
-# env vars for configuration
-env:
-  springDatasourceHost: "hawkbit-mysql"
-  springDatasourceDb: "hawkbit"
-  # if springDatasourceUrl is set override default mysql db url
-  springDatasourceUrl: ""
-  springRabbitmqHost: "hawkbit-rabbitmq"
-  springRabbitmqUsername: "hawkbit"
-  springRabbitmqPassword: "hawkbit"
+  mountPath: "/artifactrepo"
 
 # optional env vars
-extraEnv: {}
-  # JAVA_TOOL_OPTIONS: "-Xms1024m -Xmx1024m"
+extraEnv: []
+# - name: JAVA_TOOL_OPTIONS:
+#   value: "-Xms1024m -Xmx1024m"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -119,7 +119,7 @@ extraVolumes: []
 extraVolumeMounts: []
 
 configMap:
-  mountPath: "/opt/hawkbit/config"
+  mountPath: "/config"
 
 spring:
   profiles: "mysql"
@@ -129,19 +129,6 @@ config:
     server:
       useForwardHeaders: true
     hawkbit:
-      ## Configuration for the device management federation
-      ## ref: https://www.eclipse.org/hawkbit/apis/dmf_api/
-      ## These configuration will become available once https://github.com/eclipse/hawkbit/pull/890 is merged
-      # dmf:
-      #   hono:
-      #     enabled: false
-      #     tenant-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/admin/tenants"
-      #     device-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/admin/$$tenantId/devices"
-      #     credentials-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/v1/credentials/$$tenantId/$$deviceId"
-      #     authentication-method: "oidc"
-      #     username: "[KEYCLOAK_HAWKBIT_USERNAME]"
-      #     oidc-token-uri: "http://[KEYCLOAK_HOST]:8080/auth/realms/master/protocol/openid-connect/token"
-      #     oidc-client-id: "[KEYCLOAK_DEVICE_REGISTRY_CLIENT_ID]"
     spring:
       cloud:
         stream:
@@ -154,23 +141,6 @@ config:
               destination: "device-registry.device-updated"
             device-deleted:
               destination: "device-registry.device-deleted"
-      security:
-        user:
-          name: admin
-  secrets:
-    hawkbit:
-      dmf:
-        hono:
-          password: "[KEYCLOAK_HAWKBIT_USER_PASSWORD]"
-    spring:
-      security:
-        user:
-          # the "{noop}" prefix is needed!
-          password: "{noop}admin"
-      datasource:
-        username: hawkbit
-        password: hawkbit
-
 
 ## dependency charts config
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/values.yaml
@@ -183,6 +153,8 @@ mysql:
     enabled: true
   architecture: standalone
   auth:
+    # The secret has to contain the keys mysql-root-password, mysql-replication-password and mysql-password
+    existingSecret: ""
     username: hawkbit
     password: hawkbit
     database: hawkbit
@@ -197,6 +169,8 @@ rabbitmq:
   volumePermissions:
     enabled: true
   auth:
+    existingPasswordSecret: ""
+    existingSecretPasswordKey: rabbitmq-password
     username: hawkbit
     password: hawkbit
   metrics:
