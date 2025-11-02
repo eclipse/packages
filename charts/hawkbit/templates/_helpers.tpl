@@ -54,3 +54,14 @@ Return the appropriate apiVersion for ingress.
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "hawkbit.ingressDefaultPaths" -}}
+- path: "/rest"
+  service: {{ include "hawkbit.fullname" . }}
+- path: "/swagger-ui"
+  service: {{ include "hawkbit.fullname" . }}
+- path: "/v3"
+  service: {{ include "hawkbit.fullname" . }}
+- path: "/"
+  service: {{ include "hawkbit.fullname" . }}-simple-ui
+{{- end -}}
