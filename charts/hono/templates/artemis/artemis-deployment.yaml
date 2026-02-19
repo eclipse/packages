@@ -1,7 +1,7 @@
 {{- $amqpEnabled := and ( has "amqp" .Values.messagingNetworkTypes ) .Values.amqpMessagingNetworkExample.enabled -}}
 {{- if and $amqpEnabled ( not .Values.amqpMessagingNetworkExample.broker.servicebus.host ) }}
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -47,8 +47,6 @@ spec:
           value: admin
         - name: HOME
           value: /home/jboss
-        - name: AMQ_EXTRA_ARGS
-          value: "--http-host 0.0.0.0"
         - name: JAVA_INITIAL_MEM_RATIO
           value: "30"
         - name: JAVA_MAX_MEM_RATIO

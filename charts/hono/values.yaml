@@ -14,6 +14,15 @@
 # Default values for eclipse-hono.
 # Declare variables to be passed into your templates.
 
+# This is required to be able to still use the (unmaintained) "bitnamylegacy" container images
+# for Kafka and MongoDB, which are used by the chart's example configurations for the Kafka Messaging
+# Infrastucture and the Device Registry.
+# see https://github.com/bitnami/charts/issues/30850
+# see https://github.com/eclipse-packages/packages/issues/567
+global:
+  security:
+    allowInsecureImages: true
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -27,7 +36,7 @@ fullnameOverride: ""
 # the container images for Hono's components should be pulled from.
 # The registry can also be set separately for each component, overriding
 # the value specified here.
-honoContainerRegistry: "index.docker.io"
+honoContainerRegistry: "docker.io"
 
 # imagePullSecrets for pulling docker images from private registry. It will
 # be added to every deployment and statefulset.
@@ -109,7 +118,7 @@ messagingNetworkTypes:
 # is stored in an AMQP 1.0 message sent to the AMQP Messaging Network. A "true" value here
 # configures the format used in previous Hono versions, while setting "false" chooses a more
 # generic format (compatible with e.g. Eclipse Ditto). Refer to
-# https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+# https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/
 # for the documentation of the corresponding "useLegacyTraceContextFormat" Hono client property.
 useLegacyAmqpTraceContextFormat: true
 
@@ -139,7 +148,7 @@ adapters:
   # adapters for connecting to the AMQP Messaging Network to forward downstream messages to.
   # This property MUST be set if "messagingNetworkTypes" contains "amqp" and
   # "amqpMessagingNetworkExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # Please refer to https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
   # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
@@ -157,7 +166,7 @@ adapters:
   # to send commands to devices.
   # This property MUST be set if "messagingNetworkTypes" contains "amqp" and
   # "amqpMessagingNetworkExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # Please refer to https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   # However, if "amqpMessagingNetworkExample.enabled" is set to true, only
   # "keyPath", "certPath", "trustStorePath", "hostnameVerificationRequired" can be set.
@@ -171,7 +180,7 @@ adapters:
   # adapters for connecting to the Kafka cluster to be used for messaging.
   # This property MUST be set if "messagingNetworkTypes" contains "kafka" and
   # "kafkaMessagingClusterExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/common-config/#kafka-based-messaging-configuration
+  # Please refer to https://eclipse.dev/hono/docs/admin-guide/common-config/#kafka-based-messaging-configuration
   # for a description of supported properties.
   kafkaMessagingSpec: {}
   #  commonClientConfig:
@@ -198,21 +207,21 @@ adapters:
   # tenantSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Tenant service.
   # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # Please refer to https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   tenantSpec:
 
   # deviceRegistrationSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Device Registration service.
   # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # Please refer to https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   deviceRegistrationSpec:
 
   # credentialsSpec contains Hono client properties used by all protocol adapters for
   # connecting to the Credentials service.
   # This property MUST be set if "deviceRegistryExample.enabled" is set to false.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # Please refer to https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   credentialsSpec:
 
@@ -220,7 +229,7 @@ adapters:
   # connecting to the Command Router service.
   # If not set, default properties will be used for establishing a TLS based connection
   # to the command router server.
-  # Please refer to https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/
+  # Please refer to https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/
   # for a description of supported properties.
   commandRouterSpec:
 
@@ -245,7 +254,7 @@ adapters:
     enabled: true
     # imageName contains the name (excluding registry)
     # of the container image to use for the AMQP adapter
-    imageName: "eclipse/hono-adapter-amqp"
+    imageName: "eclipsehono/hono-adapter-amqp"
     # imageTag contains the tag of the container image to deploy.
     # If not specified, the value of the honoImagesTag property is used.
     # imageTag:
@@ -354,7 +363,7 @@ adapters:
     tlsTrustStoreConfigMap: "example"
 
     # hono contains the adapter's configuration properties as defined in
-    # https://www.eclipse.org/hono/docs/admin-guide/amqp-adapter-config/
+    # https://eclipse.dev/hono/docs/admin-guide/amqp-adapter-config/
     hono:
       app:
         # maxInstances defines the number of adapter Verticle instances to deploy
@@ -374,7 +383,7 @@ adapters:
     enabled: false
     # imageName contains the name (excluding registry)
     # of the container image to use for the CoAP adapter
-    imageName: "eclipse/hono-adapter-coap"
+    imageName: "eclipsehono/hono-adapter-coap"
     # imageTag contains the tag of the container image to deploy.
     # If not specified, the value of the honoImagesTag property is used.
     # imageTag:
@@ -501,7 +510,7 @@ adapters:
     enabled: true
     # imageName contains the name (excluding registry)
     # of the container image to use for the HTTP adapter
-    imageName: "eclipse/hono-adapter-http"
+    imageName: "eclipsehono/hono-adapter-http"
     # imageTag contains the tag of the container image to deploy.
     # If not specified, the value of the honoImagesTag property is used.
     # imageTag:
@@ -610,7 +619,7 @@ adapters:
     tlsTrustStoreConfigMap: "example"
 
     # hono contains the adapter's configuration properties as defined in
-    # https://www.eclipse.org/hono/docs/admin-guide/http-adapter-config/
+    # https://eclipse.dev/hono/docs/admin-guide/http-adapter-config/
     hono:
       app:
         # maxInstances defines the number of adapter Verticle instances to deploy
@@ -630,7 +639,7 @@ adapters:
     enabled: false
     # imageName contains the name (excluding registry)
     # of the container image to use for the LoRa adapter
-    imageName: "eclipse/hono-adapter-lora"
+    imageName: "eclipsehono/hono-adapter-lora"
     # imageTag contains the tag of the container image to deploy.
     # If not specified, the value of the honoImagesTag property is used.
     # imageTag:
@@ -758,7 +767,7 @@ adapters:
     enabled: true
     # imageName contains the name (excluding registry)
     # of the container image to use for the MQTT adapter
-    imageName: "eclipse/hono-adapter-mqtt"
+    imageName: "eclipsehono/hono-adapter-mqtt"
     # imageTag contains the tag of the container image to deploy.
     # If not specified, the value of the honoImagesTag property is used.
     # imageTag:
@@ -867,7 +876,7 @@ adapters:
     tlsTrustStoreConfigMap: "example"
 
     # hono contains the adapter's configuration properties as defined in
-    # https://www.eclipse.org/hono/docs/admin-guide/mqtt-adapter-config/
+    # https://eclipse.dev/hono/docs/admin-guide/mqtt-adapter-config/
     hono:
       app:
         # maxInstances defines the number of adapter Verticle instances to deploy
@@ -887,7 +896,7 @@ authServer:
 
   # imageName contains the name (excluding registry)
   # of the container image to use for the Auth Server
-  imageName: "eclipse/hono-service-auth"
+  imageName: "eclipsehono/hono-service-auth"
   # imageTag contains the tag of the container image to deploy.
   # If not specified, the value of the honoImagesTag property is used.
   # imageTag:
@@ -984,7 +993,7 @@ authServer:
   tlsKeysSecret: "example"
 
   # hono contains the Auth Server's configuration properties as defined in
-  # https://www.eclipse.org/hono/docs/admin-guide/auth-server-config/
+  # https://eclipse.dev/hono/docs/admin-guide/auth-server-config/
   hono:
     app:
       # maxInstances defines the number of adapter Verticle instances to deploy
@@ -1096,7 +1105,7 @@ deviceRegistryExample:
   clientTrustStorePath:
 
   # hono contains the Device Registry's configuration properties as defined in
-  # https://www.eclipse.org/hono/docs/admin-guide/device-registry-config/
+  # https://eclipse.dev/hono/docs/admin-guide/device-registry-config/
   hono:
     # auth contains Hono client properties used by the example registry for
     # connecting to the Authentication service.
@@ -1129,9 +1138,9 @@ deviceRegistryExample:
     # for connecting to a Kafka cluster to be used for messaging.
     # This property will be used if "messagingNetworkTypes" contains "kafka" and
     # "kafkaMessagingClusterExample.enabled" is set to false. Please refer to
-    # https://www.eclipse.org/hono/docs/admin-guide/jdbc-device-registry-config/#kafka-based-messaging-configuration
+    # https://eclipse.dev/hono/docs/admin-guide/jdbc-device-registry-config/#kafka-based-messaging-configuration
     # or
-    # https://www.eclipse.org/hono/docs/admin-guide/mongodb-device-registry-config/#kafka-based-messaging-configuration
+    # https://eclipse.dev/hono/docs/admin-guide/mongodb-device-registry-config/#kafka-based-messaging-configuration
     # for a description of supported properties.
     kafka: {}
       # commonClientConfig contains Kafka client configuration to be used by all Kafka consumers and producers
@@ -1152,7 +1161,7 @@ deviceRegistryExample:
   embeddedJdbcDeviceRegistry:
     # imageName contains the name (excluding registry)
     # of the container image for the example embedded jdbc device registry.
-    imageName: "eclipse/hono-service-device-registry-jdbc"
+    imageName: "eclipsehono/hono-service-device-registry-jdbc"
     # imageTag contains the tag of the container image to deploy.
     # If not specified, the value of the honoImagesTag property is used.
     # imageTag:
@@ -1225,7 +1234,7 @@ deviceRegistryExample:
   mongoDBBasedDeviceRegistry:
     # imageName contains the name (excluding registry)
     # of the container image for the example MongoDB based device registry.
-    imageName: "eclipse/hono-service-device-registry-mongodb"
+    imageName: "eclipsehono/hono-service-device-registry-mongodb"
     # imageTag contains the tag of the container image to deploy.
     # If not specified, the value of the honoImagesTag property is used.
     # imageTag:
@@ -1308,7 +1317,7 @@ deviceRegistryExample:
   jdbcBasedDeviceRegistry:
     # imageName contains the name (excluding registry)
     # of the container image for the example jdbc based device registry.
-    imageName: "eclipse/hono-service-device-registry-jdbc"
+    imageName: "eclipsehono/hono-service-device-registry-jdbc"
     # imageTag contains the tag of the container image to deploy.
     # If not specified, the value of the honoImagesTag property is used.
     # imageTag:
@@ -1459,7 +1468,7 @@ commandRouterService:
 
   # imageName contains the name (excluding registry)
   # of the container image to use for the Command Router service
-  imageName: "eclipse/hono-service-command-router-infinispan"
+  imageName: "eclipsehono/hono-service-command-router-infinispan"
   # imageTag contains the tag of the container image to deploy.
   # If not specified, the value of the honoImagesTag property is used.
   # imageTag:
@@ -1571,7 +1580,7 @@ commandRouterService:
   clientTrustStorePath:
 
   # hono contains the service's configuration properties as defined in
-  # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/
+  # https://eclipse.dev/hono/docs/admin-guide/command-router-config/
   hono:
     app:
       # maxInstances defines the number of adapter Verticle instances to deploy
@@ -1593,7 +1602,7 @@ commandRouterService:
 
       # cache contains properties configuring the embedded or remote cache that
       # the Command Router uses for storing routing information. Please refer to Hono's Command Router admin guide at
-      # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/#data-grid-connection-configuration for
+      # https://eclipse.dev/hono/docs/admin-guide/command-router-config/#data-grid-connection-configuration for
       # details regarding cache configuration.
       # If not set explicitly here and "dataGridExample.enabled" is "true", the example data grid is used.
       # If "dataGridExample.enabled" is "false", an embedded cache with a default configuration will be used.
@@ -1605,7 +1614,7 @@ commandRouterService:
     # for connecting to a Kafka cluster to be used for messaging.
     # This property will be used if "messagingNetworkTypes" contains "kafka" and
     # "kafkaMessagingClusterExample.enabled" is set to false. Please refer to
-    # https://www.eclipse.org/hono/docs/admin-guide/command-router-config/#kafka-based-messaging-configuration
+    # https://eclipse.dev/hono/docs/admin-guide/command-router-config/#kafka-based-messaging-configuration
     # for a description of supported properties.
     kafka: {}
       # commonClientConfig contains Kafka client configuration to be used by all Kafka consumers and producers
@@ -1722,7 +1731,7 @@ grafana:
 # to be used for messaging if "messagingNetworkTypes" contains "kafka"
 kafkaMessagingClusterExample:
   # enabled indicates whether the example Kafka cluster consisting of a single broker
-  # and one Zookeeper instance should be deployed. This minimal deployment is not suitable
+  # instance should be deployed. This minimal deployment is not suitable
   # for production purposes. To use an already existing Kafka cluster instead,
   # set this property to false and configure "adapters.kafkaMessagingSpec".
   enabled: true
@@ -1947,7 +1956,7 @@ amqpMessagingNetworkExample:
     artemis:
       # imageName contains the name (including tag) of the container
       # image to use for the example AMQP Messaging Network Broker
-      imageName: "quay.io/artemiscloud/activemq-artemis-broker:1.0.6"
+      imageName: "quay.io/artemiscloud/activemq-artemis-broker:1.0.32"
       # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
       # configuration property of the component's liveness probe.
       # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
@@ -2010,7 +2019,7 @@ dataGridExample:
   enabled: false
   # imageName contains the name (including tag)
   # of the container image to use for the example data grid.
-  imageName: "infinispan/server-native:13.0"
+  imageName: "quay.io/infinispan/server:15.2.6.Final"
   # [DEPRECATED: use probes instead] livenessProbeInitialDelaySeconds contains the value to use for the "initialDelaySeconds"
   # configuration property of the component's liveness probe.
   # The value of the top level "livenessProbeInitialDelaySeconds" property will be used if not set.
@@ -2023,7 +2032,7 @@ dataGridExample:
   probes:
     livenessProbe:
       httpGet:
-        path: "/rest/v2/cache-managers/routing-info/health/status"
+        path: "/rest/v2/container/health/status"
         port: "hotrod"
       failureThreshold: 5
       successThreshold: 1
@@ -2031,7 +2040,7 @@ dataGridExample:
       initialDelaySeconds: 300
     readinessProbe:
       httpGet:
-        path: "/rest/v2/cache-managers/routing-info/health/status"
+        path: "/rest/v2/container/health/status"
         port: "hotrod"
       failureThreshold: 5
       successThreshold: 1
@@ -2044,10 +2053,10 @@ dataGridExample:
   resources:
     requests:
       cpu: "150m"
-      memory: "100Mi"
+      memory: "320Mi"
     limits:
       cpu: "1"
-      memory: "200Mi"
+      memory: "320Mi"
 
   pod:
     priorityClassName: ""

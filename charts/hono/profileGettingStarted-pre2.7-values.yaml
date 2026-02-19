@@ -1,0 +1,99 @@
+#
+# Copyright (c) 2026 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+
+# This profile provides a minimal setup of Hono that is suitable for walking through
+# Hono's Getting Started guide using a local Kubernetes cluster.
+# This profile is supposed to be used with Hono chart versions prior to 2.7.0.
+
+# This is required to be able to still use the (unmaintained) "bitnamylegacy" container images
+# for Kafka and MongoDB, which are used by the chart's example configurations for the Kafka Messaging
+# Infrastucture and the Device Registry.
+# see https://github.com/bitnami/charts/issues/30850
+# see https://github.com/eclipse-packages/packages/issues/567
+global:
+  security:
+    allowInsecureImages: true
+
+grafana:
+  enabled: false
+
+prometheus:
+  createInstance: false
+
+jaegerBackendExample:
+  enabled: false
+
+adapters:
+  http:
+    enabled: true
+    imageName: "eclipse/hono-adapter-http-native"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "120Mi"
+      limits:
+        memory: "120Mi"
+
+  mqtt:
+    enabled: true
+    imageName: "eclipse/hono-adapter-mqtt-native"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "120Mi"
+      limits:
+        memory: "120Mi"
+
+  amqp:
+    enabled: false
+
+  coap:
+    enabled: false
+
+  kura:
+    enabled: false
+
+  lora:
+    enabled: false
+
+authServer:
+  imageName: "eclipse/hono-service-auth-native"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "60Mi"
+    limits:
+      memory: "60Mi"
+
+deviceRegistryExample:
+  type: "embedded"
+  embeddedJdbcDeviceRegistry:
+    imageName: "eclipse/hono-service-device-registry-jdbc"
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "400Mi"
+      limits:
+        memory: "400Mi"
+
+dataGridExample:
+  enabled: false
+
+commandRouterService:
+  imageName: "eclipse/hono-service-command-router-native"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "140Mi"
+    limits:
+      memory: "140Mi"

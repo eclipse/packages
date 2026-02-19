@@ -1,6 +1,6 @@
 {{- if .Values.dataGridExample.enabled }}
 #
-# Copyright (c) 2019, 2020 Contributors to the Eclipse Foundation
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -20,9 +20,10 @@ data:
   hono-data-grid.xml: |
     {{- tpl ( .Files.Get "config/infinispan/hono-data-grid.xml" ) . | nindent 4 }}
   users.properties: |
+    #$REALM_NAME=default$
+    #$ALGORITHM=clear$
+    #Tue Feb 17 17:15:00 CEST 2026
     {{ printf "%s=%s" .Values.dataGridExample.authUsername .Values.dataGridExample.authPassword }}
   public-groups.properties: |
-    {{ printf "%s=adapter" .Values.dataGridExample.authUsername }}
-  mgmt-groups.properties: |
-    {{ printf "%s=admin" .Values.dataGridExample.authUsername }}
+    {{ printf "%s=application" .Values.dataGridExample.authUsername }}
 {{- end }}

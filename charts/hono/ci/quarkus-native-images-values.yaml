@@ -32,40 +32,34 @@ kafka:
     create: false
 
 authServer:
-  imageName: "eclipse/hono-service-auth-native"
+  imageName: "eclipsehono/hono-service-auth-native"
   cmdLineArgs:
   - "-Xmx24m"
   resources:
     requests:
-      cpu:
       memory: "30Mi"
     limits:
-      cpu:
       memory: "30Mi"
 
 commandRouterService:
-  imageName: "eclipse/hono-service-command-router-infinispan-native"
+  imageName: "eclipsehono/hono-service-command-router-infinispan-native"
   cmdLineArgs:
-  - "-Xmx96m"
+  - "-Xmx110m"
   resources:
     requests:
-      cpu:
-      memory: "120Mi"
+      memory: "140Mi"
     limits:
-      cpu:
-      memory: "120Mi"
+      memory: "140Mi"
 
 deviceRegistryExample:
   embeddedJdbcDeviceRegistry:
-    imageName: "eclipse/hono-service-device-registry-jdbc-native"
+    imageName: "eclipsehono/hono-service-device-registry-jdbc-native"
     cmdLineArgs:
     - "-Xmx160m"
     resources:
       requests:
-        cpu:
         memory: "120Mi"
       limits:
-        cpu:
         memory: "120Mi"
 
 adapters:
@@ -73,7 +67,7 @@ adapters:
     enabled: false
   coap:
     enabled: true
-    imageName: "eclipse/hono-adapter-coap-native"
+    imageName: "eclipsehono/hono-adapter-coap-native"
     cmdLineArgs:
     - "-Xmx96m"
     hono:
@@ -86,10 +80,8 @@ adapters:
         maxConnections: 70
     resources:
       requests:
-        cpu:
         memory: "120Mi"
       limits:
-        cpu:
         memory: "120Mi"
   http:
     enabled: false
