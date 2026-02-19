@@ -32,6 +32,9 @@ NAME                                       {{ "READY   STATUS    RESTARTS   AGE"
 {{ include "hono.fullname" . }}-artemis-f8f7dc7f4-864cj                   1/1     Running   0          5m51s
 {{ include "hono.fullname" . }}-dispatch-router-6c77dc78bd-hjn4l          1/1     Running   0          5m51s
 {{- end }}
+{{- if .Values.dataGridExample.enabled }}
+{{ include "hono.fullname" . }}-data-grid-0                               1/1     Running   0          5m51s
+{{- end }}
 {{- if ( has "kafka" .Values.messagingNetworkTypes ) }}
 {{ include "hono.fullname" . }}-kafka-controller-0                        1/1     Running   0          5m51s
 {{- end }}

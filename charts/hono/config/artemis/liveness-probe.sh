@@ -14,7 +14,7 @@
 #
 
 brokerName=${1:-hono-broker}
-url="http://localhost:8161/console/jolokia/read/org.apache.activemq.artemis:broker=%22${brokerName}%22/Version"
+brokerIP=`hostname -I | cut -f 1 -d ' '`
+url="http://${brokerIP}:8161/console/jolokia/read/org.apache.activemq.artemis:broker=%22${brokerName}%22/Version"
 
-curl -s --user artemis:artemis -H "Origin: http://0.0.0.0" ${url}
-
+curl -s --user artemis:artemis -H "Origin: http://${brokerIP}" ${url}

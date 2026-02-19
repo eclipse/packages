@@ -1,6 +1,6 @@
 {{- if .Values.dataGridExample.enabled }}
 #
-# Copyright (c) 2019, 2021 Contributors to the Eclipse Foundation
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -36,14 +36,10 @@ spec:
       - image: {{ .Values.dataGridExample.imageName | quote }}
         imagePullPolicy: IfNotPresent
         name: hono-data-grid
-        command:
-        - /opt/infinispan/bin/server.sh
+        args:
         - -c
-        - hono-data-grid.xml
-        - -Dquarkus.log.category."org.infinispan.AUDIT".level=WARN
+        - /opt/hono/infinispan/hono-data-grid.xml
         env:
-        - name: JDK_JAVA_OPTIONS
-          value: "-XX:MinRAMPercentage=85 -XX:MaxRAMPercentage=85"
         - name: JAVA_OPTIONS
           value: {{ printf "-Djgroups.dns.query=%s-%s" (include "hono.fullname" .) $args.name }}
         ports:
@@ -51,21 +47,17 @@ spec:
           containerPort: 11222
           protocol: TCP
         volumeMounts:
-        - mountPath: /opt/infinispan/server/conf/hono-data-grid.xml
+        - mountPath: /opt/hono/infinispan/hono-data-grid.xml
           name: conf
           subPath: hono-data-grid.xml
           readOnly: true
-        - mountPath: /opt/infinispan/server/conf/users.properties
+        - mountPath: /opt/hono/infinispan/users.properties
           name: conf
           subPath: users.properties
           readOnly: true
-        - mountPath: /opt/infinispan/server/conf/public-groups.properties
+        - mountPath: /opt/hono/infinispan/public-groups.properties
           name: conf
           subPath: public-groups.properties
-          readOnly: true
-        - mountPath: /opt/infinispan/server/conf/mgmt-groups.properties
-          name: conf
-          subPath: mgmt-groups.properties
           readOnly: true
         {{- include "hono.component.healthChecks" $args | nindent 8 }}
         {{- with .Values.dataGridExample.resources }}

@@ -1,6 +1,6 @@
 # Eclipse Hono
 
-[Eclipse Hono™](https://www.eclipse.org/hono/) provides remote service interfaces for connecting large
+[Eclipse Hono™](https://eclipse.dev/hono/) provides remote service interfaces for connecting large
 numbers of IoT devices to a back end and interacting with them in a uniform way regardless of the device
 communication protocol.
 
@@ -10,11 +10,11 @@ This repository contains a *chart* that can be used to install Hono to a Kuberne
 ## Prerequisites
 
 Installing Hono using the chart requires the Helm tool to be installed as described on the
-[IoT Packages chart repository prerequisites](https://www.eclipse.org/packages/prereqs/#helm)
+[IoT Packages chart repository prerequisites](https://eclipse.dev/packages/prereqs/#helm)
 page.
 
 In addition, a Kubernetes cluster to install the chart to is required.
-See the corresponding section on the [IoT Packages prerequisites](https://www.eclipse.org/packages/prereqs/#kubernetes-cluster)
+See the corresponding section on the [IoT Packages prerequisites](https://eclipse.dev/packages/prereqs/#kubernetes-cluster)
 page for information on how to set up a cluster suitable for running Hono.
 
 The Helm chart is being tested to successfully install on the four most recent Kubernetes versions.
@@ -100,6 +100,13 @@ helm uninstall eclipse-hono -n hono
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Release Notes
+
+### 2.7.0
+
+* Use Hono 2.7.0 container images.
+* Explicitly allow usage of binamilegacy images by default.
+* Updated Apache ActibeMQ Artemis image to most recent version.
+* Updated Infinispan server to version 15.2
 
 ### 2.6.6
 
@@ -344,7 +351,7 @@ adapters:
 ```
 
 *adapters.kafkaMessagingSpec* needs to contain configuration properties as described in Hono's
-[Kafka client admin guide](https://www.eclipse.org/hono/docs/admin-guide/hono-kafka-client-configuration/).
+[Kafka client admin guide](https://eclipse.dev/hono/docs/admin-guide/hono-kafka-client-configuration/).
 Make sure to adapt/add properties as required by the Kafka cluster.
 
 Assuming that the file is named `customKafkaCluster.yaml`, the values can then be passed in to the Helm `install`
@@ -411,7 +418,7 @@ adapters:
 ```
 
 All of the *specs* need to contain Hono client configuration properties as described in the
-[client admin guide](https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/).
+[client admin guide](https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/).
 Make sure to adapt/add properties as required by the custom service implementations.
 The information contained in the *specs* will then be used by all protocol adapters that get deployed.
 
@@ -518,7 +525,7 @@ adapters:
 ```
 
 Both the *amqpMessagingNetworkSpec* and the *commandAndControlSpec* need to contain Hono client configuration properties
-as described in the [client admin guide](https://www.eclipse.org/hono/docs/admin-guide/hono-client-configuration/).
+as described in the [client admin guide](https://eclipse.dev/hono/docs/admin-guide/hono-client-configuration/).
 Make sure to adapt/add properties as required by the AMQP Messaging Network.
 
 Note that *my-secret* is expected to already exist in the namespace that Hono gets installed to, i.e. the Helm chart
@@ -562,7 +569,7 @@ The dashboard can then be opened by pointing your browser to `http://localhost:3
 The chart can be customized to use container images other than the default ones. This can be used to install an older
 version of the images or to install a Hono milestone using the chart. It can also be used to install custom built
 images that need to be pulled from a different (private) container registry. Please refer to Hono's
-[build instructions](https://www.eclipse.org/hono/docs/dev-guide/building_hono/#pushing-images) for details regarding
+[build instructions](https://eclipse.dev/hono/docs/dev-guide/building_hono/#pushing-images) for details regarding
 building custom images and pushing them to a private container registry.
 
 The `values.yaml` file contains configuration properties for setting the container image and tag names to use for
@@ -573,15 +580,15 @@ The following command installs Hono using custom built images published on a pri
 *2.0.0-custom* instead of the ones indicated by the chart's *appVersion* property:
 
 ```bash
-helm install eclipse-hono eclipse-iot/hono -n hono --wait --set honoImagesTag=2.0.0-custom --set honoContainerRegistry=my-registry:9090
+helm install eclipse-hono eclipse-iot/hono -n hono --wait --set honoImagesTag=2.7.0-custom --set honoContainerRegistry=my-registry:9090
 ```
 
 It is also possible to define the image and tag names and container registry for each component separately.
 The easiest way to do that is to create a YAML file that specifies the particular properties:
 
 ```yaml
-# pull standard adapter images in version 2.0.0 from Docker Hub by default
-honoImagesTag: "2.0.0"
+# pull standard adapter images in version 2.7.0 from Docker Hub by default
+honoImagesTag: "2.7.0"
 
 deviceRegistryExample:
   # pull custom Device Registry image from private container registry
@@ -592,7 +599,7 @@ deviceRegistryExample:
 authServer:
   # pull "older" release from Docker Hub
   imageName: "eclipse/hono-service-auth"
-  imageTag: "1.12.2"
+  imageTag: "2.6.0"
 ```
 
 Assuming that the file is named `customImages.yaml`, the values can then be passed in to the
@@ -614,28 +621,28 @@ details regarding the setup and configuration of a private container registry.
 
 ### Deploying via a private Registry
 
-Please refer to Hono's [Building from Source](https://www.eclipse.org/hono/docs/dev-guide/building_hono/) instructions
+Please refer to Hono's [Building from Source](https://eclipse.dev/hono/docs/dev-guide/building_hono/) instructions
 for details regarding getting the source code, building and pushing the container images.
 
 As in the previous section, the names of the custom images are configured in a YAML file:
 
 ```yaml
-# use version 2.0.0-CUSTOM
-honoImagesTag: "2.0.0-CUSTOM"
+# use version 2.7.0-CUSTOM
+honoImagesTag: "2.7.0-CUSTOM"
 
 deviceRegistryExample:
-  imageName: "my.registry.io/eclipse/hono-service-device-registry-mongodb"
+  imageName: "my.registry.io/eclipsehono/hono-service-device-registry-mongodb"
 authServer:
-  imageName: "my.registry.io/eclipse/hono-service-auth"
+  imageName: "my.registry.io/eclipsehono/hono-service-auth"
 commandRouterService:
-  imageName: "my.registry.io/eclipse/hono-service-command-router-infinispan"
+  imageName: "my.registry.io/eclipsehono/hono-service-command-router-infinispan"
 adapters:
   amqp:
-    imageName: "my.registry.io/eclipse/hono-adapter-amqp"
+    imageName: "my.registry.io/eclipsehono/hono-adapter-amqp"
   mqtt:
-    imageName: "my.registry.io/eclipse/hono-adapter-mqtt"
+    imageName: "my.registry.io/eclipsehono/hono-adapter-mqtt"
   http:
-    imageName: "my.registry.io/eclipse/hono-adapter-http"
+    imageName: "my.registry.io/eclipsehono/hono-adapter-http"
 ```
 
 Assuming that the file is named `customImages.yaml`, the values can then be passed in to the
@@ -700,7 +707,7 @@ with 80% of the container's memory limit being available to the process like thi
 
 ```yaml
 authServer:
-  imageName: "eclipse/hono-service-auth-native"
+  imageName: "eclipsehono/hono-service-auth-native"
   cmdLineArgs:
   - "-Xmx24m"
   resources:
@@ -715,10 +722,10 @@ authServer:
 ## Configuring Storage for Command Routing Data
 
 Hono needs to store information about the connection status of devices during runtime.
-This kind of information is used for determining how [command & control](https://www.eclipse.org/hono/docs/concepts/command-and-control/)
+This kind of information is used for determining how [command & control](https://eclipse.dev/hono/docs/concepts/command-and-control/)
 messages, that are sent by business applications, can be routed to the protocol adapters that the target devices are connected to.
 
-Hono's protocol adapters can use the [Command Router API](https://www.eclipse.org/hono/docs/api/command-router/) to supply
+Hono's protocol adapters can use the [Command Router API](https://eclipse.dev/hono/docs/api/command-router/) to supply
 device connection information with which a Command Router service component can route command & control messages to the
 protocol adapters that the target devices are connected to.
 
@@ -791,7 +798,7 @@ cluster and how to install Hono to it. The steps described include:
 * Helm based installation of Hono to the AKS instance.
 * (Optionally) using a managed [Azure Service Bus](https://docs.microsoft.com/azure/service-bus-messaging) instance as the
   broker component for Hono's
-  [AMQP 1.0 based messaging infrastructure](https://www.eclipse.org/hono/docs/architecture/component-view/#amqp-10-based-messaging-infrastructure)
+  [AMQP 1.0 based messaging infrastructure](https://eclipse.dev/hono/docs/architecture/component-view/#amqp-10-based-messaging-infrastructure)
   instead of the Apache ActiveMQ Artemis instance that is installed by the chart by default.
 - [Virtual Network (VNet) service endpoints](https://docs.microsoft.com/azure/virtual-network) ensure protected communication
   between AKS and Azure Service Bus.
