@@ -1,7 +1,7 @@
 {{- $amqpEnabled := and ( has "amqp" .Values.messagingNetworkTypes ) .Values.amqpMessagingNetworkExample.enabled -}}
 {{- if $amqpEnabled }}
 #
-# Copyright (c) 2019, 2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2019 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -57,14 +57,37 @@ spec:
         - name: internal
           containerPort: 5673
           protocol: TCP
-        - name: health
-          containerPort: {{ include "hono.healthCheckPort" . }}
-          protocol: TCP
         {{- with .Values.amqpMessagingNetworkExample.dispatchRouter.resources }}
         resources:
           {{- . | toYaml | nindent 10 }}
         {{- end }}
-        {{- include "hono.component.healthChecks" $args | nindent 8 }}
+        # In general, we would rather use the /healthz resource provided by qdrouterd's HTTP server.
+        # However, the libwebsockets library used by older dispatch router images will try to allocate
+        # memory for a lot of file descriptors and fail with an OOM during startup, effectively preventing
+        # the HTTP server from starting and in turn preventing the pod to ever reach the ready state.
+        # see https://github.com/eclipse-packages/packages/issues/312
+        #
+        # We therefore use a simple TCP socket check on the internal AMQP port for the liveness and readiness probes,
+        # which is sufficient for our use case.
+        {{- $probes := mergeOverwrite ( .Values.probes | deepCopy ) ( $args.componentConfig.probes | default dict | deepCopy ) }}
+        {{- $deprecatedLivenessProbeInitialDelaySeconds := default .Values.livenessProbeInitialDelaySeconds $args.componentConfig.livenessProbeInitialDelaySeconds }}
+        {{- $deprecatedReadinessProbeInitialDelaySeconds := default .Values.readinessProbeInitialDelaySeconds $args.componentConfig.readinessProbeInitialDelaySeconds }}
+        livenessProbe:
+          tcpSocket:
+            port: 5673
+          periodSeconds: {{ $probes.livenessProbe.periodSeconds }}
+          failureThreshold: {{ $probes.livenessProbe.failureThreshold }}
+          initialDelaySeconds: {{ default $probes.livenessProbe.initialDelaySeconds $deprecatedLivenessProbeInitialDelaySeconds }}
+          successThreshold: {{ $probes.livenessProbe.successThreshold }}
+          timeoutSeconds: {{ $probes.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          tcpSocket:
+            port: 5673
+          periodSeconds: {{ $probes.readinessProbe.periodSeconds }}
+          failureThreshold: {{ $probes.readinessProbe.failureThreshold }}
+          initialDelaySeconds: {{ default $probes.readinessProbe.initialDelaySeconds $deprecatedReadinessProbeInitialDelaySeconds }}
+          successThreshold: {{ $probes.readinessProbe.successThreshold }}
+          timeoutSeconds: {{ $probes.readinessProbe.timeoutSeconds }}
         securityContext:
           privileged: false
         volumeMounts:
