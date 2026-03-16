@@ -176,11 +176,15 @@ config:
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/values.yaml
 mysql:
   enabled: true
+  image:
+    repository: bitnamilegacy/mysql
   primary:
     persistence:
       enabled: true
   volumePermissions:
     enabled: true
+    image:
+      repository: bitnamilegacy/os-shell
   architecture: standalone
   auth:
     username: hawkbit
@@ -188,14 +192,21 @@ mysql:
     database: hawkbit
   metrics:
     enabled: true
+    image:
+      repository: bitnamilegacy/mysqld-exporter
 
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/rabbitmq/values.yaml
 rabbitmq:
   enabled: true
+  image:
+    repository: bitnamilegacy/rabbitmq
   persistence:
     enabled: true
   volumePermissions:
     enabled: true
+    image:
+      repository: bitnamilegacy/os-shell
+      tag: 11-debian-11-r90
   auth:
     username: hawkbit
     password: hawkbit
