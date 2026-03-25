@@ -15,10 +15,14 @@
 
 image:
   repository: "hawkbit/hawkbit-update-server"
-  tag: 0.5.0-mysql
+  tag: "0.8.0"
   pullPolicy: IfNotPresent
 
-replicaCount: 1
+simpleUIImage:
+  repository: "hawkbit/hawkbit-simple-ui"
+  tag: "0.8.0"
+  pullPolicy: IfNotPresent
+
 
 ## podDisruptionBudget configuration
 podDisruptionBudget:
@@ -34,27 +38,38 @@ securityContext:
   runAsUser: 65534
   extra: {}
 
-## strategy used to replace old Pods by new ones
-## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-updateStrategy:
-  ## default is re-create, because of possible database migrations
-  type: Recreate
 
 nameOverride: ""
 fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
   annotations: {}
+  replicaCount: 1
+  ## strategy used to replace old Pods by new ones
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  updateStrategy:
+    ## default is re-create, because of possible database migrations
+    type: Recreate
     # traefik.ingress.kubernetes.io/affinity: "true"
+
+serviceSimpleUI:
+  type: ClusterIP
+  port: 8088
+  annotations: {}
+  replicaCount: 1
+  updateStrategy:
+    type: RollingUpdate
+  resources: {}
 
 livenessProbe:
   initialDelaySeconds: 240
   timeoutSeconds: 5
 readinessProbe:
-  initialDelaySeconds: 120
+  failureThreshold: 24
   timeoutSeconds: 5
+  periodSeconds: 5
 
 ingress:
   enabled: false
@@ -64,7 +79,16 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: hawkbit.local
-      paths: []
+      paths:
+    # default value:
+    #  - path: "/rest"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #  - path: "/swagger-ui"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #  - path: "/v3"
+    #    service: {{ include "hawkbit.fullname" . }}
+    #²  - path: "/"
+    #    service: {{ include "hawkbit.fullname" . }}-simple-ui
   tls: []
   #  - secretName: hawkbit-tls
   #    hosts:
@@ -89,6 +113,9 @@ env:
   springRabbitmqHost: "hawkbit-rabbitmq"
   springRabbitmqUsername: "hawkbit"
   springRabbitmqPassword: "hawkbit"
+
+envSimpleUI:
+  hawkbitServerMgmtUrl: ""
 
 # optional env vars
 extraEnv: {}
@@ -170,6 +197,7 @@ config:
       datasource:
         username: hawkbit
         password: hawkbit
+  simpleUI: {}
 
 
 ## dependency charts config

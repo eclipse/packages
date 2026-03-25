@@ -1,4 +1,5 @@
 {{- if .Values.ingress.enabled -}}
+{{- $ingressDefaultPaths := (include "hawkbit.ingressDefaultPaths" $ | fromYamlArray ) }}
 {{- $apiVersion := include "hawkbit.ingressAPIVersion" . -}}
 {{- $fullName := include "hawkbit.fullname" . -}}
 apiVersion: {{ $apiVersion }}
@@ -30,18 +31,18 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-        {{- range .paths }}
-          - path: {{ . }}
+        {{- range default .paths $ingressDefaultPaths }}
+          - path: {{ .path }}
             {{- if eq $apiVersion "networking.k8s.io/v1" }}
             pathType: Prefix
             backend:
               service:
-                name: {{ $fullName }}
+                name: {{ .service }}
                 port:
                   name: http
             {{- else }}
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ .service }}
               servicePort: http
             {{- end }}
         {{- end }}
