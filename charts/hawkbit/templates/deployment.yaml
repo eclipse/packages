@@ -25,6 +25,28 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      initContainers:
+        - name: hawkbit-init
+          image: "{{ .Values.image.initContainer }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: HAWKBIT_DB_MODE
+              value: "migrate"
+            - name: "SPRING_DATASOURCE_URL"
+              {{- if and .Values.env .Values.env.springDatasourceUrl }}
+              value: "{{ .Values.env.springDatasourceUrl }}"
+              {{- else }}
+              value: "jdbc:mariadb://{{ .Release.Name }}-mysql:3306/{{ .Values.mysql.auth.database }}"
+              {{- end }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "{{ .Values.mysql.auth.username }}"
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "mysql.secretName" .Subcharts.mysql }}
+                  key: mysql-password
+            - name: AND_THEN
+              value: "true"
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -34,35 +56,54 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: SPRING_PROFILES_ACTIVE
+            - name: PROFILES
               value: "{{ .Values.spring.profiles }}"
-            - name: "SPRING_DATASOURCE_URL"
-              {{- if .Values.env.springDatasourceUrl }}
-              value: "{{ .Values.env.springDatasourceUrl }}"
-              {{- else }}
-              value: "jdbc:mariadb://{{ if .Values.mysql.enabled }}{{ .Release.Name }}-mysql{{ else }}{{ .Values.env.springDatasourceHost }}{{ end }}:3306/{{ .Values.env.springDatasourceDb }}"
-              {{- end }}
-            - name: "SPRING_APPLICATION_JSON"
+            - name: SPRING_FLYWAY_ENABLED
+              value: "false"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "{{ .Values.mysql.auth.username }}"
+            - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "hawkbit.fullname" . }}
-                  key: "SPRING_APPLICATION_JSON"
+                  name: {{ include "mysql.secretName" .Subcharts.mysql }}
+                  key: mysql-password
+            - name: "SPRING_DATASOURCE_URL"
+              {{- if and .Values.env .Values.env.springDatasourceUrl }}
+              value: "{{ .Values.env.springDatasourceUrl }}"
+              {{- else }}
+              value: "jdbc:mariadb://{{ .Release.Name }}-mysql:3306/{{ .Values.mysql.auth.database }}"
+              {{- end }}
             - name: "SPRING_RABBITMQ_HOST"
-              value: "{{ if .Values.rabbitmq.enabled }}{{ .Release.Name }}-rabbitmq{{ else }}{{ .Values.env.springRabbitmqHost }}{{ end }}"
+              value: "{{ .Release.Name }}-rabbitmq"
             - name: "SPRING_RABBITMQ_USERNAME"
-              value: "{{ .Values.env.springRabbitmqUsername }}"
+              value: "{{ .Values.rabbitmq.auth.username }}"
             - name: "SPRING_RABBITMQ_PASSWORD"
               valueFrom:
                 secretKeyRef:
-                  name: "{{ template "hawkbit.fullname" . }}-rabbitmq-pass"
-                  key: "rabbitmq-pass"
+                  name: {{ include "rabbitmq.secretPasswordName" .Subcharts.rabbitmq }}
+                  key: rabbitmq-password
+            - name: SPRING_SECURITY_USER_NAME
+              value: "{{ .Values.auth.username }}"
+            - name: SPRING_SECURITY_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "hawkbit.secretName" . }}
+                  key: hawkbit-password
             {{- if .Values.fileStorage.enabled }}
             - name: "org.eclipse.hawkbit.repository.file.path"
               value: {{ .Values.fileStorage.mountPath }}
             {{- end }}
+            {{- if .Values.extraEnv }}
+            {{- if kindIs "slice" .Values.extraEnv }}
+            {{- toYaml .Values.extraEnv | nindent 12 }}
+            {{- else if kindIs "map" .Values.extraEnv }}
             {{- range $key, $value := .Values.extraEnv }}
             - name: "{{ $key }}"
               value: "{{ $value }}"
+            {{- end }}
+            {{- else }}
+            # .Values.extraEnv of type {{kindOf .Values.extraEnv}} is ignored
+            {{- end }}
             {{- end }}
           ports:
             - name: http
@@ -113,13 +154,13 @@ spec:
         {{- end }}
       {{- end }}
       volumes:
-      - name: configmap
-        configMap:
-          name: {{ include "hawkbit.fullname" . }}
+        - name: configmap
+          configMap:
+            name: {{ include "hawkbit.fullname" . }}
       {{- if .Values.fileStorage.enabled }}
-      - name: storage
-        persistentVolumeClaim:
-          claimName: {{ include "hawkbit.fullname" . }}-data
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ include "hawkbit.fullname" . }}-data
       {{- end}}
       {{- if .Values.extraVolumes }}
       {{ toYaml .Values.extraVolumes | nindent 6 }}
