@@ -21,7 +21,7 @@ image:
 
 # auth configuration
 auth:
-  # if set, the secret will be used to set the hawkbit user password
+  # if set, must contain key: application-user-credentials.yaml
   existingSecret: ""
   username: "admin"
   password: "{noop}admin"
@@ -119,7 +119,7 @@ extraVolumes: []
 extraVolumeMounts: []
 
 configMap:
-  mountPath: "/config"
+  mountPath: "/app/config"
 
 spring:
   profiles: "mysql"
@@ -139,10 +139,9 @@ externalDatabase:
   port: ""
   database: hawkbit
   user: ""
+  password: ""  # used when existingSecret is not set
   url: ""  # optional: override the full JDBC URL
-  existingSecret: ""
-  existingSecretPasswordKey: ""
-  existingSecretUsernameKey: ""
+  existingSecret: ""  # must contain keys: SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD
 
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/values.yaml
 mysql:
@@ -164,6 +163,11 @@ mysql:
 
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/rabbitmq/values.yaml
 rabbitmq:
+  # hawkbit chart: if set, must contain keys SPRING_RABBITMQ_USERNAME and SPRING_RABBITMQ_PASSWORD;
+  # generated from rabbitmq.auth.username and rabbitmq.auth.password if not set
+  credentialsSecret: ""
+  # external RabbitMQ hostname (used when rabbitmq.enabled=false and microservices.enabled=true)
+  host: ""
   enabled: true
   persistence:
     enabled: true
@@ -176,3 +180,47 @@ rabbitmq:
     password: hawkbit
   metrics:
     enabled: true
+
+## Microservices mode — deploy mgmt, ddi, dmf as separate pods instead of the monolith
+microservices:
+  enabled: false
+  mgmt:
+    image:
+      repository: "hawkbit/hawkbit-mgmt-server"
+      tag: "0.10.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources: {}
+  ddi:
+    image:
+      repository: "hawkbit/hawkbit-ddi-server"
+      tag: "0.10.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources: {}
+    # Ingress paths routed to the DDI server (e.g., ["/DEFAULT/controller"])
+    ingressPaths: []
+  dmf:
+    image:
+      repository: "hawkbit/hawkbit-dmf-server"
+      tag: "0.10.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources: {}
+
+## hawkbitgui — optional Next.js management UI
+gui:
+  enabled: false
+  image:
+    repository: "ghcr.io/joshua-clayton/hawkbitgui"
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    port: 3000
+  nextauth:
+    # NEXTAUTH_URL: full public URL of the GUI (e.g., https://hawkbit.example.com)
+    url: "http://localhost:3000"
+    # existingSecret must contain key: NEXTAUTH_SECRET
+    existingSecret: ""
+  resources: {}

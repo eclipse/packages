@@ -66,6 +66,30 @@ Return the secret with the Hawkbit credentials.
   {{- end -}}
 {{- end -}}
 
+{{- define "hawkbit.userCredentialsSecretName" -}}
+  {{- if .Values.auth.existingSecret -}}
+    {{- .Values.auth.existingSecret -}}
+  {{- else -}}
+    {{- printf "%s-user" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.dbCredentialsSecretName" -}}
+  {{- if .Values.externalDatabase.existingSecret -}}
+    {{- .Values.externalDatabase.existingSecret -}}
+  {{- else -}}
+    {{- printf "%s-db" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.rabbitmqCredentialsSecretName" -}}
+  {{- if .Values.rabbitmq.credentialsSecret -}}
+    {{- .Values.rabbitmq.credentialsSecret -}}
+  {{- else -}}
+    {{- printf "%s-rabbitmq" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
+
 {{/*
 Database helpers — switch between externalDatabase and the bundled mysql subchart.
 */}}

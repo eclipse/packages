@@ -32,28 +32,22 @@ spec:
           env:
             - name: HAWKBIT_DB_MODE
               value: "migrate"
-            - name: "SPRING_DATASOURCE_URL"
-              value: {{ include "hawkbit.database.url" . | quote }}
-            - name: SPRING_DATASOURCE_USERNAME
-              {{- if include "hawkbit.database.secretUsernameKey" . }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "hawkbit.database.secretName" . }}
-                  key: {{ include "hawkbit.database.secretUsernameKey" . }}
-              {{- else }}
-              value: {{ include "hawkbit.database.user" . | quote }}
-              {{- end }}
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "hawkbit.database.secretName" . }}
-                  key: {{ include "hawkbit.database.secretPasswordKey" . }}
+            - name: PROFILES
+              value: {{ include "hawkbit.spring.profiles" . | quote }}
             - name: AND_THEN
               value: "true"
-          {{- if .Values.extraVolumeMounts }}
+          envFrom:
+            - secretRef:
+                name: {{ include "hawkbit.dbCredentialsSecretName" . }}
           volumeMounts:
+            - name: configmap
+              mountPath: {{ .Values.configMap.mountPath }}
+            - name: secret-config
+              mountPath: /secret-config
+              readOnly: true
+            {{- if .Values.extraVolumeMounts }}
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
-          {{- end }}
+            {{- end }}
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -67,34 +61,6 @@ spec:
               value: {{ include "hawkbit.spring.profiles" . | quote }}
             - name: SPRING_FLYWAY_ENABLED
               value: "false"
-            - name: SPRING_DATASOURCE_USERNAME
-              {{- if include "hawkbit.database.secretUsernameKey" . }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "hawkbit.database.secretName" . }}
-                  key: {{ include "hawkbit.database.secretUsernameKey" . }}
-              {{- else }}
-              value: {{ include "hawkbit.database.user" . | quote }}
-              {{- end }}
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "hawkbit.database.secretName" . }}
-                  key: {{ include "hawkbit.database.secretPasswordKey" . }}
-            - name: "SPRING_DATASOURCE_URL"
-              value: {{ include "hawkbit.database.url" . | quote }}
-            {{- if .Values.rabbitmq.enabled }}
-            - name: "SPRING_RABBITMQ_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "rabbitmq.secretPasswordName" .Subcharts.rabbitmq }}
-                  key: rabbitmq-password
-            {{- end }}
-            - name: {{ printf "HAWKBIT_SECURITY_USER_%s_PASSWORD" (.Values.auth.username | upper) }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "hawkbit.secretName" . }}
-                  key: hawkbit-password
             {{- if .Values.fileStorage.enabled }}
             - name: "org.eclipse.hawkbit.repository.file.path"
               value: {{ .Values.fileStorage.mountPath }}
@@ -110,6 +76,13 @@ spec:
             {{- else }}
             # .Values.extraEnv of type {{kindOf .Values.extraEnv}} is ignored
             {{- end }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "hawkbit.dbCredentialsSecretName" . }}
+            {{- if .Values.rabbitmq.enabled }}
+            - secretRef:
+                name: {{ include "hawkbit.rabbitmqCredentialsSecretName" . }}
             {{- end }}
           ports:
             - name: http
@@ -130,6 +103,9 @@ spec:
           volumeMounts:
             - name: configmap
               mountPath: {{ .Values.configMap.mountPath }}
+            - name: secret-config
+              mountPath: /secret-config
+              readOnly: true
             {{- if .Values.fileStorage.enabled }}
             - name: storage
               mountPath: {{ .Values.fileStorage.mountPath }}
@@ -163,6 +139,14 @@ spec:
         - name: configmap
           configMap:
             name: {{ include "hawkbit.fullname" . }}
+        - name: secret-config
+          projected:
+            sources:
+              - secret:
+                  name: {{ include "hawkbit.userCredentialsSecretName" . }}
+                  items:
+                    - key: application-user-credentials.yaml
+                      path: application-user-credentials.yaml
       {{- if .Values.fileStorage.enabled }}
         - name: storage
           persistentVolumeClaim:

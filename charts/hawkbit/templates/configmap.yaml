@@ -11,7 +11,6 @@ data:
     {{- $rabbitmqConfig = dict "spring" (dict
         "rabbitmq" (dict
           "host" (printf "%s-rabbitmq" .Release.Name)
-          "username" .Values.rabbitmq.auth.username
         )
         "cloud" (dict "stream" (dict "bindings" (dict
           "default"        (dict "group" "hawkbit")
@@ -24,4 +23,13 @@ data:
     {{- $rabbitmqConfig = dict "spring" (dict "autoconfigure" (dict "exclude" "org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration")) -}}
     {{- end -}}
     {{- $authConfig := dict "hawkbit" (dict "security" (dict "user" (dict (.Values.auth.username) (dict "tenant" "DEFAULT" "roles" (list "TENANT_ADMIN"))))) -}}
-    {{- mergeOverwrite (deepCopy .Values.config.application) $rabbitmqConfig $authConfig | toYaml | nindent 4 }}
+    {{- $importConfig := dict "spring" (dict "config" (dict "import" (list "optional:file:/secret-config/application-user-credentials.yaml"))) -}}
+    {{- mergeOverwrite (deepCopy .Values.config.application) $rabbitmqConfig $authConfig $importConfig | toYaml | nindent 4 }}
+  application-mysql.yaml: |-
+    spring:
+      datasource:
+        url: {{ include "hawkbit.database.url" . | quote }}
+  application-postgresql.yaml: |-
+    spring:
+      datasource:
+        url: {{ include "hawkbit.database.url" . | quote }}
