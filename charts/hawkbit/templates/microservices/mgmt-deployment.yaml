@@ -1,25 +1,26 @@
-{{- if not .Values.microservices.enabled }}
+{{- if .Values.microservices.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hawkbit.fullname" . }}
+  name: {{ include "hawkbit.fullname" . }}-mgmt
   labels:
 {{ include "hawkbit.labels" . | indent 4 }}
+    app.kubernetes.io/component: mgmt
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.microservices.mgmt.replicaCount }}
   strategy:
-    {{- with .Values.updateStrategy }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "hawkbit.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: mgmt
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "hawkbit.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: mgmt
       annotations:
         checksum/config: {{ include (print .Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- with .Values.podTemplate.annotations }}
@@ -28,8 +29,8 @@ spec:
     spec:
       initContainers:
         - name: hawkbit-init
-          image: "{{ .Values.image.initContainer }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.image.initContainer }}:{{ .Values.microservices.mgmt.image.tag }}"
+          imagePullPolicy: {{ .Values.microservices.mgmt.image.pullPolicy }}
           env:
             - name: HAWKBIT_DB_MODE
               value: "migrate"
@@ -49,14 +50,14 @@ spec:
             {{- if .Values.extraVolumeMounts }}
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
-    {{- with .Values.image.pullSecrets }}
+    {{- with .Values.microservices.mgmt.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: hawkbit-mgmt
+          image: "{{ .Values.microservices.mgmt.image.repository }}:{{ .Values.microservices.mgmt.image.tag }}"
+          imagePullPolicy: {{ .Values.microservices.mgmt.image.pullPolicy }}
           env:
             - name: PROFILES
               value: {{ include "hawkbit.spring.profiles" . | quote }}
@@ -74,30 +75,26 @@ spec:
             - name: "{{ $key }}"
               value: "{{ $value }}"
             {{- end }}
-            {{- else }}
-            # .Values.extraEnv of type {{kindOf .Values.extraEnv}} is ignored
             {{- end }}
             {{- end }}
           envFrom:
             - secretRef:
                 name: {{ include "hawkbit.dbCredentialsSecretName" . }}
-            {{- if .Values.rabbitmq.enabled }}
             - secretRef:
                 name: {{ include "hawkbit.rabbitmqCredentialsSecretName" . }}
-            {{- end }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /swagger-ui/index.html
+              path: /actuator/health
               port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           readinessProbe:
             httpGet:
-              path: /swagger-ui/index.html
+              path: /actuator/health
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
@@ -115,7 +112,7 @@ spec:
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.microservices.mgmt.resources | indent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -152,7 +149,7 @@ spec:
         - name: storage
           persistentVolumeClaim:
             claimName: {{ include "hawkbit.fullname" . }}-data
-      {{- end}}
+      {{- end }}
       {{- if .Values.extraVolumes }}
       {{- toYaml .Values.extraVolumes | nindent 8 }}
       {{- end }}

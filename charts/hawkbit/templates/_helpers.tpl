@@ -86,43 +86,43 @@ Return the secret with the Hawkbit credentials.
   {{- if .Values.rabbitmq.credentialsSecret -}}
     {{- .Values.rabbitmq.credentialsSecret -}}
   {{- else -}}
-    {{- printf "%s-rabbitmq" (include "hawkbit.fullname" .) -}}
+    {{- printf "%s-rabbitmq-creds" (include "hawkbit.fullname" .) -}}
   {{- end -}}
 {{- end -}}
 
 {{/*
-Database helpers — switch between externalDatabase and the bundled mysql subchart.
+Database helpers — switch between externalDatabase and the bundled mariadb subchart.
 */}}
 
 {{- define "hawkbit.database.url" -}}
   {{- if .Values.externalDatabase.url -}}
     {{- .Values.externalDatabase.url -}}
-  {{- else if and .Values.externalDatabase.host (eq (.Values.externalDatabase.type | default "mysql") "postgresql") -}}
+  {{- else if and .Values.externalDatabase.host (eq (.Values.externalDatabase.type | default "mariadb") "postgresql") -}}
     {{- printf "jdbc:postgresql://%s:%v/%s" .Values.externalDatabase.host (.Values.externalDatabase.port | default 5432) (.Values.externalDatabase.database | default "hawkbit") -}}
   {{- else if .Values.externalDatabase.host -}}
     {{- printf "jdbc:mariadb://%s:%v/%s" .Values.externalDatabase.host (.Values.externalDatabase.port | default 3306) (.Values.externalDatabase.database | default "hawkbit") -}}
-  {{- else if .Values.mysql.enabled -}}
-    {{- printf "jdbc:mariadb://%s-mysql:3306/%s" (include "hawkbit.fullname" .) .Values.mysql.auth.database -}}
+  {{- else if .Values.mariadb.enabled -}}
+    {{- printf "jdbc:mariadb://%s-mariadb:3306/%s" (include "hawkbit.fullname" .) .Values.mariadb.auth.database -}}
   {{- else -}}
-    {{- fail "Either externalDatabase.host or mysql.enabled must be set" -}}
+    {{- fail "Either externalDatabase.host or mariadb.enabled must be set" -}}
   {{- end -}}
 {{- end -}}
 
 {{- define "hawkbit.database.user" -}}
   {{- if .Values.externalDatabase.user -}}
     {{- .Values.externalDatabase.user -}}
-  {{- else if .Values.mysql.enabled -}}
+  {{- else if .Values.mariadb.enabled -}}
     {{- "root" -}}
   {{- else -}}
-    {{- fail "externalDatabase.user is required when mysql.enabled=false" -}}
+    {{- fail "externalDatabase.user is required when mariadb.enabled=false" -}}
   {{- end -}}
 {{- end -}}
 
 {{- define "hawkbit.database.secretName" -}}
   {{- if .Values.externalDatabase.existingSecret -}}
     {{- .Values.externalDatabase.existingSecret -}}
-  {{- else if .Values.mysql.enabled -}}
-    {{- include "mysql.secretName" .Subcharts.mysql -}}
+  {{- else if .Values.mariadb.enabled -}}
+    {{- include "mariadb.secretName" .Subcharts.mariadb -}}
   {{- else -}}
     {{- printf "%s-external-db" (include "hawkbit.fullname" .) -}}
   {{- end -}}
@@ -131,8 +131,8 @@ Database helpers — switch between externalDatabase and the bundled mysql subch
 {{- define "hawkbit.database.secretPasswordKey" -}}
   {{- if .Values.externalDatabase.existingSecretPasswordKey -}}
     {{- .Values.externalDatabase.existingSecretPasswordKey -}}
-  {{- else if .Values.mysql.enabled -}}
-    {{- "mysql-root-password" -}}
+  {{- else if .Values.mariadb.enabled -}}
+    {{- "mariadb-root-password" -}}
   {{- else -}}
     {{- "password" -}}
   {{- end -}}
@@ -147,7 +147,7 @@ Database helpers — switch between externalDatabase and the bundled mysql subch
 {{- define "hawkbit.spring.profiles" -}}
   {{- if .Values.spring.profiles -}}
     {{- .Values.spring.profiles -}}
-  {{- else if eq (.Values.externalDatabase.type | default "mysql") "postgresql" -}}
+  {{- else if eq (.Values.externalDatabase.type | default "mariadb") "postgresql" -}}
     {{- "postgresql" -}}
   {{- else -}}
     {{- "mysql" -}}

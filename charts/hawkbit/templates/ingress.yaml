@@ -23,27 +23,69 @@ spec:
   {{- end }}
 {{- end }}
   {{- if eq $apiVersion "networking.k8s.io/v1" }}
-  ingressClassName: {{ .Values.ingress.ingressClassName  }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
   {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
-        {{- range .paths }}
+          {{- if $.Values.microservices.enabled }}
+          - path: /rest
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}-mgmt
+                port:
+                  name: http
+          {{- range $.Values.microservices.ddi.ingressPaths }}
           - path: {{ . }}
-            {{- if eq $apiVersion "networking.k8s.io/v1" }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}-ddi
+                port:
+                  name: http
+          {{- end }}
+          {{- else }}
+          {{- if $.Values.gui.enabled }}
+          {{- /* monolith + gui: explicitly route api paths to monolith */}}
+          - path: /rest
             pathType: Prefix
             backend:
               service:
                 name: {{ $fullName }}
                 port:
                   name: http
-            {{- else }}
+          {{- range $.Values.microservices.ddi.ingressPaths }}
+          - path: {{ . }}
+            pathType: Prefix
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
-            {{- end }}
-        {{- end }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
+          {{- end }}
+          {{- else }}
+          {{- range .paths }}
+          - path: {{ . }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- if $.Values.gui.enabled }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}-gui
+                port:
+                  name: http
+          {{- end }}
   {{- end }}
 {{- end }}

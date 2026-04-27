@@ -1,0 +1,73 @@
+{{- if .Values.gui.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hawkbit.fullname" . }}-gui
+  labels:
+{{ include "hawkbit.labels" . | indent 4 }}
+    app.kubernetes.io/component: gui
+spec:
+  replicas: {{ .Values.gui.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "hawkbit.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: gui
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "hawkbit.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: gui
+      {{- with .Values.podTemplate.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: hawkbitgui
+          image: "{{ .Values.gui.image.repository }}:{{ .Values.gui.image.tag }}"
+          imagePullPolicy: {{ .Values.gui.image.pullPolicy }}
+          env:
+            - name: NEXTAUTH_URL
+              value: {{ .Values.gui.nextauth.url | quote }}
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.gui.nextauth.existingSecret }}
+                  key: NEXTAUTH_SECRET
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          resources:
+{{ toYaml .Values.gui.resources | indent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

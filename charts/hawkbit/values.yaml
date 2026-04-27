@@ -131,10 +131,10 @@ config:
     hawkbit:
 
 ## dependency charts config
-## External database configuration (used when mysql.enabled=false).
-## type: mysql (default) or postgresql
+## External database configuration (used when mariadb.enabled=false).
+## type: mariadb (default) or postgresql
 externalDatabase:
-  type: mysql
+  type: mariadb
   host: ""
   port: ""
   database: hawkbit
@@ -143,25 +143,24 @@ externalDatabase:
   url: ""  # optional: override the full JDBC URL
   existingSecret: ""  # must contain keys: SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD
 
-## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/values.yaml
-mysql:
+## ref: https://github.com/CloudPirates-io/helm-charts/tree/main/charts/mariadb
+mariadb:
   enabled: true
-  primary:
-    persistence:
-      enabled: true
-  volumePermissions:
+  persistence:
     enabled: true
-  architecture: standalone
   auth:
-    # The secret has to contain the keys mysql-root-password, mysql-replication-password and mysql-password
     existingSecret: ""
+    rootPassword: ""
+    database: hawkbit
     username: hawkbit
     password: hawkbit
-    database: hawkbit
+    secretKeys:
+      rootPasswordKey: mariadb-root-password
+      userPasswordKey: mariadb-password
   metrics:
     enabled: true
 
-## ref: https://github.com/bitnami/charts/blob/master/bitnami/rabbitmq/values.yaml
+## ref: https://github.com/CloudPirates-io/helm-charts/tree/main/charts/rabbitmq
 rabbitmq:
   # hawkbit chart: if set, must contain keys SPRING_RABBITMQ_USERNAME and SPRING_RABBITMQ_PASSWORD;
   # generated from rabbitmq.auth.username and rabbitmq.auth.password if not set
@@ -171,13 +170,13 @@ rabbitmq:
   enabled: true
   persistence:
     enabled: true
-  volumePermissions:
-    enabled: true
   auth:
-    existingPasswordSecret: ""
-    existingSecretPasswordKey: rabbitmq-password
+    existingSecret: ""
+    existingPasswordKey: "rabbitmq-password"
+    existingErlangCookieKey: "rabbitmq-erlang-cookie"
     username: hawkbit
     password: hawkbit
+    erlangCookie: ""
   metrics:
     enabled: true
 

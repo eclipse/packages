@@ -11,6 +11,7 @@ data:
     {{- $rabbitmqConfig = dict "spring" (dict
         "rabbitmq" (dict
           "host" (printf "%s-rabbitmq" .Release.Name)
+          "listener" (dict "simple" (dict "missing-queues-fatal" false))
         )
         "cloud" (dict "stream" (dict "bindings" (dict
           "default"        (dict "group" "hawkbit")
@@ -19,7 +20,20 @@ data:
           "device-deleted" (dict "destination" "device-registry.device-deleted")
         )))
       ) -}}
-    {{- else -}}
+    {{- else if .Values.rabbitmq.host -}}
+    {{- $rabbitmqConfig = dict "spring" (dict
+        "rabbitmq" (dict
+          "host" .Values.rabbitmq.host
+          "listener" (dict "simple" (dict "missing-queues-fatal" false))
+        )
+        "cloud" (dict "stream" (dict "bindings" (dict
+          "default"        (dict "group" "hawkbit")
+          "device-created" (dict "destination" "device-registry.device-created")
+          "device-updated" (dict "destination" "device-registry.device-updated")
+          "device-deleted" (dict "destination" "device-registry.device-deleted")
+        )))
+      ) -}}
+    {{- else if not .Values.microservices.enabled -}}
     {{- $rabbitmqConfig = dict "spring" (dict "autoconfigure" (dict "exclude" "org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration")) -}}
     {{- end -}}
     {{- $authConfig := dict "hawkbit" (dict "security" (dict "user" (dict (.Values.auth.username) (dict "tenant" "DEFAULT" "roles" (list "TENANT_ADMIN"))))) -}}
