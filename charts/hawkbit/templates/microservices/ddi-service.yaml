@@ -1,22 +1,20 @@
-{{- if not .Values.microservices.enabled }}
+{{- if .Values.microservices.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "hawkbit.fullname" . }}
+  name: {{ include "hawkbit.fullname" . }}-ddi
   labels:
 {{ include "hawkbit.labels" . | indent 4 }}
-  {{- with .Values.service.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    app.kubernetes.io/component: ddi
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
+    - port: 8081
       targetPort: http
       protocol: TCP
       name: http
   selector:
     app.kubernetes.io/name: {{ include "hawkbit.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: ddi
 {{- end }}

@@ -11,7 +11,7 @@
 ---
 apiVersion: v2
 version: 1.7.0
-appVersion: "0.5.0-mysql"
+appVersion: "0.10.0"
 description: |
    Eclipse hawkBit™ is a domain independent back-end framework for rolling out software updates
    to constrained edge devices as well as more powerful controllers and gateways connected to
@@ -32,11 +32,11 @@ maintainers:
 - name: ctron
   email: ctron@dentrassi.de
 dependencies:
-- name: mysql
-  version: ^9.x
-  repository: "oci://registry-1.docker.io/bitnamicharts"
-  condition: mysql.enabled
+- name: mariadb
+  version: ^0.x
+  repository: "oci://registry-1.docker.io/cloudpirates"
+  condition: mariadb.enabled
 - name: rabbitmq
-  version: ^10.x
-  repository: "oci://registry-1.docker.io/bitnamicharts"
+  version: ^0.x
+  repository: "oci://registry-1.docker.io/cloudpirates"
   condition: rabbitmq.enabled

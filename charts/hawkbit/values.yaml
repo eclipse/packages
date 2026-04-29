@@ -15,8 +15,17 @@
 
 image:
   repository: "hawkbit/hawkbit-update-server"
-  tag: 0.5.0-mysql
+  tag: '0.10.0'
   pullPolicy: IfNotPresent
+  initContainer: "hawkbit/hawkbit-repository-jpa-init"
+
+# auth configuration
+auth:
+  # if set, must contain key: application-user-credentials.yaml
+  existingSecret: ""
+  username: "admin"
+  password: "{noop}admin"
+  dmfPassword: "[KEYCLOAK_HAWKBIT_USER_PASSWORD]"
 
 replicaCount: 1
 
@@ -78,21 +87,12 @@ routes:
 fileStorage:
   enabled: true
   pvcSize: "1Gi"
-  mountPath: "/var/lib/hawkbit-storage"
-
-# env vars for configuration
-env:
-  springDatasourceHost: "hawkbit-mysql"
-  springDatasourceDb: "hawkbit"
-  # if springDatasourceUrl is set override default mysql db url
-  springDatasourceUrl: ""
-  springRabbitmqHost: "hawkbit-rabbitmq"
-  springRabbitmqUsername: "hawkbit"
-  springRabbitmqPassword: "hawkbit"
+  mountPath: "/artifactrepo"
 
 # optional env vars
-extraEnv: {}
-  # JAVA_TOOL_OPTIONS: "-Xms1024m -Xmx1024m"
+extraEnv: []
+# - name: JAVA_TOOL_OPTIONS:
+#   value: "-Xms1024m -Xmx1024m"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -119,7 +119,7 @@ extraVolumes: []
 extraVolumeMounts: []
 
 configMap:
-  mountPath: "/opt/hawkbit/config"
+  mountPath: "/app/config"
 
 spring:
   profiles: "mysql"
@@ -129,75 +129,97 @@ config:
     server:
       useForwardHeaders: true
     hawkbit:
-      ## Configuration for the device management federation
-      ## ref: https://www.eclipse.org/hawkbit/apis/dmf_api/
-      ## These configuration will become available once https://github.com/eclipse/hawkbit/pull/890 is merged
-      # dmf:
-      #   hono:
-      #     enabled: false
-      #     tenant-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/admin/tenants"
-      #     device-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/admin/$$tenantId/devices"
-      #     credentials-list-uri: "http://[DEVICE_REGISTRY_HOST]:8080/v1/credentials/$$tenantId/$$deviceId"
-      #     authentication-method: "oidc"
-      #     username: "[KEYCLOAK_HAWKBIT_USERNAME]"
-      #     oidc-token-uri: "http://[KEYCLOAK_HOST]:8080/auth/realms/master/protocol/openid-connect/token"
-      #     oidc-client-id: "[KEYCLOAK_DEVICE_REGISTRY_CLIENT_ID]"
-    spring:
-      cloud:
-        stream:
-          bindings:
-            default:
-              group: "hawkbit"
-            device-created:
-              destination: "device-registry.device-created"
-            device-updated:
-              destination: "device-registry.device-updated"
-            device-deleted:
-              destination: "device-registry.device-deleted"
-      security:
-        user:
-          name: admin
-  secrets:
-    hawkbit:
-      dmf:
-        hono:
-          password: "[KEYCLOAK_HAWKBIT_USER_PASSWORD]"
-    spring:
-      security:
-        user:
-          # the "{noop}" prefix is needed!
-          password: "{noop}admin"
-      datasource:
-        username: hawkbit
-        password: hawkbit
-
 
 ## dependency charts config
-## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/values.yaml
-mysql:
-  enabled: true
-  primary:
-    persistence:
-      enabled: true
-  volumePermissions:
-    enabled: true
-  architecture: standalone
-  auth:
-    username: hawkbit
-    password: hawkbit
-    database: hawkbit
-  metrics:
-    enabled: true
+## External database configuration (used when mariadb.enabled=false).
+## type: mariadb (default) or postgresql
+externalDatabase:
+  type: mariadb
+  host: ""
+  port: ""
+  database: hawkbit
+  user: ""
+  password: ""  # used when existingSecret is not set
+  url: ""  # optional: override the full JDBC URL
+  existingSecret: ""  # must contain keys: SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD
 
-## ref: https://github.com/bitnami/charts/blob/master/bitnami/rabbitmq/values.yaml
-rabbitmq:
+## ref: https://github.com/CloudPirates-io/helm-charts/tree/main/charts/mariadb
+mariadb:
   enabled: true
   persistence:
     enabled: true
-  volumePermissions:
-    enabled: true
   auth:
+    existingSecret: ""
+    rootPassword: ""
+    database: hawkbit
     username: hawkbit
     password: hawkbit
+    secretKeys:
+      rootPasswordKey: mariadb-root-password
+      userPasswordKey: mariadb-password
   metrics:
     enabled: true
+
+## ref: https://github.com/CloudPirates-io/helm-charts/tree/main/charts/rabbitmq
+rabbitmq:
+  # hawkbit chart: if set, must contain keys SPRING_RABBITMQ_USERNAME and SPRING_RABBITMQ_PASSWORD;
+  # generated from rabbitmq.auth.username and rabbitmq.auth.password if not set
+  credentialsSecret: ""
+  # external RabbitMQ hostname (used when rabbitmq.enabled=false and microservices.enabled=true)
+  host: ""
+  enabled: true
+  persistence:
+    enabled: true
+  auth:
+    existingSecret: ""
+    existingPasswordKey: "rabbitmq-password"
+    existingErlangCookieKey: "rabbitmq-erlang-cookie"
+    username: hawkbit
+    password: hawkbit
+    erlangCookie: ""
+  metrics:
+    enabled: true
+
+## Microservices mode — deploy mgmt, ddi, dmf as separate pods instead of the monolith
+microservices:
+  enabled: false
+  mgmt:
+    image:
+      repository: "hawkbit/hawkbit-mgmt-server"
+      tag: "0.10.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources: {}
+  ddi:
+    image:
+      repository: "hawkbit/hawkbit-ddi-server"
+      tag: "0.10.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources: {}
+    # Ingress paths routed to the DDI server (e.g., ["/DEFAULT/controller"])
+    ingressPaths: []
+  dmf:
+    image:
+      repository: "hawkbit/hawkbit-dmf-server"
+      tag: "0.10.0"
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources: {}
+
+## hawkbitgui — optional Next.js management UI
+gui:
+  enabled: false
+  image:
+    repository: "ghcr.io/joshua-clayton/hawkbitgui"
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    port: 3000
+  nextauth:
+    # NEXTAUTH_URL: full public URL of the GUI (e.g., https://hawkbit.example.com)
+    url: "http://localhost:3000"
+    # existingSecret must contain key: NEXTAUTH_SECRET
+    existingSecret: ""
+  resources: {}

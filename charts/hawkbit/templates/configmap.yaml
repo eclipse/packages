@@ -6,4 +6,44 @@ metadata:
 {{ include "hawkbit.labels" . | indent 4 }}
 data:
   application.yaml: |-
-{{ toYaml .Values.config.application | indent 4}}
+    {{- $rabbitmqConfig := dict -}}
+    {{- if .Values.rabbitmq.enabled -}}
+    {{- $rabbitmqConfig = dict "spring" (dict
+        "rabbitmq" (dict
+          "host" (printf "%s-rabbitmq" .Release.Name)
+          "listener" (dict "simple" (dict "missing-queues-fatal" false))
+        )
+        "cloud" (dict "stream" (dict "bindings" (dict
+          "default"        (dict "group" "hawkbit")
+          "device-created" (dict "destination" "device-registry.device-created")
+          "device-updated" (dict "destination" "device-registry.device-updated")
+          "device-deleted" (dict "destination" "device-registry.device-deleted")
+        )))
+      ) -}}
+    {{- else if .Values.rabbitmq.host -}}
+    {{- $rabbitmqConfig = dict "spring" (dict
+        "rabbitmq" (dict
+          "host" .Values.rabbitmq.host
+          "listener" (dict "simple" (dict "missing-queues-fatal" false))
+        )
+        "cloud" (dict "stream" (dict "bindings" (dict
+          "default"        (dict "group" "hawkbit")
+          "device-created" (dict "destination" "device-registry.device-created")
+          "device-updated" (dict "destination" "device-registry.device-updated")
+          "device-deleted" (dict "destination" "device-registry.device-deleted")
+        )))
+      ) -}}
+    {{- else if not .Values.microservices.enabled -}}
+    {{- $rabbitmqConfig = dict "spring" (dict "autoconfigure" (dict "exclude" "org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration")) -}}
+    {{- end -}}
+    {{- $authConfig := dict "hawkbit" (dict "security" (dict "user" (dict (.Values.auth.username) (dict "tenant" "DEFAULT" "roles" (list "TENANT_ADMIN"))))) -}}
+    {{- $importConfig := dict "spring" (dict "config" (dict "import" (list "optional:file:/secret-config/application-user-credentials.yaml"))) -}}
+    {{- mergeOverwrite (deepCopy .Values.config.application) $rabbitmqConfig $authConfig $importConfig | toYaml | nindent 4 }}
+  application-mysql.yaml: |-
+    spring:
+      datasource:
+        url: {{ include "hawkbit.database.url" . | quote }}
+  application-postgresql.yaml: |-
+    spring:
+      datasource:
+        url: {{ include "hawkbit.database.url" . | quote }}

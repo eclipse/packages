@@ -54,3 +54,102 @@ Return the appropriate apiVersion for ingress.
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the secret with the Hawkbit credentials.
+*/}}
+{{- define "hawkbit.secretName" -}}
+  {{- if .Values.auth.existingSecret -}}
+    {{ print (tpl .Values.auth.existingSecret $) -}}
+  {{- else -}}
+    {{ printf "%s" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.userCredentialsSecretName" -}}
+  {{- if .Values.auth.existingSecret -}}
+    {{- .Values.auth.existingSecret -}}
+  {{- else -}}
+    {{- printf "%s-user" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.dbCredentialsSecretName" -}}
+  {{- if .Values.externalDatabase.existingSecret -}}
+    {{- .Values.externalDatabase.existingSecret -}}
+  {{- else -}}
+    {{- printf "%s-db" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.rabbitmqCredentialsSecretName" -}}
+  {{- if .Values.rabbitmq.credentialsSecret -}}
+    {{- .Values.rabbitmq.credentialsSecret -}}
+  {{- else -}}
+    {{- printf "%s-rabbitmq-creds" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Database helpers — switch between externalDatabase and the bundled mariadb subchart.
+*/}}
+
+{{- define "hawkbit.database.url" -}}
+  {{- if .Values.externalDatabase.url -}}
+    {{- .Values.externalDatabase.url -}}
+  {{- else if and .Values.externalDatabase.host (eq (.Values.externalDatabase.type | default "mariadb") "postgresql") -}}
+    {{- printf "jdbc:postgresql://%s:%v/%s" .Values.externalDatabase.host (.Values.externalDatabase.port | default 5432) (.Values.externalDatabase.database | default "hawkbit") -}}
+  {{- else if .Values.externalDatabase.host -}}
+    {{- printf "jdbc:mariadb://%s:%v/%s" .Values.externalDatabase.host (.Values.externalDatabase.port | default 3306) (.Values.externalDatabase.database | default "hawkbit") -}}
+  {{- else if .Values.mariadb.enabled -}}
+    {{- printf "jdbc:mariadb://%s-mariadb:3306/%s" (include "hawkbit.fullname" .) .Values.mariadb.auth.database -}}
+  {{- else -}}
+    {{- fail "Either externalDatabase.host or mariadb.enabled must be set" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.database.user" -}}
+  {{- if .Values.externalDatabase.user -}}
+    {{- .Values.externalDatabase.user -}}
+  {{- else if .Values.mariadb.enabled -}}
+    {{- "root" -}}
+  {{- else -}}
+    {{- fail "externalDatabase.user is required when mariadb.enabled=false" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.database.secretName" -}}
+  {{- if .Values.externalDatabase.existingSecret -}}
+    {{- .Values.externalDatabase.existingSecret -}}
+  {{- else if .Values.mariadb.enabled -}}
+    {{- include "mariadb.secretName" .Subcharts.mariadb -}}
+  {{- else -}}
+    {{- printf "%s-external-db" (include "hawkbit.fullname" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.database.secretPasswordKey" -}}
+  {{- if .Values.externalDatabase.existingSecretPasswordKey -}}
+    {{- .Values.externalDatabase.existingSecretPasswordKey -}}
+  {{- else if .Values.mariadb.enabled -}}
+    {{- "mariadb-root-password" -}}
+  {{- else -}}
+    {{- "password" -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.database.secretUsernameKey" -}}
+  {{- if .Values.externalDatabase.existingSecretUsernameKey -}}
+    {{- .Values.externalDatabase.existingSecretUsernameKey -}}
+  {{- end -}}
+{{- end -}}
+
+{{- define "hawkbit.spring.profiles" -}}
+  {{- if .Values.spring.profiles -}}
+    {{- .Values.spring.profiles -}}
+  {{- else if eq (.Values.externalDatabase.type | default "mariadb") "postgresql" -}}
+    {{- "postgresql" -}}
+  {{- else -}}
+    {{- "mysql" -}}
+  {{- end -}}
+{{- end -}}

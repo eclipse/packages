@@ -1,25 +1,26 @@
-{{- if not .Values.microservices.enabled }}
+{{- if .Values.microservices.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hawkbit.fullname" . }}
+  name: {{ include "hawkbit.fullname" . }}-dmf
   labels:
 {{ include "hawkbit.labels" . | indent 4 }}
+    app.kubernetes.io/component: dmf
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.microservices.dmf.replicaCount }}
   strategy:
-    {{- with .Values.updateStrategy }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "hawkbit.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: dmf
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "hawkbit.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: dmf
       annotations:
         checksum/config: {{ include (print .Template.BasePath "/secrets.yaml") . | sha256sum }}
         {{- with .Values.podTemplate.annotations }}
@@ -28,8 +29,8 @@ spec:
     spec:
       initContainers:
         - name: hawkbit-init
-          image: "{{ .Values.image.initContainer }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.image.initContainer }}:{{ .Values.microservices.dmf.image.tag }}"
+          imagePullPolicy: {{ .Values.microservices.dmf.image.pullPolicy }}
           env:
             - name: HAWKBIT_DB_MODE
               value: "migrate"
@@ -46,76 +47,31 @@ spec:
             - name: secret-config
               mountPath: /secret-config
               readOnly: true
-            {{- if .Values.extraVolumeMounts }}
-            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
-            {{- end }}
-    {{- with .Values.image.pullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: hawkbit-dmf
+          image: "{{ .Values.microservices.dmf.image.repository }}:{{ .Values.microservices.dmf.image.tag }}"
+          imagePullPolicy: {{ .Values.microservices.dmf.image.pullPolicy }}
           env:
             - name: PROFILES
               value: {{ include "hawkbit.spring.profiles" . | quote }}
             - name: SPRING_FLYWAY_ENABLED
               value: "false"
-            {{- if .Values.fileStorage.enabled }}
-            - name: ORG_ECLIPSE_HAWKBIT_ARTIFACT_FS_PATH
-              value: {{ .Values.fileStorage.mountPath }}
-            {{- end }}
-            {{- if .Values.extraEnv }}
-            {{- if kindIs "slice" .Values.extraEnv }}
-            {{- toYaml .Values.extraEnv | nindent 12 }}
-            {{- else if kindIs "map" .Values.extraEnv }}
-            {{- range $key, $value := .Values.extraEnv }}
-            - name: "{{ $key }}"
-              value: "{{ $value }}"
-            {{- end }}
-            {{- else }}
-            # .Values.extraEnv of type {{kindOf .Values.extraEnv}} is ignored
-            {{- end }}
-            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ include "hawkbit.dbCredentialsSecretName" . }}
-            {{- if .Values.rabbitmq.enabled }}
             - secretRef:
                 name: {{ include "hawkbit.rabbitmqCredentialsSecretName" . }}
-            {{- end }}
-          ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /swagger-ui/index.html
-              port: http
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
-          readinessProbe:
-            httpGet:
-              path: /swagger-ui/index.html
-              port: http
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
           volumeMounts:
             - name: configmap
               mountPath: {{ .Values.configMap.mountPath }}
             - name: secret-config
               mountPath: /secret-config
               readOnly: true
-            {{- if .Values.fileStorage.enabled }}
-            - name: storage
-              mountPath: {{ .Values.fileStorage.mountPath }}
-            {{- end }}
             {{- if .Values.extraVolumeMounts }}
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.microservices.dmf.resources | indent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -148,11 +104,6 @@ spec:
                   items:
                     - key: application-user-credentials.yaml
                       path: application-user-credentials.yaml
-      {{- if .Values.fileStorage.enabled }}
-        - name: storage
-          persistentVolumeClaim:
-            claimName: {{ include "hawkbit.fullname" . }}-data
-      {{- end}}
       {{- if .Values.extraVolumes }}
       {{- toYaml .Values.extraVolumes | nindent 8 }}
       {{- end }}
